@@ -39,12 +39,13 @@ class ViewController: UIViewController {
 		
 		updateTitle()
 		setStdOut()
+		setStdErr()
 
 		print("test")
 
-		ios_system("ls -l".utf8CString)
+//		ios_system("ls -l".utf8CString)
 
-		readFile()
+//		readFile(stdout)
 
 //		ios_system("ls -l".utf8CString)
 //
@@ -97,12 +98,27 @@ class ViewController: UIViewController {
 		
 		freopen(".out.txt", "a+", stdout)
 
-//		guard let file = freopen("".utf8CString, "a+", outHandle.fileDescriptor) else {
-//			fatalError("Expected file")
-//		}
-//
-//		stdout = file
-//
+	}
+	
+	func setStdErr() {
+		
+		let fileManager = DocumentManager.shared.fileManager
+		let filePath = fileManager.currentDirectoryPath.appending("/.err.txt")
+		
+		try? fileManager.removeItem(atPath: filePath)
+		
+		if !fileManager.fileExists(atPath: filePath) {
+			fileManager.createFile(atPath: filePath, contents: nil, attributes: nil)
+		}
+		
+		let fileURL = URL(fileURLWithPath: filePath)
+		
+		guard let outHandle = try? FileHandle(forUpdating: fileURL) else {
+			fatalError("Expected handle")
+		}
+		
+		freopen(".err.txt", "a+", stderr)
+		
 	}
 
 	func stringFromFILE(filePtr: UnsafeMutablePointer<FILE>) -> String {
@@ -119,14 +135,14 @@ class ViewController: UIViewController {
 		return string
 	}
 	
-	func readFile() {
+	func readFile(_ file: UnsafeMutablePointer<FILE>) {
 		let bufsize = 4096
 		let buffer = [CChar](repeating: 0, count: bufsize)
 
 		// let stdin = fdopen(STDIN_FILENO, "r") it is now predefined in Darwin
 		var buf = UnsafeMutablePointer(mutating: buffer)
 		
-		while (fgets(buf, Int32(bufsize-1), stdout) != nil) {
+		while (fgets(buf, Int32(bufsize-1), file) != nil) {
 			let out = String(cString: buf)
 			print(out)
 		}
@@ -180,18 +196,34 @@ extension ViewController: TerminalProcessor {
 		}
 		
 		setStdOut()
-		
+		setStdErr()
+
 		ios_system(command.utf8CString)
 
-		readFile()
+		readFile(stdout)
+		readFile(stderr)
 
 		print("test")
+
+		let errFilePath = fileManager.currentDirectoryPath.appending("/.err.txt")
+
+		if let data = fileManager.contents(atPath: errFilePath) {
+			if let errStr = String(data: data, encoding: .utf8) {
+				
+				let filtered = errStr.replacingOccurrences(of: "Command after parsing: ", with: "")
+				
+				if !filtered.isEmpty {
+					return filtered
+				}
+				
+			}
+		}
 		
 		let filePath = fileManager.currentDirectoryPath.appending("/.out.txt")
 
-		let data = fileManager.contents(atPath: filePath)
-		
-		return String(data: data!, encoding: .utf8)!
+		if let data = fileManager.contents(atPath: filePath) {
+			return String(data: data, encoding: .utf8) ?? ""
+		}
 
 		return ""
 		

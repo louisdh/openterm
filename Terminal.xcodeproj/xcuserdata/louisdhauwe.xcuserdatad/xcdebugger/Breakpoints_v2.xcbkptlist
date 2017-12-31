@@ -10,11 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Terminal/ViewController.swift"
-            timestampString = "535669608.830857"
+            timestampString = "536425500.953446"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "223"
-            endingLineNumber = "223"
+            startingLineNumber = "255"
+            endingLineNumber = "255"
             landmarkName = "process(command:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -26,11 +26,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Terminal/ViewController.swift"
-            timestampString = "535669608.831253"
+            timestampString = "536425500.953497"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "226"
-            endingLineNumber = "226"
+            startingLineNumber = "258"
+            endingLineNumber = "258"
             landmarkName = "process(command:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -42,11 +42,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Terminal/ViewController.swift"
-            timestampString = "535669608.831534"
+            timestampString = "536425500.953549"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "228"
-            endingLineNumber = "228"
+            startingLineNumber = "260"
+            endingLineNumber = "260"
             landmarkName = "process(command:)"
             landmarkType = "7">
          </BreakpointContent>
