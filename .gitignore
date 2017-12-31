@@ -1,0 +1,11 @@
+Pods
+
+xcuserdata/
+
+**/.DS_Store
+
+*.zip
+*.ipa
+
+fastlane/README.md
+fastlane/report.xml

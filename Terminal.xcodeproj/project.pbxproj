@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		BE000C081FEC4F6C00D06B91 /* ios_system.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BE3768EE1FEC4DCE00D5A2D1 /* ios_system.framework */; };
+		BE000C091FEC4F6F00D06B91 /* ios_system.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BE3768EE1FEC4DCE00D5A2D1 /* ios_system.framework */; };
+		BE000C0A1FEC4F6F00D06B91 /* ios_system.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = BE3768EE1FEC4DCE00D5A2D1 /* ios_system.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		BE3808561FD9BFB600393EB8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE3808551FD9BFB600393EB8 /* AppDelegate.swift */; };
 		BE3808581FD9BFB600393EB8 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE3808571FD9BFB600393EB8 /* ViewController.swift */; };
 		BE38085B1FD9BFB600393EB8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BE3808591FD9BFB600393EB8 /* Main.storyboard */; };
@@ -18,7 +21,22 @@
 		BEA499301FDC3B93001B9B9D /* TerminalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEA4992F1FDC3B93001B9B9D /* TerminalView.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		BE000C0B1FEC4F7000D06B91 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				BE000C0A1FEC4F6F00D06B91 /* ios_system.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		BE3768EE1FEC4DCE00D5A2D1 /* ios_system.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = ios_system.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		BE3808521FD9BFB600393EB8 /* Terminal.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Terminal.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BE3808551FD9BFB600393EB8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		BE3808571FD9BFB600393EB8 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -38,17 +56,28 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BE000C081FEC4F6C00D06B91 /* ios_system.framework in Frameworks */,
+				BE000C091FEC4F6F00D06B91 /* ios_system.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		BE3768EC1FEC4DCE00D5A2D1 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				BE3768EE1FEC4DCE00D5A2D1 /* ios_system.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		BE3808491FD9BFB600393EB8 = {
 			isa = PBXGroup;
 			children = (
 				BE3808541FD9BFB600393EB8 /* Terminal */,
 				BE3808531FD9BFB600393EB8 /* Products */,
+				BE3768EC1FEC4DCE00D5A2D1 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -88,6 +117,7 @@
 				BE38084E1FD9BFB600393EB8 /* Sources */,
 				BE38084F1FD9BFB600393EB8 /* Frameworks */,
 				BE3808501FD9BFB600393EB8 /* Resources */,
+				BE000C0B1FEC4F7000D06B91 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -304,6 +334,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 6G5LMQ72D8;
+				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Terminal/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -323,6 +354,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 6G5LMQ72D8;
+				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Terminal/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
