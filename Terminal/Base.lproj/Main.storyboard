@@ -31,7 +31,10 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
-                    <navigationItem key="navigationItem" id="JRv-Im-Tnt"/>
+                    <navigationItem key="navigationItem" id="JRv-Im-Tnt">
+                        <barButtonItem key="leftBarButtonItem" image="gear" id="vwD-wd-hzA"/>
+                        <barButtonItem key="rightBarButtonItem" title="Item" image="clock" id="u0V-tr-ngf"/>
+                    </navigationItem>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" barStyle="black" prompted="NO"/>
                     <connections>
                         <outlet property="terminalView" destination="GsK-49-eEc" id="hGV-35-shM"/>
@@ -40,6 +43,34 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="479.19999999999999" y="133.5832083958021"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="ysT-04-NMd">
+            <objects>
+                <viewController id="ImO-cu-uJM" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="rND-dM-SoE">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="7LH-sV-VsN">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </tableView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="7LH-sV-VsN" firstAttribute="trailing" secondItem="WFn-MD-C9x" secondAttribute="trailing" id="Ew8-4w-jbY"/>
+                            <constraint firstItem="7LH-sV-VsN" firstAttribute="top" secondItem="rND-dM-SoE" secondAttribute="top" id="YOP-hI-OJd"/>
+                            <constraint firstItem="7LH-sV-VsN" firstAttribute="bottom" secondItem="WFn-MD-C9x" secondAttribute="bottom" id="fa1-fD-nnd"/>
+                            <constraint firstItem="7LH-sV-VsN" firstAttribute="leading" secondItem="WFn-MD-C9x" secondAttribute="leading" id="huH-ni-Fdn"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="WFn-MD-C9x"/>
+                    </view>
+                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="kcT-Q3-sri" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1536.8" y="133.5832083958021"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="9Ak-gh-czG">
@@ -60,5 +91,9 @@
             <point key="canvasLocation" x="-503" y="134"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="clock" width="32" height="32"/>
+        <image name="gear" width="20" height="20"/>
+    </resources>
     <color key="tintColor" name="Main Tint Color"/>
 </document>
