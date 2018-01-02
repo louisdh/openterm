@@ -35,48 +35,28 @@ class ViewController: UIViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
+		printCommands()
+		
 		terminalView.processor = self
 		
 		updateTitle()
 		setStdOut()
 		setStdErr()
 
-		print("test")
-
-//		ios_system("ls -l".utf8CString)
-
-//		readFile(stdout)
-
-//		ios_system("ls -l".utf8CString)
-//
-//		readFile()
+//		let exporter = CommandsExporter()
 		
-		print("test")
+	}
+	
+	func printCommands() {
 		
-//		fclose(stdout)
+		let commands = String(cString: commandsAsString())
 		
-//		stderr = file!
-
-//		process(command: "cd Root")
-
-//		process(command: "mkdir testing")
-//		process(command: "cat test.svg")
-
-//		ios_system(.UTF8CString)
+		let data = commands.data(using: .utf8)!
 		
-//		let output = fileManager.contents(atPath: filePath)
+		let json = try! JSONSerialization.jsonObject(with: data, options: [])
+		let arr = (json as! [String]).sorted()
+		print(arr.joined(separator: "\n"))
 		
-//		let readFileHandle = FileHandle(fileDescriptor: stdout.pointee._r)
-//		let data = readFileHandle.readDataToEndOfFile()
-		
-//		let output = stringFromFILE(filePtr: stdout)
-//		readFile()
-		
-//		ios_system("cd ..".UTF8CString)
-//		ios_system("cd ..".UTF8CString)
-//		ios_system("ls -l".UTF8CString)
-		
-//		print("test")
 	}
 	
 	func setStdOut() {
@@ -187,9 +167,10 @@ extension ViewController: TerminalProcessor {
 					
 				}
 				
-				
 				updateTitle()
 				
+				return ""
+			} else {
 				return ""
 			}
 			
@@ -226,76 +207,6 @@ extension ViewController: TerminalProcessor {
 		}
 
 		return ""
-		
-		if command == "" {
-			return ""
-		}
-		
-		if command == "ls" {
-		
-			do {
-				
-				let files = try fileManager.contentsOfDirectory(at: URL(fileURLWithPath: fileManager.currentDirectoryPath), includingPropertiesForKeys: nil, options: [.skipsHiddenFiles])
-				
-//				let files = try fileManager.contentsOfDirectory(atPath: fileManager.currentDirectoryPath)
-				
-				return files.map{ $0.lastPathComponent }.joined(separator: "\n")
-
-			} catch {
-				
-			}
-			
-		}
-		
-		if command.hasPrefix("mkdir") {
-
-			var arguments = command.split(separator: " ")
-			arguments.removeFirst()
-			
-			if arguments.count == 1 {
-				let folderName = arguments[0]
-				
-				let dirPath = fileManager.currentDirectoryPath.appending("/\(folderName)")
-				
-				do {
-					try fileManager.createDirectory(atPath: dirPath, withIntermediateDirectories: false, attributes: nil)
-					return ""
-				} catch {
-					
-				}
-			}
-			
-		}
-		
-		if command.hasPrefix("touch") {
-			
-			var arguments = command.split(separator: " ")
-			arguments.removeFirst()
-			
-			if arguments.count >= 1 {
-				
-				for fileName in arguments {
-					
-					let filePath = fileManager.currentDirectoryPath.appending("/\(fileName)")
-					
-					
-					let succeed = fileManager.createFile(atPath: filePath, contents: nil, attributes: nil)
-					
-					if !succeed {
-						return "Couldn't create file \"\(fileName)\""
-					}
-					
-				}
-				
-				return ""
-				
-			}
-			
-		}
-		
-	
-		
-		return "-bash: \(command): command not found"
 	}
 	
 }
