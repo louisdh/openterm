@@ -10,7 +10,6 @@ import Foundation
 import CoreFoundation
 import Darwin
 import UIKit
-
 import ios_system
 
 extension String {
@@ -42,8 +41,6 @@ class ViewController: UIViewController {
 		updateTitle()
 		setStdOut()
 		setStdErr()
-
-//		let exporter = CommandsExporter()
 		
 	}
 	
@@ -72,9 +69,9 @@ class ViewController: UIViewController {
 		
 		let fileURL = URL(fileURLWithPath: filePath)
 		
-		guard let outHandle = try? FileHandle(forUpdating: fileURL) else {
-			fatalError("Expected handle")
-		}
+//		guard let outHandle = try? FileHandle(forUpdating: fileURL) else {
+//			fatalError("Expected handle")
+//		}
 		
 		freopen(".out.txt", "a+", stdout)
 
@@ -93,9 +90,9 @@ class ViewController: UIViewController {
 		
 		let fileURL = URL(fileURLWithPath: filePath)
 		
-		guard let outHandle = try? FileHandle(forUpdating: fileURL) else {
-			fatalError("Expected handle")
-		}
+//		guard let outHandle = try? FileHandle(forUpdating: fileURL) else {
+//			fatalError("Expected handle")
+//		}
 		
 		freopen(".err.txt", "a+", stderr)
 		
@@ -138,7 +135,57 @@ class ViewController: UIViewController {
 	
 }
 
+extension ViewController {
+	
+	func cd(command: String) -> String {
+		
+		let fileManager = DocumentManager.shared.fileManager
+		
+		var arguments = command.split(separator: " ")
+		arguments.removeFirst()
+		
+		if arguments.count == 1 {
+			let folderName = arguments[0]
+			
+			if folderName == ".." {
+				
+				let dirPath = URL(fileURLWithPath: fileManager.currentDirectoryPath).deletingLastPathComponent()
+				
+				if dirPath.lastPathComponent == "iCloud~com~silverfox~Terminal" {
+					return ""
+				}
+				
+				fileManager.changeCurrentDirectoryPath(dirPath.path)
+				
+			} else if folderName.hasPrefix("/") {
+				
+				guard let documents = DocumentManager.shared.activeDocumentsFolderURL else {
+					return ""
+				}
+				
+				let dirPath = documents.appendingPathComponent(String(folderName)).path
+				
+				fileManager.changeCurrentDirectoryPath(dirPath)
+				
+			} else {
+				
+				let dirPath = fileManager.currentDirectoryPath.appending("/\(folderName)")
+				
+				fileManager.changeCurrentDirectoryPath(dirPath)
+				
+			}
+			
+			return ""
+		} else {
+			return ""
+		}
+		
+	}
+	
+}
+
 extension ViewController: TerminalProcessor {
+	
 	
 	@discardableResult
 	func process(command: String) -> String {
@@ -147,33 +194,11 @@ extension ViewController: TerminalProcessor {
 
 		if command.hasPrefix("cd") {
 			
-			var arguments = command.split(separator: " ")
-			arguments.removeFirst()
+			let result = cd(command: command)
 			
-			if arguments.count == 1 {
-				let folderName = arguments[0]
-				
-				if folderName == ".." {
-					
-					let dirPath = URL(fileURLWithPath: fileManager.currentDirectoryPath).deletingLastPathComponent()
-					
-					fileManager.changeCurrentDirectoryPath(dirPath.path)
-					
-				} else {
-					
-					let dirPath = fileManager.currentDirectoryPath.appending("/\(folderName)")
-					
-					fileManager.changeCurrentDirectoryPath(dirPath)
-					
-				}
-				
-				updateTitle()
-				
-				return ""
-			} else {
-				return ""
-			}
-			
+			updateTitle()
+
+			return result
 		}
 		
 		setStdOut()
