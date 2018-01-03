@@ -14,6 +14,12 @@ protocol TerminalProcessor: class {
 	
 }
 
+protocol TerminalViewDelegate: class {
+	
+	func didEnterCommand(_ command: String)
+	
+}
+
 @IBDesignable
 class TerminalView: UIView {
 	
@@ -22,11 +28,11 @@ class TerminalView: UIView {
 	
 	let keyboardObserver = KeyboardObserver()
 	
-	var commandHistory = [String]()
-	
 	var currentCommandStartIndex: String.Index!
 	
 	weak var processor: TerminalProcessor?
+	
+	weak var delegate: TerminalViewDelegate?
 	
 	init() {
 		super.init(frame: .zero)
@@ -98,6 +104,35 @@ class TerminalView: UIView {
 		
 	}
 	
+	@discardableResult
+	override func becomeFirstResponder() -> Bool {
+		return textView.becomeFirstResponder()
+	}
+
+	var currentCommand: String {
+		get {
+			
+			guard let currentCommandStartIndex = currentCommandStartIndex else {
+				return ""
+			}
+			
+			let currentCmdRange = currentCommandStartIndex..<textView.text.endIndex
+			
+			return String(textView.text[currentCmdRange])
+		}
+		set {
+			
+			if let currentCommandStartIndex = currentCommandStartIndex {
+				let currentCmdRange = currentCommandStartIndex..<textView.text.endIndex
+				textView.text.replaceSubrange(currentCmdRange, with: "")
+			}
+			
+			
+			textView.text.append(newValue)
+			
+		}
+	}
+	
 }
 
 extension TerminalView: UITextViewDelegate {
@@ -130,6 +165,8 @@ extension TerminalView: UITextViewDelegate {
 				
 				let input = textView.text[currentCommandStartIndex..<textView.text.endIndex]
 				
+				delegate?.didEnterCommand(String(input))
+
 				if input == "clear" {
 					
 					currentCommandStartIndex = nil

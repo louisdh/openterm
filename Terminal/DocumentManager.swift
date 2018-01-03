@@ -15,11 +15,13 @@ class DocumentManager {
 	
 	let fileManager: FileManager
 
-	init() {
+	init(fileManager: FileManager = .default) {
 		
-		fileManager = .default
+		self.fileManager = fileManager
 		
-		let baseURL = self.activeDocumentsFolderURL!
+		guard let baseURL = self.activeDocumentsFolderURL else {
+			fatalError("Expected base url")
+		}
 		
 		fileManager.changeCurrentDirectoryPath(baseURL.path)
 		

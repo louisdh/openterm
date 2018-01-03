@@ -5,6 +5,7 @@
     </device>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -17,26 +18,43 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GsK-49-eEc" customClass="TerminalView" customModule="Terminal" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SOJ-yb-JDf">
+                                <rect key="frame" x="0.0" y="64" width="375" height="603"/>
+                                <subviews>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GsK-49-eEc" customClass="TerminalView" customModule="Terminal" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="603"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </view>
+                                </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstItem="GsK-49-eEc" firstAttribute="top" secondItem="SOJ-yb-JDf" secondAttribute="top" id="BjW-a9-jH4"/>
+                                    <constraint firstAttribute="trailing" secondItem="GsK-49-eEc" secondAttribute="trailing" id="LFJ-fB-3hv"/>
+                                    <constraint firstAttribute="bottom" secondItem="GsK-49-eEc" secondAttribute="bottom" id="bOM-IP-ih8"/>
+                                    <constraint firstItem="GsK-49-eEc" firstAttribute="leading" secondItem="SOJ-yb-JDf" secondAttribute="leading" id="cE6-eQ-0TY"/>
+                                </constraints>
                             </view>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="GsK-49-eEc" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="4ZK-jd-xfh"/>
-                            <constraint firstItem="GsK-49-eEc" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="lZz-21-TvF"/>
-                            <constraint firstItem="GsK-49-eEc" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="ndB-lW-JIe"/>
-                            <constraint firstItem="GsK-49-eEc" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="pYJ-oF-QiV"/>
+                            <constraint firstItem="SOJ-yb-JDf" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="3PS-bG-x8p"/>
+                            <constraint firstItem="SOJ-yb-JDf" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="9MG-0U-HlJ"/>
+                            <constraint firstItem="SOJ-yb-JDf" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="B2O-51-yjJ"/>
+                            <constraint firstItem="SOJ-yb-JDf" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="Zj6-Zp-0eb"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <navigationItem key="navigationItem" id="JRv-Im-Tnt">
                         <barButtonItem key="leftBarButtonItem" image="gear" id="vwD-wd-hzA"/>
-                        <barButtonItem key="rightBarButtonItem" title="Item" image="clock" id="u0V-tr-ngf"/>
+                        <barButtonItem key="rightBarButtonItem" title="Item" image="clock" id="u0V-tr-ngf">
+                            <connections>
+                                <action selector="showHistory:" destination="BYZ-38-t0r" id="1tS-n5-l85"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" barStyle="black" prompted="NO"/>
                     <connections>
+                        <outlet property="contentWrapperView" destination="SOJ-yb-JDf" id="ScL-oT-6Te"/>
                         <outlet property="terminalView" destination="GsK-49-eEc" id="hGV-35-shM"/>
                     </connections>
                 </viewController>
@@ -44,20 +62,21 @@
             </objects>
             <point key="canvasLocation" x="479.19999999999999" y="133.5832083958021"/>
         </scene>
-        <!--View Controller-->
+        <!--History View Controller-->
         <scene sceneID="ysT-04-NMd">
             <objects>
-                <viewController id="ImO-cu-uJM" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="HistoryViewController" id="ImO-cu-uJM" customClass="HistoryViewController" customModule="Terminal" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="rND-dM-SoE">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="7LH-sV-VsN">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="backgroundColor" name="Panel Background Color"/>
+                                <color key="separatorColor" white="0.1621372767857143" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </tableView>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="backgroundColor" name="Panel Background Color"/>
                         <constraints>
                             <constraint firstItem="7LH-sV-VsN" firstAttribute="trailing" secondItem="WFn-MD-C9x" secondAttribute="trailing" id="Ew8-4w-jbY"/>
                             <constraint firstItem="7LH-sV-VsN" firstAttribute="top" secondItem="rND-dM-SoE" secondAttribute="top" id="YOP-hI-OJd"/>
@@ -66,11 +85,14 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="WFn-MD-C9x"/>
                     </view>
-                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
+                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" barStyle="black" prompted="NO"/>
+                    <connections>
+                        <outlet property="tableView" destination="7LH-sV-VsN" id="AfW-Ko-nH2"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="kcT-Q3-sri" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1536.8" y="133.5832083958021"/>
+            <point key="canvasLocation" x="1484" y="134"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="9Ak-gh-czG">
@@ -94,6 +116,9 @@
     <resources>
         <image name="clock" width="32" height="32"/>
         <image name="gear" width="20" height="20"/>
+        <namedColor name="Panel Background Color">
+            <color white="0.064999997615814209" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </namedColor>
     </resources>
     <color key="tintColor" name="Main Tint Color"/>
 </document>

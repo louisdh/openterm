@@ -11,6 +11,18 @@ import CoreFoundation
 import Darwin
 import UIKit
 import ios_system
+import PanelKit
+
+extension UIColor {
+	
+	static var defaultMainTintColor: UIColor {
+		guard let defaultMainTintColor = UIColor(named: "Main Tint Color") else {
+			fatalError("Expected color, check asset catalog")
+		}
+		return defaultMainTintColor
+	}
+	
+}
 
 extension String {
 	func toCString() -> UnsafePointer<Int8>? {
@@ -31,12 +43,24 @@ class ViewController: UIViewController {
 
 	@IBOutlet weak var terminalView: TerminalView!
 	
+	@IBOutlet weak var contentWrapperView: UIView!
+	
+	var historyViewController: HistoryViewController!
+	var historyPanelViewController: PanelViewController!
+	
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
+		let storyboard = UIStoryboard(name: "Main", bundle: nil)
+		historyViewController = storyboard.instantiateViewController(withIdentifier: "HistoryViewController") as! HistoryViewController
+		historyViewController.delegate = self
+		
+		historyPanelViewController = PanelViewController(with: historyViewController, in: self)
+		
 		printCommands()
 		
 		terminalView.processor = self
+		terminalView.delegate = self
 		
 		updateTitle()
 		setStdOut()
@@ -44,15 +68,52 @@ class ViewController: UIViewController {
 		
 	}
 	
-	func printCommands() {
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
+
+		self.terminalView.becomeFirstResponder()
 		
+	}
+	
+	@IBAction func showHistory(_ sender: UIBarButtonItem) {
+		
+		historyPanelViewController.modalPresentationStyle = .popover
+		historyPanelViewController.popoverPresentationController?.barButtonItem = sender
+		
+		historyPanelViewController.popoverPresentationController?.backgroundColor = historyViewController.view.backgroundColor
+		present(historyPanelViewController, animated: true, completion: nil)
+		
+	}
+	
+	func availableCommands() -> [String] {
+
 		let commands = String(cString: commandsAsString())
 		
-		let data = commands.data(using: .utf8)!
+		guard let data = commands.data(using: .utf8) else {
+			assertionFailure("Expected valid data")
+			return []
+		}
 		
-		let json = try! JSONSerialization.jsonObject(with: data, options: [])
-		let arr = (json as! [String]).sorted()
-		print(arr.joined(separator: "\n"))
+		guard let json = try? JSONSerialization.jsonObject(with: data, options: []) else {
+			assertionFailure("Expected valid json")
+			return []
+		}
+		
+		guard var arr = (json as? [String]) else {
+			assertionFailure("Expected String Array")
+			return []
+		}
+		
+		arr.append("cd")
+		arr.append("clear")
+		arr.append("help")
+
+		return arr.sorted()
+	}
+	
+	func printCommands() {
+		
+		print(availableCommands().joined(separator: "\n"))
 		
 	}
 	
@@ -135,6 +196,42 @@ class ViewController: UIViewController {
 	
 }
 
+extension ViewController: TerminalViewDelegate {
+	
+	func didEnterCommand(_ command: String) {
+
+		historyViewController.addCommand(command)
+
+	}
+
+}
+
+extension ViewController: HistoryViewControllerDelegate {
+	
+	func didSelectCommand(command: String) {
+		
+		terminalView.currentCommand = command
+		
+	}
+	
+}
+
+extension ViewController: PanelManager {
+
+	var panels: [PanelViewController] {
+		return [historyPanelViewController]
+	}
+	
+	var panelContentWrapperView: UIView {
+		return contentWrapperView
+	}
+	
+	var panelContentView: UIView {
+		return terminalView
+	}
+
+}
+
 extension ViewController {
 	
 	func cd(command: String) -> String {
@@ -186,12 +283,15 @@ extension ViewController {
 
 extension ViewController: TerminalProcessor {
 	
-	
 	@discardableResult
 	func process(command: String) -> String {
 
 		let fileManager = DocumentManager.shared.fileManager
 
+		if command == "help" || command == "?" {
+			return availableCommands().joined(separator: "\n")
+		}
+		
 		if command.hasPrefix("cd") {
 			
 			let result = cd(command: command)
