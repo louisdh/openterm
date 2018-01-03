@@ -128,12 +128,6 @@ class ViewController: UIViewController {
 			fileManager.createFile(atPath: filePath, contents: nil, attributes: nil)
 		}
 		
-		let fileURL = URL(fileURLWithPath: filePath)
-		
-//		guard let outHandle = try? FileHandle(forUpdating: fileURL) else {
-//			fatalError("Expected handle")
-//		}
-		
 		freopen(".out.txt", "a+", stdout)
 
 	}
@@ -149,36 +143,15 @@ class ViewController: UIViewController {
 			fileManager.createFile(atPath: filePath, contents: nil, attributes: nil)
 		}
 		
-		let fileURL = URL(fileURLWithPath: filePath)
-		
-//		guard let outHandle = try? FileHandle(forUpdating: fileURL) else {
-//			fatalError("Expected handle")
-//		}
-		
 		freopen(".err.txt", "a+", stderr)
 		
-	}
-
-	func stringFromFILE(filePtr: UnsafeMutablePointer<FILE>) -> String {
-		guard filePtr != nil else {
-			return ""
-		}
-		// change the buffer size at your needs
-		let buffer = [CChar](repeating: 0, count: 1024)
-		var string = String()
-		while fgets(UnsafeMutablePointer(mutating: buffer), Int32(buffer.count), filePtr) != nil {
-			let read = String(cString: buffer)
-			string += read
-		}
-		return string
 	}
 	
 	func readFile(_ file: UnsafeMutablePointer<FILE>) {
 		let bufsize = 4096
 		let buffer = [CChar](repeating: 0, count: bufsize)
 
-		// let stdin = fdopen(STDIN_FILENO, "r") it is now predefined in Darwin
-		var buf = UnsafeMutablePointer(mutating: buffer)
+		let buf = UnsafeMutablePointer(mutating: buffer)
 		
 		while (fgets(buf, Int32(bufsize-1), file) != nil) {
 			let out = String(cString: buf)
@@ -308,8 +281,6 @@ extension ViewController: TerminalProcessor {
 
 		readFile(stdout)
 		readFile(stderr)
-
-		print("test")
 
 		let errFilePath = fileManager.currentDirectoryPath.appending("/.err.txt")
 
