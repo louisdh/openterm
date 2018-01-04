@@ -45,7 +45,6 @@
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <navigationItem key="navigationItem" id="JRv-Im-Tnt">
-                        <barButtonItem key="leftBarButtonItem" image="gear" id="vwD-wd-hzA"/>
                         <barButtonItem key="rightBarButtonItem" title="Item" image="clock" id="u0V-tr-ngf">
                             <connections>
                                 <action selector="showHistory:" destination="BYZ-38-t0r" id="1tS-n5-l85"/>
@@ -115,7 +114,6 @@
     </scenes>
     <resources>
         <image name="clock" width="32" height="32"/>
-        <image name="gear" width="20" height="20"/>
         <namedColor name="Panel Background Color">
             <color white="0.064999997615814209" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </namedColor>
