@@ -21,6 +21,7 @@
 		BEA4992E1FDC305B001B9B9D /* KeyboardObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEA4992D1FDC305B001B9B9D /* KeyboardObserver.swift */; };
 		BEA499301FDC3B93001B9B9D /* TerminalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEA4992F1FDC3B93001B9B9D /* TerminalView.swift */; };
 		BEECFF0A1FFC1DC0009608B3 /* HistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEECFF091FFC1DC0009608B3 /* HistoryViewController.swift */; };
+		BEECFF391FFEC187009608B3 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEECFF381FFEC187009608B3 /* SettingsViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -54,6 +55,7 @@
 		BEA4992D1FDC305B001B9B9D /* KeyboardObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardObserver.swift; sourceTree = "<group>"; };
 		BEA4992F1FDC3B93001B9B9D /* TerminalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TerminalView.swift; sourceTree = "<group>"; };
 		BEECFF091FFC1DC0009608B3 /* HistoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryViewController.swift; sourceTree = "<group>"; };
+		BEECFF381FFEC187009608B3 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		D73213876015994510AC49C0 /* Pods-Terminal.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Terminal.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Terminal/Pods-Terminal.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -113,6 +115,7 @@
 				BEA4992D1FDC305B001B9B9D /* KeyboardObserver.swift */,
 				BEA4992F1FDC3B93001B9B9D /* TerminalView.swift */,
 				BEECFF091FFC1DC0009608B3 /* HistoryViewController.swift */,
+				BEECFF381FFEC187009608B3 /* SettingsViewController.swift */,
 			);
 			path = Terminal;
 			sourceTree = "<group>";
@@ -267,6 +270,7 @@
 			files = (
 				BEA499301FDC3B93001B9B9D /* TerminalView.swift in Sources */,
 				BE3808581FD9BFB600393EB8 /* ViewController.swift in Sources */,
+				BEECFF391FFEC187009608B3 /* SettingsViewController.swift in Sources */,
 				BEA499261FD9C4D7001B9B9D /* DocumentManager.swift in Sources */,
 				BEECFF0A1FFC1DC0009608B3 /* HistoryViewController.swift in Sources */,
 				BEA4992E1FDC305B001B9B9D /* KeyboardObserver.swift in Sources */,
