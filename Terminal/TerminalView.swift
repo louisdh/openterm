@@ -165,7 +165,9 @@ extension TerminalView: UITextViewDelegate {
 				
 				let input = textView.text[currentCommandStartIndex..<textView.text.endIndex]
 				
-				delegate?.didEnterCommand(String(input))
+				if !input.isEmpty {
+					delegate?.didEnterCommand(String(input))
+				}
 
 				if input == "clear" {
 					
