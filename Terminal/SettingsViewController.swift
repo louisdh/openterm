@@ -53,7 +53,7 @@ class SettingsViewController: UITableViewController {
 		let footer = view as? UITableViewHeaderFooterView
 		footer?.textLabel?.textAlignment = .center
 		
-		if section == 3 {
+		if section == 2 {
 			
 			let version = Bundle.main.version
 			let build = Bundle.main.build
@@ -90,39 +90,71 @@ class SettingsViewController: UITableViewController {
 	
 		tableView.deselectRow(at: indexPath, animated: true)
 
-		
 		if indexPath.section == 1 {
+
+			if indexPath.row == 0 {
+				
+				if let url = URL(string: "https://github.com/louisdh/terminal") {
+					UIApplication.shared.open((url), options: [:], completionHandler: nil)
+				}
+				
+			}
 			
-			let appId = "1323205755"
+			if indexPath.row == 1 {
+				
+				if let url = URL(string: "https://github.com/holzschu/ios_system") {
+					UIApplication.shared.open((url), options: [:], completionHandler: nil)
+				}
+				
+			}
 			
-			let urlString = "itms-apps://itunes.apple.com/us/app/terminal/id\(appId)?action=write-review"
-			
-			if let url = URL(string: urlString) {
-				UIApplication.shared.open((url), options: [:], completionHandler: nil)
+			if indexPath.row == 2 {
+				
+				if let url = URL(string: "https://github.com/louisdh/panelkit") {
+					UIApplication.shared.open((url), options: [:], completionHandler: nil)
+				}
+				
 			}
 			
 		}
 		
 		if indexPath.section == 2 {
-
-			if let url = URL(string: "https://twitter.com/LouisDhauwe") {
-				UIApplication.shared.open((url), options: [:], completionHandler: nil)
+			
+			if indexPath.row == 0 {
+				
+				let appId = "1323205755"
+				
+				let urlString = "itms-apps://itunes.apple.com/us/app/terminal/id\(appId)?action=write-review"
+				
+				if let url = URL(string: urlString) {
+					UIApplication.shared.open((url), options: [:], completionHandler: nil)
+				}
+				
 			}
 			
-		}
-		
-		if indexPath.section == 3 {
-			
-			if MFMailComposeViewController.canSendMail() {
+			if indexPath.row == 1 {
 				
-				let mailComposeViewController = configuredMailComposeViewController()
-				self.present(mailComposeViewController, animated: true, completion: nil)
-				
-			} else {
-				
-				self.showSendMailErrorAlert()
+				if let url = URL(string: "https://twitter.com/LouisDhauwe") {
+					UIApplication.shared.open((url), options: [:], completionHandler: nil)
+				}
 				
 			}
+			
+			if indexPath.row == 2 {
+				
+				if MFMailComposeViewController.canSendMail() {
+					
+					let mailComposeViewController = configuredMailComposeViewController()
+					self.present(mailComposeViewController, animated: true, completion: nil)
+					
+				} else {
+					
+					self.showSendMailErrorAlert()
+					
+				}
+				
+			}
+			
 			
 		}
 		
@@ -178,7 +210,10 @@ class SettingsViewController: UITableViewController {
 		
 	}
 	
-	// MARK: MFMailComposeViewControllerDelegate
+}
+
+extension SettingsViewController: MFMailComposeViewControllerDelegate {
+	
 	func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
 		controller.dismiss(animated: true, completion: nil)
 		
@@ -197,10 +232,5 @@ class SettingsViewController: UITableViewController {
 		}
 		
 	}
-	
-}
-
-extension SettingsViewController: MFMailComposeViewControllerDelegate {
-	
 	
 }
