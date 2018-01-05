@@ -89,6 +89,9 @@ class TerminalView: UIView {
 		
 		textView.indicatorStyle = .white
 		
+		textView.textDragDelegate = self
+		textView.textDropDelegate = self
+
 		keyboardObserver.observe { (state) in
 			
 			let rect = self.textView.convert(state.keyboardFrameEnd, from: nil).intersection(self.textView.bounds)
@@ -132,6 +135,18 @@ class TerminalView: UIView {
 			
 		}
 	}
+	
+}
+
+extension TerminalView: UITextDragDelegate {
+	
+	func textDraggableView(_ textDraggableView: UIView & UITextDraggable, itemsForDrag dragRequest: UITextDragRequest) -> [UIDragItem] {
+		return []
+	}
+	
+}
+
+extension TerminalView: UITextDropDelegate {
 	
 }
 
