@@ -12,6 +12,7 @@ import Darwin
 import UIKit
 import ios_system
 import PanelKit
+import StoreKit
 
 extension UIColor {
 	
@@ -66,12 +67,20 @@ class ViewController: UIViewController {
 		setStdOut()
 		setStdErr()
 		
+		NotificationCenter.default.addObserver(self, selector: #selector(didDismissKeyboard), name: .UIKeyboardDidHide, object: nil)
+		
 	}
 	
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 
 		self.terminalView.becomeFirstResponder()
+		
+	}
+	
+	@objc func didDismissKeyboard() {
+		
+		SKStoreReviewController.requestReview()
 		
 	}
 	
