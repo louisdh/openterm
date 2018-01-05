@@ -167,6 +167,45 @@ class ViewController: UIViewController {
 
 	}
 	
+	var commandIndex = 0
+	
+	@objc func selectPreviousCommand() {
+		
+		guard commandIndex < historyViewController.commands.count else {
+			return
+		}
+		
+		commandIndex += 1
+
+		terminalView.currentCommand = historyViewController.commands.reversed()[commandIndex - 1]
+
+	}
+	
+	@objc func selectNextCommand() {
+		
+		guard commandIndex > 0 else {
+			return
+		}
+		
+		commandIndex -= 1
+		
+		if commandIndex == 0 {
+			terminalView.currentCommand = ""
+		} else {
+			terminalView.currentCommand = historyViewController.commands.reversed()[commandIndex - 1]
+		}
+
+	}
+	
+	override var keyCommands: [UIKeyCommand]? {
+		let prevCmd = UIKeyCommand(input: UIKeyInputUpArrow, modifierFlags: UIKeyModifierFlags(rawValue: 0), action: #selector(selectPreviousCommand))
+
+		let nextCmd = UIKeyCommand(input: UIKeyInputDownArrow, modifierFlags: UIKeyModifierFlags(rawValue: 0), action: #selector(selectNextCommand))
+
+		
+		return [prevCmd, nextCmd]
+	}
+	
 }
 
 extension ViewController: TerminalViewDelegate {
@@ -174,7 +213,8 @@ extension ViewController: TerminalViewDelegate {
 	func didEnterCommand(_ command: String) {
 
 		historyViewController.addCommand(command)
-
+		commandIndex = 0
+		
 	}
 
 }
@@ -301,7 +341,7 @@ extension ViewController: TerminalProcessor {
 		if let data = fileManager.contents(atPath: filePath) {
 			return String(data: data, encoding: .utf8) ?? ""
 		}
-
+		
 		return ""
 	}
 	
