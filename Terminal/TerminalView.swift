@@ -84,6 +84,7 @@ class TerminalView: UIView {
 		textView.keyboardAppearance = .dark
 		textView.autocorrectionType = .no
 		textView.smartDashesType = .no
+		textView.smartQuotesType = .no
 		textView.autocapitalizationType = .none
 		textView.spellCheckingType = .no
 		
