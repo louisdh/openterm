@@ -1,0 +1,9 @@
+# $FreeBSD: head/bin/sh/tests/parameters/exitstatus1.0 185232 2008-11-23 20:27:03Z stefanf $
+f() {
+	[ $? = $1 ] || exit 1
+}
+
+true
+f 0
+false
+f 1

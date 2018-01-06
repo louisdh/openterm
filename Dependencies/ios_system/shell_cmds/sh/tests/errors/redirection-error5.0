@@ -1,0 +1,5 @@
+# $FreeBSD: head/bin/sh/tests/errors/redirection-error5.0 205153 2010-03-14 13:51:12Z jilles $
+# A redirection error on a subshell should not abort the shell.
+exec 2>/dev/null
+( echo bad ) </var/empty/x
+exit 0

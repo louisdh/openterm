@@ -1,0 +1,12 @@
+# $FreeBSD: head/bin/sh/tests/builtins/alias3.0 242767 2012-11-08 13:36:19Z jilles $
+set -e
+
+unalias -a
+alias foo=bar
+alias bar=
+alias quux="1 2 3"
+alias foo=bar
+alias bar=
+alias quux="1 2 3"
+alias
+alias foo

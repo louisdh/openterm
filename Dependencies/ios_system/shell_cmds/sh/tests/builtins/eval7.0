@@ -1,0 +1,9 @@
+# $FreeBSD: head/bin/sh/tests/builtins/eval7.0 272983 2014-10-12 13:12:06Z jilles $
+# Assumes that break can break out of a loop outside eval.
+
+while :; do
+	eval "break
+echo bad1"
+	echo bad2
+	exit 3
+done

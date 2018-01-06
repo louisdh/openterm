@@ -1,0 +1,10 @@
+# $FreeBSD: head/bin/sh/tests/builtins/trap12.0 247720 2013-03-03 17:33:59Z jilles $
+
+f() {
+	trap 'return 42' USR1
+	kill -USR1 $$
+	return 3
+}
+f
+r=$?
+[ "$r" = 42 ]

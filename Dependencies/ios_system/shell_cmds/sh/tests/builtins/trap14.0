@@ -1,0 +1,10 @@
+# $FreeBSD: head/bin/sh/tests/builtins/trap14.0 257399 2013-10-30 21:36:15Z jilles $
+
+{
+	trap - INT
+	${SH} -c 'kill -INT $PPID' &
+	wait
+} &
+wait $!
+r=$?
+[ "$r" -gt 128 ] && [ "$(kill -l "$r")" = INT ]

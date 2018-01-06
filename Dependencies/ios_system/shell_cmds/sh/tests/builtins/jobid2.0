@@ -1,0 +1,9 @@
+# $FreeBSD: head/bin/sh/tests/builtins/jobid2.0 254413 2013-08-16 13:56:43Z jilles $
+
+: &
+p1=$(jobid)
+p2=$(jobid --)
+p3=$(jobid %+)
+p4=$(jobid -- %+)
+[ "${p1:?}" = "${p2:?}" ] && [ "${p2:?}" = "${p3:?}" ] &&
+[ "${p3:?}" = "${p4:?}" ] && [ "${p4:?}" = "${p1:?}" ]

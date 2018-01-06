@@ -1,0 +1,12 @@
+# $FreeBSD: head/bin/sh/tests/expansion/set-u2.0 198454 2009-10-24 21:20:04Z jilles $
+
+set -u
+: $* $@ "$@" "$*"
+set -- x
+: $* $@ "$@" "$*"
+shift $#
+: $* $@ "$@" "$*"
+set -- y
+set --
+: $* $@ "$@" "$*"
+exit 0

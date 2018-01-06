@@ -1,0 +1,681 @@
+diff -Naur text_cmds-99/cat/cat.c text_cmds/cat/cat.c
+--- text_cmds-99/cat/cat.c	2005-09-20 23:36:44.000000000 +0200
++++ text_cmds/cat/cat.c	2017-12-13 20:56:40.000000000 +0100
+@@ -55,7 +55,7 @@
+ #endif
+ 
+ #include <ctype.h>
+-#include <err.h>
++// #include <err.h>
+ #include <fcntl.h>
+ #include <locale.h>
+ #include <stdio.h>
+@@ -63,9 +63,10 @@
+ #include <string.h>
+ #include <unistd.h>
+ #include <stddef.h>
++#include "ios_error.h"
+ 
+-int bflag, eflag, nflag, sflag, tflag, vflag;
+-int rval;
++static int bflag, eflag, nflag, sflag, tflag, vflag;
++static int rval;
+ const char *filename;
+ 
+ static void usage(void);
+@@ -78,11 +79,14 @@
+ #endif
+ 
+ int
+-main(int argc, char *argv[])
++cat_main(int argc, char *argv[])
+ {
+ 	int ch;
+ 
+ 	setlocale(LC_CTYPE, "");
++    // Initialize all flags
++    bflag = eflag = nflag = sflag = tflag = vflag = 0; rval = 0;
++    optind = 1; opterr = 1; optreset = 1;
+ 
+ 	while ((ch = getopt(argc, argv, "benstuv")) != -1)
+ 		switch (ch) {
+@@ -116,8 +120,8 @@
+ 		scanfiles(argv, 1);
+ 	else
+ 		scanfiles(argv, 0);
+-	if (fclose(stdout))
+-		err(1, "stdout");
++	// if (fclose(stdout)) err(1, "stdout");
++    optarg = NULL; opterr = 0; optind = 0;
+ 	exit(rval);
+ 	/* NOTREACHED */
+ }
+@@ -152,7 +156,8 @@
+ #endif
+ 		}
+ 		if (fd < 0) {
+-			warn("%s", path);
++            fprintf(stderr, "cat: %s\n", path);
++            // warn("%s", path);
+ 			rval = 1;
+ 		} else if (cooked) {
+ 			if (fd == STDIN_FILENO)
+@@ -226,12 +231,16 @@
+ 			break;
+ 	}
+ 	if (ferror(fp)) {
+-		warn("%s", filename);
++        fprintf(stderr, "cat: %s\n", filename);
++        // warn("%s", filename);
+ 		rval = 1;
+ 		clearerr(fp);
+ 	}
+-	if (ferror(stdout))
+-		err(1, "stdout");
++    if (ferror(stdout)) {
++		// err(1, "stdout");
++        fprintf(stderr, "cat: stdout\n");
++        pthread_exit(NULL);
++    }
+ }
+ 
+ static void
+@@ -241,24 +250,36 @@
+ 	ssize_t nr, nw;
+ 	static size_t bsize;
+ 	static char *buf = NULL;
+-	struct stat sbuf;
++	// struct stat sbuf;
+ 
+ 	wfd = fileno(stdout);
+ 	if (buf == NULL) {
+-		if (fstat(wfd, &sbuf))
+-			err(1, "%s", filename);
+-		bsize = MAX(sbuf.st_blksize, 1024);
+-		if ((buf = malloc(bsize)) == NULL)
+-			err(1, "buffer");
++        // if (fstat(wfd, &sbuf))
++			// err(1, "%s", filename);
++        bsize = 1024; // MAX(sbuf.st_blksize, 1024);
++        if ((buf = malloc(bsize)) == NULL) {
++            // err(1, "buffer");
++            fprintf(stderr, "cat: buffer\n");
++            pthread_exit(NULL);
++        }
+ 	}
+ 	while ((nr = read(rfd, buf, bsize)) > 0)
+-		for (off = 0; nr; nr -= nw, off += nw)
+-			if ((nw = write(wfd, buf + off, (size_t)nr)) < 0)
+-				err(1, "stdout");
++        for (off = 0; nr; nr -= nw, off += nw) {
++            // We can't write to the fd of stdout, so we write to stdout
++            nw = 0; // number of bytes written
++            for (int i = 0; i < nr; i++) {
++                fputc(*(buf+off+nw), stdout);
++                nw += 1;
++            }
++			// if ((nw = write(wfd, buf + off, (size_t)nr)) < 0) err(1, "stdout");
++        }
+ 	if (nr < 0) {
+-		warn("%s", filename);
++        fprintf(stderr, "cat: %s\n", filename);
++        // warn("%s", filename);
+ 		rval = 1;
+ 	}
++    free(buf);
++    buf = NULL;
+ }
+ 
+ #ifndef NO_UDOM_SUPPORT
+@@ -298,11 +319,13 @@
+ 		switch(flags & O_ACCMODE) {
+ 		case O_RDONLY:
+ 			if (shutdown(fd, SHUT_WR) == -1)
+-				warn(NULL);
++				fprintf(stderr, "\n");
++                // warn(NULL);
+ 			break;
+ 		case O_WRONLY:
+ 			if (shutdown(fd, SHUT_RD) == -1)
+-				warn(NULL);
++                fprintf(stderr, "\n");
++				// warn(NULL);
+ 			break;
+ 		default:
+ 			break;
+diff -Naur text_cmds-99/grep/file.c text_cmds/grep/file.c
+--- text_cmds-99/grep/file.c	2015-08-18 22:29:43.000000000 +0200
++++ text_cmds/grep/file.c	2017-12-12 23:58:21.000000000 +0100
+@@ -38,7 +38,7 @@
+ #include <sys/stat.h>
+ #include <sys/types.h>
+ 
+-#include <err.h>
++// #include <err.h>
+ #include <errno.h>
+ #include <fcntl.h>
+ #ifndef WITHOUT_LZMA
+diff -Naur text_cmds-99/grep/grep.c text_cmds/grep/grep.c
+--- text_cmds-99/grep/grep.c	2015-08-18 22:29:43.000000000 +0200
++++ text_cmds/grep/grep.c	2017-12-12 23:58:22.000000000 +0100
+@@ -36,7 +36,7 @@
+ #include <sys/types.h>
+ 
+ #include <ctype.h>
+-#include <err.h>
++// #include <err.h>
+ #include <errno.h>
+ #include <fcntl.h>
+ #include <getopt.h>
+@@ -53,6 +53,7 @@
+ #include "fastmatch.h"
+ #endif
+ #include "grep.h"
++#include "ios_error.h"
+ 
+ #ifndef WITHOUT_NLS
+ #include <nl_types.h>
+@@ -67,7 +68,7 @@
+ 	"",
+ /* 1*/	"(standard input)",
+ /* 2*/	"cannot read bzip2 compressed file",
+-/* 3*/	"unknown %s option",
++/* 3*/	"grep: unknown %s option\n",
+ #ifdef __APPLE__
+ /* 4*/	"usage: %s [-abcDEFGHhIiJLlmnOoqRSsUVvwxZ] [-A num] [-B num] [-C[num]]\n",
+ #else
+@@ -158,13 +159,16 @@
+ int	 tail;		/* lines left to print */
+ bool	 file_err;	/* file reading error */
+ 
++static char* progname;
++
+ /*
+  * Prints usage information and returns 2.
+  */
+ static void
+ usage(void)
+ {
+-	fprintf(stderr, getstr(4), getprogname());
++	// fprintf(stderr, getstr(4), getprogname());
++    fprintf(stderr, getstr(4), progname);
+ 	fprintf(stderr, "%s", getstr(5));
+ 	fprintf(stderr, "%s", getstr(6));
+ 	fprintf(stderr, "%s", getstr(7));
+@@ -328,16 +332,22 @@
+ 	char *line;
+ 	size_t len;
+ 
+-	if ((f = fopen(fn, "r")) == NULL)
+-		err(2, "%s", fn);
++    if ((f = fopen(fn, "r")) == NULL) {
++		// err(2, "%s", fn);
++        fprintf(stderr, "grep: %s\n", fn);
++        pthread_exit(NULL);
++    }
+ 	if ((fstat(fileno(f), &st) == -1) || (S_ISDIR(st.st_mode))) {
+ 		fclose(f);
+ 		return;
+ 	}
+         while ((line = fgetln(f, &len)) != NULL)
+ 		add_pattern(line, line[0] == '\n' ? 0 : len);
+-	if (ferror(f))
+-		err(2, "%s", fn);
++    if (ferror(f)) {
++		// err(2, "%s", fn);
++        fprintf(stderr, "grep: %s\n", fn);
++        pthread_exit(NULL);
++    }
+ 	fclose(f);
+ }
+ 
+@@ -351,7 +361,7 @@
+ }
+ 
+ int
+-main(int argc, char *argv[])
++grep_main(int argc, char *argv[])
+ {
+ 	char **aargv, **eargv, *eopts;
+ 	char *ep;
+@@ -360,8 +370,37 @@
+ 	unsigned int aargc, eargc, i;
+ 	int c, lastc, needpattern, newarg, prevoptind;
+ 
+-	setlocale(LC_ALL, "");
+-
++    setlocale(LC_ALL, "");
++    // Initialize all variables and flags:
++    optind = 1; opterr = 1; optreset = 1;
++    patterns = pattern_sz = 0;
++    fpatterns = fpattern_sz = 0;
++    dpatterns = dpattern_sz = 0;
++    
++    pattern = NULL;
++    dpattern = NULL;
++    fpattern = NULL;
++    
++    cflags = REG_NOSUB;
++    eflags = REG_STARTEND;
++    
++    matchall = false;
++    
++    Aflag = Bflag = 0;
++    Hflag = Lflag = bflag = cflag = hflag = iflag = lflag = mflag = false;
++    mcount = 0;
++    nflag = oflag = qflag = sflag = vflag = wflag = xflag = lbflag = nullflag = false;
++    label = NULL;
++    grepbehave = GREP_BASIC;
++    binbehave = BINFILE_BIN;
++    filebehave = FILE_STDIO;
++    devbehave = DEV_READ;
++    dirbehave = DIR_READ;
++    linkbehave = LINK_READ;
++    
++    dexclude = dinclude = false;
++    fexclude = finclude = false;
++    
+ #ifndef WITHOUT_NLS
+ 	catalog = catopen("grep", NL_CAT_LOCALE);
+ #endif
+@@ -369,7 +408,9 @@
+ 	/* Check what is the program name of the binary.  In this
+ 	   way we can have all the funcionalities in one binary
+ 	   without the need of scripting and using ugly hacks. */
+-	pn = getprogname();
++	// pn = getprogname();
++    pn = argv[0];
++    progname = argv[0]; 
+ 	if (pn[0] == 'b' && pn[1] == 'z') {
+ 		filebehave = FILE_BZIP;
+ 		pn += 2;
+@@ -441,7 +482,8 @@
+ 				Aflag = 0;
+ 			else if (Aflag > LLONG_MAX / 10) {
+ 				errno = ERANGE;
+-				err(2, NULL);
++                pthread_exit(NULL);
++				// err(2, NULL);
+ 			}
+ 			Aflag = Bflag = (Aflag * 10) + (c - '0');
+ 			break;
+@@ -458,10 +500,12 @@
+ 			l = strtoull(optarg, &ep, 10);
+ 			if (((errno == ERANGE) && (l == ULLONG_MAX)) ||
+ 			    ((errno == EINVAL) && (l == 0)))
+-				err(2, NULL);
++                pthread_exit(NULL);
++                // err(2, NULL);
+ 			else if (ep[0] != '\0') {
+ 				errno = EINVAL;
+-				err(2, NULL);
++                pthread_exit(NULL);
++                // err(2, NULL);
+ 			}
+ 			if (c == 'A')
+ 				Aflag = l;
+@@ -484,8 +528,11 @@
+ 				devbehave = DEV_SKIP;
+ 			else if (strcasecmp(optarg, "read") == 0)
+ 				devbehave = DEV_READ;
+-			else
+-				errx(2, getstr(3), "--devices");
++            else {
++				// errx(2, getstr(3), "--devices");
++                fprintf(stderr, getstr(3), "--devices");
++                pthread_exit(NULL);
++            }
+ 			break;
+ 		case 'd':
+ 			if (strcasecmp("recurse", optarg) == 0) {
+@@ -495,8 +542,11 @@
+ 				dirbehave = DIR_SKIP;
+ 			else if (strcasecmp("read", optarg) == 0)
+ 				dirbehave = DIR_READ;
+-			else
+-				errx(2, getstr(3), "--directories");
++            else {
++				// errx(2, getstr(3), "--directories");
++                fprintf(stderr, getstr(3), "--directories");
++                pthread_exit(NULL);
++            }
+ 			break;
+ 		case 'E':
+ 			grepbehave = GREP_EXTENDED;
+@@ -533,7 +583,9 @@
+ 		case 'J':
+ #ifdef WITHOUT_BZIP2
+ 			errno = EOPNOTSUPP;
+-			err(2, "bzip2 support was disabled at compile-time");
++			// err(2, "bzip2 support was disabled at compile-time");
++            fprintf(stderr, "grep: bzip2 support was disabled at compile-time\n");
++            pthread_exit(NULL);
+ #endif
+ 			filebehave = FILE_BZIP;
+ 			break;
+@@ -551,16 +603,20 @@
+ 			mcount = strtoll(optarg, &ep, 10);
+ 			if (((errno == ERANGE) && (mcount == LLONG_MAX)) ||
+ 			    ((errno == EINVAL) && (mcount == 0)))
+-				err(2, NULL);
++                pthread_exit(NULL);
++                // err(2, NULL);
+ 			else if (ep[0] != '\0') {
+ 				errno = EINVAL;
+-				err(2, NULL);
++                pthread_exit(NULL);
++                // err(2, NULL);
+ 			}
+ 			break;
+ 		case 'M':
+ #ifdef WITHOUT_LZMA
+ 			errno = EOPNOTSUPP;
+-			err(2, "lzma support was disabled at compile-time");
++			// err(2, "lzma support was disabled at compile-time");
++            fprintf(stderr, "grep: lzma support was disabled at compile-time\n");
++            pthread_exit(NULL);
+ #endif
+ 			filebehave = FILE_LZMA;
+ 			break;
+@@ -602,7 +658,7 @@
+ #endif
+ 			break;
+ 		case 'V':
+-			printf(getstr(9), getprogname(), VERSION);
++			printf(getstr(9), progname, VERSION);
+ 			exit(0);
+ 		case 'v':
+ 			vflag = true;
+@@ -618,7 +674,9 @@
+ 		case 'X':
+ #ifdef WITHOUT_LZMA
+ 			errno = EOPNOTSUPP;
+-			err(2, "xz support was disabled at compile-time");
++			// err(2, "xz support was disabled at compile-time");
++            fprintf(stderr, "grep: xz support was disabled at compile-time\n");
++            pthread_exit(NULL);
+ #endif
+ 			filebehave = FILE_XZ;
+ 			break;
+@@ -632,8 +690,11 @@
+ 				binbehave = BINFILE_SKIP;
+ 			else if (strcasecmp("text", optarg) == 0)
+ 				binbehave = BINFILE_TEXT;
+-			else
+-				errx(2, getstr(3), "--binary-files");
++            else {
++				// errx(2, getstr(3), "--binary-files");
++                fprintf(stderr, getstr(3), "--binary-files");
++                pthread_exit(NULL);
++            }
+ 			break;
+ 		case COLOR_OPT:
+ 			color = NULL;
+@@ -652,8 +713,11 @@
+ 				color = init_color("01;31");
+ 			} else if (strcasecmp("never", optarg) != 0 &&
+ 			    strcasecmp("none", optarg) != 0 &&
+-			    strcasecmp("no", optarg) != 0)
+-				errx(2, getstr(3), "--color");
++                strcasecmp("no", optarg) != 0) {
++				// errx(2, getstr(3), "--color");
++                fprintf(stderr, getstr(3), "--color");
++                pthread_exit(NULL);
++            }
+ 			cflags &= ~REG_NOSUB;
+ 			break;
+ 		case LABEL_OPT:
+@@ -748,7 +812,9 @@
+ 			if (c != 0) {
+ 				regerror(c, &r_pattern[i], re_error,
+ 				    RE_ERROR_BUF);
+-				errx(2, "%s", re_error);
++				// errx(2, "%s", re_error);
++                fprintf(stderr, "grep: %s\n", re_error);
++                pthread_exit(NULL);
+ 			}
+ #ifndef WITHOUT_FASTMATCH
+ 		}
+diff -Naur text_cmds-99/grep/util.c text_cmds/grep/util.c
+--- text_cmds-99/grep/util.c	2015-09-10 22:25:31.000000000 +0200
++++ text_cmds/grep/util.c	2017-12-12 23:58:22.000000000 +0100
+@@ -39,7 +39,7 @@
+ #endif
+ 
+ #include <ctype.h>
+-#include <err.h>
++// #include <err.h>
+ #include <errno.h>
+ #include <fnmatch.h>
+ #include <fts.h>
+@@ -59,6 +59,7 @@
+ #include "fastmatch.h"
+ #endif
+ #include "grep.h"
++#include "ios_error.h"
+ 
+ static int	 linesqueued;
+ static int	 procline(struct str *l, int);
+@@ -135,8 +136,11 @@
+ 
+ 	fts_flags |= FTS_NOSTAT | FTS_NOCHDIR;
+ 
+-	if (!(fts = fts_open(argv, fts_flags, NULL)))
+-		err(2, "fts_open");
++    if (!(fts = fts_open(argv, fts_flags, NULL))) {
++		// err(2, "fts_open");
++        fprintf(stderr, "grep: fts_open\n");
++        pthread_exit(NULL);
++    }
+ 	while ((p = fts_read(fts)) != NULL) {
+ 		switch (p->fts_info) {
+ 		case FTS_DNR:
+@@ -144,7 +148,8 @@
+ 		case FTS_ERR:
+ 			file_err = true;
+ 			if(!sflag)
+-				warnx("%s: %s", p->fts_path, strerror(p->fts_errno));
++                fprintf(stderr, "grep: %s: %s\n", p->fts_path, strerror(p->fts_errno));
++                // warnx("%s: %s", p->fts_path, strerror(p->fts_errno));
+ 			break;
+ 		case FTS_D:
+ 			/* FALLTHROUGH */
+@@ -156,7 +161,8 @@
+ 			break;
+ 		case FTS_DC:
+ 			/* Print a warning for recursive directory loop */
+-			warnx("warning: %s: recursive directory loop",
++			// warnx("warning: %s: recursive directory loop",
++                fprintf(stderr, "grep; warning: %s: recursive directory loop\n",
+ 				p->fts_path);
+ 			break;
+ 		default:
+@@ -195,7 +201,8 @@
+ #ifdef __APPLE__
+ 		/* 4053512, 10290183 */
+ 		if (dirbehave == DIR_RECURSE && isatty(STDIN_FILENO)) {
+-			warnx("warning: recursive search of stdin");
++            fprintf(stderr, "grep: warning: recursive search of stdin\n");
++            // warnx("warning: recursive search of stdin");
+ 		}
+ #endif
+ 		fn = label != NULL ? label : getstr(1);
+@@ -215,7 +222,8 @@
+ 	if (f == NULL) {
+ 		file_err = true;
+ 		if (!sflag)
+-			warn("%s", fn);
++            fprintf(stderr, "grep: %s\n", fn);
++            // warn("%s", fn);
+ 		return (0);
+ 	}
+ 
+@@ -494,8 +502,11 @@
+ {
+ 	void *ptr;
+ 
+-	if ((ptr = malloc(size)) == NULL)
+-		err(2, "malloc");
++    if ((ptr = malloc(size)) == NULL) {
++		// err(2, "malloc");
++        fprintf(stderr, "grep: malloc\n");
++        pthread_exit(NULL);
++    }
+ 	return (ptr);
+ }
+ 
+@@ -507,8 +518,11 @@
+ {
+ 	void *ptr;
+ 
+-	if ((ptr = calloc(nmemb, size)) == NULL)
+-		err(2, "calloc");
++    if ((ptr = calloc(nmemb, size)) == NULL) {
++        // err(2, "calloc");
++        fprintf(stderr, "grep: malloc\n");
++    pthread_exit(NULL);
++}
+ 	return (ptr);
+ }
+ 
+@@ -519,8 +533,11 @@
+ grep_realloc(void *ptr, size_t size)
+ {
+ 
+-	if ((ptr = realloc(ptr, size)) == NULL)
+-		err(2, "realloc");
++    if ((ptr = realloc(ptr, size)) == NULL) {
++        // err(2, "realloc");
++        fprintf(stderr, "grep: realloc\n");
++        pthread_exit(NULL);
++    }
+ 	return (ptr);
+ }
+ 
+@@ -532,8 +549,11 @@
+ {
+ 	char *ret;
+ 
+-	if ((ret = strdup(str)) == NULL)
+-		err(2, "strdup");
++    if ((ret = strdup(str)) == NULL) {
++        // err(2, "strdup");
++        fprintf(stderr, "grep: strdup\n");
++        pthread_exit(NULL);
++    }
+ 	return (ret);
+ }
+ 
+diff -Naur text_cmds-99/wc/wc.c text_cmds/wc/wc.c
+--- text_cmds-99/wc/wc.c	2008-02-26 02:39:32.000000000 +0100
++++ text_cmds/wc/wc.c	2017-12-12 23:58:22.000000000 +0100
+@@ -51,7 +51,7 @@
+ #include <sys/stat.h>
+ 
+ #include <ctype.h>
+-#include <err.h>
++// #include <err.h>
+ #include <errno.h>
+ #include <fcntl.h>
+ #include <locale.h>
+@@ -62,24 +62,29 @@
+ #include <unistd.h>
+ #include <wchar.h>
+ #include <wctype.h>
++#include "ios_error.h"
+ 
+ /* We allocte this much memory statically, and use it as a fallback for
+   malloc failure, or statfs failure.  So it should be small, but not
+   "too small" */
+ #define SMALL_BUF_SIZE (1024 * 8)
+ 
+-uintmax_t tlinect, twordct, tcharct;
+-int doline, doword, dochar, domulti;
++static uintmax_t tlinect, twordct, tcharct;
++static int doline, doword, dochar, domulti;
+ 
+ static int	cnt(const char *);
+ static void	usage(void);
+ 
+ int
+-main(int argc, char *argv[])
++wc_main(int argc, char *argv[])
+ {
+ 	int ch, errors, total;
+ 
+ 	(void) setlocale(LC_CTYPE, "");
++    // Initialize flags:
++    doline = doword = dochar =  domulti = 0;
++    tlinect = twordct = tcharct = 0;
++    optind = 1; opterr = 1; optreset = 1;
+ 
+ 	while ((ch = getopt(argc, argv, "clmw")) != -1)
+ 		switch((char)ch) {
+@@ -133,6 +138,7 @@
+ 			(void)printf(" %7ju", tcharct);
+ 		(void)printf(" total\n");
+ 	}
++    optarg = NULL; opterr = 0; optind = 0;
+ 	exit(errors == 0 ? 0 : 1);
+ }
+ 
+@@ -159,7 +165,8 @@
+ 		fd = STDIN_FILENO;
+ 	} else {
+ 		if ((fd = open(file, O_RDONLY, 0)) < 0) {
+-			warn("%s: open", file);
++            fprintf(stderr, "wc: %s: open\n", file);
++			// warn("%s: open", file);
+ 			return (1);
+ 		}
+ 	}
+@@ -189,7 +196,8 @@
+ 	if (doline) {
+ 		while ((len = read(fd, buf, buf_size))) {
+ 			if (len == -1) {
+-				warn("%s: read", file);
++                fprintf(stderr, "wc: %s: read\n", file);
++                // warn("%s: read", file);
+ 				(void)close(fd);
+ 				return (1);
+ 			}
+@@ -213,7 +221,8 @@
+ 	 */
+ 	if (dochar || domulti) {
+ 		if (fstat(fd, &sb)) {
+-			warn("%s: fstat", file);
++            fprintf(stderr, "wc: %s: fstat\n", file);
++            // warn("%s: fstat", file);
+ 			(void)close(fd);
+ 			return (1);
+ 		}
+@@ -231,7 +240,8 @@
+ 	memset(&mbs, 0, sizeof(mbs));
+ 	while ((len = read(fd, buf, buf_size)) != 0) {
+ 		if (len == -1) {
+-			warn("%s: read", file);
++            fprintf(stderr, "wc: %s: read\n", file);
++            // warn("%s: read", file);
+ 			(void)close(fd);
+ 			return (1);
+ 		}
+@@ -244,7 +254,8 @@
+ 			    (size_t)-1) {
+ 				if (!warned) {
+ 					errno = EILSEQ;
+-					warn("%s", file);
++                    fprintf(stderr, "wc: %s\n", file);
++                    // warn("%s", file);
+ 					warned = 1;
+ 				}
+ 				memset(&mbs, 0, sizeof(mbs));
+@@ -269,7 +280,8 @@
+ 	}
+ 	if (domulti && MB_CUR_MAX > 1)
+ 		if (mbrtowc(NULL, NULL, 0, &mbs) == (size_t)-1 && !warned)
+-			warn("%s", file);
++            fprintf(stderr, "wc: %s\n", file);
++            // warn("%s", file);
+ 	if (doline) {
+ 		tlinect += linect;
+ 		(void)printf(" %7ju", linect);

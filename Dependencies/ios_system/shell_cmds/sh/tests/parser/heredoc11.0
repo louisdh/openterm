@@ -1,0 +1,26 @@
+# $FreeBSD: head/bin/sh/tests/parser/heredoc11.0 222134 2011-05-20 16:03:36Z jilles $
+
+failures=''
+
+check() {
+	if eval "[ $* ]"; then
+		:
+	else
+		echo "Failed: $*"
+		failures=x$failures
+	fi
+}
+
+check '`cat <<EOF
+foo
+EOF` = foo'
+
+check '"`cat <<EOF
+foo
+EOF`" = foo'
+
+check '`eval "cat <<EOF
+foo
+EOF"` = foo'
+
+test "x$failures" = x

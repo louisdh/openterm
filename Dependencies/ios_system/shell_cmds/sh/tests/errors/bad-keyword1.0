@@ -1,0 +1,4 @@
+# $FreeBSD: head/bin/sh/tests/errors/bad-keyword1.0 216398 2010-12-12 21:18:16Z jilles $
+
+echo ':; fi' | ${SH} -n 2>/dev/null && exit 1
+exit 0

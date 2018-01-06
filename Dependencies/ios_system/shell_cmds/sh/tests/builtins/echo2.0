@@ -1,0 +1,7 @@
+# $FreeBSD: head/bin/sh/tests/builtins/echo2.0 305305 2016-09-02 21:13:46Z jilles $
+
+# Not specified by POSIX.
+
+a=`echo -e '\a\b\e\f\n\r\t\v\\\\\0041\c'; echo .`
+b=`printf '\a\b\033\f\n\r\t\v\\\\!.'`
+[ "$a" = "$b" ]

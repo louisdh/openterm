@@ -1,0 +1,4 @@
+# $FreeBSD: head/bin/sh/tests/builtins/alias4.0 254849 2013-08-25 11:42:53Z jilles $
+
+unalias -a
+alias --

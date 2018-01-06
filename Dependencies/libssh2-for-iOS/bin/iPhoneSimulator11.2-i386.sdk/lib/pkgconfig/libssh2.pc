@@ -1,0 +1,17 @@
+###########################################################################
+# libssh2 installation details
+###########################################################################
+
+prefix=/Users/louisdhauwe/projects/private/TerminalPOC/Framework/libssh2-for-iOS/bin/iPhoneSimulator11.2-i386.sdk
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: libssh2
+URL: http://www.libssh2.org/
+Description: Library for SSH-based communication
+Version: 1.4.3
+Requires.private: libssl,libcrypto
+Libs: -L${libdir} -lssh2 -arch i386 -pipe -no-cpp-precomp -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator11.2.sdk -L/Users/louisdhauwe/projects/private/TerminalPOC/Framework/libssh2-for-iOS/bin/iPhoneSimulator11.2-i386.sdk/lib -miphoneos-version-min=7.0 
+Libs.private: 
+Cflags: -I${includedir}

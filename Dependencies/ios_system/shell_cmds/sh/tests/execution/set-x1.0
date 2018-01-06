@@ -1,0 +1,8 @@
+# $FreeBSD: head/bin/sh/tests/execution/set-x1.0 222882 2011-06-08 21:58:19Z jilles $
+
+key='must_contain_this'
+{ r=`set -x; { : "$key"; } 2>&1 >/dev/null`; } 2>/dev/null
+case $r in
+*"$key"*) true ;;
+*) false ;;
+esac

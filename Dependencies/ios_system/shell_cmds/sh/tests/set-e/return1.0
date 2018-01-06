@@ -1,0 +1,11 @@
+# $FreeBSD: head/bin/sh/tests/set-e/return1.0 149788 2005-09-04 21:29:09Z stefanf $
+set -e
+
+# PR 77067, 85267
+f() {
+	return 1
+	true
+}
+
+f || true
+exit 0

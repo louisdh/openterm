@@ -1,0 +1,16 @@
+# $FreeBSD: head/bin/sh/tests/parser/line-cont1.0 273243 2014-10-17 21:52:57Z jilles $
+
+i\
+f
+t\
+r\
+u\
+e
+t\
+h\
+e\
+n
+:
+\
+f\
+i

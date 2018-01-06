@@ -1,0 +1,4 @@
+# $FreeBSD: head/bin/sh/tests/errors/bad-parm-exp8.0 287081 2015-08-23 20:44:53Z jilles $
+
+v=1
+eval ": $(printf '${v-${w\372}}')"

@@ -1,0 +1,6 @@
+# $FreeBSD: head/bin/sh/tests/parser/alias14.0 261192 2014-01-26 21:19:33Z jilles $
+
+alias command='command '
+alias alias0=exit
+eval 'command alias0 0'
+exit 3

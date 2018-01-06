@@ -1,0 +1,4 @@
+# $FreeBSD: head/bin/sh/tests/parser/line-cont2.0 273243 2014-10-17 21:52:57Z jilles $
+
+[ "a\
+b" = ab ]

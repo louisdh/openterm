@@ -1,0 +1,17 @@
+# $FreeBSD: head/bin/sh/tests/builtins/local2.0 251797 2013-06-15 22:22:03Z jilles $
+
+f() {
+	local -
+	set -a
+	case $- in
+	*a*) : ;;
+	*) echo In-function \$- bad
+	esac
+}
+case $- in
+*a*) echo Initial \$- bad
+esac
+f
+case $- in
+*a*) echo Final \$- bad
+esac

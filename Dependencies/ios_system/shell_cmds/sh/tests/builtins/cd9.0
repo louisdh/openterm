@@ -1,0 +1,8 @@
+# $FreeBSD: head/bin/sh/tests/builtins/cd9.0 293371 2016-01-07 21:46:07Z jilles $
+
+cd /dev
+cd /bin
+cd - >/dev/null
+pwd
+cd - >/dev/null
+pwd

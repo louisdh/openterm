@@ -1,0 +1,5 @@
+# $FreeBSD: head/bin/sh/tests/expansion/cmdsubst11.0 223163 2011-06-16 21:50:28Z jilles $
+
+# Not required by POSIX but useful for efficiency.
+
+[ $$ = $(eval '${SH} -c echo\ \$PPID') ]

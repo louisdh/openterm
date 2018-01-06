@@ -1,0 +1,10 @@
+# $FreeBSD: head/bin/sh/tests/builtins/lineno2.0 262565 2014-02-27 16:54:43Z jilles $
+
+f() {
+	: ${LINENO+${x?}}
+}
+
+unset -v x
+command eval f 2>/dev/null && exit 3
+x=1
+f

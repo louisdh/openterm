@@ -1,0 +1,7 @@
+# $FreeBSD: head/bin/sh/tests/parser/empty-braces1.0 245382 2013-01-13 19:26:33Z jilles $
+
+# Unfortunately, some scripts depend on the extension of allowing an empty
+# pair of braces.
+
+{ } &
+wait $!

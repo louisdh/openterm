@@ -1,0 +1,7 @@
+# $FreeBSD: head/bin/sh/tests/builtins/kill2.0 263206 2014-03-15 14:58:48Z jilles $
+
+sleep 1 | sleep 1 &
+kill %+
+wait "$!"
+r=$?
+[ "$r" -gt 128 ] && [ "$(kill -l "$r")" = TERM ]

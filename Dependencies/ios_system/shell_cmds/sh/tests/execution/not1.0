@@ -1,0 +1,4 @@
+# $FreeBSD: head/bin/sh/tests/execution/not1.0 249407 2013-04-12 15:19:35Z jilles $
+
+f() { ! return $1; }
+f 0 && ! f 1

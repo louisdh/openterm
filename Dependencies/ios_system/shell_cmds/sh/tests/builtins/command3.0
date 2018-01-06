@@ -1,0 +1,14 @@
+# $FreeBSD: head/bin/sh/tests/builtins/command3.0 211399 2010-08-16 17:18:08Z jilles $
+command -v ls
+command -v true
+command -v /bin/ls
+
+fun() {
+	:
+}
+command -v fun
+command -v break
+command -v if
+
+alias foo=bar
+command -v foo

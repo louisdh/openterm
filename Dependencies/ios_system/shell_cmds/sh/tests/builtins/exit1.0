@@ -1,0 +1,6 @@
+# $FreeBSD: head/bin/sh/tests/builtins/exit1.0 216871 2011-01-01 15:25:15Z jilles $
+
+# exit with an argument should overwrite the exit status in an EXIT trap.
+
+trap 'true; exit $?' 0
+false

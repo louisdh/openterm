@@ -1,0 +1,7 @@
+# $FreeBSD: head/bin/sh/tests/expansion/readonly1.0 238468 2012-07-15 10:19:43Z jilles $
+
+w='@ @'
+
+v=0 HOME=/known/value
+readonly v=~:~/:$w
+[ "$v" = "$HOME:$HOME/:$w" ] || echo "Expected $HOME/:$w got $v"

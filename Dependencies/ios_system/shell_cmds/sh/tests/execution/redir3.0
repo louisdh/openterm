@@ -1,0 +1,3 @@
+# $FreeBSD: head/bin/sh/tests/execution/redir3.0 214289 2010-10-24 19:56:34Z jilles $
+
+3>&- 3>&-

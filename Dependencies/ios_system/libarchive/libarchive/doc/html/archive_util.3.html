@@ -1,0 +1,210 @@
+<!-- Creator     : groff version 1.19.2 -->
+<!-- CreationDate: Sun Mar 14 19:50:20 2010 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta name="generator" content="groff -Thtml, see www.gnu.org">
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<meta name="Content-Style" content="text/css">
+<style type="text/css">
+       p     { margin-top: 0; margin-bottom: 0; }
+       pre   { margin-top: 0; margin-bottom: 0; }
+       table { margin-top: 0; margin-bottom: 0; }
+</style>
+<title></title>
+</head>
+<body>
+
+<hr>
+
+
+<p valign="top">archive_util(3) FreeBSD Library Functions
+Manual archive_util(3)</p>
+
+<p style="margin-top: 1em" valign="top"><b>NAME</b></p>
+
+<p style="margin-left:8%;"><b>archive_clear_error</b>,
+<b>archive_compression</b>, <b>archive_compression_name</b>,
+<b>archive_copy_error</b>, <b>archive_errno</b>,
+<b>archive_error_string</b>, <b>archive_file_count</b>,
+<b>archive_format</b>, <b>archive_format_name</b>,
+<b>archive_set_error</b> &mdash; libarchive utility
+functions</p>
+
+
+<p style="margin-top: 1em" valign="top"><b>SYNOPSIS</b></p>
+
+<p style="margin-left:8%;"><b>#include
+&lt;archive.h&gt;</b></p>
+
+<p style="margin-left:8%; margin-top: 1em"><i>void</i></p>
+
+
+<p style="margin-left:14%;"><b>archive_clear_error</b>(<i>struct&nbsp;archive&nbsp;*</i>);</p>
+
+<p style="margin-left:8%; margin-top: 1em"><i>int</i></p>
+
+
+<p style="margin-left:14%;"><b>archive_compression</b>(<i>struct&nbsp;archive&nbsp;*</i>);</p>
+
+<p style="margin-left:8%; margin-top: 1em"><i>const char
+*</i></p>
+
+
+<p style="margin-left:14%;"><b>archive_compression_name</b>(<i>struct&nbsp;archive&nbsp;*</i>);</p>
+
+<p style="margin-left:8%; margin-top: 1em"><i>void</i></p>
+
+
+<p style="margin-left:14%;"><b>archive_copy_error</b>(<i>struct&nbsp;archive&nbsp;*</i>,
+<i>struct&nbsp;archive&nbsp;*</i>);</p>
+
+<p style="margin-left:8%; margin-top: 1em"><i>int</i></p>
+
+
+<p style="margin-left:14%;"><b>archive_errno</b>(<i>struct&nbsp;archive&nbsp;*</i>);</p>
+
+<p style="margin-left:8%; margin-top: 1em"><i>const char
+*</i></p>
+
+
+<p style="margin-left:14%;"><b>archive_error_string</b>(<i>struct&nbsp;archive&nbsp;*</i>);</p>
+
+<p style="margin-left:8%; margin-top: 1em"><i>int</i></p>
+
+
+<p style="margin-left:14%;"><b>archive_file_count</b>(<i>struct&nbsp;archive&nbsp;*</i>);</p>
+
+<p style="margin-left:8%; margin-top: 1em"><i>int</i></p>
+
+
+<p style="margin-left:14%;"><b>archive_format</b>(<i>struct&nbsp;archive&nbsp;*</i>);</p>
+
+<p style="margin-left:8%; margin-top: 1em"><i>const char
+*</i></p>
+
+
+<p style="margin-left:14%;"><b>archive_format_name</b>(<i>struct&nbsp;archive&nbsp;*</i>);</p>
+
+<p style="margin-left:8%; margin-top: 1em"><i>void</i></p>
+
+
+<p valign="top"><b>archive_set_error</b>(<i>struct&nbsp;archive&nbsp;*</i>,
+<i>int&nbsp;error_code</i>,
+<i>const&nbsp;char&nbsp;*fmt</i>, <i>...</i>);</p>
+
+
+<p style="margin-top: 1em" valign="top"><b>DESCRIPTION</b></p>
+
+<p style="margin-left:8%;">These functions provide access
+to various information about the struct archive object used
+in the libarchive(3) library.</p>
+
+<p valign="top"><b>archive_clear_error</b>()</p>
+
+<p style="margin-left:20%;">Clears any error information
+left over from a previous call. Not generally used in client
+code.</p>
+
+<p valign="top"><b>archive_compression</b>()</p>
+
+<p style="margin-left:20%;">Returns a numeric code
+indicating the current compression. This value is set by
+<b>archive_read_open</b>().</p>
+
+<p valign="top"><b>archive_compression_name</b>()</p>
+
+<p style="margin-left:20%;">Returns a text description of
+the current compression suitable for display.</p>
+
+<p valign="top"><b>archive_copy_error</b>()</p>
+
+<p style="margin-left:20%;">Copies error information from
+one archive to another.</p>
+
+<p valign="top"><b>archive_errno</b>()</p>
+
+<p style="margin-left:20%;">Returns a numeric error code
+(see errno(2)) indicating the reason for the most recent
+error return.</p>
+
+<p valign="top"><b>archive_error_string</b>()</p>
+
+<p style="margin-left:20%;">Returns a textual error message
+suitable for display. The error message here is usually more
+specific than that obtained from passing the result of
+<b>archive_errno</b>() to strerror(3).</p>
+
+<p valign="top"><b>archive_file_count</b>()</p>
+
+<p style="margin-left:20%;">Returns a count of the number
+of files processed by this archive object. The count is
+incremented by calls to archive_write_header or
+archive_read_next_header.</p>
+
+<p valign="top"><b>archive_format</b>()</p>
+
+<p style="margin-left:20%;">Returns a numeric code
+indicating the format of the current archive entry. This
+value is set by a successful call to
+<b>archive_read_next_header</b>(). Note that it is common
+for this value to change from entry to entry. For example, a
+tar archive might have several entries that utilize GNU tar
+extensions and several entries that do not. These entries
+will have different format codes.</p>
+
+<p valign="top"><b>archive_format_name</b>()</p>
+
+<p style="margin-left:20%;">A textual description of the
+format of the current entry.</p>
+
+<p valign="top"><b>archive_set_error</b>()</p>
+
+<p style="margin-left:20%;">Sets the numeric error code and
+error description that will be returned by
+<b>archive_errno</b>() and <b>archive_error_string</b>().
+This function should be used within I/O callbacks to set
+system-specific error codes and error descriptions. This
+function accepts a printf-like format string and arguments.
+However, you should be careful to use only the following
+printf format specifiers: &lsquo;&lsquo;%c&rsquo;&rsquo;,
+&lsquo;&lsquo;%d&rsquo;&rsquo;,
+&lsquo;&lsquo;%jd&rsquo;&rsquo;,
+&lsquo;&lsquo;%jo&rsquo;&rsquo;,
+&lsquo;&lsquo;%ju&rsquo;&rsquo;,
+&lsquo;&lsquo;%jx&rsquo;&rsquo;,
+&lsquo;&lsquo;%ld&rsquo;&rsquo;,
+&lsquo;&lsquo;%lo&rsquo;&rsquo;,
+&lsquo;&lsquo;%lu&rsquo;&rsquo;,
+&lsquo;&lsquo;%lx&rsquo;&rsquo;,
+&lsquo;&lsquo;%o&rsquo;&rsquo;,
+&lsquo;&lsquo;%u&rsquo;&rsquo;,
+&lsquo;&lsquo;%s&rsquo;&rsquo;,
+&lsquo;&lsquo;%x&rsquo;&rsquo;,
+&lsquo;&lsquo;%%&rsquo;&rsquo;. Field-width specifiers and
+other printf features are not uniformly supported and should
+not be used.</p>
+
+<p style="margin-top: 1em" valign="top"><b>SEE ALSO</b></p>
+
+<p style="margin-left:8%;">archive_read(3),
+archive_write(3), libarchive(3), printf(3)</p>
+
+<p style="margin-top: 1em" valign="top"><b>HISTORY</b></p>
+
+<p style="margin-left:8%;">The <b>libarchive</b> library
+first appeared in FreeBSD&nbsp;5.3.</p>
+
+<p style="margin-top: 1em" valign="top"><b>AUTHORS</b></p>
+
+<p style="margin-left:8%;">The <b>libarchive</b> library
+was written by Tim Kientzle
+&lang;kientzle@acm.org&rang;.</p>
+
+
+<p style="margin-left:8%; margin-top: 1em">FreeBSD&nbsp;9.0
+January&nbsp;8, 2005 FreeBSD&nbsp;9.0</p>
+<hr>
+</body>
+</html>

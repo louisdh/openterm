@@ -1,0 +1,5 @@
+#include "base.xcconfig"
+
+INSTALL_PATH = /usr/bin
+INSTALL_PATH[sdk=iphonesimulator*] = /usr/local/bin
+USER_HEADER_SEARCH_PATHS = $(SRCROOT)/libarchive/libarchive_fe

@@ -1,0 +1,4 @@
+# $FreeBSD: head/bin/sh/tests/parameters/positional3.0 268436 2014-07-08 22:04:44Z jilles $
+
+r=$(${SH} -c 'echo ${01:+yes}${010:+yes}' '' a '' '' '' '' '' '' '' '' b)
+[ "$r" = yesyes ]

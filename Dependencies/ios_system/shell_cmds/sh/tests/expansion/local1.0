@@ -1,0 +1,28 @@
+# $FreeBSD: head/bin/sh/tests/expansion/local1.0 238468 2012-07-15 10:19:43Z jilles $
+
+run_test() {
+	w='@ @'
+	check() {
+		[ "$v" = "$w" ] || echo "Expected $w got $v"
+	}
+
+	local v=$w
+	check
+
+	HOME=/known/value
+	check() {
+		[ "$v" = ~ ] || echo "Expected $HOME got $v"
+	}
+
+	local v=~
+	check
+
+	check() {
+		[ "$v" = "x:$HOME" ] || echo "Expected x:$HOME got $v"
+	}
+
+	local v=x:~
+	check
+}
+
+run_test

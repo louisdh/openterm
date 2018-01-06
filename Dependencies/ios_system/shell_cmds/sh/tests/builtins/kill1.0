@@ -1,0 +1,8 @@
+# $FreeBSD: head/bin/sh/tests/builtins/kill1.0 262931 2014-03-08 19:44:34Z jilles $
+
+: &
+p1=$!
+: &
+p2=$!
+wait $p2
+kill %1

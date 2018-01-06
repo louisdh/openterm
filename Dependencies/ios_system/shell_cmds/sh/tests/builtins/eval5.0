@@ -1,0 +1,4 @@
+# $FreeBSD: head/bin/sh/tests/builtins/eval5.0 210829 2010-08-03 22:17:29Z jilles $
+
+# eval should return 0 if no command was executed.
+eval $(false)

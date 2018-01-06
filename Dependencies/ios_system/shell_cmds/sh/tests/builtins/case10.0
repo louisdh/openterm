@@ -1,0 +1,16 @@
+# $FreeBSD: head/bin/sh/tests/builtins/case10.0 223546 2011-06-25 20:37:43Z jilles $
+
+case ! in
+[\!!]) ;;
+*) echo Failed at $LINENO ;;
+esac
+
+case ! in
+['!'!]) ;;
+*) echo Failed at $LINENO ;;
+esac
+
+case ! in
+["!"!]) ;;
+*) echo Failed at $LINENO ;;
+esac

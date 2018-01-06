@@ -1,0 +1,10 @@
+# $FreeBSD: head/bin/sh/tests/builtins/cd6.0 222381 2011-05-27 20:01:46Z jilles $
+
+set -e
+cd -P /bin
+d=$PWD
+CDPATH=/:
+cd -P .
+[ "$d" = "$PWD" ]
+cd -P ./
+[ "$d" = "$PWD" ]

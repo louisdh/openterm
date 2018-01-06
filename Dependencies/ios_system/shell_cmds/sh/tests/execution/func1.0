@@ -1,0 +1,4 @@
+# $FreeBSD: head/bin/sh/tests/execution/func1.0 213738 2010-10-12 18:20:38Z obrien $
+
+MALLOC_OPTIONS=J ${SH} -c 'g() { g() { :; }; :; }; g' &&
+MALLOC_OPTIONS=J ${SH} -c 'g() { unset -f g; :; }; g'

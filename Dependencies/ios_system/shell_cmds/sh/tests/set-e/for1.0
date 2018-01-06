@@ -1,0 +1,9 @@
+# $FreeBSD: head/bin/sh/tests/set-e/for1.0 149791 2005-09-05 09:42:10Z stefanf $
+set -e
+f() {
+	for i in a b c; do
+		false
+		true
+	done
+}
+f || true

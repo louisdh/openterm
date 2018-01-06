@@ -1,0 +1,42 @@
+The 'curl' subdirectory is based on curl 7.51.0
+
+== Updating ==
+
+Confirm/update versions in xcconfigs/libcurl-version.xcconfig
+ - This will probably require building the regular open source version and running otool on the resulting library.
+
+Update CURL_SUPPORT_* in xcconfigs/common.xcconfig
+ - Run configure, check config.status
+
+If options change (see below), update CURL_CONFIGURE_OPTIONS in xcconfigs/common.xcconfig
+
+Make sure all files are being compiled.
+curl: CURL_CFILES and CURLX_CFILES in curl/src/Makefile.inc 
+libcurl: LIB_CFILES and LIB_VTLS_CFILES in curl/lib/Makefile.inc
+The Xcode targets list the files in the same order.
+Might be able to process the Makefile.inc files into Xcode file lists at some point.
+
+Make sure all man pages and headers are being installed.
+
+Update xcscripts/install_libtest.sh (see comment at top) -- NOTE: This hasn't been updated in quite some time, see radar:17812072
+
+== Configuration ==
+
+macOS:
+SDKROOT=macosx.internal ./configure --enable-hidden-symbols --enable-threaded-resolver --with-gssapi --with-ssl=/usr/local/libressl
+
+iOS (etc):
+SDKROOT=macosx.internal ./configure --enable-hidden-symbols --enable-threaded-resolver --disable-ldap --with-darwinssl
+
+Changes to include/curl/curlbuild.h post-configure:
+  (1) Add #ifdef __LP64__ for CURL_SIZEOF_LONG.
+  (2) Change CURL_TYPEOF_CURL_OFF_T and associated defines to int64_t (configure gets it wrong for 32-bit).
+		(requires CURL_PULL_STDINT_H, CURL_PULL_INTTYPES_H)
+
+Changes to curl_config.h post-configure:
+  (1) Add #ifdef __LP64__ for SIZEOF_LONG, SIZEOF_SIZE_T, SIZEOF_TIME_T, SIZEOF_VOIDP
+  (2) #undef OS - conditionally defined in common.xcconfig
+  (3) [iOS only] #undef CURL_CA_BUNDLE - causes an error; we currently use SecureTransport
+  (4) Enable USE_NGHTTP2.  Because our nghttp2 is at a non-standard path and we
+      don't install the pkgconfig support, the configure script cannot
+      configure it automatically.

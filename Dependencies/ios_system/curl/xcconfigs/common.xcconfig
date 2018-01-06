@@ -1,0 +1,20 @@
+SDKROOT = macosx.internal
+
+GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H OS=\"$(CURL_ARCH)-apple-$(CURL_KERNEL)\" $(CURL_PREPROCESSOR_DEFINITIONS)
+
+// Lies.
+CURL_ARCH = x86_64
+CURL_ARCH[arch=i386] = i386
+CURL_KERNEL = darwin16.0
+CURL_KERNEL[sdk=macosx*] = darwin$(UNAME_RELEASE)
+
+CURL_PREFIX = /usr/local
+CURL_PREFIX[sdk=macosx*] = /usr
+
+// May need to be updated.
+CURL_CONFIGURE_OPTIONS[sdk=iphone*] = --enable-hidden-symbols --enable-threaded-resolver --disable-ldap --with-darwinssl
+CURL_CONFIGURE_OPTIONS[sdk=macosx*] = --enable-hidden-symbols --enable-threaded-resolver --with-gssapi --with-ssl=/usr/local/libressl
+CURL_SUPPORT_FEATURES[sdk=iphone*] = SSL IPv6 UnixSockets libz AsynchDNS NTLM NTLM_WB HTTP2
+CURL_SUPPORT_FEATURES[sdk=macosx*] = SSL IPv6 UnixSockets libz AsynchDNS GSS-API SPNEGO Kerberos NTLM NTLM_WB HTTPS-proxy HTTP2
+CURL_SUPPORT_PROTOCOLS[sdk=iphone*] = DICT FILE FTP FTPS GOPHER HTTP HTTPS IMAP IMAPS POP3 POP3S RTSP SMB SMBS SMTP SMTPS TELNET TFTP
+CURL_SUPPORT_PROTOCOLS[sdk=macosx*] = DICT FILE FTP FTPS GOPHER HTTP HTTPS IMAP IMAPS LDAP LDAPS POP3 POP3S RTSP SMB SMBS SMTP SMTPS TELNET TFTP

@@ -1,0 +1,5 @@
+# $FreeBSD: head/bin/sh/tests/execution/bg9.0 258533 2013-11-24 22:45:49Z jilles $
+# The redirection does not apply to the background command, and therefore
+# does not override the implicit </dev/null.
+
+echo bad | ${SH} -c 'command eval eval \\\) \</dev/null 2>/dev/null; { cat & wait; }'

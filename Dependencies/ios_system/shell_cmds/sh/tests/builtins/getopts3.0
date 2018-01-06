@@ -1,0 +1,6 @@
+# $FreeBSD: head/bin/sh/tests/builtins/getopts3.0 265616 2014-05-07 21:45:25Z jilles $
+
+shift $#
+getopts x opt
+r=$?
+[ "$r" != 0 ] && [ "$OPTIND" = 1 ]

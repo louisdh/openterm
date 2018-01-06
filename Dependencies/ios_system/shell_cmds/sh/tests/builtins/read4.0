@@ -1,0 +1,10 @@
+# $FreeBSD: head/bin/sh/tests/builtins/read4.0 212339 2010-09-08 20:35:43Z jilles $
+
+printf '%s\n' '\a\ b c'	| { read a b; printf '%s\n' "x${a}x${b}x"; }
+printf '%s\n' '\a b\ c'	| { read a b; printf '%s\n' "x${a}x${b}x"; }
+printf '%s\n' '\a\:b:c'	| { IFS=: read a b; printf '%s\n' "x${a}x${b}x"; }
+printf '%s\n' '\a:b\:c'	| { IFS=: read a b; printf '%s\n' "x${a}x${b}x"; }
+printf '%s\n' '\\ a'	| { read a b; printf '%s\n' "x${a}x${b}x"; }
+printf '%s\n' '\\:a'	| { IFS=: read a b; printf '%s\n' "x${a}x${b}x"; }
+printf '%s\n' '\\\ a'	| { read a b; printf '%s\n' "x${a}x${b}x"; }
+printf '%s\n' '\\\:a'	| { IFS=: read a b; printf '%s\n' "x${a}x${b}x"; }

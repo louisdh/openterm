@@ -1,0 +1,10 @@
+# $FreeBSD: head/bin/sh/tests/execution/fork1.0 218850 2011-02-19 13:22:18Z jilles $
+
+shname=${SH%% *}
+shname=${shname##*/}
+
+result=$(${SH} -c 'ps -p $$ -o comm=')
+test "$result" = "ps" || exit 1
+
+result=$(${SH} -c 'ps -p $$ -o comm=; :')
+test "$result" = "$shname" || exit 1

@@ -1,0 +1,7 @@
+# $FreeBSD: head/bin/sh/tests/builtins/exit2.8 217172 2011-01-08 23:00:38Z jilles $
+
+# exit without arguments is the same as exit $? outside a trap.
+
+trap 'true; true' 0
+(exit 8)
+exit

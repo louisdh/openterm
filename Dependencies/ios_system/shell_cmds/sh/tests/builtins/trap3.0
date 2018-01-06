@@ -1,0 +1,11 @@
+# $FreeBSD: head/bin/sh/tests/builtins/trap3.0 218889 2011-02-20 14:18:58Z jilles $
+
+{
+	trap '' garbage && exit 3
+	trap - garbage && exit 3
+	trap true garbage && exit 3
+	trap '' 99999 && exit 3
+	trap - 99999 && exit 3
+	trap true 99999 && exit 3
+} 2>/dev/null
+exit 0

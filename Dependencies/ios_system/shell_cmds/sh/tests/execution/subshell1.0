@@ -1,0 +1,6 @@
+# $FreeBSD: head/bin/sh/tests/execution/subshell1.0 245383 2013-01-13 19:39:13Z jilles $
+
+(eval "cd /
+v=$(printf %0100000d 1)
+echo \${#v}")
+echo end

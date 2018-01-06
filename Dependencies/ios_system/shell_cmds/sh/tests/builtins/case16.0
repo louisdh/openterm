@@ -1,0 +1,7 @@
+# $FreeBSD: head/bin/sh/tests/builtins/case16.0 230154 2012-01-15 20:04:05Z jilles $
+
+f() { return 42; }
+f
+case x in
+x) [ $? = 42 ] ;;
+esac

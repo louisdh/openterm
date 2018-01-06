@@ -1,0 +1,6 @@
+# $FreeBSD: head/bin/sh/tests/parser/line-cont8.0 273276 2014-10-19 11:59:15Z jilles $
+
+set -- a b c d e f g h i j
+[ "${1\
+0\
+}" = j ]

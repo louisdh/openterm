@@ -1,0 +1,85 @@
+# $FreeBSD: head/bin/sh/tests/parser/heredoc1.0 204836 2010-03-07 15:08:42Z jilles $
+
+failures=0
+
+check() {
+	if ! eval "[ $* ]"; then
+		echo "Failed: $*"
+		: $((failures += 1))
+	fi
+}
+
+check '"$(cat <<EOF
+hi
+EOF
+)" = hi'
+
+check '"$(cat <<EOF
+${$+hi}
+EOF
+)" = hi'
+
+unset yy
+check '"$(cat <<EOF
+${yy-hi}
+EOF
+)" = hi'
+
+check '"$(cat <<EOF
+${$+hi
+there}
+EOF
+)" = "hi
+there"'
+
+check '"$(cat <<EOF
+$((1+1))
+EOF
+)" = 2'
+
+check '"$(cat <<EOF
+$(echo hi)
+EOF
+)" = hi'
+
+check '"$(cat <<EOF
+`echo hi`
+EOF
+)" = hi'
+
+check '"$(cat <<\EOF
+${$+hi}
+EOF
+)" = "\${\$+hi}"'
+
+check '"$(cat <<\EOF
+$(
+EOF
+)" = \$\('
+
+check '"$(cat <<\EOF
+`
+EOF
+)" = \`'
+
+check '"$(cat <<EOF
+"
+EOF
+)" = \"'
+
+check '"$(cat <<\EOF
+"
+EOF
+)" = \"'
+
+check '"$(cat <<esac
+'"'"'
+esac
+)" = "'"'"'"'
+
+check '"$(cat <<\)
+'"'"'
+)
+)" = "'"'"'"'
+
+exit $((failures != 0))

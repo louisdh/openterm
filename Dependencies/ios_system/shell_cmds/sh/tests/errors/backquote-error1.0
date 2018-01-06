@@ -1,0 +1,4 @@
+# $FreeBSD: head/bin/sh/tests/errors/backquote-error1.0 213738 2010-10-12 18:20:38Z obrien $
+
+echo 'echo `for` echo ".BAD"CODE.' | ${SH} +m -i 2>&1 | grep -q BADCODE && exit 1
+exit 0

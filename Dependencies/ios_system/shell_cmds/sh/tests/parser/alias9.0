@@ -1,0 +1,6 @@
+# $FreeBSD: head/bin/sh/tests/parser/alias9.0 242721 2012-11-07 23:15:36Z jilles $
+
+alias alias0=:
+alias alias0=exit
+eval 'alias0 0'
+exit 1

@@ -1,0 +1,7 @@
+# $FreeBSD: head/bin/sh/tests/builtins/command12.0 257929 2013-11-10 23:00:39Z jilles $
+
+alias aa=echo\ \'\"\'
+cmd=$(command -v aa)
+alias aa=echo\ bad
+eval "$cmd"
+[ "$(eval aa)" = \" ]

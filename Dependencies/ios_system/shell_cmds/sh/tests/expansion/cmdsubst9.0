@@ -1,0 +1,11 @@
+# $FreeBSD: head/bin/sh/tests/expansion/cmdsubst9.0 216819 2010-12-30 15:04:59Z jilles $
+
+set -e
+
+cd /
+dummy=$(cd /bin)
+[ "$(pwd)" = / ]
+
+v=1
+dummy=$(eval v=2)
+[ "$v" = 1 ]

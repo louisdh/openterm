@@ -1,0 +1,5 @@
+# $FreeBSD: head/bin/sh/tests/builtins/echo3.0 305305 2016-09-02 21:13:46Z jilles $
+
+# Not specified by POSIX.
+
+[ "`echo -e 'a\cb' c; echo d`" = "ad" ]

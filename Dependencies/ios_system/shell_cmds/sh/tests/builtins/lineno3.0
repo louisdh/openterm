@@ -1,0 +1,6 @@
+# $FreeBSD: head/bin/sh/tests/builtins/lineno3.0 272482 2014-10-03 20:24:56Z jilles $
+
+echo before: $LINENO
+dummy=$'a\0
+'
+echo after: $LINENO

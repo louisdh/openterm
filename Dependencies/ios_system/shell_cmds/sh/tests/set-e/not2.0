@@ -1,0 +1,4 @@
+# $FreeBSD: head/bin/sh/tests/set-e/not2.0 193178 2009-05-31 17:23:27Z stefanf $
+set -e
+! false
+! eval false

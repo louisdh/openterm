@@ -1,0 +1,3 @@
+# $FreeBSD: head/bin/sh/tests/builtins/type3.0 255072 2013-08-30 12:09:59Z jilles $
+
+[ "$(type type)" = "$(type -- type)" ]

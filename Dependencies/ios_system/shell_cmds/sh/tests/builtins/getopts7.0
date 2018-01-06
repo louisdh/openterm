@@ -1,0 +1,6 @@
+# $FreeBSD: head/bin/sh/tests/builtins/getopts7.0 265844 2014-05-10 17:42:21Z jilles $
+
+set -- -x
+getopts :x: var
+r=$?
+[ r != 0 ] && [ "$OPTIND" = 2 ]

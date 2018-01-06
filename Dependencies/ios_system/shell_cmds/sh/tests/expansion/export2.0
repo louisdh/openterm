@@ -1,0 +1,24 @@
+# $FreeBSD: head/bin/sh/tests/expansion/export2.0 238468 2012-07-15 10:19:43Z jilles $
+
+w='@ @'
+check() {
+	[ "$v" = "$w" ] || echo "Expected $w got $v"
+}
+
+export v=$w
+check
+
+HOME=/known/value
+check() {
+	[ "$v" = ~ ] || echo "Expected $HOME got $v"
+}
+
+export v=~
+check
+
+check() {
+	[ "$v" = "x:$HOME" ] || echo "Expected x:$HOME got $v"
+}
+
+export v=x:~
+check

@@ -1,0 +1,5 @@
+# $FreeBSD: head/bin/sh/tests/expansion/cmdsubst5.0 216761 2010-12-28 13:28:24Z jilles $
+
+unset v
+exec 2>/dev/null
+! y=$(: ${v?})

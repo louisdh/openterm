@@ -1,0 +1,6 @@
+# $FreeBSD: head/bin/sh/tests/builtins/trap10.0 230212 2012-01-16 11:07:46Z dumbbell $
+
+# Check that the return statement will not break the EXIT trap, ie. all
+# trap commands are executed before the script exits.
+
+test "$(trap 'printf trap; echo ped' EXIT; f() { return; }; f)" = trapped || exit 1

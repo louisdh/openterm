@@ -1,0 +1,7 @@
+# $FreeBSD: head/bin/sh/tests/parameters/positional6.0 273802 2014-10-28 22:14:31Z jilles $
+
+IFS=?
+set p r
+v=pqrs
+r=${v#"$*"}
+[ "$r" = pqrs ]

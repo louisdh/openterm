@@ -1,0 +1,504 @@
+#summary archive_entry 3 manual page
+== NAME ==
+*archive_entry_acl_add_entry*,
+*archive_entry_acl_add_entry_w*,
+*archive_entry_acl_clear*,
+*archive_entry_acl_count*,
+*archive_entry_acl_next*,
+*archive_entry_acl_next_w*,
+*archive_entry_acl_reset*,
+*archive_entry_acl_text_w*,
+*archive_entry_atime*,
+*archive_entry_atime_nsec*,
+*archive_entry_clear*,
+*archive_entry_clone*,
+*archive_entry_copy_fflags_text*,
+*archive_entry_copy_fflags_text_w*,
+*archive_entry_copy_gname*,
+*archive_entry_copy_gname_w*,
+*archive_entry_copy_hardlink*,
+*archive_entry_copy_hardlink_w*,
+*archive_entry_copy_link*,
+*archive_entry_copy_link_w*,
+*archive_entry_copy_pathname_w*,
+*archive_entry_copy_sourcepath*,
+*archive_entry_copy_stat*,
+*archive_entry_copy_symlink*,
+*archive_entry_copy_symlink_w*,
+*archive_entry_copy_uname*,
+*archive_entry_copy_uname_w*,
+*archive_entry_dev*,
+*archive_entry_devmajor*,
+*archive_entry_devminor*,
+*archive_entry_filetype*,
+*archive_entry_fflags*,
+*archive_entry_fflags_text*,
+*archive_entry_free*,
+*archive_entry_gid*,
+*archive_entry_gname*,
+*archive_entry_hardlink*,
+*archive_entry_ino*,
+*archive_entry_mode*,
+*archive_entry_mtime*,
+*archive_entry_mtime_nsec*,
+*archive_entry_nlink*,
+*archive_entry_new*,
+*archive_entry_pathname*,
+*archive_entry_pathname_w*,
+*archive_entry_rdev*,
+*archive_entry_rdevmajor*,
+*archive_entry_rdevminor*,
+*archive_entry_set_atime*,
+*archive_entry_set_ctime*,
+*archive_entry_set_dev*,
+*archive_entry_set_devmajor*,
+*archive_entry_set_devminor*,
+*archive_entry_set_filetype*,
+*archive_entry_set_fflags*,
+*archive_entry_set_gid*,
+*archive_entry_set_gname*,
+*archive_entry_set_hardlink*,
+*archive_entry_set_link*,
+*archive_entry_set_mode*,
+*archive_entry_set_mtime*,
+*archive_entry_set_pathname*,
+*archive_entry_set_rdevmajor*,
+*archive_entry_set_rdevminor*,
+*archive_entry_set_size*,
+*archive_entry_set_symlink*,
+*archive_entry_set_uid*,
+*archive_entry_set_uname*,
+*archive_entry_size*,
+*archive_entry_sourcepath*,
+*archive_entry_stat*,
+*archive_entry_symlink*,
+*archive_entry_uid*,
+*archive_entry_uname*
+- functions for manipulating archive entry descriptions
+== SYNOPSIS ==
+*#include <archive_entry.h>*
+<br>
+*void*
+<br>
+*archive_entry_acl_add_entry*(_struct archive_entry `*`_, _int type_, _int permset_, _int tag_, _int qual_, _const char `*`name_);
+<br>
+*void*
+<br>
+*archive_entry_acl_add_entry_w*(_struct archive_entry `*`_, _int type_, _int permset_, _int tag_, _int qual_, _const wchar_t `*`name_);
+<br>
+*void*
+<br>
+*archive_entry_acl_clear*(_struct archive_entry `*`_);
+<br>
+*int*
+<br>
+*archive_entry_acl_count*(_struct archive_entry `*`_, _int type_);
+<br>
+*int*
+<br>
+*archive_entry_acl_next*(_struct archive_entry `*`_, _int want_type_, _int `*`type_, _int `*`permset_, _int `*`tag_, _int `*`qual_, _const char `*``*`name_);
+<br>
+*int*
+<br>
+*archive_entry_acl_next_w*(_struct archive_entry `*`_, _int want_type_, _int `*`type_, _int `*`permset_, _int `*`tag_, _int `*`qual_, _const wchar_t `*``*`name_);
+<br>
+*int*
+<br>
+*archive_entry_acl_reset*(_struct archive_entry `*`_, _int want_type_);
+<br>
+*const wchar_t `*`*
+<br>
+*archive_entry_acl_text_w*(_struct archive_entry `*`_, _int flags_);
+<br>
+*time_t*
+<br>
+*archive_entry_atime*(_struct archive_entry `*`_);
+<br>
+*long*
+<br>
+*archive_entry_atime_nsec*(_struct archive_entry `*`_);
+<br>
+*struct archive_entry `*`*
+<br>
+*archive_entry_clear*(_struct archive_entry `*`_);
+<br>
+*struct archive_entry `*`*
+<br>
+*archive_entry_clone*(_struct archive_entry `*`_);
+<br>
+*const char `*` `*`*
+<br>
+*archive_entry_copy_fflags_text_w*(_struct archive_entry `*`_, _const char `*`_);
+<br>
+*const wchar_t `*`*
+<br>
+*archive_entry_copy_fflags_text_w*(_struct archive_entry `*`_, _const wchar_t `*`_);
+<br>
+*void*
+<br>
+*archive_entry_copy_gname*(_struct archive_entry `*`_, _const char `*`_);
+<br>
+*void*
+<br>
+*archive_entry_copy_gname_w*(_struct archive_entry `*`_, _const wchar_t `*`_);
+<br>
+*void*
+<br>
+*archive_entry_copy_hardlink*(_struct archive_entry `*`_, _const char `*`_);
+<br>
+*void*
+<br>
+*archive_entry_copy_hardlink_w*(_struct archive_entry `*`_, _const wchar_t `*`_);
+<br>
+*void*
+<br>
+*archive_entry_copy_sourcepath*(_struct archive_entry `*`_, _const char `*`_);
+<br>
+*void*
+<br>
+*archive_entry_copy_pathname_w*(_struct archive_entry `*`_, _const wchar_t `*`_);
+<br>
+*void*
+<br>
+*archive_entry_copy_stat*(_struct archive_entry `*`_, _const struct stat `*`_);
+<br>
+*void*
+<br>
+*archive_entry_copy_symlink*(_struct archive_entry `*`_, _const char `*`_);
+<br>
+*void*
+<br>
+*archive_entry_copy_symlink_w*(_struct archive_entry `*`_, _const wchar_t `*`_);
+<br>
+*void*
+<br>
+*archive_entry_copy_uname*(_struct archive_entry `*`_, _const char `*`_);
+<br>
+*void*
+<br>
+*archive_entry_copy_uname_w*(_struct archive_entry `*`_, _const wchar_t `*`_);
+<br>
+*dev_t*
+<br>
+*archive_entry_dev*(_struct archive_entry `*`_);
+<br>
+*dev_t*
+<br>
+*archive_entry_devmajor*(_struct archive_entry `*`_);
+<br>
+*dev_t*
+<br>
+*archive_entry_devminor*(_struct archive_entry `*`_);
+<br>
+*mode_t*
+<br>
+*archive_entry_filetype*(_struct archive_entry `*`_);
+<br>
+*void*
+<br>
+*archive_entry_fflags*(_struct archive_entry `*`_, _unsigned long `*`set_, _unsigned long `*`clear_);
+<br>
+*const char `*`*
+<br>
+*archive_entry_fflags_text*(_struct archive_entry `*`_);
+<br>
+*void*
+<br>
+*archive_entry_free*(_struct archive_entry `*`_);
+<br>
+*const char `*`*
+<br>
+*archive_entry_gname*(_struct archive_entry `*`_);
+<br>
+*const char `*`*
+<br>
+*archive_entry_hardlink*(_struct archive_entry `*`_);
+<br>
+*ino_t*
+<br>
+*archive_entry_ino*(_struct archive_entry `*`_);
+<br>
+*mode_t*
+<br>
+*archive_entry_mode*(_struct archive_entry `*`_);
+<br>
+*time_t*
+<br>
+*archive_entry_mtime*(_struct archive_entry `*`_);
+<br>
+*long*
+<br>
+*archive_entry_mtime_nsec*(_struct archive_entry `*`_);
+<br>
+*unsigned int*
+<br>
+*archive_entry_nlink*(_struct archive_entry `*`_);
+<br>
+*struct archive_entry `*`*
+<br>
+*archive_entry_new*(_void_);
+<br>
+*const char `*`*
+<br>
+*archive_entry_pathname*(_struct archive_entry `*`_);
+<br>
+*const wchar_t `*`*
+<br>
+*archive_entry_pathname_w*(_struct archive_entry `*`_);
+<br>
+*dev_t*
+<br>
+*archive_entry_rdev*(_struct archive_entry `*`_);
+<br>
+*dev_t*
+<br>
+*archive_entry_rdevmajor*(_struct archive_entry `*`_);
+<br>
+*dev_t*
+<br>
+*archive_entry_rdevminor*(_struct archive_entry `*`_);
+<br>
+*void*
+<br>
+*archive_entry_set_dev*(_struct archive_entry `*`_, _dev_t_);
+<br>
+*void*
+<br>
+*archive_entry_set_devmajor*(_struct archive_entry `*`_, _dev_t_);
+<br>
+*void*
+<br>
+*archive_entry_set_devminor*(_struct archive_entry `*`_, _dev_t_);
+<br>
+*void*
+<br>
+*archive_entry_set_filetype*(_struct archive_entry `*`_, _unsigned int_);
+<br>
+*void*
+<br>
+*archive_entry_set_fflags*(_struct archive_entry `*`_, _unsigned long set_, _unsigned long clear_);
+<br>
+*void*
+<br>
+*archive_entry_set_gid*(_struct archive_entry `*`_, _gid_t_);
+<br>
+*void*
+<br>
+*archive_entry_set_gname*(_struct archive_entry `*`_, _const char `*`_);
+<br>
+*void*
+<br>
+*archive_entry_set_hardlink*(_struct archive_entry `*`_, _const char `*`_);
+<br>
+*void*
+<br>
+*archive_entry_set_ino*(_struct archive_entry `*`_, _unsigned long_);
+<br>
+*void*
+<br>
+*archive_entry_set_link*(_struct archive_entry `*`_, _const char `*`_);
+<br>
+*void*
+<br>
+*archive_entry_set_mode*(_struct archive_entry `*`_, _mode_t_);
+<br>
+*void*
+<br>
+*archive_entry_set_mtime*(_struct archive_entry `*`_, _time_t_, _long nanos_);
+<br>
+*void*
+<br>
+*archive_entry_set_nlink*(_struct archive_entry `*`_, _unsigned int_);
+<br>
+*void*
+<br>
+*archive_entry_set_pathname*(_struct archive_entry `*`_, _const char `*`_);
+<br>
+*void*
+<br>
+*archive_entry_set_rdev*(_struct archive_entry `*`_, _dev_t_);
+<br>
+*void*
+<br>
+*archive_entry_set_rdevmajor*(_struct archive_entry `*`_, _dev_t_);
+<br>
+*void*
+<br>
+*archive_entry_set_rdevminor*(_struct archive_entry `*`_, _dev_t_);
+<br>
+*void*
+<br>
+*archive_entry_set_size*(_struct archive_entry `*`_, _int64_t_);
+<br>
+*void*
+<br>
+*archive_entry_set_symlink*(_struct archive_entry `*`_, _const char `*`_);
+<br>
+*void*
+<br>
+*archive_entry_set_uid*(_struct archive_entry `*`_, _uid_t_);
+<br>
+*void*
+<br>
+*archive_entry_set_uname*(_struct archive_entry `*`_, _const char `*`_);
+<br>
+*int64_t*
+<br>
+*archive_entry_size*(_struct archive_entry `*`_);
+<br>
+*const char `*`*
+<br>
+*archive_entry_sourcepath*(_struct archive_entry `*`_);
+<br>
+*const struct stat `*`*
+<br>
+*archive_entry_stat*(_struct archive_entry `*`_);
+<br>
+*const char `*`*
+<br>
+*archive_entry_symlink*(_struct archive_entry `*`_);
+<br>
+*const char `*`*
+<br>
+*archive_entry_uname*(_struct archive_entry `*`_);
+== DESCRIPTION ==
+These functions create and manipulate data objects that
+represent entries within an archive.
+You can think of a
+*struct archive_entry*
+as a heavy-duty version of
+*struct stat :*
+it includes everything from
+*struct stat*
+plus associated pathname, textual group and user names, etc.
+These objects are used by
+*libarchive*(3)
+to represent the metadata associated with a particular
+entry in an archive.
+=== Create and Destroy===
+There are functions to allocate, destroy, clear, and copy
+_archive_entry_
+objects:
+<dl>
+<dt>*archive_entry_clear*()</dt><dd>
+Erases the object, resetting all internal fields to the
+same state as a newly-created object.
+This is provided to allow you to quickly recycle objects
+without thrashing the heap.
+</dd><dt>*archive_entry_clone*()</dt><dd>
+A deep copy operation; all text fields are duplicated.
+</dd><dt>*archive_entry_free*()</dt><dd>
+Releases the
+*struct archive_entry*
+object.
+</dd><dt>*archive_entry_new*()</dt><dd>
+Allocate and return a blank
+*struct archive_entry*
+object.
+</dd></dl>
+=== Set and Get Functions===
+Most of the functions here set or read entries in an object.
+Such functions have one of the following forms:
+<dl>
+<dt>*archive_entry_set_XXXX*()</dt><dd>
+Stores the provided data in the object.
+In particular, for strings, the pointer is stored,
+not the referenced string.
+</dd><dt>*archive_entry_copy_XXXX*()</dt><dd>
+As above, except that the referenced data is copied
+into the object.
+</dd><dt>*archive_entry_XXXX*()</dt><dd>
+Returns the specified data.
+In the case of strings, a const-qualified pointer to
+the string is returned.
+</dd></dl>
+String data can be set or accessed as wide character strings
+or normal
+_char_
+strings.
+The functions that use wide character strings are suffixed with
+*`_`w*.
+Note that these are different representations of the same data:
+For example, if you store a narrow string and read the corresponding
+wide string, the object will transparently convert formats
+using the current locale.
+Similarly, if you store a wide string and then store a
+narrow string for the same data, the previously-set wide string will
+be discarded in favor of the new data.
+
+There are a few set/get functions that merit additional description:
+<dl>
+<dt>*archive_entry_set_link*()</dt><dd>
+This function sets the symlink field if it is already set.
+Otherwise, it sets the hardlink field.
+</dd></dl>
+=== File Flags===
+File flags are transparently converted between a bitmap
+representation and a textual format.
+For example, if you set the bitmap and ask for text, the library
+will build a canonical text format.
+However, if you set a text format and request a text format,
+you will get back the same text, even if it is ill-formed.
+If you need to canonicalize a textual flags string, you should first set the
+text form, then request the bitmap form, then use that to set the bitmap form.
+Setting the bitmap format will clear the internal text representation
+and force it to be reconstructed when you next request the text form.
+
+The bitmap format consists of two integers, one containing bits
+that should be set, the other specifying bits that should be
+cleared.
+Bits not mentioned in either bitmap will be ignored.
+Usually, the bitmap of bits to be cleared will be set to zero.
+In unusual circumstances, you can force a fully-specified set
+of file flags by setting the bitmap of flags to clear to the complement
+of the bitmap of flags to set.
+(This differs from
+*fflagstostr*(3),
+which only includes names for set bits.)
+Converting a bitmap to a textual string is a platform-specific
+operation; bits that are not meaningful on the current platform
+will be ignored.
+
+The canonical text format is a comma-separated list of flag names.
+The
+*archive_entry_copy_fflags_text*()
+and
+*archive_entry_copy_fflags_text_w*()
+functions parse the provided text and sets the internal bitmap values.
+This is a platform-specific operation; names that are not meaningful
+on the current platform will be ignored.
+The function returns a pointer to the start of the first name that was not
+recognized, or NULL if every name was recognized.
+Note that every name--including names that follow an unrecognized name--will
+be evaluated, and the bitmaps will be set to reflect every name that is
+recognized.
+(In particular, this differs from
+*strtofflags*(3),
+which stops parsing at the first unrecognized name.)
+=== ACL Handling===
+XXX This needs serious help.
+XXX
+
+An
+"Access Control List"
+(ACL) is a list of permissions that grant access to particular users or
+groups beyond what would normally be provided by standard POSIX mode bits.
+The ACL handling here addresses some deficiencies in the POSIX.1e draft 17 ACL
+specification.
+In particular, POSIX.1e draft 17 specifies several different formats, but
+none of those formats include both textual user/group names and numeric
+UIDs/GIDs.
+
+XXX explain ACL stuff XXX
+== SEE ALSO ==
+*archive*(3)
+== HISTORY ==
+The
+*libarchive*
+library first appeared in
+FreeBSD 5.3.
+== AUTHORS ==
+The
+*libarchive*
+library was written by
+Tim Kientzle  <kientzle@acm.org.>

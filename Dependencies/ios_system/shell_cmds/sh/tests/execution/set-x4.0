@@ -1,0 +1,7 @@
+# $FreeBSD: head/bin/sh/tests/execution/set-x4.0 275766 2014-12-14 16:26:19Z jilles $
+
+key=`printf '\r\t\001\200\300'`
+r=`{ set -x; : "$key"; } 2>&1 >/dev/null`
+case $r in
+*[![:print:]]*) echo fail; exit 3
+esac

@@ -1,0 +1,5 @@
+# $FreeBSD: head/bin/sh/tests/execution/set-n2.0 222661 2011-06-03 21:17:42Z jilles $
+
+$SH -n <<'EOF'
+echo bad
+EOF

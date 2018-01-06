@@ -1,0 +1,6 @@
+# $FreeBSD: head/bin/sh/tests/builtins/getopts2.0 297752 2016-04-09 16:06:13Z jilles $
+set - -ax
+getopts ax option
+set -C
+getopts ax option
+printf '%s\n' "$option"

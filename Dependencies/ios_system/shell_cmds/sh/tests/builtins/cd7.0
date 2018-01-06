@@ -1,0 +1,15 @@
+# $FreeBSD: head/bin/sh/tests/builtins/cd7.0 222381 2011-05-27 20:01:46Z jilles $
+
+set -e
+cd /usr/bin
+[ "$PWD" = /usr/bin ]
+CDPATH=/:
+cd .
+[ "$PWD" = /usr/bin ]
+cd ./
+[ "$PWD" = /usr/bin ]
+cd ..
+[ "$PWD" = /usr ]
+cd /usr/bin
+cd ../
+[ "$PWD" = /usr ]

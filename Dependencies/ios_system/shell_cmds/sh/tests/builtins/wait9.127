@@ -1,0 +1,3 @@
+# $FreeBSD: head/bin/sh/tests/builtins/wait9.127 251430 2013-06-05 19:40:52Z jilles $
+# Init cannot be a child of the shell.
+wait 1

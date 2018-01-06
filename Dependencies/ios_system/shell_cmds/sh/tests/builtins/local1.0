@@ -1,0 +1,13 @@
+# $FreeBSD: head/bin/sh/tests/builtins/local1.0 238469 2012-07-15 10:22:13Z jilles $
+# A commonly used but non-POSIX builtin.
+
+f() {
+	local x
+	x=2
+	[ "$x" = 2 ]
+}
+x=1
+f || exit 3
+[ "$x" = 1 ] || exit 3
+f || exit 3
+[ "$x" = 1 ] || exit 3

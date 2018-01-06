@@ -1,0 +1,10 @@
+# $FreeBSD: head/bin/sh/tests/builtins/local6.0 294582 2016-01-22 18:10:36Z jilles $
+
+f() {
+	local x
+	readonly x=2
+}
+x=3
+f
+x=4
+[ "$x" = 4 ]

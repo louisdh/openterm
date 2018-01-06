@@ -1,0 +1,21 @@
+# $FreeBSD: head/bin/sh/tests/parser/heredoc13.0 287408 2015-09-02 19:49:55Z jilles $
+
+failures=0
+
+check() {
+	if ! eval "[ $* ]"; then
+		echo "Failed: $*"
+		: $((failures += 1))
+	fi
+}
+
+check '"$(cat <<""
+
+echo yes)" = "yes"'
+
+check '"$(cat <<""
+yes
+
+)" = "yes"'
+
+exit $((failures != 0))

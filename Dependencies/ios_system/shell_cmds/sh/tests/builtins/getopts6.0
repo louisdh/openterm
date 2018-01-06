@@ -1,0 +1,7 @@
+# $FreeBSD: head/bin/sh/tests/builtins/getopts6.0 265844 2014-05-10 17:42:21Z jilles $
+
+set -- -x -y
+getopts :x var || echo "First getopts bad: $?"
+getopts :x var
+r=$?
+[ r != 0 ] && [ "$OPTIND" = 3 ]

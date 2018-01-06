@@ -1,0 +1,6 @@
+# $FreeBSD: head/bin/sh/tests/parser/func2.0 222512 2011-05-30 21:49:59Z jilles $
+
+f() { return 42; }
+f() { return 3; } &
+f
+[ $? -eq 42 ]

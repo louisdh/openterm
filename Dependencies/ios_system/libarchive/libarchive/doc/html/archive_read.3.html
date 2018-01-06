@@ -1,0 +1,820 @@
+<!-- Creator     : groff version 1.19.2 -->
+<!-- CreationDate: Sun Mar 14 19:50:17 2010 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta name="generator" content="groff -Thtml, see www.gnu.org">
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<meta name="Content-Style" content="text/css">
+<style type="text/css">
+       p     { margin-top: 0; margin-bottom: 0; }
+       pre   { margin-top: 0; margin-bottom: 0; }
+       table { margin-top: 0; margin-bottom: 0; }
+</style>
+<title></title>
+</head>
+<body>
+
+<hr>
+
+
+<p valign="top">archive_read(3) FreeBSD Library Functions
+Manual archive_read(3)</p>
+
+<p style="margin-top: 1em" valign="top"><b>NAME</b></p>
+
+<p style="margin-left:8%;"><b>archive_read_new</b>,
+<b>archive_read_set_filter_options</b>,
+<b>archive_read_set_format_options</b>,
+<b>archive_read_set_options</b>,
+<b>archive_read_support_compression_all</b>,
+<b>archive_read_support_compression_bzip2</b>,
+<b>archive_read_support_compression_compress</b>,
+<b>archive_read_support_compression_gzip</b>,
+<b>archive_read_support_compression_lzma</b>,
+<b>archive_read_support_compression_none</b>,
+<b>archive_read_support_compression_xz</b>,
+<b>archive_read_support_compression_program</b>,
+<b>archive_read_support_compression_program_signature</b>,
+<b>archive_read_support_format_all</b>,
+<b>archive_read_support_format_ar</b>,
+<b>archive_read_support_format_cpio</b>,
+<b>archive_read_support_format_empty</b>,
+<b>archive_read_support_format_iso9660</b>,
+<b>archive_read_support_format_mtree,
+archive_read_support_format_raw,
+archive_read_support_format_tar</b>,
+<b>archive_read_support_format_zip</b>,
+<b>archive_read_open</b>, <b>archive_read_open2</b>,
+<b>archive_read_open_fd</b>, <b>archive_read_open_FILE</b>,
+<b>archive_read_open_filename</b>,
+<b>archive_read_open_memory</b>,
+<b>archive_read_next_header</b>,
+<b>archive_read_next_header2</b>, <b>archive_read_data</b>,
+<b>archive_read_data_block</b>,
+<b>archive_read_data_skip</b>,
+<b>archive_read_data_into_buffer</b>,
+<b>archive_read_data_into_fd</b>,
+<b>archive_read_extract</b>, <b>archive_read_extract2</b>,
+<b>archive_read_extract_set_progress_callback</b>,
+<b>archive_read_close</b>, <b>archive_read_finish</b>
+&mdash; functions for reading streaming archives</p>
+
+
+<p style="margin-top: 1em" valign="top"><b>SYNOPSIS</b></p>
+
+<p style="margin-left:8%;"><b>#include
+&lt;archive.h&gt;</b></p>
+
+<p style="margin-left:8%; margin-top: 1em"><i>struct
+archive *</i></p>
+
+
+<p style="margin-left:14%;"><b>archive_read_new</b>(<i>void</i>);</p>
+
+<p style="margin-left:8%; margin-top: 1em"><i>int</i></p>
+
+
+<p style="margin-left:14%;"><b>archive_read_support_compression_all</b>(<i>struct&nbsp;archive&nbsp;*</i>);</p>
+
+<p style="margin-left:8%; margin-top: 1em"><i>int</i></p>
+
+
+<p style="margin-left:14%;"><b>archive_read_support_compression_bzip2</b>(<i>struct&nbsp;archive&nbsp;*</i>);</p>
+
+<p style="margin-left:8%; margin-top: 1em"><i>int</i></p>
+
+
+<p style="margin-left:14%;"><b>archive_read_support_compression_compress</b>(<i>struct&nbsp;archive&nbsp;*</i>);</p>
+
+<p style="margin-left:8%; margin-top: 1em"><i>int</i></p>
+
+
+<p style="margin-left:14%;"><b>archive_read_support_compression_gzip</b>(<i>struct&nbsp;archive&nbsp;*</i>);</p>
+
+<p style="margin-left:8%; margin-top: 1em"><i>int</i></p>
+
+
+<p style="margin-left:14%;"><b>archive_read_support_compression_lzma</b>(<i>struct&nbsp;archive&nbsp;*</i>);</p>
+
+<p style="margin-left:8%; margin-top: 1em"><i>int</i></p>
+
+
+<p style="margin-left:14%;"><b>archive_read_support_compression_none</b>(<i>struct&nbsp;archive&nbsp;*</i>);</p>
+
+<p style="margin-left:8%; margin-top: 1em"><i>int</i></p>
+
+
+<p style="margin-left:14%;"><b>archive_read_support_compression_xz</b>(<i>struct&nbsp;archive&nbsp;*</i>);</p>
+
+<p style="margin-left:8%; margin-top: 1em"><i>int</i></p>
+
+
+<p valign="top"><b>archive_read_support_compression_program</b>(<i>struct&nbsp;archive&nbsp;*</i>,
+<i>const&nbsp;char&nbsp;*cmd</i>);</p>
+
+<p style="margin-left:8%; margin-top: 1em"><i>int</i></p>
+
+
+<p valign="top"><b>archive_read_support_compression_program_signature</b>(<i>struct&nbsp;archive&nbsp;*</i>,
+<i>const&nbsp;char&nbsp;*cmd</i>,
+<i>const&nbsp;void&nbsp;*signature</i>,
+<i>size_t&nbsp;signature_length</i>);</p>
+
+<p style="margin-left:8%; margin-top: 1em"><i>int</i></p>
+
+
+<p style="margin-left:14%;"><b>archive_read_support_format_all</b>(<i>struct&nbsp;archive&nbsp;*</i>);</p>
+
+<p style="margin-left:8%; margin-top: 1em"><i>int</i></p>
+
+
+<p style="margin-left:14%;"><b>archive_read_support_format_ar</b>(<i>struct&nbsp;archive&nbsp;*</i>);</p>
+
+<p style="margin-left:8%; margin-top: 1em"><i>int</i></p>
+
+
+<p style="margin-left:14%;"><b>archive_read_support_format_cpio</b>(<i>struct&nbsp;archive&nbsp;*</i>);</p>
+
+<p style="margin-left:8%; margin-top: 1em"><i>int</i></p>
+
+
+<p style="margin-left:14%;"><b>archive_read_support_format_empty</b>(<i>struct&nbsp;archive&nbsp;*</i>);</p>
+
+<p style="margin-left:8%; margin-top: 1em"><i>int</i></p>
+
+
+<p style="margin-left:14%;"><b>archive_read_support_format_iso9660</b>(<i>struct&nbsp;archive&nbsp;*</i>);</p>
+
+<p style="margin-left:8%; margin-top: 1em"><i>int</i></p>
+
+
+<p style="margin-left:14%;"><b>archive_read_support_format_mtree</b>(<i>struct&nbsp;archive&nbsp;*</i>);</p>
+
+<p style="margin-left:8%; margin-top: 1em"><i>int</i></p>
+
+
+<p style="margin-left:14%;"><b>archive_read_support_format_raw</b>(<i>struct&nbsp;archive&nbsp;*</i>);</p>
+
+<p style="margin-left:8%; margin-top: 1em"><i>int</i></p>
+
+
+<p style="margin-left:14%;"><b>archive_read_support_format_tar</b>(<i>struct&nbsp;archive&nbsp;*</i>);</p>
+
+<p style="margin-left:8%; margin-top: 1em"><i>int</i></p>
+
+
+<p style="margin-left:14%;"><b>archive_read_support_format_zip</b>(<i>struct&nbsp;archive&nbsp;*</i>);</p>
+
+<p style="margin-left:8%; margin-top: 1em"><i>int</i></p>
+
+
+<p style="margin-left:14%;"><b>archive_read_set_filter_options</b>(<i>struct&nbsp;archive&nbsp;*</i>,
+<i>const&nbsp;char&nbsp;*</i>);</p>
+
+<p style="margin-left:8%; margin-top: 1em"><i>int</i></p>
+
+
+<p style="margin-left:14%;"><b>archive_read_set_format_options</b>(<i>struct&nbsp;archive&nbsp;*</i>,
+<i>const&nbsp;char&nbsp;*</i>);</p>
+
+<p style="margin-left:8%; margin-top: 1em"><i>int</i></p>
+
+
+<p style="margin-left:14%;"><b>archive_read_set_options</b>(<i>struct&nbsp;archive&nbsp;*</i>,
+<i>const&nbsp;char&nbsp;*</i>);</p>
+
+<p style="margin-left:8%; margin-top: 1em"><i>int</i></p>
+
+
+<p valign="top"><b>archive_read_open</b>(<i>struct&nbsp;archive&nbsp;*</i>,
+<i>void&nbsp;*client_data</i>,
+<i>archive_open_callback&nbsp;*</i>,
+<i>archive_read_callback&nbsp;*</i>,
+<i>archive_close_callback&nbsp;*</i>);</p>
+
+<p style="margin-left:8%; margin-top: 1em"><i>int</i></p>
+
+
+<p valign="top"><b>archive_read_open2</b>(<i>struct&nbsp;archive&nbsp;*</i>,
+<i>void&nbsp;*client_data</i>,
+<i>archive_open_callback&nbsp;*</i>,
+<i>archive_read_callback&nbsp;*</i>,
+<i>archive_skip_callback&nbsp;*</i>,
+<i>archive_close_callback&nbsp;*</i>);</p>
+
+<p style="margin-left:8%; margin-top: 1em"><i>int</i></p>
+
+
+<p style="margin-left:14%;"><b>archive_read_open_FILE</b>(<i>struct&nbsp;archive&nbsp;*</i>,
+<i>FILE&nbsp;*file</i>);</p>
+
+<p style="margin-left:8%; margin-top: 1em"><i>int</i></p>
+
+
+<p style="margin-left:14%;"><b>archive_read_open_fd</b>(<i>struct&nbsp;archive&nbsp;*</i>,
+<i>int&nbsp;fd</i>, <i>size_t&nbsp;block_size</i>);</p>
+
+<p style="margin-left:8%; margin-top: 1em"><i>int</i></p>
+
+
+<p valign="top"><b>archive_read_open_filename</b>(<i>struct&nbsp;archive&nbsp;*</i>,
+<i>const&nbsp;char&nbsp;*filename</i>,
+<i>size_t&nbsp;block_size</i>);</p>
+
+<p style="margin-left:8%; margin-top: 1em"><i>int</i></p>
+
+
+<p style="margin-left:14%;"><b>archive_read_open_memory</b>(<i>struct&nbsp;archive&nbsp;*</i>,
+<i>void&nbsp;*buff</i>, <i>size_t&nbsp;size</i>);</p>
+
+<p style="margin-left:8%; margin-top: 1em"><i>int</i></p>
+
+
+<p style="margin-left:14%;"><b>archive_read_next_header</b>(<i>struct&nbsp;archive&nbsp;*</i>,
+<i>struct&nbsp;archive_entry&nbsp;**</i>);</p>
+
+<p style="margin-left:8%; margin-top: 1em"><i>int</i></p>
+
+
+<p style="margin-left:14%;"><b>archive_read_next_header2</b>(<i>struct&nbsp;archive&nbsp;*</i>,
+<i>struct&nbsp;archive_entry&nbsp;*</i>);</p>
+
+
+<p style="margin-left:8%; margin-top: 1em"><i>ssize_t</i></p>
+
+
+<p style="margin-left:14%;"><b>archive_read_data</b>(<i>struct&nbsp;archive&nbsp;*</i>,
+<i>void&nbsp;*buff</i>, <i>size_t&nbsp;len</i>);</p>
+
+<p style="margin-left:8%; margin-top: 1em"><i>int</i></p>
+
+
+<p valign="top"><b>archive_read_data_block</b>(<i>struct&nbsp;archive&nbsp;*</i>,
+<i>const&nbsp;void&nbsp;**buff</i>, <i>size_t&nbsp;*len</i>,
+<i>off_t&nbsp;*offset</i>);</p>
+
+<p style="margin-left:8%; margin-top: 1em"><i>int</i></p>
+
+
+<p style="margin-left:14%;"><b>archive_read_data_skip</b>(<i>struct&nbsp;archive&nbsp;*</i>);</p>
+
+<p style="margin-left:8%; margin-top: 1em"><i>int</i></p>
+
+
+<p style="margin-left:14%;"><b>archive_read_data_into_buffer</b>(<i>struct&nbsp;archive&nbsp;*</i>,
+<i>void&nbsp;*</i>, <i>ssize_t&nbsp;len</i>);</p>
+
+<p style="margin-left:8%; margin-top: 1em"><i>int</i></p>
+
+
+<p style="margin-left:14%;"><b>archive_read_data_into_fd</b>(<i>struct&nbsp;archive&nbsp;*</i>,
+<i>int&nbsp;fd</i>);</p>
+
+<p style="margin-left:8%; margin-top: 1em"><i>int</i></p>
+
+
+<p valign="top"><b>archive_read_extract</b>(<i>struct&nbsp;archive&nbsp;*</i>,
+<i>struct&nbsp;archive_entry&nbsp;*</i>,
+<i>int&nbsp;flags</i>);</p>
+
+<p style="margin-left:8%; margin-top: 1em"><i>int</i></p>
+
+
+<p valign="top"><b>archive_read_extract2</b>(<i>struct&nbsp;archive&nbsp;*src</i>,
+<i>struct&nbsp;archive_entry&nbsp;*</i>,
+<i>struct&nbsp;archive&nbsp;*dest</i>);</p>
+
+<p style="margin-left:8%; margin-top: 1em"><i>void</i></p>
+
+
+<p valign="top"><b>archive_read_extract_set_progress_callback</b>(<i>struct&nbsp;archive&nbsp;*</i>,
+<i>void&nbsp;(*func)(void&nbsp;*)</i>,
+<i>void&nbsp;*user_data</i>);</p>
+
+<p style="margin-left:8%; margin-top: 1em"><i>int</i></p>
+
+
+<p style="margin-left:14%;"><b>archive_read_close</b>(<i>struct&nbsp;archive&nbsp;*</i>);</p>
+
+<p style="margin-left:8%; margin-top: 1em"><i>int</i></p>
+
+
+<p style="margin-left:14%;"><b>archive_read_finish</b>(<i>struct&nbsp;archive&nbsp;*</i>);</p>
+
+
+<p style="margin-top: 1em" valign="top"><b>DESCRIPTION</b></p>
+
+<p style="margin-left:8%;">These functions provide a
+complete API for reading streaming archives. The general
+process is to first create the struct archive object, set
+options, initialize the reader, iterate over the archive
+headers and associated data, then close the archive and
+release all resources. The following summary describes the
+functions in approximately the order they would be used:</p>
+
+<p valign="top"><b>archive_read_new</b>()</p>
+
+<p style="margin-left:20%;">Allocates and initializes a
+struct archive object suitable for reading from an
+archive.</p>
+
+
+<p valign="top"><b>archive_read_support_compression_bzip2</b>(),
+<b>archive_read_support_compression_compress</b>(),
+<b>archive_read_support_compression_gzip</b>(),
+<b>archive_read_support_compression_lzma</b>(),
+<b>archive_read_support_compression_none</b>(),
+<b>archive_read_support_compression_xz</b>()</p>
+
+<p style="margin-left:20%;">Enables auto-detection code and
+decompression support for the specified compression. Returns
+<b>ARCHIVE_OK</b> if the compression is fully supported, or
+<b>ARCHIVE_WARN</b> if the compression is supported only
+through an external program. Note that decompression using
+an external program is usually slower than decompression
+through built-in libraries. Note that
+&lsquo;&lsquo;none&rsquo;&rsquo; is always enabled by
+default.</p>
+
+
+<p valign="top"><b>archive_read_support_compression_all</b>()</p>
+
+<p style="margin-left:20%;">Enables all available
+decompression filters.</p>
+
+
+<p valign="top"><b>archive_read_support_compression_program</b>()</p>
+
+<p style="margin-left:20%;">Data is fed through the
+specified external program before being dearchived. Note
+that this disables automatic detection of the compression
+format, so it makes no sense to specify this in conjunction
+with any other decompression option.</p>
+
+
+<p valign="top"><b>archive_read_support_compression_program_signature</b>()</p>
+
+<p style="margin-left:20%;">This feeds data through the
+specified external program but only if the initial bytes of
+the data match the specified signature value.</p>
+
+<p valign="top"><b>archive_read_support_format_all</b>(),
+<b>archive_read_support_format_ar</b>(),
+<b>archive_read_support_format_cpio</b>(),
+<b>archive_read_support_format_empty</b>(),
+<b>archive_read_support_format_iso9660</b>(),
+<b>archive_read_support_format_mtree</b>(),
+<b>archive_read_support_format_tar</b>(),
+<b>archive_read_support_format_zip</b>()</p>
+
+<p style="margin-left:20%;">Enables support---including
+auto-detection code---for the specified archive format. For
+example, <b>archive_read_support_format_tar</b>() enables
+support for a variety of standard tar formats, old-style
+tar, ustar, pax interchange format, and many common
+variants. For convenience,
+<b>archive_read_support_format_all</b>() enables support for
+all available formats. Only empty archives are supported by
+default.</p>
+
+
+<p valign="top"><b>archive_read_support_format_raw</b>()</p>
+
+<p style="margin-left:20%;">The
+&lsquo;&lsquo;raw&rsquo;&rsquo; format handler allows
+libarchive to be used to read arbitrary data. It treats any
+data stream as an archive with a single entry. The pathname
+of this entry is &lsquo;&lsquo;data&rsquo;&rsquo;; all other
+entry fields are unset. This is not enabled by
+<b>archive_read_support_format_all</b>() in order to avoid
+erroneous handling of damaged archives.</p>
+
+<p valign="top"><b>archive_read_set_filter_options</b>(),
+<b>archive_read_set_format_options</b>(),
+<b>archive_read_set_options</b>()</p>
+
+<p style="margin-left:20%;">Specifies options that will be
+passed to currently-registered filters (including
+decompression filters) and/or format readers. The argument
+is a comma-separated list of individual options. Individual
+options have one of the following forms:</p>
+
+<p valign="top"><i>option=value</i></p>
+
+<p style="margin-left:32%;">The option/value pair will be
+provided to every module. Modules that do not accept an
+option with this name will ignore it.</p>
+
+<p valign="top"><i>option</i></p>
+
+<p style="margin-left:32%; margin-top: 1em">The option will
+be provided to every module with a value of
+&lsquo;&lsquo;1&rsquo;&rsquo;.</p>
+
+<p valign="top"><i>!option</i></p>
+
+<p style="margin-left:32%;">The option will be provided to
+every module with a NULL value.</p>
+
+<p valign="top"><i>module:option=value</i>,
+<i>module:option</i>, <i>module:!option</i></p>
+
+<p style="margin-left:32%;">As above, but the corresponding
+option and value will be provided only to modules whose name
+matches <i>module</i>.</p>
+
+<p style="margin-left:20%;">The return value will be
+<b>ARCHIVE_OK</b> if any module accepts the option, or
+<b>ARCHIVE_WARN</b> if no module accepted the option, or
+<b>ARCHIVE_FATAL</b> if there was a fatal error while
+attempting to process the option.</p>
+
+<p style="margin-left:20%; margin-top: 1em">The currently
+supported options are:</p>
+
+<p valign="top">Format iso9660 <b><br>
+joliet</b></p>
+
+<p style="margin-left:45%; margin-top: 1em">Support Joliet
+extensions. Defaults to enabled, use <b>!joliet</b> to
+disable.</p>
+
+<p valign="top"><b>archive_read_open</b>()</p>
+
+<p style="margin-left:20%;">The same as
+<b>archive_read_open2</b>(), except that the skip callback
+is assumed to be NULL.</p>
+
+<p valign="top"><b>archive_read_open2</b>()</p>
+
+<p style="margin-left:20%;">Freeze the settings, open the
+archive, and prepare for reading entries. This is the most
+generic version of this call, which accepts four callback
+functions. Most clients will want to use
+<b>archive_read_open_filename</b>(),
+<b>archive_read_open_FILE</b>(),
+<b>archive_read_open_fd</b>(), or
+<b>archive_read_open_memory</b>() instead. The library
+invokes the client-provided functions to obtain raw bytes
+from the archive.</p>
+
+<p valign="top"><b>archive_read_open_FILE</b>()</p>
+
+<p style="margin-left:20%;">Like
+<b>archive_read_open</b>(), except that it accepts a <i>FILE
+*</i> pointer. This function should not be used with tape
+drives or other devices that require strict I/O
+blocking.</p>
+
+<p valign="top"><b>archive_read_open_fd</b>()</p>
+
+<p style="margin-left:20%;">Like
+<b>archive_read_open</b>(), except that it accepts a file
+descriptor and block size rather than a set of function
+pointers. Note that the file descriptor will not be
+automatically closed at end-of-archive. This function is
+safe for use with tape drives or other blocked devices.</p>
+
+<p valign="top"><b>archive_read_open_file</b>()</p>
+
+<p style="margin-left:20%;">This is a deprecated synonym
+for <b>archive_read_open_filename</b>().</p>
+
+<p valign="top"><b>archive_read_open_filename</b>()</p>
+
+<p style="margin-left:20%;">Like
+<b>archive_read_open</b>(), except that it accepts a simple
+filename and a block size. A NULL filename represents
+standard input. This function is safe for use with tape
+drives or other blocked devices.</p>
+
+<p valign="top"><b>archive_read_open_memory</b>()</p>
+
+<p style="margin-left:20%;">Like
+<b>archive_read_open</b>(), except that it accepts a pointer
+and size of a block of memory containing the archive
+data.</p>
+
+<p valign="top"><b>archive_read_next_header</b>()</p>
+
+<p style="margin-left:20%;">Read the header for the next
+entry and return a pointer to a struct archive_entry. This
+is a convenience wrapper around
+<b>archive_read_next_header2</b>() that reuses an internal
+struct archive_entry object for each request.</p>
+
+<p valign="top"><b>archive_read_next_header2</b>()</p>
+
+<p style="margin-left:20%;">Read the header for the next
+entry and populate the provided struct archive_entry.</p>
+
+<p valign="top"><b>archive_read_data</b>()</p>
+
+<p style="margin-left:20%;">Read data associated with the
+header just read. Internally, this is a convenience function
+that calls <b>archive_read_data_block</b>() and fills any
+gaps with nulls so that callers see a single continuous
+stream of data.</p>
+
+<p valign="top"><b>archive_read_data_block</b>()</p>
+
+<p style="margin-left:20%;">Return the next available block
+of data for this entry. Unlike <b>archive_read_data</b>(),
+the <b>archive_read_data_block</b>() function avoids copying
+data and allows you to correctly handle sparse files, as
+supported by some archive formats. The library guarantees
+that offsets will increase and that blocks will not overlap.
+Note that the blocks returned from this function can be much
+larger than the block size read from disk, due to
+compression and internal buffer optimizations.</p>
+
+<p valign="top"><b>archive_read_data_skip</b>()</p>
+
+<p style="margin-left:20%;">A convenience function that
+repeatedly calls <b>archive_read_data_block</b>() to skip
+all of the data for this archive entry.</p>
+
+<p valign="top"><b>archive_read_data_into_buffer</b>()</p>
+
+<p style="margin-left:20%;">This function is deprecated and
+will be removed. Use <b>archive_read_data</b>() instead.</p>
+
+<p valign="top"><b>archive_read_data_into_fd</b>()</p>
+
+<p style="margin-left:20%;">A convenience function that
+repeatedly calls <b>archive_read_data_block</b>() to copy
+the entire entry to the provided file descriptor.</p>
+
+<p valign="top"><b>archive_read_extract</b>(),
+<b>archive_read_extract_set_skip_file</b>()</p>
+
+<p style="margin-left:20%;">A convenience function that
+wraps the corresponding archive_write_disk(3) interfaces.
+The first call to <b>archive_read_extract</b>() creates a
+restore object using archive_write_disk_new(3) and
+archive_write_disk_set_standard_lookup(3), then
+transparently invokes archive_write_disk_set_options(3),
+archive_write_header(3), archive_write_data(3), and
+archive_write_finish_entry(3) to create the entry on disk
+and copy data into it. The <i>flags</i> argument is passed
+unmodified to archive_write_disk_set_options(3).</p>
+
+<p valign="top"><b>archive_read_extract2</b>()</p>
+
+<p style="margin-left:20%;">This is another version of
+<b>archive_read_extract</b>() that allows you to provide
+your own restore object. In particular, this allows you to
+override the standard lookup functions using
+archive_write_disk_set_group_lookup(3), and
+archive_write_disk_set_user_lookup(3). Note that
+<b>archive_read_extract2</b>() does not accept a
+<i>flags</i> argument; you should use
+<b>archive_write_disk_set_options</b>() to set the restore
+options yourself.</p>
+
+
+<p valign="top"><b>archive_read_extract_set_progress_callback</b>()</p>
+
+<p style="margin-left:20%;">Sets a pointer to a
+user-defined callback that can be used for updating progress
+displays during extraction. The progress function will be
+invoked during the extraction of large regular files. The
+progress function will be invoked with the pointer provided
+to this call. Generally, the data pointed to should include
+a reference to the archive object and the archive_entry
+object so that various statistics can be retrieved for the
+progress display.</p>
+
+<p valign="top"><b>archive_read_close</b>()</p>
+
+<p style="margin-left:20%;">Complete the archive and invoke
+the close callback.</p>
+
+<p valign="top"><b>archive_read_finish</b>()</p>
+
+<p style="margin-left:20%;">Invokes
+<b>archive_read_close</b>() if it was not invoked manually,
+then release all resources. Note: In libarchive 1.x, this
+function was declared to return <i>void</i>, which made it
+impossible to detect certain errors when
+<b>archive_read_close</b>() was invoked implicitly from this
+function. The declaration is corrected beginning with
+libarchive 2.0.</p>
+
+<p style="margin-left:8%; margin-top: 1em">Note that the
+library determines most of the relevant information about
+the archive by inspection. In particular, it automatically
+detects gzip(1) or bzip2(1) compression and transparently
+performs the appropriate decompression. It also
+automatically detects the archive format.</p>
+
+<p style="margin-left:8%; margin-top: 1em">A complete
+description of the struct archive and struct archive_entry
+objects can be found in the overview manual page for
+libarchive(3).</p>
+
+<p style="margin-top: 1em" valign="top"><b>CLIENT
+CALLBACKS</b></p>
+
+<p style="margin-left:8%;">The callback functions must
+match the following prototypes:</p>
+
+<p style="margin-left:17%; margin-top: 1em"><i>typedef
+ssize_t</i></p>
+
+
+<p valign="top"><b>archive_read_callback</b>(<i>struct&nbsp;archive&nbsp;*</i>,
+<i>void&nbsp;*client_data</i>,
+<i>const&nbsp;void&nbsp;**buffer</i>)</p>
+
+<p style="margin-left:17%; margin-top: 1em"><i>typedef
+int</i></p>
+
+
+<p valign="top"><b>archive_skip_callback</b>(<i>struct&nbsp;archive&nbsp;*</i>,
+<i>void&nbsp;*client_data</i>,
+<i>size_t&nbsp;request</i>)</p>
+
+<p style="margin-left:17%; margin-top: 1em"><i>typedef
+int</i> <b>archive_open_callback</b>(<i>struct archive
+*</i>, <i>void *client_data</i>)</p>
+
+<p style="margin-left:17%; margin-top: 1em"><i>typedef
+int</i> <b>archive_close_callback</b>(<i>struct archive
+*</i>, <i>void *client_data</i>)</p>
+
+<p style="margin-left:8%; margin-top: 1em">The open
+callback is invoked by <b>archive_open</b>(). It should
+return <b>ARCHIVE_OK</b> if the underlying file or data
+source is successfully opened. If the open fails, it should
+call <b>archive_set_error</b>() to register an error code
+and message and return <b>ARCHIVE_FATAL</b>.</p>
+
+<p style="margin-left:8%; margin-top: 1em">The read
+callback is invoked whenever the library requires raw bytes
+from the archive. The read callback should read data into a
+buffer, set the const void **buffer argument to point to the
+available data, and return a count of the number of bytes
+available. The library will invoke the read callback again
+only after it has consumed this data. The library imposes no
+constraints on the size of the data blocks returned. On
+end-of-file, the read callback should return zero. On error,
+the read callback should invoke <b>archive_set_error</b>()
+to register an error code and message and return -1.</p>
+
+<p style="margin-left:8%; margin-top: 1em">The skip
+callback is invoked when the library wants to ignore a block
+of data. The return value is the number of bytes actually
+skipped, which may differ from the request. If the callback
+cannot skip data, it should return zero. If the skip
+callback is not provided (the function pointer is NULL ),
+the library will invoke the read function instead and simply
+discard the result. A skip callback can provide significant
+performance gains when reading uncompressed archives from
+slow disk drives or other media that can skip quickly.</p>
+
+<p style="margin-left:8%; margin-top: 1em">The close
+callback is invoked by archive_close when the archive
+processing is complete. The callback should return
+<b>ARCHIVE_OK</b> on success. On failure, the callback
+should invoke <b>archive_set_error</b>() to register an
+error code and message and return <b>ARCHIVE_FATAL.</b></p>
+
+<p style="margin-top: 1em" valign="top"><b>EXAMPLE</b></p>
+
+<p style="margin-left:8%;">The following illustrates basic
+usage of the library. In this example, the callback
+functions are simply wrappers around the standard open(2),
+read(2), and close(2) system calls.</p>
+
+<p style="margin-left:17%; margin-top: 1em">void <br>
+list_archive(const char *name) <br>
+{ <br>
+struct mydata *mydata; <br>
+struct archive *a; <br>
+struct archive_entry *entry;</p>
+
+<p style="margin-left:17%; margin-top: 1em">mydata =
+malloc(sizeof(struct mydata)); <br>
+a = archive_read_new(); <br>
+mydata-&gt;name = name; <br>
+archive_read_support_compression_all(a); <br>
+archive_read_support_format_all(a); <br>
+archive_read_open(a, mydata, myopen, myread, myclose); <br>
+while (archive_read_next_header(a, &amp;entry) ==
+ARCHIVE_OK) { <br>
+printf(&quot;%s\n&quot;,archive_entry_pathname(entry)); <br>
+archive_read_data_skip(a); <br>
+} <br>
+archive_read_finish(a); <br>
+free(mydata); <br>
+}</p>
+
+<p style="margin-left:17%; margin-top: 1em">ssize_t <br>
+myread(struct archive *a, void *client_data, const void
+**buff) <br>
+{ <br>
+struct mydata *mydata = client_data;</p>
+
+<p style="margin-left:17%; margin-top: 1em">*buff =
+mydata-&gt;buff; <br>
+return (read(mydata-&gt;fd, mydata-&gt;buff, 10240)); <br>
+}</p>
+
+<p style="margin-left:17%; margin-top: 1em">int <br>
+myopen(struct archive *a, void *client_data) <br>
+{ <br>
+struct mydata *mydata = client_data;</p>
+
+<p style="margin-left:17%; margin-top: 1em">mydata-&gt;fd =
+open(mydata-&gt;name, O_RDONLY); <br>
+return (mydata-&gt;fd &gt;= 0 ? ARCHIVE_OK : ARCHIVE_FATAL);
+<br>
+}</p>
+
+<p style="margin-left:17%; margin-top: 1em">int <br>
+myclose(struct archive *a, void *client_data) <br>
+{ <br>
+struct mydata *mydata = client_data;</p>
+
+<p style="margin-left:17%; margin-top: 1em">if
+(mydata-&gt;fd &gt; 0) <br>
+close(mydata-&gt;fd); <br>
+return (ARCHIVE_OK); <br>
+}</p>
+
+<p style="margin-top: 1em" valign="top"><b>RETURN
+VALUES</b></p>
+
+<p style="margin-left:8%;">Most functions return zero on
+success, non-zero on error. The possible return codes
+include: <b>ARCHIVE_OK</b> (the operation succeeded),
+<b>ARCHIVE_WARN</b> (the operation succeeded but a
+non-critical error was encountered), <b>ARCHIVE_EOF</b>
+(end-of-archive was encountered), <b>ARCHIVE_RETRY</b> (the
+operation failed but can be retried), and
+<b>ARCHIVE_FATAL</b> (there was a fatal error; the archive
+should be closed immediately). Detailed error codes and
+textual descriptions are available from the
+<b>archive_errno</b>() and <b>archive_error_string</b>()
+functions.</p>
+
+
+<p style="margin-left:8%; margin-top: 1em"><b>archive_read_new</b>()
+returns a pointer to a freshly allocated struct archive
+object. It returns NULL on error.</p>
+
+
+<p style="margin-left:8%; margin-top: 1em"><b>archive_read_data</b>()
+returns a count of bytes actually read or zero at the end of
+the entry. On error, a value of <b>ARCHIVE_FATAL</b>,
+<b>ARCHIVE_WARN</b>, or <b>ARCHIVE_RETRY</b> is returned and
+an error code and textual description can be retrieved from
+the <b>archive_errno</b>() and <b>archive_error_string</b>()
+functions.</p>
+
+<p style="margin-left:8%; margin-top: 1em">The library
+expects the client callbacks to behave similarly. If there
+is an error, you can use <b>archive_set_error</b>() to set
+an appropriate error code and description, then return one
+of the non-zero values above. (Note that the value
+eventually returned to the client may not be the same; many
+errors that are not critical at the level of basic I/O can
+prevent the archive from being properly read, thus most I/O
+errors eventually cause <b>ARCHIVE_FATAL</b> to be
+returned.)</p>
+
+<p style="margin-top: 1em" valign="top"><b>SEE ALSO</b></p>
+
+<p style="margin-left:8%;">tar(1), archive(3),
+archive_util(3), tar(5)</p>
+
+<p style="margin-top: 1em" valign="top"><b>HISTORY</b></p>
+
+<p style="margin-left:8%;">The <b>libarchive</b> library
+first appeared in FreeBSD&nbsp;5.3.</p>
+
+<p style="margin-top: 1em" valign="top"><b>AUTHORS</b></p>
+
+<p style="margin-left:8%;">The <b>libarchive</b> library
+was written by Tim Kientzle
+&lang;kientzle@acm.org&rang;.</p>
+
+<p style="margin-top: 1em" valign="top"><b>BUGS</b></p>
+
+<p style="margin-left:8%;">Many traditional archiver
+programs treat empty files as valid empty archives. For
+example, many implementations of tar(1) allow you to append
+entries to an empty file. Of course, it is impossible to
+determine the format of an empty file by inspecting the
+contents, so this library treats empty files as having a
+special &lsquo;&lsquo;empty&rsquo;&rsquo; format.</p>
+
+
+<p style="margin-left:8%; margin-top: 1em">FreeBSD&nbsp;9.0
+April&nbsp;13, 2009 FreeBSD&nbsp;9.0</p>
+<hr>
+</body>
+</html>

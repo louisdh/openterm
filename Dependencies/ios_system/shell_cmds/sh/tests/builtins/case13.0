@@ -1,0 +1,12 @@
+# $FreeBSD: head/bin/sh/tests/builtins/case13.0 228943 2011-12-28 23:51:17Z jilles $
+
+case ^ in
+[\^^]) ;;
+*) echo Failed at $LINENO ;;
+esac
+
+case s in
+[\^^]) echo Failed at $LINENO ;;
+[s\]]) ;;
+*) echo Failed at $LINENO ;;
+esac

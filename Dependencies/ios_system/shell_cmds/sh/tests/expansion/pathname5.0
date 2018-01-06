@@ -1,0 +1,3 @@
+# $FreeBSD: head/bin/sh/tests/expansion/pathname5.0 278806 2015-02-15 19:48:29Z jilles $
+
+[ `echo '/[e]tc'` = /etc ]

@@ -1,0 +1,4 @@
+# $FreeBSD: head/bin/sh/tests/parser/comment2.42 295818 2016-02-19 16:56:07Z jilles $
+
+${SH} -c '#
+exit 42'

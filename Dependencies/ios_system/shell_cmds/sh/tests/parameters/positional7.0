@@ -1,0 +1,8 @@
+# $FreeBSD: head/bin/sh/tests/parameters/positional7.0 273802 2014-10-28 22:14:31Z jilles $
+
+set -- / ''
+IFS=*
+set -- "$*"
+IFS=:
+args="$*"
+[ "$#:$args" = "1:/*" ]

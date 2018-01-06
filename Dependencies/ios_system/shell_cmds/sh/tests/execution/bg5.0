@@ -1,0 +1,4 @@
+# $FreeBSD: head/bin/sh/tests/execution/bg5.0 258489 2013-11-22 21:50:13Z jilles $
+# A background command has an implicit </dev/null redirection.
+
+echo bad | ${SH} -c '{ cat & wait; }'

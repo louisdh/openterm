@@ -1,0 +1,4 @@
+# $FreeBSD: head/bin/sh/tests/expansion/cmdsubst4.0 216747 2010-12-27 23:56:03Z jilles $
+
+exec 2>/dev/null
+! y=$(: </var/empty/nonexistent)

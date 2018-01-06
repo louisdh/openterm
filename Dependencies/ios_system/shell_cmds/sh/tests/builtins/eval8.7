@@ -1,0 +1,7 @@
+# $FreeBSD: head/bin/sh/tests/builtins/eval8.7 272983 2014-10-12 13:12:06Z jilles $
+
+f() {
+	eval "return 7
+echo bad2"
+}
+f

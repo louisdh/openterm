@@ -1,0 +1,4 @@
+# $FreeBSD: head/bin/sh/tests/execution/subshell3.0 245383 2013-01-13 19:39:13Z jilles $
+
+(false; exit) && exit 3
+exit 0

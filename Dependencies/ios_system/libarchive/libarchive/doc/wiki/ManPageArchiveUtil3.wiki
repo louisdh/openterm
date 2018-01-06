@@ -1,0 +1,146 @@
+#summary archive_util 3 manual page
+== NAME ==
+*archive_clear_error*,
+*archive_compression*,
+*archive_compression_name*,
+*archive_copy_error*,
+*archive_errno*,
+*archive_error_string*,
+*archive_file_count*,
+*archive_format*,
+*archive_format_name*,
+*archive_set_error*
+- libarchive utility functions
+== SYNOPSIS ==
+*#include <archive.h>*
+<br>
+*void*
+<br>
+*archive_clear_error*(_struct archive `*`_);
+<br>
+*int*
+<br>
+*archive_compression*(_struct archive `*`_);
+<br>
+*const char `*`*
+<br>
+*archive_compression_name*(_struct archive `*`_);
+<br>
+*void*
+<br>
+*archive_copy_error*(_struct archive `*`_, _struct archive `*`_);
+<br>
+*int*
+<br>
+*archive_errno*(_struct archive `*`_);
+<br>
+*const char `*`*
+<br>
+*archive_error_string*(_struct archive `*`_);
+<br>
+*int*
+<br>
+*archive_file_count*(_struct archive `*`_);
+<br>
+*int*
+<br>
+*archive_format*(_struct archive `*`_);
+<br>
+*const char `*`*
+<br>
+*archive_format_name*(_struct archive `*`_);
+<br>
+*void*
+<br>
+*archive_set_error*(_struct archive `*`_, _int error_code_, _const char `*`fmt_, _..._);
+== DESCRIPTION ==
+These functions provide access to various information about the
+*struct archive*
+object used in the
+*libarchive*(3)
+library.
+<dl>
+<dt>*archive_clear_error*()</dt><dd>
+Clears any error information left over from a previous call.
+Not generally used in client code.
+</dd><dt>*archive_compression*()</dt><dd>
+Returns a numeric code indicating the current compression.
+This value is set by
+*archive_read_open*().
+</dd><dt>*archive_compression_name*()</dt><dd>
+Returns a text description of the current compression suitable for display.
+</dd><dt>*archive_copy_error*()</dt><dd>
+Copies error information from one archive to another.
+</dd><dt>*archive_errno*()</dt><dd>
+Returns a numeric error code (see
+*errno*(2))
+indicating the reason for the most recent error return.
+</dd><dt>*archive_error_string*()</dt><dd>
+Returns a textual error message suitable for display.
+The error message here is usually more specific than that
+obtained from passing the result of
+*archive_errno*()
+to
+*strerror*(3).
+</dd><dt>*archive_file_count*()</dt><dd>
+Returns a count of the number of files processed by this archive object.
+The count is incremented by calls to
+*archive_write_header*()
+or
+*archive_read_next_header*(.)
+</dd><dt>*archive_format*()</dt><dd>
+Returns a numeric code indicating the format of the current
+archive entry.
+This value is set by a successful call to
+*archive_read_next_header*().
+Note that it is common for this value to change from
+entry to entry.
+For example, a tar archive might have several entries that
+utilize GNU tar extensions and several entries that do not.
+These entries will have different format codes.
+</dd><dt>*archive_format_name*()</dt><dd>
+A textual description of the format of the current entry.
+</dd><dt>*archive_set_error*()</dt><dd>
+Sets the numeric error code and error description that will be returned
+by
+*archive_errno*()
+and
+*archive_error_string*().
+This function should be used within I/O callbacks to set system-specific
+error codes and error descriptions.
+This function accepts a printf-like format string and arguments.
+However, you should be careful to use only the following printf
+format specifiers:
+"%c",
+"%d",
+"%jd",
+"%jo",
+"%ju",
+"%jx",
+"%ld",
+"%lo",
+"%lu",
+"%lx",
+"%o",
+"%u",
+"%s",
+"%x",
+"%%".
+Field-width specifiers and other printf features are
+not uniformly supported and should not be used.
+</dd></dl>
+== SEE ALSO ==
+*archive_read*(3),
+*archive_write*(3),
+*libarchive*(3),
+*printf*(3)
+== HISTORY ==
+The
+*libarchive*
+library first appeared in
+FreeBSD 5.3.
+== AUTHORS ==
+The
+*libarchive*
+library was written by
+Tim Kientzle  <kientzle@acm.org.>

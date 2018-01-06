@@ -1,0 +1,8 @@
+# $FreeBSD: head/bin/sh/tests/builtins/type1.0 165931 2007-01-11 00:25:20Z stefanf $
+command -v not-here && exit 1
+command -v /not-here && exit 1
+command -V not-here && exit 1
+command -V /not-here && exit 1
+type not-here && exit 1
+type /not-here && exit 1
+exit 0

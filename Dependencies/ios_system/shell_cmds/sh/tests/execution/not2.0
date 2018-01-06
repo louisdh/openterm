@@ -1,0 +1,6 @@
+# $FreeBSD: head/bin/sh/tests/execution/not2.0 249407 2013-04-12 15:19:35Z jilles $
+
+while :; do
+	! break
+	exit 3
+done

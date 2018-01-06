@@ -1,0 +1,3 @@
+# $FreeBSD: head/bin/sh/tests/builtins/hash3.0 149791 2005-09-05 09:42:10Z stefanf $
+hash -v cat
+hash

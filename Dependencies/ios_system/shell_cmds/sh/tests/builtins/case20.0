@@ -1,0 +1,9 @@
+# $FreeBSD: head/bin/sh/tests/builtins/case20.0 287148 2015-08-25 21:55:15Z jilles $
+
+# Shells do not agree about what this pattern should match, but it is
+# certain that it must not crash and the missing close bracket must not
+# be simply ignored.
+
+case B in
+[[:alpha:]) echo bad ;;
+esac

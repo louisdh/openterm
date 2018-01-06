@@ -1,0 +1,12 @@
+# $FreeBSD: head/bin/sh/tests/builtins/local4.0 254339 2013-08-14 21:59:48Z jilles $
+
+f() {
+	local -- x
+	x=2
+	[ "$x" = 2 ]
+}
+x=1
+f || exit 3
+[ "$x" = 1 ] || exit 3
+f || exit 3
+[ "$x" = 1 ] || exit 3

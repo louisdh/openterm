@@ -1,0 +1,13 @@
+# $FreeBSD: head/bin/sh/tests/builtins/return8.0 255215 2013-09-04 22:10:16Z jilles $
+
+if [ "$1" = nested ]; then
+	return 17
+fi
+
+f() {
+	set -- nested
+	. "$0"
+	return $(($? ^ 1))
+}
+f
+exit $(($? ^ 16))

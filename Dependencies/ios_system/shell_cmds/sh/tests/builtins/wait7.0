@@ -1,0 +1,4 @@
+# $FreeBSD: head/bin/sh/tests/builtins/wait7.0 248349 2013-03-15 20:29:31Z jilles $
+
+: &
+wait -- $!

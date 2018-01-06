@@ -1,0 +1,8 @@
+# $FreeBSD: head/bin/sh/tests/errors/assignment-error2.0 216870 2011-01-01 13:26:18Z jilles $
+
+set -e
+HOME=/
+readonly HOME
+cd /sbin
+{ HOME=/bin cd; } 2>/dev/null || :
+[ "$(pwd)" != /bin ]

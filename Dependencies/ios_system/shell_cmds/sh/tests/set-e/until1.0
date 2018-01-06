@@ -1,0 +1,5 @@
+# $FreeBSD: head/bin/sh/tests/set-e/until1.0 149781 2005-09-04 11:59:59Z stefanf $
+set -e
+until false; do
+	break
+done

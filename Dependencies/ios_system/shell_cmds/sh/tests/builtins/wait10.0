@@ -1,0 +1,5 @@
+# $FreeBSD: head/bin/sh/tests/builtins/wait10.0 251430 2013-06-05 19:40:52Z jilles $
+# Init cannot be a child of the shell.
+exit 49 & p49=$!
+wait 1 "$p49"
+[ "$?" = 49 ]

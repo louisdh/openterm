@@ -1,0 +1,18 @@
+# $FreeBSD: head/bin/sh/tests/parser/line-cont10.0 273276 2014-10-19 11:59:15Z jilles $
+
+v=XaaaXbbbX
+[ "${v\
+#\
+*\
+a}.${v\
+#\
+#\
+*\
+a}.${v\
+%\
+b\
+*}.${v\
+%\
+%\
+b\
+*}" = aaXbbbX.XbbbX.XaaaXbb.XaaaX ]

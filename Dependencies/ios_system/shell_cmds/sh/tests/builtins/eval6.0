@@ -1,0 +1,5 @@
+# $FreeBSD: head/bin/sh/tests/builtins/eval6.0 249220 2013-04-06 22:30:46Z jilles $
+
+# eval should preserve $? from command substitutions when starting
+# the parsed command.
+[ $(false; eval 'echo $?' $(:)) = 0 ]

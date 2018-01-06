@@ -1,0 +1,9 @@
+# $FreeBSD: head/bin/sh/tests/builtins/for2.0 230463 2012-01-22 14:00:33Z jilles $
+
+r=x
+f() { return 42; }
+f
+for i in x; do
+	r=$?
+done
+[ "$r" = 42 ]

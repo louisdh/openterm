@@ -1,0 +1,9 @@
+# $FreeBSD: head/bin/sh/tests/set-e/while3.0 149791 2005-09-05 09:42:10Z stefanf $
+set -e
+f() {
+	while true; do
+		false
+		break
+	done
+}
+f || true

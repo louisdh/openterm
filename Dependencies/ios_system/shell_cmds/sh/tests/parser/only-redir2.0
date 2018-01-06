@@ -1,0 +1,2 @@
+# $FreeBSD: head/bin/sh/tests/parser/only-redir2.0 254335 2013-08-14 19:34:13Z jilles $
+</dev/null | :

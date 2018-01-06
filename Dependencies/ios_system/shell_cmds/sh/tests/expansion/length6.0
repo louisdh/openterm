@@ -1,0 +1,8 @@
+# $FreeBSD: head/bin/sh/tests/expansion/length6.0 220903 2011-04-20 22:24:54Z jilles $
+
+x='!@#$%^&*()[]'
+[ ${#x} = 12 ] || echo bad 1
+[ "${#x}" = 12 ] || echo bad 2
+IFS=2
+[ ${#x} = 1 ] || echo bad 3
+[ "${#x}" = 12 ] || echo bad 4

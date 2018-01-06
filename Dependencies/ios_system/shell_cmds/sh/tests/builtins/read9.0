@@ -1,0 +1,10 @@
+# $FreeBSD: head/bin/sh/tests/builtins/read9.0 287308 2015-08-30 17:24:22Z jilles $
+
+empty=''
+read a b c <<EOF
+\ \ A B\ \ B C\ \ $empty
+EOF
+read d e <<EOF
+D\ $empty
+EOF
+[ "$a.$b.$c.$d.$e" = "  A.B  B.C  .D ." ]

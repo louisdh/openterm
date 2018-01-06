@@ -1,0 +1,7 @@
+# $FreeBSD: head/bin/sh/tests/parser/dollar-quote12.0 286971 2015-08-20 21:31:36Z jilles $
+
+# \u without any digits at all remains invalid.
+# Our choice is a parse error.
+
+v=$( (eval ": \$'\u'") 2>&1 >/dev/null)
+[ $? -ne 0 ] && [ -n "$v" ]

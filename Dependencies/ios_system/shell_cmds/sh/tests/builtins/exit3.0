@@ -1,0 +1,5 @@
+# $FreeBSD: head/bin/sh/tests/builtins/exit3.0 217175 2011-01-08 23:08:13Z jilles $
+
+# exit without arguments differs from exit $? in an EXIT trap.
+
+trap 'false; exit' 0

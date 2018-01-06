@@ -1,0 +1,7 @@
+# $FreeBSD: head/bin/sh/tests/set-e/elif2.0 211399 2010-08-16 17:18:08Z jilles $
+set -e
+if false; then
+	:
+elif false; false; then
+	:
+fi

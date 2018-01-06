@@ -1,0 +1,7 @@
+# $FreeBSD: head/bin/sh/tests/parser/no-space2.0 218891 2011-02-20 17:28:58Z jilles $
+
+# This conflicts with ksh extended patterns but occurs in the wild.
+
+set -e
+
+!(false)

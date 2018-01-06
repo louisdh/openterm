@@ -1,0 +1,7 @@
+# $FreeBSD: head/bin/sh/tests/errors/redirection-error7.0 216851 2010-12-31 18:20:17Z jilles $
+
+! dummy=$(
+	exec 3>&1 >&2 2>&3
+	ulimit -n 9
+	exec 9<.
+) && [ -n "$dummy" ]

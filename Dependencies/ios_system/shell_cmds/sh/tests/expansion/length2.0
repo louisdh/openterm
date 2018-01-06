@@ -1,0 +1,4 @@
+# $FreeBSD: head/bin/sh/tests/expansion/length2.0 219611 2011-03-13 16:20:38Z jilles $
+
+v=$-
+[ "${#-}" = "${#v}" ] || echo '${#-} wrong'

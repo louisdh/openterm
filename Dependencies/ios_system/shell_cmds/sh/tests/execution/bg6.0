@@ -1,0 +1,4 @@
+# $FreeBSD: head/bin/sh/tests/execution/bg6.0 258489 2013-11-22 21:50:13Z jilles $
+# The redirection overrides the </dev/null implicit in a background command.
+
+echo yes | ${SH} -c '{ cat & wait; } </dev/stdin'

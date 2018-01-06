@@ -1,0 +1,4 @@
+# $FreeBSD: head/bin/sh/tests/execution/redir4.0 214290 2010-10-24 20:09:49Z jilles $
+
+{ echo bad 0>&3; } 2>/dev/null 3>/dev/null 3>&-
+exit 0

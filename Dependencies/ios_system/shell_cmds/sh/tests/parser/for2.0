@@ -1,0 +1,15 @@
+# $FreeBSD: head/bin/sh/tests/parser/for2.0 218889 2011-02-20 14:18:58Z jilles $
+
+# Common extensions to the 'for' syntax.
+
+nl='
+'
+list=' a b c'
+set -- $list
+for s2 in ";" ";$nl"; do
+	for s3 in "$nl" " "; do
+		r=''
+		eval "for i${s2}do${s3}r=\"\$r \$i\"; done"
+		[ "$r" = "$list" ] || exit 1
+	done
+done

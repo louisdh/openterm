@@ -1,0 +1,6 @@
+# $FreeBSD: head/bin/sh/tests/parser/alias12.0 261160 2014-01-25 14:59:08Z jilles $
+
+unalias -a
+alias alias0=command
+alias true='echo bad'
+eval 'alias0 true'

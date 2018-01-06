@@ -1,0 +1,4 @@
+# $FreeBSD: head/bin/sh/tests/execution/fork3.0 220978 2011-04-23 22:28:56Z jilles $
+
+result=$(${SH} -c 'f() { ps -p $$ -o comm=; }; f')
+test "$result" = "ps"

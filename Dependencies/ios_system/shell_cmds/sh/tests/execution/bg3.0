@@ -1,0 +1,5 @@
+# $FreeBSD: head/bin/sh/tests/execution/bg3.0 221027 2011-04-25 20:54:12Z jilles $
+
+f() { return 42; }
+f
+(:) &

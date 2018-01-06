@@ -1,0 +1,14 @@
+# $FreeBSD: head/bin/sh/tests/parser/line-cont5.0 273276 2014-10-19 11:59:15Z jilles $
+
+bad=1
+case x in
+x\
+) ;\
+; *) exit 7
+esac &\
+& bad= &\
+& : >\
+>/dev/null
+
+false |\
+| [ -z "$bad" ]

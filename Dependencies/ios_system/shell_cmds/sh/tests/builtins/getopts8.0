@@ -1,0 +1,8 @@
+# $FreeBSD: head/bin/sh/tests/builtins/getopts8.0 265849 2014-05-10 19:18:49Z jilles $
+
+set -- -yz -wx
+opt=wrong1 OPTARG=wrong2
+while getopts :x opt; do
+	echo "$opt:${OPTARG-unset}"
+done
+echo "OPTIND=$OPTIND"

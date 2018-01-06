@@ -1,0 +1,4 @@
+# $FreeBSD: head/bin/sh/tests/errors/redirection-error2.2 213738 2010-10-12 18:20:38Z obrien $
+
+# sh should fail gracefully on this bad redirect
+${SH} -c 'echo 1 >&$a' 2>/dev/null

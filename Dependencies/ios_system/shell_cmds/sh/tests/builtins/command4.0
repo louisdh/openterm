@@ -1,0 +1,2 @@
+# $FreeBSD: head/bin/sh/tests/builtins/command4.0 211973 2010-08-29 20:53:24Z jilles $
+! command -v nonexisting

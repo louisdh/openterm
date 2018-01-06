@@ -1,0 +1,4 @@
+# $FreeBSD: head/bin/sh/tests/builtins/set3.0 296578 2016-03-09 21:05:21Z jilles $
+
+settings1=$(set +o) && set -o nolog && settings2=$(set +o) &&
+[ "$settings1" != "$settings2" ]

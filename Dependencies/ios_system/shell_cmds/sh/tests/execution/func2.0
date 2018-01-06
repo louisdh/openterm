@@ -1,0 +1,12 @@
+# $FreeBSD: head/bin/sh/tests/execution/func2.0 211399 2010-08-16 17:18:08Z jilles $
+# The empty pairs of braces here are to test that this does not cause a crash.
+
+f() { }
+f
+hash -v f >/dev/null
+f() { { }; }
+f
+hash -v f >/dev/null
+f() { { } }
+f
+hash -v f >/dev/null

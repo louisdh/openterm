@@ -1,0 +1,3 @@
+# $FreeBSD: head/bin/sh/tests/parameters/optind2.0 259846 2013-12-24 22:38:24Z jilles $
+
+[ "$(OPTIND=42 ${SH} -c 'printf %s "$OPTIND"')" = 1 ]

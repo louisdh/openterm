@@ -1,0 +1,3 @@
+# $FreeBSD: head/bin/sh/tests/parser/comment1.0 295818 2016-02-19 16:56:07Z jilles $
+
+${SH} -c '#'

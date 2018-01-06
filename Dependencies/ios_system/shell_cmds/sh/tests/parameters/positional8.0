@@ -1,0 +1,31 @@
+# $FreeBSD: head/bin/sh/tests/parameters/positional8.0 291025 2015-11-18 21:09:03Z jilles $
+
+failures=''
+ok=''
+
+testcase() {
+	code="$1"
+	expected="$2"
+	oIFS="$IFS"
+	eval "$code"
+	IFS='|'
+	result="$#|$*"
+	IFS="$oIFS"
+	if [ "x$result" = "x$expected" ]; then
+		ok=x$ok
+	else
+		failures=x$failures
+		echo "For $code, expected $expected actual $result"
+	fi
+}
+
+testcase 'shift $#; set -- ""$*'		'1|'
+testcase 'shift $#; set -- $*""'		'1|'
+testcase 'shift $#; set -- ""$@'		'1|'
+testcase 'shift $#; set -- $@""'		'1|'
+testcase 'shift $#; set -- """$*"'		'1|'
+testcase 'shift $#; set -- "$*"""'		'1|'
+testcase 'shift $#; set -- """$@"'		'1|'
+testcase 'shift $#; set -- "$@"""'		'1|'
+
+test "x$failures" = x

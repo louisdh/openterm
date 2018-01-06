@@ -1,0 +1,10 @@
+# $FreeBSD: head/bin/sh/tests/parameters/ifs1.0 306843 2016-10-08 13:40:12Z jilles $
+
+env IFS=_ ${SH} -c '
+rc=2
+nosuchtool_function() {
+	rc=0
+}
+v=nosuchtool_function
+$v && exit "$rc"
+'

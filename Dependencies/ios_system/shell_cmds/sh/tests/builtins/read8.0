@@ -1,0 +1,17 @@
+# $FreeBSD: head/bin/sh/tests/builtins/read8.0 286826 2015-08-16 12:57:17Z jilles $
+
+read a b c <<\EOF
+\
+A\
+ \
+ \
+ \
+B\
+ \
+ \
+C\
+ \
+ \
+ \
+EOF
+[ "$a.$b.$c" = "A.B.C" ]

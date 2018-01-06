@@ -1,0 +1,7 @@
+# $FreeBSD: head/bin/sh/tests/builtins/wait8.0 251429 2013-06-05 19:08:22Z jilles $
+
+exit 44 & p44=$!
+exit 45 & p45=$!
+exit 7 & p7=$!
+wait "$p44" "$p7" "$p45"
+[ "$?" = 45 ]

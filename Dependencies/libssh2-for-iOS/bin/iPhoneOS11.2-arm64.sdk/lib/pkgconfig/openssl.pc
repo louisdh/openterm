@@ -1,0 +1,9 @@
+prefix=/Users/louisdhauwe/projects/private/TerminalPOC/Framework/libssh2-for-iOS/bin/iPhoneOS11.2-arm64.sdk
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: OpenSSL
+Description: Secure Sockets Layer and cryptography libraries and tools
+Version: 1.0.2e
+Requires: libssl libcrypto

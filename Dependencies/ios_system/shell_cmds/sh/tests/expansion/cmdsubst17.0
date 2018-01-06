@@ -1,0 +1,5 @@
+# $FreeBSD: head/bin/sh/tests/expansion/cmdsubst17.0 245422 2013-01-14 12:20:55Z jilles $
+
+f() { return 3; }
+f
+[ `echo $?; :` = 3 ]

@@ -1,0 +1,6 @@
+# $FreeBSD: head/bin/sh/tests/expansion/cmdsubst12.0 230121 2012-01-14 23:10:18Z jilles $
+
+f() {
+	echo x$(printf foo >&2)y
+}
+[ "$(f 2>&1)" = "fooxy" ]

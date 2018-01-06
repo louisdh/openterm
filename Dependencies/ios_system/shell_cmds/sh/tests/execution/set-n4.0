@@ -1,0 +1,3 @@
+# $FreeBSD: head/bin/sh/tests/execution/set-n4.0 222676 2011-06-04 11:28:42Z jilles $
+
+$SH -nc 'echo bad'

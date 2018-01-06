@@ -1,0 +1,3 @@
+# $FreeBSD: head/bin/sh/tests/builtins/set2.0 223183 2011-06-17 10:21:24Z jilles $
+
+! env @badness=1 ${SH} -c 'v=`set`; eval "$v"' 2>&1 | grep @badness

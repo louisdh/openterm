@@ -1,0 +1,16 @@
+// The settings in this file should be updated with the utmost caution.
+// See radar:13158726 for additional discusion.
+
+// For compatibility reasons, we must continue to ship libcurl.4.dylib with
+// compatibility version 7.0.0. This differs from upstream, which has
+// compatibility version 8.0.0 as of release 7.28.1. The libtool versioning
+// system bumps compatibility version when API is added, which is not correct
+// on our platform. Once an actual incompatible change is made upstream
+// (hopefully never), the library version will increase to 5, which may
+// require us to ship a legacy curl along with the latest version. Until
+// then, we should be able to safely keep the following two settings.
+CURL_LIBRARY_VERSION = 4
+DYLIB_COMPATIBILITY_VERSION = 7
+
+// The current version is less important, and can probably match upstream.
+DYLIB_CURRENT_VERSION = 9

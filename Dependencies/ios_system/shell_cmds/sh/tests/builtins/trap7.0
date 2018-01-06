@@ -1,0 +1,3 @@
+# $FreeBSD: head/bin/sh/tests/builtins/trap7.0 217996 2011-01-27 23:08:20Z jilles $
+
+[ "$(trap 'echo trapped' EXIT)" = trapped ]

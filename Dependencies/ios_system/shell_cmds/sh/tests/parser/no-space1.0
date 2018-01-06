@@ -1,0 +1,18 @@
+# $FreeBSD: head/bin/sh/tests/parser/no-space1.0 218891 2011-02-20 17:28:58Z jilles $
+
+# These are ugly but are required to work.
+
+set -e
+
+while(false)do(:)done
+if(false)then(:)fi
+if(false)then(:)else(:)fi
+(:&&:)||:
+until(:)do(:)done
+case x in(x);;*)exit 1;(:)esac
+case x in(x);;*)exit 1;;esac
+for i do(:)done
+{(:)}
+f(){(:)}
+:|:
+(:)|(:)

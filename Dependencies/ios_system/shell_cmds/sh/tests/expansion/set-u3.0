@@ -1,0 +1,6 @@
+# $FreeBSD: head/bin/sh/tests/expansion/set-u3.0 221463 2011-05-04 22:12:22Z jilles $
+
+set -u
+unset x
+v=$( (eval ': $((x))') 2>&1 >/dev/null)
+[ $? -ne 0 ] && [ -n "$v" ]

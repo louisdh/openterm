@@ -1,0 +1,6 @@
+# $FreeBSD: head/bin/sh/tests/builtins/case11.0 228007 2011-11-26 22:28:25Z jilles $
+
+false
+case x in
+*)
+esac

@@ -1,0 +1,8 @@
+# $FreeBSD: head/bin/sh/tests/parser/set-v1.0 295937 2016-02-23 22:44:01Z jilles $
+
+${SH} <<\EOF
+echo one >&2
+set -v
+echo two >&2
+echo three >&2
+EOF

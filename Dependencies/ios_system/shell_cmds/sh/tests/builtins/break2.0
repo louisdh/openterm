@@ -1,0 +1,12 @@
+# $FreeBSD: head/bin/sh/tests/builtins/break2.0 211467 2010-08-18 20:26:50Z jilles $
+
+# It is not immediately obvious that this should work, and someone probably
+# relies on it.
+
+while :; do
+	trap 'break' USR1
+	kill -USR1 $$
+	echo bad
+	exit 1
+done
+echo good

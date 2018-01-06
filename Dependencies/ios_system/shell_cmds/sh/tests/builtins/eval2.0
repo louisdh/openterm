@@ -1,0 +1,7 @@
+# $FreeBSD: head/bin/sh/tests/builtins/eval2.0 194897 2009-06-24 20:22:54Z jilles $
+
+eval '
+false
+
+' && exit 1
+exit 0

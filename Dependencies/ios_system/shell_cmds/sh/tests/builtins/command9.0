@@ -1,0 +1,14 @@
+# $FreeBSD: head/bin/sh/tests/builtins/command9.0 204801 2010-03-06 17:09:22Z jilles $
+
+failures=0
+
+check() {
+	if ! eval "[ $* ]"; then
+		echo "Failed: $*"
+		: $((failures += 1))
+	fi
+}
+
+check '"$({ command eval shift x 2>/dev/null; } >/dev/null; echo hi)" = hi'
+
+exit $((failures > 0))

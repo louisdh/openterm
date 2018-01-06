@@ -1,0 +1,8 @@
+# $FreeBSD: head/bin/sh/tests/builtins/trap13.0 257399 2013-10-30 21:36:15Z jilles $
+
+{
+	trap 'exit 0' INT
+	${SH} -c 'kill -INT $PPID'
+	exit 3
+} &
+wait $!

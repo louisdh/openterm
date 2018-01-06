@@ -1,0 +1,4 @@
+# $FreeBSD: head/bin/sh/tests/parameters/positional4.0 268568 2014-07-12 10:27:30Z jilles $
+
+set -- "x$0" 2 3 4 5 6 7 8 9 "y$0"
+[ "${01}.${010}" = "$1.${10}" ]

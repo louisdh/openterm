@@ -1,0 +1,9 @@
+# $FreeBSD: head/bin/sh/tests/builtins/eval3.0 196607 2009-08-27 22:23:23Z jilles $
+
+eval 'false;' && exit 1
+eval 'true;' || exit 1
+eval 'false;
+' && exit 1
+eval 'true;
+' || exit 1
+exit 0

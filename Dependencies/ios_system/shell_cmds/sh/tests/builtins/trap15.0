@@ -1,0 +1,5 @@
+# $FreeBSD: head/bin/sh/tests/builtins/trap15.0 281718 2015-04-18 23:49:57Z bdrewery $
+
+(${SH} -c 'term(){ exit 5;}; trap term TERM; kill -TERM $$') &
+wait >/dev/null 2>&1 $!
+[ $? -eq 5 ]

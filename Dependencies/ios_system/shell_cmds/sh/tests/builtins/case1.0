@@ -1,0 +1,13 @@
+#$FreeBSD: head/bin/sh/tests/builtins/case1.0 172440 2007-10-04 16:14:48Z stefanf $
+f()
+{
+	false
+	case $1 in
+	foo) true ;;
+	bar) false ;;
+	esac
+}
+
+f foo || exit 1
+f bar && exit 1
+f quux || exit 1

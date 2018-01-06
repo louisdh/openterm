@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>OpenSourceProject</key>
+	<string>libarchive</string>
+	<key>OpenSourceVersion</key>
+	<string>2.8.3</string>
+	<key>OpenSourceWebsiteURL</key>
+	<string>http://code.google.com/p/libarchive/</string>
+	<key>OpenSourceURL</key>
+	<string>http://libarchive.googlecode.com/files/libarchive-2.8.3.tar.gz</string>
+	<key>OpenSourceSHA1</key>
+	<string>e0634a326cce2b46c8dc637de84d7556257e59e0</string>
+	<key>OpenSourceImportDate</key>
+	<string>2010-05-17</string>
+	<key>OpenSourceModifications</key>
+	<array>
+		<string>Added support for quarantine and copyfile.</string>
+		<string>Added tar --disable-copyfile option.</string>
+		<string>Changed -f behavior; no longer use _PATH_DEFTAPE (6236525).</string>
+		<string>archive_read_support_compression_compress.c: 22872683</string>
+		<string>tar/read.c: 20749385</string>
+		<string>cpio/cpio.c: fix strftime crash on NULL (23383941)</string>
+		<string>libarchive/archive_read_support_format_tar.c: upstream fixes for 23383941</string>
+		<string>libarchive/archive_read_support_format_zip.c: 23383941</string>
+		<string>libarchive/archive_read_support_compression_uu.c: 24686424</string>
+		<string>libarchive/archive_read_support_format_tar.c: 26496124 (8b102e8ddf35e0c066af8d26eb9845024b6a5048)</string>
+		<string>tar/read.c: 28015866</string>
+		<string>tar/read.c: 28024754 (b2e2abbb13ddcd962470cc1adb43b085f6e407a4)</string>
+		<string>libarchive/archive_write_disk.c: 28101193 (6a7b8adb9c70593159831161659de2d2898045f0)</string>
+		<string>libarchive/archive_write_disk.c: 28270358 (dc1882e, 1fa9c7b)</string>
+		<string>tar/util.c: 29009783 (e37b620f)</string>
+		<string>libarchive/archive_write_disk.c: 28270432, 28270519 (dfd6b54c)</string>
+		<string>libarchive/archive_read_support_format_zip.c: 23384463 (36bb164e)</string>
+		<string>libarchive/archive_read_support_format_ar.c: 30881387</string>
+		<string>libarchive/archive_read_support_format_mtree.c: 32125732</string>
+		<string>libarchive/archive_read_support_compression_uu.c: 30881365</string>
+		<string>libarchive/archive_read_support_format_cpio.c: 32125737</string>
+	</array>
+	<key>OpenSourceLicense</key>
+	<string>BSD</string>
+	<key>OpenSourceLicenseFile</key>
+	<string>libarchive.txt</string>
+</dict>
+</plist>

@@ -1,0 +1,7 @@
+# $FreeBSD: head/bin/sh/tests/parser/heredoc3.0 207824 2010-05-09 17:10:50Z jilles $
+
+# This may be expected to work, but pretty much only ash derivatives allow it.
+
+test "$(cat <<EOF)" = "hi there"
+hi there
+EOF

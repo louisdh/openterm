@@ -1,0 +1,4 @@
+# $FreeBSD: head/bin/sh/tests/expansion/plus-minus2.0 206145 2010-04-03 20:55:56Z jilles $
+
+e=
+test "${e:-\}}" = '}'

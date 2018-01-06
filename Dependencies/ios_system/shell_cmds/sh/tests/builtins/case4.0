@@ -1,0 +1,6 @@
+# $FreeBSD: head/bin/sh/tests/builtins/case4.0 220654 2011-04-15 15:14:58Z jilles $
+
+set -- "*"
+case x in
+"$1") echo failed ;;
+esac

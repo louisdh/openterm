@@ -1,0 +1,4 @@
+# $FreeBSD: head/bin/sh/tests/builtins/hash2.0 149791 2005-09-05 09:42:10Z stefanf $
+hash
+hash cat
+hash

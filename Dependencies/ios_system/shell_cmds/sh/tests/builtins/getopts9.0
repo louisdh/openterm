@@ -1,0 +1,9 @@
+# $FreeBSD: head/bin/sh/tests/builtins/getopts9.0 297752 2016-04-09 16:06:13Z jilles $
+
+args='-ab'
+getopts ab opt $args
+printf '%s\n' "$?:$opt:$OPTARG"
+for dummy in dummy1 dummy2; do
+	getopts ab opt $args
+	printf '%s\n' "$?:$opt:$OPTARG"
+done

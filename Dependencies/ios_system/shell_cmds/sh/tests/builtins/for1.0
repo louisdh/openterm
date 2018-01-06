@@ -1,0 +1,4 @@
+# $FreeBSD: head/bin/sh/tests/builtins/for1.0 226892 2011-10-28 23:02:21Z jilles $
+
+false
+for i in `false`; do exit 3; done
