@@ -1,5 +1,5 @@
 <p align="center">
-<img src="readme-resources/hero.png" style="max-height: 160px;" alt="Terminal for iOS">
+<img src="readme-resources/hero.png" alt="Terminal for iOS">
 </p>
 
 <h1 align="center">Terminal for iOS</h1>
