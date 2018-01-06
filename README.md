@@ -33,6 +33,12 @@ Commands included:
 | wc | whoami | | |
 
 
+## Dependencies
+This project uses a modified version of [ios_system](https://github.com/holzschu/ios_system), which requires OpenSSL. For convenience both of these are included in the `Dependencies` folder.
+
+## Running
+Open `Terminal.xcworkspace`, change the bundle identifier to an identifier linked to your Apple developer account in order to run. Build using the `Terminal` scheme. Please note that with the current setup you can only build for arm64 (so no iOS simulator).
+
 ## License
 
 This project is available under the MIT license. See the LICENSE file for more info.
