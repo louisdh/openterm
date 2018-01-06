@@ -20,6 +20,7 @@
 		BEA4992C1FDC0918001B9B9D /* icon-320.png in Resources */ = {isa = PBXBuildFile; fileRef = BEA4992B1FDC0918001B9B9D /* icon-320.png */; };
 		BEA4992E1FDC305B001B9B9D /* KeyboardObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEA4992D1FDC305B001B9B9D /* KeyboardObserver.swift */; };
 		BEA499301FDC3B93001B9B9D /* TerminalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEA4992F1FDC3B93001B9B9D /* TerminalView.swift */; };
+		BEA8E2912001348C00002475 /* UIColor+AssetCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEA8E2902001348C00002475 /* UIColor+AssetCatalog.swift */; };
 		BEECFF0A1FFC1DC0009608B3 /* HistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEECFF091FFC1DC0009608B3 /* HistoryViewController.swift */; };
 		BEECFF391FFEC187009608B3 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEECFF381FFEC187009608B3 /* SettingsViewController.swift */; };
 /* End PBXBuildFile section */
@@ -54,6 +55,7 @@
 		BEA4992B1FDC0918001B9B9D /* icon-320.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-320.png"; sourceTree = "<group>"; };
 		BEA4992D1FDC305B001B9B9D /* KeyboardObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardObserver.swift; sourceTree = "<group>"; };
 		BEA4992F1FDC3B93001B9B9D /* TerminalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TerminalView.swift; sourceTree = "<group>"; };
+		BEA8E2902001348C00002475 /* UIColor+AssetCatalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+AssetCatalog.swift"; sourceTree = "<group>"; };
 		BEECFF091FFC1DC0009608B3 /* HistoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryViewController.swift; sourceTree = "<group>"; };
 		BEECFF381FFEC187009608B3 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		D73213876015994510AC49C0 /* Pods-Terminal.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Terminal.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Terminal/Pods-Terminal.debug.xcconfig"; sourceTree = "<group>"; };
@@ -103,21 +105,46 @@
 		BE3808541FD9BFB600393EB8 /* Terminal */ = {
 			isa = PBXGroup;
 			children = (
+				BEA8E28F2001346D00002475 /* Util */,
+				BEA8E28E2001345700002475 /* View */,
+				BEA8E28D2001344400002475 /* Controller */,
 				BEA4992B1FDC0918001B9B9D /* icon-320.png */,
 				BEA499241FD9C46C001B9B9D /* Terminal.entitlements */,
 				BE3808551FD9BFB600393EB8 /* AppDelegate.swift */,
-				BE3808571FD9BFB600393EB8 /* ViewController.swift */,
 				BE3808591FD9BFB600393EB8 /* Main.storyboard */,
 				BE38085C1FD9BFB600393EB8 /* Assets.xcassets */,
 				BE38085E1FD9BFB600393EB8 /* LaunchScreen.storyboard */,
 				BE3808611FD9BFB600393EB8 /* Info.plist */,
-				BEA499251FD9C4D7001B9B9D /* DocumentManager.swift */,
-				BEA4992D1FDC305B001B9B9D /* KeyboardObserver.swift */,
-				BEA4992F1FDC3B93001B9B9D /* TerminalView.swift */,
+			);
+			path = Terminal;
+			sourceTree = "<group>";
+		};
+		BEA8E28D2001344400002475 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				BE3808571FD9BFB600393EB8 /* ViewController.swift */,
 				BEECFF091FFC1DC0009608B3 /* HistoryViewController.swift */,
 				BEECFF381FFEC187009608B3 /* SettingsViewController.swift */,
 			);
-			path = Terminal;
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		BEA8E28E2001345700002475 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				BEA4992F1FDC3B93001B9B9D /* TerminalView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		BEA8E28F2001346D00002475 /* Util */ = {
+			isa = PBXGroup;
+			children = (
+				BEA8E2902001348C00002475 /* UIColor+AssetCatalog.swift */,
+				BEA4992D1FDC305B001B9B9D /* KeyboardObserver.swift */,
+				BEA499251FD9C4D7001B9B9D /* DocumentManager.swift */,
+			);
+			path = Util;
 			sourceTree = "<group>";
 		};
 		EDE154E4BB3A66786AACAA5C /* Pods */ = {
@@ -268,6 +295,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BEA8E2912001348C00002475 /* UIColor+AssetCatalog.swift in Sources */,
 				BEA499301FDC3B93001B9B9D /* TerminalView.swift in Sources */,
 				BE3808581FD9BFB600393EB8 /* ViewController.swift in Sources */,
 				BEECFF391FFEC187009608B3 /* SettingsViewController.swift in Sources */,

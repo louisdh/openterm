@@ -14,17 +14,6 @@ import ios_system
 import PanelKit
 import StoreKit
 
-extension UIColor {
-	
-	static var defaultMainTintColor: UIColor {
-		guard let defaultMainTintColor = UIColor(named: "Main Tint Color") else {
-			fatalError("Expected color, check asset catalog")
-		}
-		return defaultMainTintColor
-	}
-	
-}
-
 extension String {
 	func toCString() -> UnsafePointer<Int8>? {
 		let nsSelf: NSString = self as NSString
