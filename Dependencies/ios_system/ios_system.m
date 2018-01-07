@@ -19,6 +19,10 @@
 #include <pthread.h>
 #include <sys/stat.h>
 
+// Note: we could use dlsym() to make this code simpler, but it would also make it harder
+// to be accepted in the AppleStore. Dynamic libraries are already loaded, so it would be:
+// function = dlsym(argv[0] + "_main", RTLD_DEFAULT);
+
 #define FILE_UTILITIES   // file_cmds_ios
 #define ARCHIVE_UTILITIES // libarchive_ios
 #define SHELL_UTILITIES  // shell_cmds_ios
@@ -28,14 +32,9 @@
 #define CURL_COMMANDS
 // to activate TEX_COMMANDS, you need the lib-tex libraries:
 // See: https://github.com/holzschu/lib-tex
-// #define TEX_COMMANDS    // pdftex, luatex, bibtex and the like
-// to activate Python, you need python-ios: https://github.com/holzschu/python_ios
-// #define FEAT_PYTHON
-// to activate Lua, you need lua-ios: https://github.com/holzschu/lua_ios
-// #define FEAT_LUA
-
-//#define NETWORK_UTILITIES
-
+#define TEX_COMMANDS    // pdftex, luatex, bibtex and the like
+#define FEAT_PYTHON // if you don't need Python, you can remove Python_grp
+#define FEAT_LUA // if you don't need Lua, you can remove lua_grp
 
 #ifdef FILE_UTILITIES
 // Most useful file utilities (file_cmds_ios)
@@ -103,13 +102,24 @@ typedef struct _functionParameters {
 } functionParameters;
 
 static void* run_function(void* parameters) {
+    static bool isMainThread = true;
     // re-initialize for getopt:
     optind = 1;
     opterr = 1;
     optreset = 1;
     __db_getopt_reset = 1;
     functionParameters *p = (functionParameters *) parameters;
-    p->function(p->argc, p->argv);
+    // Send a signal to the system that we're going to change the current directory:
+    if (isMainThread) {
+        NSString* currentPath = [[NSFileManager defaultManager] currentDirectoryPath];
+        NSURL* currentURL = [NSURL fileURLWithPath:currentPath];
+        NSFileCoordinator *fileCoordinator =  [[NSFileCoordinator alloc] initWithFilePresenter:nil];
+        [fileCoordinator coordinateWritingItemAtURL:currentURL options:0 error:NULL byAccessor:^(NSURL *currentURL) {
+            isMainThread = false;
+            p->function(p->argc, p->argv);
+            isMainThread = true;
+        }];
+    } else p->function(p->argc, p->argv); // but don't do it if a command starts another command (would be overkill)
     return NULL;
 }
 
@@ -117,6 +127,7 @@ static NSDictionary *commandList = nil;
 // do recompute directoriesInPath only if $PATH has changed
 static NSString* fullCommandPath = @"";
 static NSArray *directoriesInPath;
+
 
 
 static void initializeCommandList()
@@ -133,12 +144,12 @@ static void initializeCommandList()
                     @"mv" : [NSValue valueWithPointer: mv_main],
                     @"mkdir" : [NSValue valueWithPointer: mkdir_main],
                     @"rmdir" : [NSValue valueWithPointer: rmdir_main],
-//                    @"chown" : [NSValue valueWithPointer: chown_main],
-//                    @"chgrp" : [NSValue valueWithPointer: chown_main],
+                    @"chown" : [NSValue valueWithPointer: chown_main],
+                    @"chgrp" : [NSValue valueWithPointer: chown_main],
                     @"chflags": [NSValue valueWithPointer: chflags_main],
-//                    @"chmod": [NSValue valueWithPointer: chmod_main],
+                    @"chmod": [NSValue valueWithPointer: chmod_main],
                     @"du"   : [NSValue valueWithPointer: du_main],
-//                    @"df"   : [NSValue valueWithPointer: df_main],
+                    @"df"   : [NSValue valueWithPointer: df_main],
                     @"chksum" : [NSValue valueWithPointer: chksum_main],
                     @"sum"    : [NSValue valueWithPointer: chksum_main],
                     @"stat"   : [NSValue valueWithPointer: stat_main],
@@ -155,15 +166,15 @@ static void initializeCommandList()
 #ifdef SHELL_UTILITIES
                     // Commands from Apple shell_cmds:
                     @"printenv": [NSValue valueWithPointer: printenv_main],
-//                    @"pwd"    : [NSValue valueWithPointer: pwd_main],
+                    @"pwd"    : [NSValue valueWithPointer: pwd_main],
                     @"uname"  : [NSValue valueWithPointer: uname_main],
                     @"date"   : [NSValue valueWithPointer: date_main],
-//                    @"env"    : [NSValue valueWithPointer: env_main],
-//                    @"id"     : [NSValue valueWithPointer: id_main],
-//                    @"groups" : [NSValue valueWithPointer: id_main],
+                    @"env"    : [NSValue valueWithPointer: env_main],
+                    @"id"     : [NSValue valueWithPointer: id_main],
+                    @"groups" : [NSValue valueWithPointer: id_main],
                     @"whoami" : [NSValue valueWithPointer: id_main],
                     @"uptime" : [NSValue valueWithPointer: w_main],
-//                    @"w"      : [NSValue valueWithPointer: w_main],
+                    @"w"      : [NSValue valueWithPointer: w_main],
 #endif
 #ifdef TEXT_UTILITIES
                     // Commands from Apple text_cmds:
@@ -279,9 +290,13 @@ int ios_system(char* inputCmd) {
     // fprintf(stderr, "Command sent: %s \n", cmd); fflush(stderr);
     if (cmd[0] == '"') {
         // Command was enclosed in quotes (almost always with Vim)
-        cmd = cmd + 1; // remove starting quote
-        cmd[strlen(cmd) - 1] = 0x00; // remove ending quote
-        assert(cmd + strlen(cmd) < maxPointer);
+        char* endCmd = strstr(cmd + 1, "\""); // find closing quote
+        if (endCmd) {
+            cmd = cmd + 1; // remove starting quote
+            endCmd[0] = 0x0;
+            assert(endCmd < maxPointer);
+        }
+        // assert(cmd + strlen(cmd) < maxPointer);
     }
     if (cmd[0] == '(') {
         // Standard vim encoding: command between parentheses
@@ -373,6 +388,10 @@ int ios_system(char* inputCmd) {
     if (errorFileMarker) errorFileMarker[0] = 0x0;
     // Store previous values of stdin, stdout, stderr:
     // fprintf(stdout, "before, stderr = %x\n", (void*)stderr);
+    // strip filenames of quotes, if any:
+    if (outputFileName && (outputFileName[0] == '\'')) { outputFileName = outputFileName + 1; outputFileName[strlen(outputFileName) - 1] = 0x0; }
+    if (inputFileName && (inputFileName[0] == '\'')) { inputFileName = inputFileName + 1; inputFileName[strlen(inputFileName) - 1] = 0x0; }
+    if (errorFileName && (errorFileName[0] == '\'')) { errorFileName = errorFileName + 1; errorFileName[strlen(errorFileName) - 1] = 0x0; }
     FILE* push_stdin = stdin;
     FILE* push_stdout = stdout;
     FILE* push_stderr = stderr;
@@ -517,6 +536,7 @@ int ios_system(char* inputCmd) {
         int (*function)(int ac, char** av) = NULL;
         if (commandList == nil) initializeCommandList();
         NSString* commandName = [NSString stringWithCString:argv[0] encoding:NSASCIIStringEncoding];
+        // Insert code here. With #ifdef ???
         function = [[commandList objectForKey: commandName] pointerValue];
         if (function) {
             // We run the function in a thread because there are several
@@ -532,6 +552,7 @@ int ios_system(char* inputCmd) {
             pthread_join(_tid, NULL);
             // free(params);
         } else {
+            // TODO: this should also raise an exception, for python scripts
             fprintf(stderr, "%s: command not found\n", argv[0]);
         }
     }
