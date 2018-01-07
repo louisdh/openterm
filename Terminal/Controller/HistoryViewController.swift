@@ -100,4 +100,20 @@ extension HistoryViewController: PanelContentDelegate {
 		return CGSize(width: 320, height: 480)
 	}
 	
+	var minimumPanelContentSize: CGSize {
+		return CGSize(width: 320, height: 320)
+	}
+	
+	var maximumPanelContentSize: CGSize {
+		return CGSize(width: 600, height: 800)
+	}
+	
+}
+
+extension HistoryViewController: PanelStateCoder {
+	
+	var panelId: Int {
+		return 1
+	}
+	
 }

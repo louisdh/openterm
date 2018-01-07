@@ -56,6 +56,8 @@ class ViewController: UIViewController {
 		
 		NotificationCenter.default.addObserver(self, selector: #selector(didDismissKeyboard), name: .UIKeyboardDidHide, object: nil)
 		
+		NotificationCenter.default.addObserver(self, selector: #selector(applicationDidEnterBackground), name: .UIApplicationDidEnterBackground, object: nil)
+
 	}
 	
 	override func viewWillAppear(_ animated: Bool) {
@@ -65,11 +67,32 @@ class ViewController: UIViewController {
 		
 	}
 	
-	@objc func didDismissKeyboard() {
+	var didFirstLayout = false
+	
+	override func viewDidLayoutSubviews() {
+		 super.viewDidLayoutSubviews()
+		
+		if !didFirstLayout {
+			restorePanelStatesFromDisk()
+
+			didFirstLayout = true
+		}
+
+	}
+	
+	@objc
+	func didDismissKeyboard() {
 		
 		if historyViewController.commands.count > 5 {
 			SKStoreReviewController.requestReview()
 		}
+		
+	}
+	
+	@objc
+	func applicationDidEnterBackground() {
+
+		savePanelStates()
 		
 	}
 	
@@ -241,6 +264,58 @@ extension ViewController: PanelManager {
 		return terminalView
 	}
 
+	func didUpdatePinnedPanels() {
+		
+		savePanelStates()
+		
+	}
+	
+}
+
+extension ViewController {
+	
+	@objc
+	func savePanelStates() {
+		
+		let states = self.panelStates
+		
+		let encoder = PropertyListEncoder()
+		
+		guard let data = try? encoder.encode(states) else {
+			return
+		}
+		
+		UserDefaults.standard.set(data, forKey: "panelStates")
+		
+	}
+	
+	func getStatesFromDisk() -> [Int: PanelState]? {
+		
+		guard let data = UserDefaults.standard.data(forKey: "panelStates") else {
+			return nil
+		}
+		
+		let decoder = PropertyListDecoder()
+		
+		guard let states = try? decoder.decode([Int: PanelState].self, from: data) else {
+			return nil
+		}
+		
+		return states
+	}
+	
+	func restorePanelStatesFromDisk() {
+		
+		let states: [Int: PanelState]
+		
+		if let statesFromDisk = getStatesFromDisk() {
+			states = statesFromDisk
+			restorePanelStates(states)
+
+		}
+		
+	}
+	
 }
 
 extension ViewController {
