@@ -47,8 +47,6 @@ class ViewController: UIViewController {
 		
 		historyPanelViewController = PanelViewController(with: historyViewController, in: self)
 		
-		printCommands()
-		
 		terminalView.processor = self
 		terminalView.delegate = self
 		
