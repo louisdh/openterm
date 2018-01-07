@@ -42,10 +42,11 @@ class DocumentManager {
 	var activeDocumentsFolderURL: URL? {
 		
 		if iCloudAvailable {
-			return cloudDocumentsURL
-		} else {
-			return localDocumentsURL
+            if (cloudDocumentsURL != nil) {
+                return cloudDocumentsURL
+            }
 		}
+        return localDocumentsURL
 	}
 	
 	var iCloudAvailable: Bool {

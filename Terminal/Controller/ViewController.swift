@@ -321,26 +321,13 @@ extension ViewController: TerminalProcessor {
 		readFile(stderr)
 
 		let errFilePath = fileManager.currentDirectoryPath.appending("/.err.txt")
-
-		if let data = fileManager.contents(atPath: errFilePath) {
-			if let errStr = String(data: data, encoding: .utf8) {
-				
-				let filtered = errStr.replacingOccurrences(of: "Command after parsing: ", with: "")
-				
-				if !filtered.isEmpty {
-					return filtered
-				}
-				
-			}
-		}
+        let filePath = fileManager.currentDirectoryPath.appending("/.out.txt")
+        let dataErr = fileManager.contents(atPath: errFilePath) ?? nil
+        let data = fileManager.contents(atPath: filePath) ?? nil
+        let errStr = String(data: dataErr!, encoding: .utf8) ?? ""
+        let outStr = String(data: data!, encoding: .utf8) ?? ""
 		
-		let filePath = fileManager.currentDirectoryPath.appending("/.out.txt")
-
-		if let data = fileManager.contents(atPath: filePath) {
-			return String(data: data, encoding: .utf8) ?? ""
-		}
-		
-		return ""
+		return errStr + outStr
 	}
 	
 }
