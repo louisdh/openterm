@@ -69,7 +69,9 @@ class ViewController: UIViewController {
 	
 	@objc func didDismissKeyboard() {
 		
-		SKStoreReviewController.requestReview()
+		if historyViewController.commands.count > 5 {
+			SKStoreReviewController.requestReview()
+		}
 		
 	}
 	
