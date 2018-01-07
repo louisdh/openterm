@@ -267,9 +267,7 @@ extension ViewController {
 				
 			} else if folderName.hasPrefix("/") {
 				
-				guard let documents = DocumentManager.shared.activeDocumentsFolderURL else {
-					return ""
-				}
+				let documents = DocumentManager.shared.activeDocumentsFolderURL
 				
 				let dirPath = documents.appendingPathComponent(String(folderName)).path
 				

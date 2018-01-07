@@ -19,9 +19,7 @@ class DocumentManager {
 		
 		self.fileManager = fileManager
 		
-		guard let baseURL = self.activeDocumentsFolderURL else {
-			fatalError("Expected base url")
-		}
+		let baseURL = self.activeDocumentsFolderURL
 		
 		fileManager.changeCurrentDirectoryPath(baseURL.path)
 		
@@ -29,19 +27,24 @@ class DocumentManager {
 	
 	private let ICLOUD_IDENTIFIER = "iCloud.com.silverfox.Terminal"
 	
-	private var localDocumentsURL: URL? {
-		return fileManager.urls(for: .documentDirectory, in: .userDomainMask).last
+	private var localDocumentsURL: URL {
+		return fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0]
 	}
 	
 	private var cloudDocumentsURL: URL? {
+		
+		guard iCloudAvailable else {
+			return nil
+		}
+		
 		let ubiquityContainerURL = fileManager.url(forUbiquityContainerIdentifier: ICLOUD_IDENTIFIER)
 		
 		return ubiquityContainerURL?.appendingPathComponent("Documents")
 	}
 	
-	var activeDocumentsFolderURL: URL? {
+	var activeDocumentsFolderURL: URL {
 		
-		if iCloudAvailable {
+		if let cloudDocumentsURL = cloudDocumentsURL {
 			return cloudDocumentsURL
 		} else {
 			return localDocumentsURL
