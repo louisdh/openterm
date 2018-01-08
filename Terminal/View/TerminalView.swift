@@ -168,7 +168,7 @@ extension TerminalView: UITextViewDelegate {
 	}
 	
 	func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
-		
+        
 		let i = textView.text.distance(from: textView.text.startIndex, to: currentCommandStartIndex)
 		
 		if range.location < i {
@@ -196,7 +196,7 @@ extension TerminalView: UITextViewDelegate {
 					
 					let output = processor.process(command: String(input))
 					if !output.isEmpty {
-						textView.text = textView.text + "\n\(output)"
+                        textView.text = textView.text + "\n\(output)"
 					}
 					
 				}
