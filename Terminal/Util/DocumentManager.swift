@@ -49,11 +49,9 @@ class DocumentManager {
 		} else {
 			return localDocumentsURL
 		}
-        return localDocumentsURL
 	}
 	
 	var iCloudAvailable: Bool {
-        return false
 		return fileManager.ubiquityIdentityToken != nil
 	}
 
