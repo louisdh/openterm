@@ -101,6 +101,7 @@ extern int dllpdftexmain(int argc, char *argv[]);
 // local commands
 static int setenv_main(int argc, char *argv[]);
 static int unsetenv_main(int argc, char *argv[]);
+static int cd_main(int argc, char *argv[]);
 
 extern int    __db_getopt_reset;
 typedef struct _functionParameters {
@@ -135,12 +136,14 @@ static NSDictionary *commandList = nil;
 // do recompute directoriesInPath only if $PATH has changed
 static NSString* fullCommandPath = @"";
 static NSArray *directoriesInPath;
+static NSString* previousDirectory;
 
 void initializeEnvironment() {
     // setup a few useful environment variables
     // Initialize paths for application files, including history.txt and keys
     NSString *docsPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
     NSString *libPath = [NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES) lastObject];
+    previousDirectory = [[NSFileManager defaultManager] currentDirectoryPath];
     
     // Where the executables are stored: $PATH + ~/Library/bin + ~/Documents/bin
     // Add content of old PATH to this. PATH *is* defined in iOS, surprising as it may be.
@@ -362,6 +365,7 @@ static void initializeCommandList()
                     // local commands
                     @"setenv"     : [NSValue valueWithPointer: setenv_main],
                     @"unsetenv"     : [NSValue valueWithPointer: unsetenv_main],
+                    @"cd"     : [NSValue valueWithPointer: cd_main],
                     };
 }
 
@@ -384,6 +388,32 @@ static int unsetenv_main(int argc, char** argv) {
     }
     // unsetenv acts on all parameters
     for (int i = 1; i < argc; i++) unsetenv(argv[i]);
+    return 0;
+}
+
+static int cd_main(int argc, char** argv) {
+    NSString* currentDir = [[NSFileManager defaultManager] currentDirectoryPath];
+    if (argc > 1) {
+        NSString* newDir = @(argv[1]);
+        if (strcmp(argv[1], "-") == 0) {
+            // "cd -" option to pop back to previous directory
+            newDir = previousDirectory;
+        }
+        BOOL isDir;
+        if ([[NSFileManager defaultManager] fileExistsAtPath:newDir isDirectory:&isDir]) {
+            if (isDir) {
+                if ([[NSFileManager defaultManager] changeCurrentDirectoryPath:newDir])
+                    previousDirectory = currentDir;
+                else fprintf(stderr, "cd: %s: permission denied\n", [newDir UTF8String]);
+            }
+            else  fprintf(stderr, "cd: %s: not a directory\n", [newDir UTF8String]);
+        } else {
+            fprintf(stderr, "cd: %s: no such file or directory\n", [newDir UTF8String]);
+        }
+    } else { // [cd] Help, I'm lost, bring me back home
+        previousDirectory = [[NSFileManager defaultManager] currentDirectoryPath];
+        [[NSFileManager defaultManager] changeCurrentDirectoryPath:[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject]];
+    }
     return 0;
 }
 
