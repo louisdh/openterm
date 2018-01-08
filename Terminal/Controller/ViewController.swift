@@ -58,6 +58,7 @@ class ViewController: UIViewController {
 		
 		NotificationCenter.default.addObserver(self, selector: #selector(applicationDidEnterBackground), name: .UIApplicationDidEnterBackground, object: nil)
 
+        initializeEnvironment();
 	}
 	
 	override func viewWillAppear(_ animated: Bool) {
@@ -319,9 +320,9 @@ extension ViewController {
 }
 
 extension ViewController {
-	
-	func cd(command: String) -> String {
-		
+    
+	func cd(command: String) -> Bool {
+
 		let fileManager = DocumentManager.shared.fileManager
 		
 		var arguments = command.split(separator: " ")
@@ -335,10 +336,10 @@ extension ViewController {
 				let dirPath = URL(fileURLWithPath: fileManager.currentDirectoryPath).deletingLastPathComponent()
 				
 				if dirPath.lastPathComponent == "iCloud~com~silverfox~Terminal" {
-					return ""
+					return true
 				}
 				
-				fileManager.changeCurrentDirectoryPath(dirPath.path)
+				return fileManager.changeCurrentDirectoryPath(dirPath.path)
 				
 			} else if folderName.hasPrefix("/") {
 				
@@ -346,19 +347,19 @@ extension ViewController {
 				
 				let dirPath = documents.appendingPathComponent(String(folderName)).path
 				
-				fileManager.changeCurrentDirectoryPath(dirPath)
+				return fileManager.changeCurrentDirectoryPath(dirPath)
 				
 			} else {
 				
 				let dirPath = fileManager.currentDirectoryPath.appending("/\(folderName)")
 				
-				fileManager.changeCurrentDirectoryPath(dirPath)
+				return fileManager.changeCurrentDirectoryPath(dirPath)
 				
 			}
-			
-			return ""
 		} else {
-			return ""
+            // command is just "cd", we go home, that is the Documents folder
+            let documents = DocumentManager.shared.activeDocumentsFolderURL
+            return fileManager.changeCurrentDirectoryPath(documents.path)
 		}
 		
 	}
@@ -377,12 +378,14 @@ extension ViewController: TerminalProcessor {
 		}
 		
 		if command.hasPrefix("cd") {
-			
+            // TODO: move cd to ios_system
 			let result = cd(command: command)
-			
-			updateTitle()
-
-			return result
+            if (result) {
+                updateTitle()
+                return ""
+            } else {
+                return "cd: directory not found, or not allowed"
+            }
 		}
 		
 		setStdOut()
