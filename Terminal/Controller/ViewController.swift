@@ -58,7 +58,7 @@ class ViewController: UIViewController {
 		
 		NotificationCenter.default.addObserver(self, selector: #selector(applicationDidEnterBackground), name: .UIApplicationDidEnterBackground, object: nil)
 
-        initializeEnvironment();
+        initializeEnvironment()
 	}
 	
 	override func viewWillAppear(_ animated: Bool) {
