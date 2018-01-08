@@ -21,3 +21,4 @@ int ios_executable(char* inputCmd); // does this command exist? (executable file
 int ios_system(char* inputCmd); // execute this command (executable file or builtin command)
 
 char* commandsAsString();
+void initializeEnvironment();
