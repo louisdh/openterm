@@ -50,6 +50,7 @@ class DocumentManager {
 	}
 	
 	var iCloudAvailable: Bool {
+        return false
 		return fileManager.ubiquityIdentityToken != nil
 	}
 

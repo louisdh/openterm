@@ -146,6 +146,7 @@ class ViewController: UIViewController {
 	}
 	
 	func readFile(_ file: UnsafeMutablePointer<FILE>) {
+        
 		let bufsize = 4096
 		let buffer = [CChar](repeating: 0, count: bufsize)
 
@@ -297,7 +298,12 @@ extension ViewController: TerminalProcessor {
 	@discardableResult
 	func process(command: String) -> String {
 
-		let fileManager = DocumentManager.shared.fileManager
+        // Get the window column size (for ls and other commands):
+        let fontSize = ("m" as NSString).size(withAttributes: [NSAttributedStringKey.font: self.terminalView.textView.font])
+        let numColumns = String(describing: Int(floor(self.terminalView.textView.frame.size.width / fontSize.width) - 1))
+        setenv("COLUMNS", numColumns, 1); // force rewrite of value
+        
+        let fileManager = DocumentManager.shared.fileManager
 
 		if command == "help" || command == "?" {
 			return availableCommands().joined(separator: "\n")
@@ -311,7 +317,7 @@ extension ViewController: TerminalProcessor {
 
 			return result
 		}
-		
+        
 		setStdOut()
 		setStdErr()
 

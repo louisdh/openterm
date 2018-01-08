@@ -528,7 +528,7 @@ int ios_system(char* inputCmd) {
                 if (cmdIsAFile) break; // else keep going through the path elements.
             }
         }
-        fprintf(stderr, "Command after parsing: ");
+        // fprintf(stderr, "Command after parsing: ");
         // for (int i = 0; i < argc; i++)
         //    fprintf(stderr, "[%s] ", argv[i]);
         // We've reached this point: either the command is a file, from a script we support,
