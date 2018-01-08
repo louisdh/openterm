@@ -32,9 +32,14 @@
 #define CURL_COMMANDS
 // to activate TEX_COMMANDS, you need the lib-tex libraries:
 // See: https://github.com/holzschu/lib-tex
-#define TEX_COMMANDS    // pdftex, luatex, bibtex and the like
-#define FEAT_PYTHON // if you don't need Python, you can remove Python_grp
-#define FEAT_LUA // if you don't need Lua, you can remove lua_grp
+// #define TEX_COMMANDS    // pdftex, luatex, bibtex and the like
+// to activate Python, you need python-ios: https://github.com/holzschu/python_ios
+// #define FEAT_PYTHON
+// to activate Lua, you need lua-ios: https://github.com/holzschu/lua_ios
+// #define FEAT_LUA
+
+//#define NETWORK_UTILITIES
+
 
 #ifdef FILE_UTILITIES
 // Most useful file utilities (file_cmds_ios)
@@ -129,7 +134,6 @@ static NSString* fullCommandPath = @"";
 static NSArray *directoriesInPath;
 
 
-
 static void initializeCommandList()
 {
     commandList = @{
@@ -144,12 +148,12 @@ static void initializeCommandList()
                     @"mv" : [NSValue valueWithPointer: mv_main],
                     @"mkdir" : [NSValue valueWithPointer: mkdir_main],
                     @"rmdir" : [NSValue valueWithPointer: rmdir_main],
-                    @"chown" : [NSValue valueWithPointer: chown_main],
-                    @"chgrp" : [NSValue valueWithPointer: chown_main],
+//                    @"chown" : [NSValue valueWithPointer: chown_main],
+//                    @"chgrp" : [NSValue valueWithPointer: chown_main],
                     @"chflags": [NSValue valueWithPointer: chflags_main],
-                    @"chmod": [NSValue valueWithPointer: chmod_main],
+//                    @"chmod": [NSValue valueWithPointer: chmod_main],
                     @"du"   : [NSValue valueWithPointer: du_main],
-                    @"df"   : [NSValue valueWithPointer: df_main],
+//                    @"df"   : [NSValue valueWithPointer: df_main],
                     @"chksum" : [NSValue valueWithPointer: chksum_main],
                     @"sum"    : [NSValue valueWithPointer: chksum_main],
                     @"stat"   : [NSValue valueWithPointer: stat_main],
@@ -166,15 +170,15 @@ static void initializeCommandList()
 #ifdef SHELL_UTILITIES
                     // Commands from Apple shell_cmds:
                     @"printenv": [NSValue valueWithPointer: printenv_main],
-                    @"pwd"    : [NSValue valueWithPointer: pwd_main],
+//                    @"pwd"    : [NSValue valueWithPointer: pwd_main],
                     @"uname"  : [NSValue valueWithPointer: uname_main],
                     @"date"   : [NSValue valueWithPointer: date_main],
-                    @"env"    : [NSValue valueWithPointer: env_main],
-                    @"id"     : [NSValue valueWithPointer: id_main],
-                    @"groups" : [NSValue valueWithPointer: id_main],
+//                    @"env"    : [NSValue valueWithPointer: env_main],
+//                    @"id"     : [NSValue valueWithPointer: id_main],
+//                    @"groups" : [NSValue valueWithPointer: id_main],
                     @"whoami" : [NSValue valueWithPointer: id_main],
                     @"uptime" : [NSValue valueWithPointer: w_main],
-                    @"w"      : [NSValue valueWithPointer: w_main],
+//                    @"w"      : [NSValue valueWithPointer: w_main],
 #endif
 #ifdef TEXT_UTILITIES
                     // Commands from Apple text_cmds:
@@ -528,7 +532,7 @@ int ios_system(char* inputCmd) {
                 if (cmdIsAFile) break; // else keep going through the path elements.
             }
         }
-        // fprintf(stderr, "Command after parsing: ");
+        fprintf(stderr, "Command after parsing: ");
         // for (int i = 0; i < argc; i++)
         //    fprintf(stderr, "[%s] ", argv[i]);
         // We've reached this point: either the command is a file, from a script we support,
