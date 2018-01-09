@@ -142,7 +142,7 @@ class ViewController: UIViewController {
 	func setStdOut() {
 		
 		let fileManager = DocumentManager.shared.fileManager
-		let filePath = fileManager.currentDirectoryPath.appending("/.out.txt")
+		let filePath = NSTemporaryDirectory().appending("out.txt")
 		
 		try? fileManager.removeItem(atPath: filePath)
 
@@ -150,14 +150,14 @@ class ViewController: UIViewController {
 			fileManager.createFile(atPath: filePath, contents: nil, attributes: nil)
 		}
 		
-		freopen(".out.txt", "a+", stdout)
+		freopen(filePath.toCString(), "a+", stdout)
 
 	}
 	
 	func setStdErr() {
 		
 		let fileManager = DocumentManager.shared.fileManager
-		let filePath = fileManager.currentDirectoryPath.appending("/.err.txt")
+		let filePath = NSTemporaryDirectory().appending("err.txt")
 		
 		try? fileManager.removeItem(atPath: filePath)
 		
@@ -165,7 +165,7 @@ class ViewController: UIViewController {
 			fileManager.createFile(atPath: filePath, contents: nil, attributes: nil)
 		}
 		
-		freopen(".err.txt", "a+", stderr)
+		freopen(filePath.toCString(), "a+", stderr)
 		
 	}
 	
@@ -396,7 +396,7 @@ extension ViewController: TerminalProcessor {
 		readFile(stdout)
 		readFile(stderr)
 
-		let errFilePath = fileManager.currentDirectoryPath.appending("/.err.txt")
+		let errFilePath = NSTemporaryDirectory().appending("err.txt")
 
 		if let data = fileManager.contents(atPath: errFilePath) {
 			if let errStr = String(data: data, encoding: .utf8) {
@@ -410,7 +410,7 @@ extension ViewController: TerminalProcessor {
 			}
 		}
 		
-		let filePath = fileManager.currentDirectoryPath.appending("/.out.txt")
+		let filePath = NSTemporaryDirectory().appending("out.txt")
 
 		if let data = fileManager.contents(atPath: filePath) {
 			return String(data: data, encoding: .utf8) ?? ""
