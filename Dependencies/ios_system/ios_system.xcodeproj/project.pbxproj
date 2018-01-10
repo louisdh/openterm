@@ -10,6 +10,27 @@
 		22319FA01FDC2332004D875A /* getopt.c in Sources */ = {isa = PBXBuildFile; fileRef = 22319F9E1FDC2332004D875A /* getopt.c */; };
 		223496B01FD5FC71007ED1A9 /* ios_system.h in Headers */ = {isa = PBXBuildFile; fileRef = 223496AE1FD5FC71007ED1A9 /* ios_system.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		223496B71FD5FC89007ED1A9 /* ios_system.m in Sources */ = {isa = PBXBuildFile; fileRef = 223496B61FD5FC89007ED1A9 /* ios_system.m */; };
+		2248DB3920062EB400F2944C /* b.c in Sources */ = {isa = PBXBuildFile; fileRef = 2248DB202004F82700F2944C /* b.c */; };
+		2248DB3A20062EB400F2944C /* lex.c in Sources */ = {isa = PBXBuildFile; fileRef = 2248DB1E2004F82600F2944C /* lex.c */; };
+		2248DB3B20062EB400F2944C /* lib.c in Sources */ = {isa = PBXBuildFile; fileRef = 2248DB1F2004F82600F2944C /* lib.c */; };
+		2248DB3C20062EB400F2944C /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 2248DB242004F82700F2944C /* main.c */; };
+		2248DB3D20062EB400F2944C /* parse.c in Sources */ = {isa = PBXBuildFile; fileRef = 2248DB1D2004F82600F2944C /* parse.c */; };
+		2248DB3E20062EB400F2944C /* proctab.c in Sources */ = {isa = PBXBuildFile; fileRef = 2248DB232004F82700F2944C /* proctab.c */; };
+		2248DB3F20062EB400F2944C /* run.c in Sources */ = {isa = PBXBuildFile; fileRef = 2248DB1B2004F82600F2944C /* run.c */; };
+		2248DB4020062EB400F2944C /* tran.c in Sources */ = {isa = PBXBuildFile; fileRef = 2248DB212004F82700F2944C /* tran.c */; };
+		2248DB4120062EB400F2944C /* ytab.c in Sources */ = {isa = PBXBuildFile; fileRef = 2248DB1A2004F82600F2944C /* ytab.c */; };
+		2248DB4220062EBB00F2944C /* compile.c in Sources */ = {isa = PBXBuildFile; fileRef = 2248DB142004C5DB00F2944C /* compile.c */; };
+		2248DB4320062EBB00F2944C /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 2248DB122004C5DB00F2944C /* main.c */; };
+		2248DB4420062EBB00F2944C /* misc.c in Sources */ = {isa = PBXBuildFile; fileRef = 2248DB112004C5DB00F2944C /* misc.c */; };
+		2248DB4520062EBB00F2944C /* process.c in Sources */ = {isa = PBXBuildFile; fileRef = 2248DB132004C5DB00F2944C /* process.c */; };
+		2248DB4620062EC000F2944C /* buf.c in Sources */ = {isa = PBXBuildFile; fileRef = 2248DB062004A5F900F2944C /* buf.c */; settings = {COMPILER_FLAGS = "-x objective-c"; }; };
+		2248DB4720062EC000F2944C /* cbc.c in Sources */ = {isa = PBXBuildFile; fileRef = 2248DB052004A5F900F2944C /* cbc.c */; };
+		2248DB4820062EC000F2944C /* glbl.c in Sources */ = {isa = PBXBuildFile; fileRef = 2248DB012004A5F800F2944C /* glbl.c */; };
+		2248DB4920062EC000F2944C /* io.c in Sources */ = {isa = PBXBuildFile; fileRef = 2248DB022004A5F800F2944C /* io.c */; };
+		2248DB4A20062EC000F2944C /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 2248DB002004A5F800F2944C /* main.c */; };
+		2248DB4B20062EC000F2944C /* re.c in Sources */ = {isa = PBXBuildFile; fileRef = 2248DB072004A5F900F2944C /* re.c */; };
+		2248DB4C20062EC000F2944C /* sub.c in Sources */ = {isa = PBXBuildFile; fileRef = 2248DB042004A5F900F2944C /* sub.c */; };
+		2248DB4D20062EC000F2944C /* undo.c in Sources */ = {isa = PBXBuildFile; fileRef = 2248DB032004A5F900F2944C /* undo.c */; };
 		22577E481FDB47A90050F312 /* err.c in Sources */ = {isa = PBXBuildFile; fileRef = 22577D451FDB47A90050F312 /* err.c */; settings = {COMPILER_FLAGS = "-DHAVE_CONFIG_H "; }; };
 		22577E491FDB47A90050F312 /* lafe_err.h in Headers */ = {isa = PBXBuildFile; fileRef = 22577D461FDB47A90050F312 /* lafe_err.h */; };
 		22577E4A1FDB47A90050F312 /* lafe_platform.h in Headers */ = {isa = PBXBuildFile; fileRef = 22577D471FDB47A90050F312 /* lafe_platform.h */; };
@@ -521,6 +542,7 @@
 		22CF27C61FDB43080087DDAD /* util.c in Sources */ = {isa = PBXBuildFile; fileRef = 22CF27B71FDB43070087DDAD /* util.c */; settings = {COMPILER_FLAGS = "-DWITHOUT_FASTMATCH"; }; };
 		22CF27C81FDB43080087DDAD /* cat.c in Sources */ = {isa = PBXBuildFile; fileRef = 22CF27BA1FDB43070087DDAD /* cat.c */; };
 		22CF27CC1FDB43080087DDAD /* wc.c in Sources */ = {isa = PBXBuildFile; fileRef = 22CF27C01FDB43080087DDAD /* wc.c */; };
+		22EB965A20065366009E39D0 /* libresolv.9.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 22EB965920065366009E39D0 /* libresolv.9.tbd */; };
 		BE3767C71FEC42D000D5A2D1 /* openssl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 22257E801FDA7C0C00FBA97D /* openssl.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		BE3767C91FEC42DD00D5A2D1 /* libssh2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BE3767C81FEC42DD00D5A2D1 /* libssh2.a */; settings = {ATTRIBUTES = (Required, ); }; };
 		BE3768E01FEC438F00D5A2D1 /* libssl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BE3768DE1FEC438F00D5A2D1 /* libssl.a */; };
@@ -534,6 +556,27 @@
 		223496AE1FD5FC71007ED1A9 /* ios_system.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ios_system.h; sourceTree = "<group>"; };
 		223496AF1FD5FC71007ED1A9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		223496B61FD5FC89007ED1A9 /* ios_system.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ios_system.m; sourceTree = "<group>"; };
+		2248DB002004A5F800F2944C /* main.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = main.c; path = text_cmds/ed/main.c; sourceTree = SOURCE_ROOT; };
+		2248DB012004A5F800F2944C /* glbl.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = glbl.c; path = text_cmds/ed/glbl.c; sourceTree = SOURCE_ROOT; };
+		2248DB022004A5F800F2944C /* io.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = io.c; path = text_cmds/ed/io.c; sourceTree = SOURCE_ROOT; };
+		2248DB032004A5F900F2944C /* undo.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = undo.c; path = text_cmds/ed/undo.c; sourceTree = SOURCE_ROOT; };
+		2248DB042004A5F900F2944C /* sub.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = sub.c; path = text_cmds/ed/sub.c; sourceTree = SOURCE_ROOT; };
+		2248DB052004A5F900F2944C /* cbc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = cbc.c; path = text_cmds/ed/cbc.c; sourceTree = SOURCE_ROOT; };
+		2248DB062004A5F900F2944C /* buf.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = buf.c; path = text_cmds/ed/buf.c; sourceTree = SOURCE_ROOT; };
+		2248DB072004A5F900F2944C /* re.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = re.c; path = text_cmds/ed/re.c; sourceTree = SOURCE_ROOT; };
+		2248DB112004C5DB00F2944C /* misc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = misc.c; path = text_cmds/sed/misc.c; sourceTree = SOURCE_ROOT; };
+		2248DB122004C5DB00F2944C /* main.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = main.c; path = text_cmds/sed/main.c; sourceTree = SOURCE_ROOT; };
+		2248DB132004C5DB00F2944C /* process.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = process.c; path = text_cmds/sed/process.c; sourceTree = SOURCE_ROOT; };
+		2248DB142004C5DB00F2944C /* compile.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = compile.c; path = text_cmds/sed/compile.c; sourceTree = SOURCE_ROOT; };
+		2248DB1A2004F82600F2944C /* ytab.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ytab.c; path = "awk-23.30.1/src/ytab.c"; sourceTree = SOURCE_ROOT; };
+		2248DB1B2004F82600F2944C /* run.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = run.c; path = "awk-23.30.1/src/run.c"; sourceTree = SOURCE_ROOT; };
+		2248DB1D2004F82600F2944C /* parse.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = parse.c; path = "awk-23.30.1/src/parse.c"; sourceTree = SOURCE_ROOT; };
+		2248DB1E2004F82600F2944C /* lex.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = lex.c; path = "awk-23.30.1/src/lex.c"; sourceTree = SOURCE_ROOT; };
+		2248DB1F2004F82600F2944C /* lib.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = lib.c; path = "awk-23.30.1/src/lib.c"; sourceTree = SOURCE_ROOT; };
+		2248DB202004F82700F2944C /* b.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = b.c; path = "awk-23.30.1/src/b.c"; sourceTree = SOURCE_ROOT; };
+		2248DB212004F82700F2944C /* tran.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = tran.c; path = "awk-23.30.1/src/tran.c"; sourceTree = SOURCE_ROOT; };
+		2248DB232004F82700F2944C /* proctab.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = proctab.c; path = "awk-23.30.1/src/proctab.c"; sourceTree = SOURCE_ROOT; };
+		2248DB242004F82700F2944C /* main.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = main.c; path = "awk-23.30.1/src/main.c"; sourceTree = SOURCE_ROOT; };
 		22577D451FDB47A90050F312 /* err.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = err.c; sourceTree = "<group>"; };
 		22577D461FDB47A90050F312 /* lafe_err.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lafe_err.h; sourceTree = "<group>"; };
 		22577D471FDB47A90050F312 /* lafe_platform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lafe_platform.h; sourceTree = "<group>"; };
@@ -1045,6 +1088,7 @@
 		22CF27B71FDB43070087DDAD /* util.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = util.c; sourceTree = "<group>"; };
 		22CF27BA1FDB43070087DDAD /* cat.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = cat.c; sourceTree = "<group>"; };
 		22CF27C01FDB43080087DDAD /* wc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = wc.c; sourceTree = "<group>"; };
+		22EB965920065366009E39D0 /* libresolv.9.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libresolv.9.tbd; path = usr/lib/libresolv.9.tbd; sourceTree = SDKROOT; };
 		BE3767C81FEC42DD00D5A2D1 /* libssh2.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libssh2.a; path = "../libssh2-for-iOS/lib/libssh2.a"; sourceTree = "<group>"; };
 		BE3767CC1FEC430600D5A2D1 /* c_hash */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = c_hash; sourceTree = "<group>"; };
 		BE3767CD1FEC430600D5A2D1 /* CA.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = CA.sh; sourceTree = "<group>"; };
@@ -1318,6 +1362,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				22EB965A20065366009E39D0 /* libresolv.9.tbd in Frameworks */,
 				BE3768E31FEC460100D5A2D1 /* libcrypto.a in Frameworks */,
 				BE3768E01FEC438F00D5A2D1 /* libssl.a in Frameworks */,
 				BE3767C91FEC42DD00D5A2D1 /* libssh2.a in Frameworks */,
@@ -1340,6 +1385,7 @@
 				226378CA1FDB3F2B00AE8827 /* shell_cmds_ios */,
 				22CF27B01FDB42F50087DDAD /* text_cmds_grp */,
 				22577D401FDB478E0050F312 /* libarchive_grp */,
+				2248DB192004F7F100F2944C /* awk */,
 				22577F9D1FDB4D220050F312 /* curl_grp */,
 				223496B61FD5FC89007ED1A9 /* ios_system.m */,
 				223496AD1FD5FC71007ED1A9 /* ios_system */,
@@ -1368,6 +1414,7 @@
 		223497AB1FD6CF7A007ED1A9 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				22EB965920065366009E39D0 /* libresolv.9.tbd */,
 				BE3768DD1FEC438E00D5A2D1 /* libcrypto.a */,
 				BE3768E21FEC460000D5A2D1 /* libcrypto.a */,
 				BE3768DE1FEC438F00D5A2D1 /* libssl.a */,
@@ -1379,6 +1426,49 @@
 				22257E801FDA7C0C00FBA97D /* openssl.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		2248DAFF2004A58600F2944C /* ed */ = {
+			isa = PBXGroup;
+			children = (
+				2248DB062004A5F900F2944C /* buf.c */,
+				2248DB052004A5F900F2944C /* cbc.c */,
+				2248DB012004A5F800F2944C /* glbl.c */,
+				2248DB022004A5F800F2944C /* io.c */,
+				2248DB002004A5F800F2944C /* main.c */,
+				2248DB072004A5F900F2944C /* re.c */,
+				2248DB042004A5F900F2944C /* sub.c */,
+				2248DB032004A5F900F2944C /* undo.c */,
+			);
+			name = ed;
+			path = text_cmds_grp/ed;
+			sourceTree = "<group>";
+		};
+		2248DB102004C5C500F2944C /* sed */ = {
+			isa = PBXGroup;
+			children = (
+				2248DB142004C5DB00F2944C /* compile.c */,
+				2248DB122004C5DB00F2944C /* main.c */,
+				2248DB112004C5DB00F2944C /* misc.c */,
+				2248DB132004C5DB00F2944C /* process.c */,
+			);
+			path = sed;
+			sourceTree = "<group>";
+		};
+		2248DB192004F7F100F2944C /* awk */ = {
+			isa = PBXGroup;
+			children = (
+				2248DB202004F82700F2944C /* b.c */,
+				2248DB1E2004F82600F2944C /* lex.c */,
+				2248DB1F2004F82600F2944C /* lib.c */,
+				2248DB242004F82700F2944C /* main.c */,
+				2248DB1D2004F82600F2944C /* parse.c */,
+				2248DB232004F82700F2944C /* proctab.c */,
+				2248DB1B2004F82600F2944C /* run.c */,
+				2248DB212004F82700F2944C /* tran.c */,
+				2248DB1A2004F82600F2944C /* ytab.c */,
+			);
+			path = awk;
 			sourceTree = "<group>";
 		};
 		22577D401FDB478E0050F312 /* libarchive_grp */ = {
@@ -2189,6 +2279,8 @@
 		22CF27B01FDB42F50087DDAD /* text_cmds_grp */ = {
 			isa = PBXGroup;
 			children = (
+				2248DB102004C5C500F2944C /* sed */,
+				2248DAFF2004A58600F2944C /* ed */,
 				22CF27B81FDB43070087DDAD /* cat */,
 				22CF27B11FDB43070087DDAD /* grep */,
 				22CF27BE1FDB43080087DDAD /* wc */,
@@ -2891,6 +2983,7 @@
 				2257824C1FDB4D390050F312 /* tool_cb_see.c in Sources */,
 				225781841FDB4D380050F312 /* http2.c in Sources */,
 				226378941FDB3EE400AE8827 /* ls.c in Sources */,
+				2248DB4520062EBB00F2944C /* process.c in Sources */,
 				2257822A1FDB4D390050F312 /* wildcard.c in Sources */,
 				225782061FDB4D390050F312 /* krb5_sspi.c in Sources */,
 				22577E981FDB47A90050F312 /* archive_write_set_compression_gzip.c in Sources */,
@@ -2906,17 +2999,21 @@
 				22577E641FDB47A90050F312 /* archive_read_data_into_fd.c in Sources */,
 				225782221FDB4D390050F312 /* polarssl_threadlock.c in Sources */,
 				22577E731FDB47A90050F312 /* archive_read_support_compression_gzip.c in Sources */,
+				2248DB4D20062EC000F2944C /* undo.c in Sources */,
 				2257828B1FDB4D390050F312 /* tool_writeenv.c in Sources */,
 				22577E6B1FDB47A90050F312 /* archive_read_open_fd.c in Sources */,
 				22CF27CC1FDB43080087DDAD /* wc.c in Sources */,
 				225781301FDB4D380050F312 /* connect.c in Sources */,
+				2248DB4620062EC000F2944C /* buf.c in Sources */,
 				22577E9E1FDB47A90050F312 /* archive_write_set_format_by_name.c in Sources */,
 				22577E941FDB47A90050F312 /* archive_write_open_memory.c in Sources */,
 				225781CA1FDB4D390050F312 /* rand.c in Sources */,
 				225781341FDB4D380050F312 /* cookie.c in Sources */,
 				2257813B1FDB4D380050F312 /* curl_des.c in Sources */,
 				22577E4B1FDB47A90050F312 /* line_reader.c in Sources */,
+				2248DB3B20062EB400F2944C /* lib.c in Sources */,
 				22577E901FDB47A90050F312 /* archive_write_disk_set_standard_lookup.c in Sources */,
+				2248DB3920062EB400F2944C /* b.c in Sources */,
 				2263788C1FDB3EE400AE8827 /* print.c in Sources */,
 				22CF27C61FDB43080087DDAD /* util.c in Sources */,
 				225781D11FDB4D390050F312 /* sendf.c in Sources */,
@@ -2927,6 +3024,7 @@
 				225781B01FDB4D380050F312 /* mprintf.c in Sources */,
 				22CF27951FDB3FDB0087DDAD /* date.c in Sources */,
 				225782801FDB4D390050F312 /* tool_sleep.c in Sources */,
+				2248DB4120062EB400F2944C /* ytab.c in Sources */,
 				225781631FDB4D380050F312 /* easy.c in Sources */,
 				225781FB1FDB4D390050F312 /* transfer.c in Sources */,
 				225781D51FDB4D390050F312 /* share.c in Sources */,
@@ -2964,6 +3062,7 @@
 				225781E31FDB4D390050F312 /* speedcheck.c in Sources */,
 				22577EA01FDB47A90050F312 /* archive_write_set_format_cpio_newc.c in Sources */,
 				2257816C1FDB4D380050F312 /* formdata.c in Sources */,
+				2248DB4220062EBB00F2944C /* compile.c in Sources */,
 				22577EA91FDB47A90050F312 /* filter_fork.c in Sources */,
 				225782761FDB4D390050F312 /* tool_panykey.c in Sources */,
 				2257825E1FDB4D390050F312 /* tool_getpass.c in Sources */,
@@ -2990,6 +3089,7 @@
 				225781881FDB4D380050F312 /* http_digest.c in Sources */,
 				22577F761FDB47B70050F312 /* bsdtar_windows.c in Sources */,
 				2257819A1FDB4D380050F312 /* ldap.c in Sources */,
+				2248DB3F20062EB400F2944C /* run.c in Sources */,
 				225781BF1FDB4D380050F312 /* openldap.c in Sources */,
 				225781651FDB4D380050F312 /* escape.c in Sources */,
 				225781731FDB4D380050F312 /* getinfo.c in Sources */,
@@ -3002,11 +3102,13 @@
 				2257812E1FDB4D380050F312 /* conncache.c in Sources */,
 				22577E4F1FDB47A90050F312 /* pathmatch.c in Sources */,
 				225781701FDB4D380050F312 /* ftplistparser.c in Sources */,
+				2248DB3D20062EB400F2944C /* parse.c in Sources */,
 				225782721FDB4D390050F312 /* tool_operate.c in Sources */,
 				225781C61FDB4D380050F312 /* pop3.c in Sources */,
 				22CF27911FDB3FDB0087DDAD /* env.c in Sources */,
 				225781F91FDB4D390050F312 /* timeval.c in Sources */,
 				22CF27C51FDB43080087DDAD /* queue.c in Sources */,
+				2248DB4720062EC000F2944C /* cbc.c in Sources */,
 				225782441FDB4D390050F312 /* tool_cb_dbg.c in Sources */,
 				22577E7D1FDB47A90050F312 /* archive_read_support_format_iso9660.c in Sources */,
 				226378A21FDB3EE400AE8827 /* stat.c in Sources */,
@@ -3020,6 +3122,7 @@
 				22577E831FDB47A90050F312 /* archive_string.c in Sources */,
 				22577E9B1FDB47A90050F312 /* archive_write_set_compression_xz.c in Sources */,
 				225782661FDB4D390050F312 /* tool_hugehelp.c in Sources */,
+				2248DB4020062EB400F2944C /* tran.c in Sources */,
 				2257818A1FDB4D380050F312 /* http_negotiate.c in Sources */,
 				22577E921FDB47A90050F312 /* archive_write_open_file.c in Sources */,
 				225781901FDB4D380050F312 /* idn_win32.c in Sources */,
@@ -3034,6 +3137,7 @@
 				22577E851FDB47A90050F312 /* archive_string_sprintf.c in Sources */,
 				226378801FDB3EE400AE8827 /* touch.c in Sources */,
 				225781771FDB4D380050F312 /* hash.c in Sources */,
+				2248DB4920062EC000F2944C /* io.c in Sources */,
 				226378B11FDB3EE400AE8827 /* zopen.c in Sources */,
 				22577E6C1FDB47A90050F312 /* archive_read_open_file.c in Sources */,
 				225781AA1FDB4D380050F312 /* md4.c in Sources */,
@@ -3041,11 +3145,13 @@
 				225782581FDB4D390050F312 /* tool_easysrc.c in Sources */,
 				225781C81FDB4D390050F312 /* progress.c in Sources */,
 				22577E9D1FDB47A90050F312 /* archive_write_set_format_ar.c in Sources */,
+				2248DB4A20062EC000F2944C /* main.c in Sources */,
 				22577E931FDB47A90050F312 /* archive_write_open_filename.c in Sources */,
 				225781971FDB4D380050F312 /* inet_pton.c in Sources */,
 				22577EA51FDB47A90050F312 /* archive_write_set_format_zip.c in Sources */,
 				2257815F1FDB4D380050F312 /* dict.c in Sources */,
 				225782071FDB4D390050F312 /* ntlm.c in Sources */,
+				2248DB3E20062EB400F2944C /* proctab.c in Sources */,
 				225781551FDB4D380050F312 /* curl_sasl.c in Sources */,
 				22577F791FDB47B70050F312 /* cmdline.c in Sources */,
 				22577F981FDB47B70050F312 /* write.c in Sources */,
@@ -3057,6 +3163,7 @@
 				22CF279C1FDB3FDB0087DDAD /* pwd.c in Sources */,
 				225782091FDB4D390050F312 /* ntlm_sspi.c in Sources */,
 				22CF27A01FDB3FDB0087DDAD /* fmt.c in Sources */,
+				2248DB4C20062EC000F2944C /* sub.c in Sources */,
 				226378A61FDB3EE400AE8827 /* chmod.c in Sources */,
 				225782021FDB4D390050F312 /* digest.c in Sources */,
 				22577E6D1FDB47A90050F312 /* archive_read_open_filename.c in Sources */,
@@ -3073,6 +3180,7 @@
 				225781BB1FDB4D380050F312 /* nwos.c in Sources */,
 				22577E991FDB47A90050F312 /* archive_write_set_compression_none.c in Sources */,
 				225781B61FDB4D380050F312 /* non-ascii.c in Sources */,
+				2248DB4820062EC000F2944C /* glbl.c in Sources */,
 				2257811F1FDB4D380050F312 /* asyn-thread.c in Sources */,
 				22CF279E1FDB3FDB0087DDAD /* uname.c in Sources */,
 				22577EA31FDB47A90050F312 /* archive_write_set_format_shar.c in Sources */,
@@ -3094,6 +3202,7 @@
 				225781FD1FDB4D390050F312 /* url.c in Sources */,
 				22577E961FDB47A90050F312 /* archive_write_set_compression_bzip2.c in Sources */,
 				22577E741FDB47A90050F312 /* archive_read_support_compression_none.c in Sources */,
+				2248DB4B20062EC000F2944C /* re.c in Sources */,
 				22577E9C1FDB47A90050F312 /* archive_write_set_format.c in Sources */,
 				22577E5D1FDB47A90050F312 /* archive_entry_strmode.c in Sources */,
 				2257817D1FDB4D380050F312 /* hostip.c in Sources */,
@@ -3104,6 +3213,7 @@
 				225782281FDB4D390050F312 /* warnless.c in Sources */,
 				225781361FDB4D380050F312 /* curl_addrinfo.c in Sources */,
 				22577E7E1FDB47A90050F312 /* archive_read_support_format_mtree.c in Sources */,
+				2248DB3C20062EB400F2944C /* main.c in Sources */,
 				2257811E1FDB4D380050F312 /* asyn-ares.c in Sources */,
 				2257819E1FDB4D380050F312 /* llist.c in Sources */,
 				22577E871FDB47A90050F312 /* archive_util.c in Sources */,
@@ -3159,6 +3269,8 @@
 				2257817F1FDB4D380050F312 /* hostip4.c in Sources */,
 				225781AB1FDB4D380050F312 /* md5.c in Sources */,
 				225782461FDB4D390050F312 /* tool_cb_hdr.c in Sources */,
+				2248DB4320062EBB00F2944C /* main.c in Sources */,
+				2248DB4420062EBB00F2944C /* misc.c in Sources */,
 				2257827D1FDB4D390050F312 /* tool_setopt.c in Sources */,
 				22577E781FDB47A90050F312 /* archive_read_support_compression_xz.c in Sources */,
 				225781E11FDB4D390050F312 /* socks_gssapi.c in Sources */,
@@ -3174,6 +3286,7 @@
 				225782841FDB4D390050F312 /* tool_urlglob.c in Sources */,
 				22CF27991FDB3FDB0087DDAD /* vary.c in Sources */,
 				22577E631FDB47A90050F312 /* archive_read.c in Sources */,
+				2248DB3A20062EB400F2944C /* lex.c in Sources */,
 				2263789F1FDB3EE400AE8827 /* humanize_number.c in Sources */,
 				225781211FDB4D380050F312 /* base64.c in Sources */,
 				22577F7C1FDB47B70050F312 /* read.c in Sources */,
@@ -3326,7 +3439,7 @@
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = (
 					"-L",
-					../blink/Frameworks/,
+					"../libssh2-for-iOS/",
 					"-F",
 					"../libssh2-for-iOS/",
 				);
@@ -3363,7 +3476,7 @@
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = (
 					"-L",
-					../blink/Frameworks/,
+					"../libssh2-for-iOS/",
 					"-F",
 					"../libssh2-for-iOS/",
 				);

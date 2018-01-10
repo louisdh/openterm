@@ -64,6 +64,9 @@ static const char sccsid[] = "@(#)main.c	8.2 (Berkeley) 1/3/94";
 
 #include "defs.h"
 #include "extern.h"
+// iOS changes:
+#include "ios_error.h"
+#include <pthread.h>
 
 /*
  * Linked list of units (strings and files) to be compiled
@@ -92,12 +95,12 @@ struct s_flist {
  * Linked list pointer to files and pointer to current
  * next pointer.
  */
-static struct s_flist *files, **fl_nextp = &files;
+static struct s_flist *files = NULL, **fl_nextp = &files;
 
 FILE *infile;			/* Current input file */
 FILE *outfile;			/* Current output file */
 
-int aflag, eflag, nflag;
+int aflag, eflag, sed_nflag;
 int rflags = 0;
 static int rval;		/* Exit status */
 
@@ -118,10 +121,24 @@ static int inplace_edit(char **);
 static void usage(void);
 
 int
-main(int argc, char *argv[])
+sed_main(int argc, char *argv[])
 {
 	int c, fflag;
 	char *temp_arg;
+
+    // init all flags:
+    aflag = eflag = sed_nflag = rflags = 0;
+    infile = NULL;
+    outfile = NULL;
+    fl_nextp = &files;
+    if (files != NULL) {
+        while (files != NULL) { struct s_flist *next = files->next; free(files); files = next; }
+    }
+    cu_nextp = &script;
+    if (script != NULL) {
+        while (script != NULL) { struct s_compunit *next = script->next; free(script); script = next; }
+    }
+    rval = 0;        /* Exit status */
 
 	(void) setlocale(LC_ALL, "");
 
@@ -139,7 +156,7 @@ main(int argc, char *argv[])
 		case 'e':
 			eflag = 1;
 			if ((temp_arg = malloc(strlen(optarg) + 2)) == NULL)
-				err(1, "malloc");
+                fprintf(stderr, "sed: malloc: %s\n", strerror(errno)); // err(1, "malloc");
 			strcpy(temp_arg, optarg);
 			strcat(temp_arg, "\n");
 			add_compunit(CU_STRING, temp_arg);
@@ -153,10 +170,10 @@ main(int argc, char *argv[])
 			break;
 		case 'l':
 			if(setlinebuf(stdout) != 0)
-				warnx("setlinebuf() failed");
+                fprintf(stderr, "sed: setlinebuf() failed\n"); // warnx("setlinebuf() failed");
 			break;
 		case 'n':
-			nflag = 1;
+			sed_nflag = 1;
 			break;
 		default:
 		case '?':
@@ -181,9 +198,12 @@ main(int argc, char *argv[])
 		add_file(NULL);
 	process();
 	cfclose(prog, NULL);
-	if (fclose(stdout))
-		err(1, "stdout");
-	exit(rval);
+	// if (fclose(stdout))
+	//	err(1, "stdout");
+	// exit(rval);
+    if ((infile != NULL) && (infile != stdin)) fclose(infile);
+    if ((outfile != NULL) && (outfile != stdout)) fclose(outfile);
+    return 0;
 }
 
 static void
@@ -192,7 +212,8 @@ usage(void)
 	(void)fprintf(stderr, "%s\n%s\n",
 		"usage: sed script [-Ealn] [-i extension] [file ...]",
 		"       sed [-Ealn] [-i extension] [-e script] ... [-f script_file] ... [file ...]");
-	exit(1);
+    pthread_exit(NULL);
+	// exit(1);
 }
 
 /*
@@ -220,7 +241,7 @@ again:
 		switch (script->type) {
 		case CU_FILE:
 			if ((f = fopen(script->s, "r")) == NULL)
-				err(1, "%s", script->s);
+                fprintf(stderr, "sed: %s: %s\n", script->s, strerror(errno)); // err(1, "%s", script->s);
 			fname = script->s;
 			state = ST_FILE;
 			goto again;
@@ -239,7 +260,7 @@ again:
 		if ((p = fgets(buf, n, f)) != NULL) {
 			linenum++;
 			if (linenum == 1 && buf[0] == '#' && buf[1] == 'n')
-				nflag = 1;
+				sed_nflag = 1;
 			if (more != NULL)
 				*more = !feof(f);
 			return (p);
@@ -250,7 +271,7 @@ again:
 		goto again;
 	case ST_STRING:
 		if (linenum == 0 && s[0] == '#' && s[1] == 'n')
-			nflag = 1;
+			sed_nflag = 1;
 		p = buf;
 		for (;;) {
 			if (n-- <= 1) {
@@ -308,7 +329,7 @@ mf_fgets(SPACE *sp, enum e_spflag spflag)
 		/* stdin? */
 		if (files->fname == NULL) {
 			if (inplace != NULL)
-				errx(1, "-i may not be used with stdin");
+                fprintf(stderr, "sed: -i may not be used with stdin\n"); //errx(1, "-i may not be used with stdin");
 			infile = stdin;
 			fname = "stdin";
 			outfile = stdout;
@@ -328,12 +349,13 @@ mf_fgets(SPACE *sp, enum e_spflag spflag)
 			return (0);
 		}
 		if (infile != NULL) {
-			fclose(infile);
+			if (infile != stdin) fclose(infile);
 			if (*oldfname != '\0') {
 				if (rename(fname, oldfname) != 0) {
-					warn("rename()");
+                    fprintf(stderr, "sed: rename(): %s\n", strerror(errno)); // warn("rename()");
 					unlink(tmpfname);
-					exit(1);
+                    pthread_exit(NULL);
+					// exit(1);
 				}
 				*oldfname = '\0';
 			}
@@ -357,27 +379,32 @@ mf_fgets(SPACE *sp, enum e_spflag spflag)
 		fname = files->fname;
 		if (inplace != NULL) {
 			if (lstat(fname, &sb) != 0)
-				err(1, "%s", fname);
+                fprintf(stderr, "sed: %s: %s\n", fname, strerror(errno)); // err(1, "%s", fname);
 			if (!(sb.st_mode & S_IFREG))
-				errx(1, "%s: %s %s", fname,
-				    "in-place editing only",
-				    "works for regular files");
+                fprintf(stderr, "sed: %s: %s %s\n", fname,
+                     "in-place editing only",
+                     "works for regular files");
+				//errx(1, "%s: %s %s", fname,
+				//    "in-place editing only",
+				//    "works for regular files");
 			if (*inplace != '\0') {
 				strlcpy(oldfname, fname,
 				    sizeof(oldfname));
 				len = strlcat(oldfname, inplace,
 				    sizeof(oldfname));
 				if (len > sizeof(oldfname))
-					errx(1, "%s: name too long", fname);
+                    fprintf(stderr, "sed: %s: name too long\n", fname);
+                // errx(1, "%s: name too long", fname);
 			}
 			len = snprintf(tmpfname, sizeof(tmpfname),
 			    "%s/.!%ld!%s", dirname(fname), (long)getpid(),
 			    basename(fname));
 			if (len >= sizeof(tmpfname))
-				errx(1, "%s: name too long", fname);
+                fprintf(stderr, "sed: %s: name too long\n", fname);
+				// errx(1, "%s: name too long", fname);
 			unlink(tmpfname);
 			if ((outfile = fopen(tmpfname, "w")) == NULL)
-				err(1, "%s", fname);
+                fprintf(stderr, "sed: %s: %s\n", fname, strerror(errno)); // err(1, "%s", fname);
 			fchown(fileno(outfile), sb.st_uid, sb.st_gid);
 			fchmod(fileno(outfile), sb.st_mode & ALLPERMS);
 			outfname = tmpfname;
@@ -386,7 +413,7 @@ mf_fgets(SPACE *sp, enum e_spflag spflag)
 			outfname = "stdout";
 		}
 		if ((infile = fopen(fname, "r")) == NULL) {
-			warn("%s", fname);
+            fprintf(stderr, "sed: %s: %s\n", fname, strerror(errno)); // warn("%s", fname);
 			rval = 1;
 			continue;
 		}
@@ -401,7 +428,8 @@ mf_fgets(SPACE *sp, enum e_spflag spflag)
 	 */
 	p = fgetln(infile, &len);
 	if (ferror(infile))
-		errx(1, "%s: %s", fname, strerror(errno ? errno : EIO));
+        fprintf(stderr, "sed: %s: %s\n", fname, strerror(errno ? errno : EIO));
+        // errx(1, "%s: %s", fname, strerror(errno ? errno : EIO));
 	if (len != 0 && p[len - 1] == '\n')
 		len--;
 	cspace(sp, p, len, spflag);
@@ -420,7 +448,7 @@ add_compunit(enum e_cut type, char *s)
 	struct s_compunit *cu;
 
 	if ((cu = malloc(sizeof(struct s_compunit))) == NULL)
-		err(1, "malloc");
+        fprintf(stderr, "sed: malloc: %s\n", strerror(errno)); // err(1, "malloc");
 	cu->type = type;
 	cu->s = s;
 	cu->next = NULL;
@@ -437,8 +465,9 @@ add_file(char *s)
 	struct s_flist *fp;
 
 	if ((fp = malloc(sizeof(struct s_flist))) == NULL)
-		err(1, "malloc");
+        fprintf(stderr, "sed: malloc: %s\n", strerror(errno)); // err(1, "malloc");
 	fp->next = NULL;
+    // That's the stuff:
 	*fl_nextp = fp;
 	fp->fname = s;
 	fl_nextp = &fp->next;

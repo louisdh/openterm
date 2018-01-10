@@ -286,13 +286,13 @@ df_main(int argc, char *argv[])
 	for (; *argv; argv++) {
 		if (stat(*argv, &stbuf) < 0) {
 			if ((mntpt = getmntpt(*argv)) == 0) {
-                fprintf(stderr, "df: %s\n", *argv);
+                fprintf(stderr, "df: %s: %s\n", *argv, strerror(errno));
                 // warn("%s", *argv);
 				rv = 1;
 				continue;
 			}
 		} else if (S_ISCHR(stbuf.st_mode) || S_ISBLK(stbuf.st_mode)) {
-            fprintf(stderr, "df: %s: Raw devices not supported\n", *argv);
+            fprintf(stderr, "df: %s: Raw devices not supported: %s\n", *argv, strerror(errno));
             // warnx("%s: Raw devices not supported", *argv);
 			rv = 1;
 			continue;
@@ -303,7 +303,7 @@ df_main(int argc, char *argv[])
 		 * implement nflag here.
 		 */
 		if (statfs(mntpt, &statfsbuf) < 0) {
-            fprintf(stderr, "df: %s\n", mntpt);
+            fprintf(stderr, "df: %s: %s\n", mntpt, strerror(errno));
             // warn("%s", mntpt);
 			rv = 1;
 			continue;
@@ -602,13 +602,13 @@ makenetvfslist(void)
 	miblen=sizeof(maxvfsconf);
 	if (sysctl(mib, 3,
 	    &maxvfsconf, &miblen, NULL, 0)) {
-        fprintf(stderr, "df: sysctl failed\n");
+        fprintf(stderr, "df: sysctl failed: %s\n", strerror(errno));
         // warn("sysctl failed");
 		return (NULL);
 	}
 
 	if ((listptr = malloc(sizeof(char*) * maxvfsconf)) == NULL) {
-        fprintf(stderr, "df: malloc failed\n");
+        fprintf(stderr, "df: malloc failed: %s\n", strerror(errno));
         // warnx("malloc failed");
 		return (NULL);
 	}
@@ -618,7 +618,7 @@ makenetvfslist(void)
 		if (ptr->vfc_flags & VFCF_NETWORK) {
 			listptr[cnt++] = strdup(ptr->vfc_name);
 			if (listptr[cnt-1] == NULL) {
-                fprintf(stderr, "df: malloc failed\n");
+                fprintf(stderr, "df: malloc failed: %s\n", strerror(errno));
 				// warnx("malloc failed");
 				return (NULL);
 			}
@@ -633,7 +633,7 @@ makenetvfslist(void)
 	                        listptr[cnt++] = strdup(vfc.vfc_name);
 	                        if (listptr[cnt-1] == NULL) {
 					free(listptr);
-                                    fprintf(stderr, "df: malloc failed\n");
+                                fprintf(stderr, "df: malloc failed: %s\n", strerror(errno));
 	                                // warnx("malloc failed");
 	                                return (NULL);
 	                        }
@@ -645,7 +645,7 @@ makenetvfslist(void)
 	if (cnt == 0 ||
 	    (str = malloc(sizeof(char) * (32 * cnt + cnt + 2))) == NULL) {
 		if (cnt > 0)
-            fprintf(stderr, "df: malloc failed\n");
+            fprintf(stderr, "df: malloc failed: %s\n", strerror(errno));
 			// warnx("malloc failed");
 		free(listptr);
 		return (NULL);

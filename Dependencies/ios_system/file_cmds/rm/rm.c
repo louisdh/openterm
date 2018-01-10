@@ -206,6 +206,7 @@ rm_tree(argv)
 	if (!(fts = fts_open(argv, flags, NULL))) {
 		if (fflag && errno == ENOENT)
 			return;
+        fprintf(stderr, "rm: %s\n", strerror(errno));
         pthread_exit(NULL);
 		// err(1, NULL);
 	}
@@ -330,14 +331,14 @@ rm_tree(argv)
 			}
 		}
 err:
-        fprintf(stderr, "rm: %s\n", p->fts_path);
+        fprintf(stderr, "rm: %s: %s\n", p->fts_path, strerror(errno));
         // warn("%s", p->fts_path);
 		eval = 1;
 	}
     fts_close(fts);
     if (errno) {
 		// err(1, "fts_read");
-        fprintf(stderr, "rm: fts_read\n");
+        fprintf(stderr, "rm: fts_read: %s\n", strerror(errno));
         pthread_exit(NULL);
     }
 }
@@ -361,7 +362,7 @@ rm_file(argv)
 				sb.st_mode = S_IFWHT|S_IWUSR|S_IRUSR;
 			} else {
 				if (!fflag || errno != ENOENT) {
-                    fprintf(stderr, "rm: %s\n", f);
+                    fprintf(stderr, "rm: %s: %s\n", f, strerror(errno));
                     // warn("%s", f);
 					eval = 1;
 				}
@@ -407,7 +408,7 @@ rm_file(argv)
 			}
 		}
 		if (rval && (!fflag || errno != ENOENT)) {
-            fprintf(stderr, "rm: %s\n", f);
+            fprintf(stderr, "rm: %s: %s\n", f, strerror(errno));
             // warn("%s", f);
 			eval = 1;
 		}
@@ -452,7 +453,7 @@ rm_overwrite(file, sbp)
 	bsize = MAX(fsb.f_iosize, 1024);
     if ((buf = malloc(bsize)) == NULL) {
 		// err(1, "malloc");
-        fprintf(stderr, "rm: malloc\n");
+        fprintf(stderr, "rm: malloc: %s\n", strerror(errno));
         pthread_exit(NULL);
     }
 
@@ -479,7 +480,7 @@ rm_overwrite(file, sbp)
 err:	eval = 1;
 	if (buf)
 		free(buf);
-        fprintf(stderr, "rm: %s\n", file);
+        fprintf(stderr, "rm: %s: %s\n", file, strerror(errno));
     // warn("%s", file);
 }
 
@@ -528,9 +529,11 @@ check(path, name, sp)
 		    (!(sp->st_flags & (UF_APPEND|UF_IMMUTABLE)) || !uid)))
 			return (1);
 		strmode(sp->st_mode, modep);
-        if ((flagsp = fflagstostr(sp->st_flags)) == NULL)
+        if ((flagsp = fflagstostr(sp->st_flags)) == NULL) {
+            fprintf(stderr, "rm: %s\n", strerror(errno));
             pthread_exit(NULL);
 			// err(1, NULL);
+        }
 		(void)fprintf(stderr, "override %s%s%s/%s %s%sfor %s? ",
 		    modep + 1, modep[9] == ' ' ? "" : " ",
 		    user_from_uid(sp->st_uid, 0),

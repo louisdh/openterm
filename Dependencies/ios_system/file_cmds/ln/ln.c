@@ -159,12 +159,12 @@ ln_main(int argc, char *argv[])
 		 */
 		errno = ENOTDIR;
 		// err(1, "%s", sourcedir);
-        fprintf(stderr, "ln: %s\n", sourcedir);
+        fprintf(stderr, "ln: %s: %s\n", sourcedir, strerror(errno));
         pthread_exit(NULL);
 	}
     if (stat(sourcedir, &sb)) {
 		// err(1, "%s", sourcedir);
-        fprintf(stderr, "ln: %s\n", sourcedir);
+        fprintf(stderr, "ln: %s: %s\n", sourcedir, strerror(errno));
         pthread_exit(NULL);
     }
 	if (!S_ISDIR(sb.st_mode))
@@ -186,14 +186,14 @@ linkit(const char *target, const char *source, int isdir)
 	if (!sflag) {
 		/* If target doesn't exist, quit now. */
 		if (stat(target, &sb)) {
-            fprintf(stderr, "ln: %s\n", target);
+            fprintf(stderr, "ln: %s: %s\n", target, strerror(errno));
             // warn("%s", target);
 			return (1);
 		}
 		/* Only symbolic links to directories. */
 		if (S_ISDIR(sb.st_mode)) {
 			errno = EISDIR;
-            fprintf(stderr, "ln: %s\n", target);
+            fprintf(stderr, "ln: %s: %s\n", target, strerror(errno));
 			// warn("%s", target);
 			return (1);
 		}
@@ -211,7 +211,7 @@ linkit(const char *target, const char *source, int isdir)
 		    snprintf(path, sizeof(path), "%s/%s", source, p) >=
 		    (ssize_t)sizeof(path)) {
 			errno = ENAMETOOLONG;
-            fprintf(stderr, "ln: %s\n", target);
+            fprintf(stderr, "ln: %s: %s\n", target, strerror(errno));
 			// warn("%s", target);
 			return (1);
 		}
@@ -226,12 +226,12 @@ linkit(const char *target, const char *source, int isdir)
 	if (fflag && exists) {
 		if (Fflag && S_ISDIR(sb.st_mode)) {
 			if (rmdir(source)) {
-                fprintf(stderr, "ln: %s\n", source);
+                fprintf(stderr, "ln: %s: %s\n", source, strerror(errno));
 				// warn("%s", source);
 				return (1);
 			}
 		} else if (unlink(source)) {
-            fprintf(stderr, "ln: %s\n", source);
+            fprintf(stderr, "ln: %s: %s\n", source, strerror(errno));
 			// warn("%s", source);
 			return (1);
 		}
@@ -249,12 +249,12 @@ linkit(const char *target, const char *source, int isdir)
 
 		if (Fflag && S_ISDIR(sb.st_mode)) {
 			if (rmdir(source)) {
-                fprintf(stderr, "ln: %s\n", source);
+                fprintf(stderr, "ln: %s: %s\n", source, strerror(errno));
 				// warn("%s", source);
 				return (1);
 			}
 		} else if (unlink(source)) {
-            fprintf(stderr, "ln: %s\n", source);
+            fprintf(stderr, "ln: %s: %s\n", source, strerror(errno));
 			// warn("%s", source);
 			return (1);
 		}
@@ -262,7 +262,7 @@ linkit(const char *target, const char *source, int isdir)
 
 	/* Attempt the link. */
 	if ((*linkf)(target, source)) {
-        fprintf(stderr, "ln: %s\n", source);
+        fprintf(stderr, "ln: %s: %s\n", source, strerror(errno));
 		// warn("%s", source);
 		return (1);
 	}

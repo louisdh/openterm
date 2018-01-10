@@ -2011,7 +2011,7 @@ handle_dir(char *dir)
 	fts = fts_open(path_argv, FTS_PHYSICAL | FTS_NOCHDIR, NULL);
 	if (fts == NULL) {
 		// warn("couldn't fts_open %s", dir);
-        fprintf(stderr, "gzip: couldn't fts_open %s\n", dir);
+        fprintf(stderr, "gzip: couldn't fts_open %s: %s\n", dir, strerror(errno));
 		return;
 	}
 

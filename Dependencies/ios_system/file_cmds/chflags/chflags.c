@@ -137,7 +137,7 @@ chflags_main(int argc, char *argv[])
 			errno = ERANGE;
         if (errno) {
             // err(1, "invalid flags: %s", flags);
-            fprintf(stderr, "chflags: invalid flags: %s\n", flags);
+            fprintf(stderr, "chflags: %s: invalid flags: %s\n", flags, strerror(errno));
             pthread_exit(NULL);
         }
         if (*ep) {
@@ -159,6 +159,7 @@ chflags_main(int argc, char *argv[])
 
     if ((ftsp = fts_open(++argv, fts_options , 0)) == NULL) {
 		// err(1, NULL);
+        fprintf(stderr, "chflags: %s\n", strerror(errno));
         pthread_exit(NULL);
     }
 
@@ -200,7 +201,7 @@ chflags_main(int argc, char *argv[])
 			continue;
 		if ((*change_flags)(p->fts_accpath, (u_int)newflags) && !fflag) {
 			// warn("%s", p->fts_path);
-            fprintf(stderr,"chflags: %s\n", p->fts_path);
+            fprintf(stderr,"chflags: %s: %s\n", p->fts_path, strerror(errno));
 			rval = 1;
 		} else if (vflag) {
 			(void)printf("%s", p->fts_path);
@@ -213,7 +214,7 @@ chflags_main(int argc, char *argv[])
 	}
     if (errno) {
 		// err(1, "fts_read");
-        fprintf(stderr, "chflags: fts_read\n");
+        fprintf(stderr, "chflags: fts_read: %s\n", strerror(errno));
         pthread_exit(NULL);
     }
 	exit(rval);

@@ -58,6 +58,7 @@ static const char sccsid[] = "@(#)process.c	8.6 (Berkeley) 4/20/94";
 
 #include "defs.h"
 #include "extern.h"
+#include "ios_error.h"
 
 static SPACE HS, PS, SS, YS;
 #define	pd		PS.deleted
@@ -116,7 +117,7 @@ redirect:
 					if ((appends = realloc(appends,
 					    sizeof(struct s_appends) *
 					    (appendnum *= 2))) == NULL)
-						err(1, "realloc");
+                        fprintf(stderr, "sed: realloc: %s\n", strerror(errno)); // err(1, "realloc");
 				appends[appendx].type = AP_STRING;
 				appends[appendx].s = cp->t;
 				appends[appendx].len = strlen(cp->t);
@@ -167,7 +168,7 @@ redirect:
 				lputs(ps, psl);
 				break;
 			case 'n':
-				if (!nflag && !pd)
+				if (!sed_nflag && !pd)
 					OUT(ps)
 				flush_appends();
 				if (!mf_fgets(&PS, REPLACE))
@@ -198,7 +199,7 @@ redirect:
 					psl = oldpsl;
 				break;
 			case 'q':
-				if (!nflag && !pd)
+				if (!sed_nflag && !pd)
 					OUT(ps)
 				flush_appends();
 				lseek(STDIN_FILENO, ftell(stdin), SEEK_SET);
@@ -208,7 +209,7 @@ redirect:
 					if ((appends = realloc(appends,
 					    sizeof(struct s_appends) *
 					    (appendnum *= 2))) == NULL)
-						err(1, "realloc");
+						        fprintf(stderr, "sed: realloc: %s\n", strerror(errno)); // err(1, "realloc");
 				appends[appendx].type = AP_FILE;
 				appends[appendx].s = cp->t;
 				appends[appendx].len = strlen(cp->t);
@@ -230,10 +231,10 @@ redirect:
 				if (cp->u.fd == -1 && (cp->u.fd = open(cp->t,
 				    O_WRONLY|O_APPEND|O_CREAT|O_TRUNC,
 				    DEFFILEMODE)) == -1)
-					err(1, "%s", cp->t);
+                    fprintf(stderr, "sed: %s: %s\n", cp->t, strerror(errno)); // err(1, "%s", cp->t);
 				if (write(cp->u.fd, ps, psl) != psl ||
 				    write(cp->u.fd, "\n", 1) != 1)
-					err(1, "%s", cp->t);
+                    fprintf(stderr, "sed: %s: %s\n", cp->t, strerror(errno)); // err(1, "%s", cp->t);
 				break;
 			case 'x':
 				if (hs == NULL)
@@ -256,7 +257,7 @@ redirect:
 			cp = cp->next;
 		} /* for all cp */
 
-new:		if (!nflag && !pd)
+new:		if (!sed_nflag && !pd)
 			OUT(ps)
 		flush_appends();
 	} /* for all lines */
@@ -329,8 +330,10 @@ substitute(struct s_command *cp)
 	if (re == NULL) {
 		if (defpreg != NULL && cp->u.s->maxbref > defpreg->re_nsub) {
 			linenum = cp->u.s->linenum;
-			errx(1, "%lu: %s: \\%d not defined in the RE",
+            fprintf(stderr, "sed: %lu: %s: \\%d not defined in the RE\n",
+			// errx(1, "%lu: %s: \\%d not defined in the RE",
 					linenum, fname, cp->u.s->maxbref);
+            pthread_exit(NULL);
 		}
 	}
 	if (!regexec_e(re, s, 0, 0, psl))
@@ -414,10 +417,10 @@ substitute(struct s_command *cp)
 	if (cp->u.s->wfile && !pd) {
 		if (cp->u.s->wfd == -1 && (cp->u.s->wfd = open(cp->u.s->wfile,
 		    O_WRONLY|O_APPEND|O_CREAT|O_TRUNC, DEFFILEMODE)) == -1)
-			err(1, "%s", cp->u.s->wfile);
+            fprintf(stderr, "sed: %s: %s\n", cp->u.s->wfile, strerror(errno)); // err(1, "%s", cp->u.s->wfile);
 		if (write(cp->u.s->wfd, ps, psl) != psl ||
 		    write(cp->u.s->wfd, "\n", 1) != 1)
-			err(1, "%s", cp->u.s->wfile);
+            fprintf(stderr, "sed: %s: %s\n", cp->u.s->wfile, strerror(errno)); // err(1, "%s", cp->u.s->wfile);
 	}
 	return (1);
 }
@@ -511,7 +514,10 @@ flush_appends(void)
 			break;
 		}
 	if (ferror(outfile))
-		errx(1, "%s: %s", outfname, strerror(errno ? errno : EIO));
+    { fprintf(stderr, "sed: %s: %s\n", outfname, strerror(errno ? errno : EIO));
+        pthread_exit(NULL);
+    // errx(1, "%s: %s", outfname, strerror(errno ? errno : EIO));
+    }
 	appendx = sdone = 0;
 }
 
@@ -589,8 +595,11 @@ lputs(char *s, size_t len)
 		fprintf(outfile, "\\\n");
 	(void)fputc('$', outfile);
 	(void)fputc('\n', outfile);
-	if (ferror(outfile))
-		errx(1, "%s: %s", outfname, strerror(errno ? errno : EIO));
+    if (ferror(outfile)) {
+        fprintf(stderr, "sed: %s: %s\n", outfname, strerror(errno ? errno : EIO));
+        // errx(1, "%s: %s", outfname, strerror(errno ? errno : EIO));
+        pthread_exit(NULL);
+    }
 }
 
 static __inline int
@@ -601,7 +610,10 @@ regexec_e(regex_t *preg, const char *string, int eflags, int nomatch,
 
 	if (preg == NULL) {
 		if (defpreg == NULL)
-			errx(1, "first RE may not be empty");
+        { fprintf(stderr, "sed: first RE may not be empty\n");
+            // errx(1, "first RE may not be empty");
+            pthread_exit(NULL);
+        }
 	} else
 		defpreg = preg;
 
@@ -617,7 +629,9 @@ regexec_e(regex_t *preg, const char *string, int eflags, int nomatch,
 	case REG_NOMATCH:
 		return (0);
 	}
-	errx(1, "RE error: %s", strregerror(eval, defpreg));
+    fprintf(stderr, "sed: RE error: %s\n", strregerror(eval, defpreg));
+    pthread_exit(NULL);
+    // errx(1, "RE error: %s", strregerror(eval, defpreg));
 	/* NOTREACHED */
 }
 
@@ -637,9 +651,10 @@ regsub(SPACE *sp, char *string, char *src)
 		sp->blen += (reqlen) + 1024;				\
 		if ((sp->space = sp->back = realloc(sp->back, sp->blen)) \
 		    == NULL)						\
-			err(1, "realloc");				\
+            fprintf(stderr, "sed: realloc: %s\n", strerror(errno)); \
 		dst = sp->space + sp->len;				\
 	}
+    // err(1, "realloc");
 
 	dst = sp->space + sp->len;
 	while ((c = *src++) != '\0') {
@@ -683,7 +698,7 @@ cspace(SPACE *sp, const char *p, size_t len, enum e_spflag spflag)
 		sp->blen = tlen + 1024;
 		if ((sp->space = sp->back = realloc(sp->back, sp->blen)) ==
 		    NULL)
-			err(1, "realloc");
+			        fprintf(stderr, "sed: realloc: %s\n", strerror(errno)); // err(1, "realloc");
 	}
 
 	if (spflag == REPLACE)
@@ -705,12 +720,12 @@ cfclose(struct s_command *cp, struct s_command *end)
 		switch(cp->code) {
 		case 's':
 			if (cp->u.s->wfd != -1 && close(cp->u.s->wfd))
-				err(1, "%s", cp->u.s->wfile);
+                fprintf(stderr, "sed: %s: %s\n", cp->u.s->wfile, strerror(errno)); // err(1, "%s", cp->u.s->wfile);
 			cp->u.s->wfd = -1;
 			break;
 		case 'w':
 			if (cp->u.fd != -1 && close(cp->u.fd))
-				err(1, "%s", cp->t);
+                fprintf(stderr, "sed: %s: %s\n", cp->t, strerror(errno)); // err(1, "%s", cp->t);
 			cp->u.fd = -1;
 			break;
 		case '{':

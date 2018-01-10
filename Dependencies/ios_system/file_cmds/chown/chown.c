@@ -176,9 +176,11 @@ chown_main(int argc, char **argv)
 		a_gid(*argv);
 	}
 
-	if ((ftsp = fts_open(++argv, fts_options, 0)) == NULL)
+    if ((ftsp = fts_open(++argv, fts_options, 0)) == NULL) {
+        fprintf(stderr, "chown: %s\n", strerror(errno));
         pthread_exit(NULL);
         //err(1, NULL);
+    }
 
 	for (rval = 0; (p = fts_read(ftsp)) != NULL;) {
 		symlink_found = 0;
@@ -246,7 +248,7 @@ chown_main(int argc, char **argv)
 	}
 	if (errno)
 		//err(1, "fts_read");
-        fprintf(stderr, "chown: fts_read\n");
+        fprintf(stderr, "chown: fts_read: %s\n", strerror(errno));
 	exit(rval);
 }
 
@@ -298,7 +300,7 @@ chownerr(const char *file)
 	if (errno != EPERM || (uid != (uid_t)-1 &&
 	    euid == (uid_t)-1 && (euid = geteuid()) != 0)) {
 		// warn("%s", file);
-        fprintf(stderr, "chown: %s\n", file);
+        fprintf(stderr, "chown: %s: %s\n", file, strerror(errno));
 		return;
 	}
 
@@ -314,7 +316,7 @@ chownerr(const char *file)
 		}
 	}
 	// warn("%s", file);
-    fprintf(stderr, "chown: %s\n", file);
+    fprintf(stderr, "chown: %s: %s\n", file, strerror(errno));
 }
 
 void

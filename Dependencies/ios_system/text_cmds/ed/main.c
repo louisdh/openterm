@@ -59,13 +59,17 @@ static const char copyright[] =
 #include <pwd.h>
 #include <setjmp.h>
 
-#ifdef __APPLE__
-#include <get_compat.h>
-#else
+// #ifdef __APPLE__
+// #include <get_compat.h>
+// #else
 #define COMPAT_MODE(a,b) (1)
-#endif /* __APPLE__ */
+// #endif /* __APPLE__ */
 
 #include "ed.h"
+// from ios_system:
+#include "ios_error.h"
+#include <pthread.h>
+extern int ios_system(char* cmd);
 
 
 #ifdef _POSIX_SOURCE
@@ -100,18 +104,46 @@ int posixly_correct = 0;	/* if set, POSIX behavior as per */
 char old_filename[PATH_MAX + 1] = "";	/* default filename */
 long current_addr;		/* current address in editor buffer */
 long addr_last;			/* last address in editor buffer */
-int lineno;			/* script line number */
+int ed_lineno;			/* script line number */
 const char *prompt;		/* command-line prompt */
 const char *dps = "*";		/* default command-line prompt */
 
-const char usage[] = "usage: %s [-] [-sx] [-p string] [file]\n";
+const char ed_usage[] = "usage: %s [-] [-sx] [-p string] [file]\n";
 
 /* ed: line editor */
 int
-main(int argc, char *argv[])
+ed_main(int argc, char *argv[])
 {
 	int c, n;
 	long status = 0;
+    // iOS: init all flags and variables:
+    /* global flags */
+    des = 0;            /* if set, use crypt(3) for i/o */
+    garrulous = 0;        /* if set, print all error messages */
+    isbinary = 0;            /* if set, buffer contains ASCII NULs */
+    isglobal = 0;            /* if set, doing a global command */
+    modified = 0;            /* if set, buffer modified since last write */
+    mutex = 0;            /* if set, signals set "sigflags" */
+    red = 0;            /* if set, restrict shell/directory access */
+    scripted = 0;        /* if set, suppress diagnostics */
+    sigflags = 0;        /* if set, signals received while mutex set */
+    sigactive = 0;        /* if set, signal handlers are enabled */
+    posixly_correct = 0;    /* if set, POSIX behavior as per */
+    /* http://www.opengroup.org/onlinepubs/009695399/utilities/ed.html */
+    
+    old_filename[0] = 0x0;    /* default filename */
+    current_addr = 0;        /* current address in editor buffer */
+    addr_last = 0;            /* last address in editor buffer */
+    ed_lineno = 0;            /* script line number */
+    prompt = 0;        /* command-line prompt */
+    shcmd = 0;            /* shell command buffer */
+    shcmdsz = 0;            /* shell command buffer size */
+    shcmdi = 0;            /* shell command buffer index */
+    ibuf = 0;            /* ed command-line buffer */
+    ibufsz = 0;            /* ed command-line buffer size */
+    ibufp = 0;            /* pointer to ed command-line buffer */
+
+    
 #if __GNUC__
 	/* Avoid longjmp clobbering */
 	(void) &argc;
@@ -141,8 +173,9 @@ top:
 			break;
 
 		default:
-			fprintf(stderr, usage, red ? "red" : "ed");
-			exit(1);
+			fprintf(stderr, ed_usage, red ? "red" : "ed");
+            pthread_exit(NULL);
+			// exit(1);
 		}
 	argv += optind;
 	argc -= optind;
@@ -210,7 +243,7 @@ top:
 				if (!isatty(0)) {
 					fprintf(stderr, garrulous ?
 					    "script, line %d: %s\n" :
-					    "", lineno, errmsg);
+					    "", ed_lineno, errmsg);
 					quit(2);
 				}
 				clearerr(stdin);
@@ -243,7 +276,7 @@ top:
 			if (!isatty(0)) {
 				fprintf(stderr, garrulous ?
 				    "script, line %d: %s\n" :
-				    "", lineno, errmsg);
+				    "", ed_lineno, errmsg);
 				quit(2);
 			}
 			break;
@@ -251,7 +284,7 @@ top:
 			if (!isatty(0))
 				fprintf(stderr, garrulous ?
 				    "script, line %d: %s\n" : "",
-				    lineno, errmsg);
+				    ed_lineno, errmsg);
 			else
 				fprintf(stderr, garrulous ? "%s\n" : "",
 				    errmsg);
@@ -261,7 +294,7 @@ top:
 			if (!isatty(0)) {
 				fprintf(stderr, garrulous ?
 				    "script, line %d: %s\n" : "",
-				    lineno, errmsg);
+				    ed_lineno, errmsg);
 				quit(2);
 			}
 			break;
@@ -888,7 +921,7 @@ exec_command(void)
 		GET_COMMAND_SUFFIX();
 		if (sflags) printf("%s\n", shcmd + 1);
 		fflush(stdout);
-		system(shcmd + 1);
+		ios_system(shcmd + 1);
 		if (!scripted) printf("!\n");
 		break;
 	case '\n':

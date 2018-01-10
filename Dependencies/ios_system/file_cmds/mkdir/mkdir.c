@@ -113,16 +113,16 @@ mkdir_main(int argc, char *argv[])
 		if (pflag) {
 			int status = mkpath_np(*argv, omode);
 			if (status && status != EEXIST) {
-                fprintf(stderr, "mkdir: %s\n", *argv);
+                fprintf(stderr, "mkdir: %s: %s\n", *argv, strerror(errno));
                 // warnc(status, "%s", *argv);
 				success = 0;
 			}
 		} else if (mkdir(*argv, omode) < 0) {
 			if (errno == ENOTDIR || errno == ENOENT)
-                fprintf(stderr, "mkdir: %s\n", dirname(*argv));
+                fprintf(stderr, "mkdir: %s: %s\n", dirname(*argv), strerror(errno));
 				// warn("%s", dirname(*argv));
 			else
-                fprintf(stderr, "mkdir: %s\n", *argv);
+                fprintf(stderr, "mkdir: %s: %s\n", *argv, strerror(errno));
 				// warn("%s", *argv);
 			success = 0;
 		} else if (vflag)
@@ -138,7 +138,7 @@ mkdir_main(int argc, char *argv[])
 		 * as chmod will (obviously) ignore the umask.
 		 */
 		if (success && mode != NULL && chmod(*argv, omode) == -1) {
-            fprintf(stderr, "mkdir: %s\n", *argv);
+            fprintf(stderr, "mkdir: %s: %s\n", *argv, strerror(errno));
 			// warn("%s", *argv);
 			exitval = 1;
 		}

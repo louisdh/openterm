@@ -314,7 +314,7 @@ apnoacl:
 		
         if (mode == NULL) {
 			// err(1, "Unable to allocate mode string");
-            fprintf(stderr, "chmod: Unable to allocate mode string\n");
+            fprintf(stderr, "chmod: Unable to allocate mode string: %s\n", strerror(errno));
             pthread_exit(NULL);
         }
 		/* Read the ACEs from STDIN */
@@ -367,7 +367,7 @@ apnoacl:
 				errno = ERANGE;
             if (errno) {
 				// err(1, "Invalid file mode: %s", mode);
-                fprintf(stderr, "chmod: Invalid file mode: %s\n", mode);
+                fprintf(stderr, "chmod: Invalid file mode: %s: %s\n", mode, strerror(errno));
                 pthread_exit(NULL);
             }
             if (*ep) {
@@ -390,7 +390,7 @@ apnoacl:
 #endif /* __APPLE__*/
     if ((ftsp = fts_open(++argv, fts_options, 0)) == NULL) {
 		// err(1, "fts_open");
-        fprintf(stderr, "chmod: fts_open\n");
+        fprintf(stderr, "chmod: fts_open: %s\n", strerror(errno));
         pthread_exit(NULL);
     }
 	for (rval = 0; (p = fts_read(ftsp)) != NULL;) {
@@ -440,7 +440,7 @@ apnoacl:
 			if ((newmode & ALLPERMS) == (p->fts_statp->st_mode & ALLPERMS))
 				continue;
 			if ((*change_mode)(p->fts_accpath, newmode) && !chmod_fflag) {
-                fprintf(stderr, "chmod: Unable to change file mode on %s\n", p->fts_path);
+                fprintf(stderr, "chmod: Unable to change file mode on %s: %s\n", p->fts_path, strerror(errno));
                 // warn("Unable to change file mode on %s", p->fts_path);
 				rval = 1;
 			} else {
@@ -469,7 +469,7 @@ apnoacl:
 	}
     if (errno) {
 		// err(1, "fts_read");
-        fprintf(stderr, "chmod: fts_read\n");
+        fprintf(stderr, "chmod: fts_read: %s\n", strerror(errno));
         pthread_exit(NULL);
     }
 #ifdef __APPLE__

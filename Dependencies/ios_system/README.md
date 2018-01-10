@@ -16,10 +16,10 @@ There are, first, shell commands (`ls`, `cp`, `rm`...), archive commands (`curl`
 
 For each set of commands, we need to provide the associated framework. Frameworks for small commands are in this project. Frameworks for interpreted languages are larger, and available separately: [python](https://github.com/holzschu/python_ios), [lua](https://github.com/holzschu/lua_ios) and [TeX](https://github.com/holzschu/lib-tex). Some commands (`curl`, `python`) require `OpenSSH` and `libssl2`, which you will have to download and compile separately.
 
-This `ios_system` framework has been successfully ported into a shell, [Blink](https://github.com/holzschu/blink) and into an editor, [iVim](https://github.com/holzschu/iVim). In both cases, it provides a Unix look-and-feel (well, mostly feel). 
+This `ios_system` framework has been successfully ported into two shells, [Blink](https://github.com/holzschu/blink) and [Terminal](https://github.com/louisdh/terminal) and into an editor, [iVim](https://github.com/holzschu/iVim). Each time, it provides a Unix look-and-feel (well, mostly feel). 
 
 **Issues:** In iOS, you cannot write in the `~` directory, only in `~/Documents/`, `~/Library/` and `~/tmp`. Most Unix programs assume the configuration files are in `$HOME`. 
-So either you redefine `$HOME` to `~/Documents/` or you set configuration variables (using `setenv`) to some other place.
+So either you redefine `$HOME` to `~/Documents/` or you set configuration variables (using `setenv`) to some other place. This is done in the `initializeEnvironment()` function. 
 
 Here's what I have:
 ```powershell
@@ -30,7 +30,7 @@ setenv CURL_HOME = $HOME/Documents/
 setenv HGRCPATH = $HOME/Documents/.hgrc/
 setenv SSL_CERT_FILE = $HOME/Documents/cacert.pem
 ```
-Your Mileage May Vary. 
+Your Mileage May Vary. Note that iOS already defines `$HOME` and `$PATH`. 
 
 ## Installation:
 

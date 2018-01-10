@@ -248,7 +248,7 @@ pretty(struct passwd *pw)
 	} else {
         if ((login = getlogin()) == NULL) {
 			// err(1, "getlogin");
-            fprintf(stderr, "id: getlogin\n");
+            fprintf(stderr, "id: getlogin: %s\n", strerror(errno));
             pthread_exit(NULL);
         }
 
@@ -326,7 +326,7 @@ id_print(struct passwd *pw, int use_ggl, int p_euid, int p_egid)
 
 #ifdef __APPLE__
 	if (ngroups < 0)
-        fprintf(stderr, "id: failed to retrieve group list\n");
+        fprintf(stderr, "id: failed to retrieve group list: %s\n", strerror(errno));
         // warn("failed to retrieve group list");
 #endif
 
@@ -371,7 +371,7 @@ auditid(void)
 
     if (getaudit_addr(&auditinfo, sizeof(auditinfo)) < 0) {
 		// err(1, "getaudit");
-        fprintf(stderr, "id: getaudit\n");
+        fprintf(stderr, "id: getaudit: %s\n", strerror(errno));
         pthread_exit(NULL);
     }
 	printf("auid=%d\n", auditinfo.ai_auid);
@@ -389,7 +389,7 @@ fullname(struct passwd *pw)
 	if (!pw) {
         if ((pw = getpwuid(getuid())) == NULL) {
 			// err(1, "getpwuid");
-            fprintf(stderr, "id: getpwuid\n");
+            fprintf(stderr, "id: getpwuid: %s\n", strerror(errno));
             pthread_exit(NULL);
         }
 	}
@@ -458,7 +458,7 @@ maclabel(void)
 {
 #ifdef __APPLE__
 	// errx(1, "-M unsupported");
-    fprintf(stderr, "-M unsupported");
+    fprintf(stderr, "id: -M unsupported");
     pthread_exit(NULL);
 #else /* !__APPLE__ */
 	char *string;
@@ -513,7 +513,7 @@ pline(struct passwd *pw)
 	if (!pw) {
         if ((pw = getpwuid(getuid())) == NULL) {
 			// err(1, "getpwuid");
-            fprintf(stderr, "id: getpwuid\n");
+            fprintf(stderr, "id: getpwuid: %s\n", strerror(errno));
             pthread_exit(NULL);
         }
 	}

@@ -165,7 +165,7 @@ cnt(const char *file)
 		fd = STDIN_FILENO;
 	} else {
 		if ((fd = open(file, O_RDONLY, 0)) < 0) {
-            fprintf(stderr, "wc: %s: open\n", file);
+            fprintf(stderr, "wc: %s: open: %s\n", file, strerror(errno));
 			// warn("%s: open", file);
 			return (1);
 		}
@@ -196,7 +196,7 @@ cnt(const char *file)
 	if (doline) {
 		while ((len = read(fd, buf, buf_size))) {
 			if (len == -1) {
-                fprintf(stderr, "wc: %s: read\n", file);
+                fprintf(stderr, "wc: %s: read: %s\n", file, strerror(errno));
                 // warn("%s: read", file);
 				(void)close(fd);
 				return (1);
@@ -221,7 +221,7 @@ cnt(const char *file)
 	 */
 	if (dochar || domulti) {
 		if (fstat(fd, &sb)) {
-            fprintf(stderr, "wc: %s: fstat\n", file);
+            fprintf(stderr, "wc: %s: fstat: %s\n", file, strerror(errno));
             // warn("%s: fstat", file);
 			(void)close(fd);
 			return (1);
@@ -240,7 +240,7 @@ word:	gotsp = 1;
 	memset(&mbs, 0, sizeof(mbs));
 	while ((len = read(fd, buf, buf_size)) != 0) {
 		if (len == -1) {
-            fprintf(stderr, "wc: %s: read\n", file);
+            fprintf(stderr, "wc: %s: read: %s\n", file, strerror(errno));
             // warn("%s: read", file);
 			(void)close(fd);
 			return (1);
@@ -254,7 +254,7 @@ word:	gotsp = 1;
 			    (size_t)-1) {
 				if (!warned) {
 					errno = EILSEQ;
-                    fprintf(stderr, "wc: %s\n", file);
+                    fprintf(stderr, "wc: %s: %s\n", file, strerror(errno));
                     // warn("%s", file);
 					warned = 1;
 				}
@@ -280,7 +280,7 @@ word:	gotsp = 1;
 	}
 	if (domulti && MB_CUR_MAX > 1)
 		if (mbrtowc(NULL, NULL, 0, &mbs) == (size_t)-1 && !warned)
-            fprintf(stderr, "wc: %s\n", file);
+            fprintf(stderr, "wc: %s: %s\n", file, strerror(errno));
             // warn("%s", file);
 	if (doline) {
 		tlinect += linect;

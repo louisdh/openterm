@@ -129,7 +129,7 @@ char	      **sel_users;	/* login array of particular users selected */
 /*
  * One of these per active utmp entry.
  */
-struct	utmp_entry {
+static struct	utmp_entry {
 	struct	utmp_entry *next;
 #if HAVE_UTMPX
 	struct	utmpx utmp;
@@ -295,7 +295,7 @@ w_main(int argc, char *argv[])
 #else
     if ((ut = fopen(_PATH_UTMP, "r")) == NULL) {
 		// err(1, "%s", _PATH_UTMP);
-        fprintf(stderr, "w: %s\n", _PATH_UTMP);
+        fprintf(stderr, "w: %s: %s\n", _PATH_UTMP, strerror(errno));
         pthread_exit(NULL);
     }
 #endif
@@ -409,7 +409,7 @@ w_main(int argc, char *argv[])
 #if HAVE_KVM
     if ((kp = kvm_getprocs(kd, KERN_PROC_ALL, 0, &nentries)) == NULL) {
 		// err(1, "%s", kvm_geterr(kd));
-        fprintf(stderr, "w: %s\n", kvm_geterr(kd));
+        fprintf(stderr, "w: %s: %s\n", kvm_geterr(kd), strerror(errno));
         pthread_exit(NULL);
     }
 #else
@@ -500,9 +500,11 @@ w_main(int argc, char *argv[])
 #else
 		w_getargv();
 #endif /* HAVE_KVM */
-		if (ep->args == NULL)
+        if (ep->args == NULL) {
+            fprintf(stderr, "w: %s\n", strerror(errno));
             pthread_exit(NULL);
 			// err(1, NULL);
+        }
 	}
 	/* sort by idle time */
 	if (sortidle && ehead != NULL) {
@@ -691,7 +693,7 @@ ttystat(char *line, int sz)
 	if (stat(ttybuf, &sb) == 0) {
 		return (&sb);
 	} else {
-        fprintf(stderr, "w: %s\n", ttybuf);
+        fprintf(stderr, "w: %s: %s\n", ttybuf, strerror(errno));
         // warn("%s", ttybuf);
 		return (NULL);
 	}

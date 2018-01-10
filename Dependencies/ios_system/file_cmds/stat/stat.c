@@ -67,6 +67,7 @@ __FBSDID("$FreeBSD: src/usr.bin/stat/stat.c,v 1.6 2003/10/06 01:55:17 dougb Exp 
 #include <string.h>
 #include <time.h>
 #include <unistd.h>
+#include <errno.h>
 #include "ios_error.h"
 
 #if HAVE_STRUCT_STAT_ST_FLAGS
@@ -330,8 +331,8 @@ stat_main(int argc, char *argv[])
 			linkfail = 1;
 			if (!quiet)
 				// warn("%s: stat",
-                fprintf(stderr, "star: %s: stat\n",
-				    argc == 0 ? "(stdin)" : argv[0]);
+                fprintf(stderr, "stat: %s: stat: %s\n",
+				    argc == 0 ? "(stdin)" : argv[0], strerror(errno));
 		}
 		else
 			output(&st, argv[0], statfmt, fn, nonl, quiet);

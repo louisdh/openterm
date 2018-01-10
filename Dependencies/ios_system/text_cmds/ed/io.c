@@ -267,7 +267,7 @@ get_tty_line(void)
 			if (!(ibuf[i++] = c)) isbinary = 1;
 			if (c != '\n')
 				continue;
-			lineno++;
+			ed_lineno++;
 			ibuf[i] = '\0';
 			ibufp = ibuf;
 			return i;

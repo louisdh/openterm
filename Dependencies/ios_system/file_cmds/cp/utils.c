@@ -87,7 +87,7 @@ copy_file(const FTSENT *entp, int dne)
 	struct stat to_stat;
 
 	if ((from_fd = open(entp->fts_path, O_RDONLY, 0)) == -1) {
-        fprintf(stderr, "cp: %s\n", entp->fts_path);
+        fprintf(stderr, "cp: %s: %s\n", entp->fts_path, strerror(errno));
         // warn("%s", entp->fts_path);
 		return (1);
 	}
@@ -126,7 +126,7 @@ copy_file(const FTSENT *entp, int dne)
 			(void)unlink(to.p_path);
 			int error = clonefile(entp->fts_path, to.p_path, 0);
 			if (error)
-                fprintf(stderr, "cp: %s: clonefile failed\n", to.p_path);
+                fprintf(stderr, "cp: %s: clonefile failed: %s\n", to.p_path, strerror(errno));
             // warn("%s: clonefile failed", to.p_path);
 			(void)close(from_fd);
 			return error == 0 ? 0 : 1;
@@ -159,7 +159,7 @@ copy_file(const FTSENT *entp, int dne)
 		if (cp_cflag) {
 			int error = clonefile(entp->fts_path, to.p_path, 0);
 			if (error)
-                fprintf(stderr, "cp: %s: clonefile failed\n", to.p_path);
+                fprintf(stderr, "cp: %s: clonefile failed: %s\n", to.p_path, strerror(errno));
             //  warn("%s: clonefile failed", to.p_path);
 			(void)close(from_fd);
 			return error == 0 ? 0 : 1;
@@ -170,7 +170,7 @@ copy_file(const FTSENT *entp, int dne)
 	}
 
 	if (to_fd == -1) {
-        fprintf(stderr, "cp: %s\n", to.p_path);
+        fprintf(stderr, "cp: %s: %s\n", to.p_path, strerror(errno));
         // warn("%s", to.p_path);
 		(void)close(from_fd);
 		return (1);
@@ -205,12 +205,12 @@ copy_file(const FTSENT *entp, int dne)
 	       if ((mode & (S_IRWXG|S_IRWXO))
 		   && fchmod(to_fd, mode & ~(S_IRWXG|S_IRWXO))) {
 		       if (errno != EPERM) /* we have write access but do not own the file */
-                   fprintf(stderr, "cp: %s: fchmod failed\n", to.p_path);
+                   fprintf(stderr, "cp: %s: fchmod failed: %s\n", to.p_path, strerror(errno));
                    // warn("%s: fchmod failed", to.p_path);
 		       mode = 0;
 	       }
        } else {
-           fprintf(stderr, "cp: %s\n", to.p_path);
+           fprintf(stderr, "cp: %s: %s\n", to.p_path, strerror(errno));
            // warn("%s", to.p_path);
        }
 	/*
@@ -223,7 +223,7 @@ copy_file(const FTSENT *entp, int dne)
 	    fs->st_size <= 8 * 1048576) {
 		if ((p = mmap(NULL, (size_t)fs->st_size, PROT_READ,
 		    MAP_SHARED, from_fd, (off_t)0)) == MAP_FAILED) {
-            fprintf(stderr, "cp: %s\n", entp->fts_path);
+            fprintf(stderr, "cp: %s: %s\n", entp->fts_path, strerror(errno));
             // warn("%s", entp->fts_path);
 			rval = 1;
 		} else {
@@ -244,13 +244,13 @@ copy_file(const FTSENT *entp, int dne)
 					break;
 			}
 			if (wcount != (ssize_t)wresid) {
-                fprintf(stderr, "cp: %s\n", to.p_path);
+                fprintf(stderr, "cp: %s: %s\n", to.p_path, strerror(errno));
                 // warn("%s", to.p_path);
 				rval = 1;
 			}
 			/* Some systems don't unmap on close(2). */
 			if (munmap(p, fs->st_size) < 0) {
-                fprintf(stderr, "cp: %s\n", entp->fts_path);
+                fprintf(stderr, "cp: %s: %s\n", entp->fts_path, strerror(errno));
                 // warn("%s", entp->fts_path);
 				rval = 1;
 			}
@@ -276,14 +276,14 @@ copy_file(const FTSENT *entp, int dne)
 					break;
 			}
 			if (wcount != (ssize_t)wresid) {
-                fprintf(stderr, "cp: %s\n", to.p_path);
+                fprintf(stderr, "cp: %s: %s\n", to.p_path, strerror(errno));
                 // warn("%s", to.p_path);
 				rval = 1;
 				break;
 			}
 		}
 		if (rcount < 0) {
-            fprintf(stderr, "cp: %s\n", entp->fts_path);
+            fprintf(stderr, "cp: %s: %s\n", entp->fts_path, strerror(errno));
             // warn("%s", entp->fts_path);
 			rval = 1;
 		}
@@ -297,13 +297,13 @@ copy_file(const FTSENT *entp, int dne)
 	 */
 	if (mode != 0)
 		if (fchmod(to_fd, mode))
-            fprintf(stderr, "cp: %s: fchmod failed\n", to.p_path);
+            fprintf(stderr, "cp: %s: fchmod failed: %s\n", to.p_path, strerror(errno));
             // warn("%s: fchmod failed", to.p_path);
 #ifdef __APPLE__
 	/* do these before setfile in case copyfile changes mtime */
 	if (!Xflag && S_ISREG(fs->st_mode)) { /* skip devices, etc */
 		if (fcopyfile(from_fd, to_fd, NULL, COPYFILE_XATTR) < 0)
-            fprintf(stderr, "cp: %s: could not copy extended attributes to %s\n", entp->fts_path, to.p_path);
+            fprintf(stderr, "cp: %s: could not copy extended attributes to %s: %s\n", entp->fts_path, to.p_path, strerror(errno));
             // warn("%s: could not copy extended attributes to %s", entp->fts_path, to.p_path);
 	}
 	if (cp_pflag && setfile(fs, to_fd))
@@ -311,7 +311,7 @@ copy_file(const FTSENT *entp, int dne)
 	if (cp_pflag) {
 		/* If this ACL denies writeattr then setfile will fail... */
 		if (fcopyfile(from_fd, to_fd, NULL, COPYFILE_ACL) < 0)
-            fprintf(stderr, "cp: %s: could not copy ACL to %s\n", entp->fts_path, to.p_path);
+            fprintf(stderr, "cp: %s: could not copy ACL to %s: %s\n", entp->fts_path, to.p_path, strerror(errno));
             // warn("%s: could not copy ACL to %s", entp->fts_path, to.p_path);
 	}
 #else  /* !__APPLE__ */
@@ -322,7 +322,7 @@ copy_file(const FTSENT *entp, int dne)
 #endif /* __APPLE__ */
 	(void)close(from_fd);
 	if (close(to_fd)) {
-        fprintf(stderr, "cp: %s\n", to.p_path);
+        fprintf(stderr, "cp: %s: %s\n", to.p_path, strerror(errno));
         // warn("%s", to.p_path);
 		rval = 1;
 	}
@@ -336,18 +336,18 @@ copy_link(const FTSENT *p, int exists)
 	char llink[PATH_MAX];
 
 	if ((len = readlink(p->fts_path, llink, sizeof(llink) - 1)) == -1) {
-        fprintf(stderr, "cp: readlink: %s\n", p->fts_path);
+        fprintf(stderr, "cp: readlink: %s: %s\n", p->fts_path, strerror(errno));
         // warn("readlink: %s", p->fts_path);
 		return (1);
 	}
 	llink[len] = '\0';
 	if (exists && unlink(to.p_path)) {
-		fprintf(stderr, "cp: unlink: %s\n", to.p_path);
+        fprintf(stderr, "cp: unlink: %s: %s\n", to.p_path, strerror(errno));
         // warn("unlink: %s", to.p_path);
 		return (1);
 	}
 	if (symlink(llink, to.p_path)) {
-		fprintf(stderr, "cp: symlink: %s\n", llink);
+        fprintf(stderr, "cp: symlink: %s: %s\n", llink, strerror(errno));
         // warn("symlink: %s", llink);
 		return (1);
 	}
@@ -355,8 +355,8 @@ copy_link(const FTSENT *p, int exists)
 	if (!Xflag)
 		if (copyfile(p->fts_path, to.p_path, NULL, COPYFILE_XATTR | COPYFILE_NOFOLLOW_SRC) <0)
             // warn("%s: could not copy extended attributes to %s",
-			fprintf(stderr, "cp: %s: could not copy extended attributes to %s\n",
-			     p->fts_path, to.p_path);
+            fprintf(stderr, "cp: %s: could not copy extended attributes to %s: %s\n",
+			     p->fts_path, to.p_path, strerror(errno));
 #endif
 	return (cp_pflag ? setfile(p->fts_statp, -1) : 0);
 }
@@ -365,12 +365,12 @@ int
 copy_fifo(struct stat *from_stat, int exists)
 {
 	if (exists && unlink(to.p_path)) {
-        fprintf(stderr, "cp: unlink: %s\n", to.p_path);
+        fprintf(stderr, "cp: unlink: %s: %s\n", to.p_path, strerror(errno));
         // warn("unlink: %s", to.p_path);
 		return (1);
 	}
 	if (mkfifo(to.p_path, from_stat->st_mode)) {
-		fprintf(stderr, "cp: mkfifo: %s\n", to.p_path);
+        fprintf(stderr, "cp: mkfifo: %s: %s\n", to.p_path, strerror(errno));
         // warn("mkfifo: %s", to.p_path);
 		return (1);
 	}
@@ -381,12 +381,12 @@ int
 copy_special(struct stat *from_stat, int exists)
 {
 	if (exists && unlink(to.p_path)) {
-		fprintf(stderr, "cp: unlink: %s\n", to.p_path);
+        fprintf(stderr, "cp: unlink: %s: %s\n", to.p_path, strerror(errno));
         // warn("unlink: %s", to.p_path);
 		return (1);
 	}
 	if (mknod(to.p_path, from_stat->st_mode, from_stat->st_rdev)) {
-		fprintf(stderr, "cp: mknod: %s\n", to.p_path);
+        fprintf(stderr, "cp: mknod: %s: %s\n", to.p_path, strerror(errno));
         // warn("mknod: %s", to.p_path);
 		return (1);
 	}
@@ -408,7 +408,7 @@ setfile(struct stat *fs, int fd)
 	TIMESPEC_TO_TIMEVAL(&tv[0], &fs->st_atimespec);
 	TIMESPEC_TO_TIMEVAL(&tv[1], &fs->st_mtimespec);
 	if (fdval ? futimes(fd, tv) : (islink ? lutimes(to.p_path, tv) : utimes(to.p_path, tv))) {
-        fprintf(stderr, "cp: %sutimes: %s\n", fdval ? "f" : (islink ? "l" : ""), to.p_path);
+        fprintf(stderr, "cp: %sutimes: %s: %s\n", fdval ? "f" : (islink ? "l" : ""), to.p_path, strerror(errno));
         // warn("%sutimes: %s", fdval ? "f" : (islink ? "l" : ""), to.p_path);
 		rval = 1;
 	}
@@ -430,7 +430,7 @@ setfile(struct stat *fs, int fd)
 								  lchown(to.p_path, fs->st_uid, fs->st_gid) :
 								  chown(to.p_path, fs->st_uid, fs->st_gid))) {
 			    if (errno != EPERM) {
-                    fprintf(stderr, "cp: %schown: %s\n", fdval ? "f" : (islink ? "l" : ""), to.p_path);
+                    fprintf(stderr, "cp: %schown: %s: %s\n", fdval ? "f" : (islink ? "l" : ""), to.p_path, strerror(errno));
                     // warn("%schown: %s", fdval ? "f" : (islink ? "l" : ""), to.p_path);
 				    rval = 1;
 			    }
@@ -442,7 +442,7 @@ setfile(struct stat *fs, int fd)
 		if (fdval ? fchmod(fd, fs->st_mode) : (islink ?
 						       lchmod(to.p_path, fs->st_mode) :
 						       chmod(to.p_path, fs->st_mode))) {
-            fprintf(stderr, "cp: %schmod: %s\n", fdval ? "f" : (islink ? "l" : ""), to.p_path);
+            fprintf(stderr, "cp: %schmod: %s: %s\n", fdval ? "f" : (islink ? "l" : ""), to.p_path, strerror(errno));
             // warn("%schmod: %s", fdval ? "f" : (islink ? "l" : ""), to.p_path);
 			rval = 1;
 		}
@@ -453,7 +453,7 @@ setfile(struct stat *fs, int fd)
 							  lchflags(to.p_path, fs->st_flags) :
 							  chflags(to.p_path, fs->st_flags))) {
 			if (errno != EPERM) {
-                fprintf(stderr, "cp: %schflags: %s\n", fdval ? "f" : (islink ? "l" : ""), to.p_path);
+                fprintf(stderr, "cp: %schflags: %s: %s\n", fdval ? "f" : (islink ? "l" : ""), to.p_path, strerror(errno));
                 // warn("%schflags: %s", fdval ? "f" : (islink ? "l" : ""), to.p_path);
 				rval = 1;
 			}
@@ -474,7 +474,7 @@ preserve_fd_acls(int source_fd, int dest_fd)
 		return (0);
 	acl = acl_get_fd(source_fd);
 	if (acl == NULL) {
-        fprintf(stderr, "cp: failed to get acl entries while setting %s\n", to.p_path);
+        fprintf(stderr, "cp: failed to get acl entries while setting %s: %s\n", to.p_path, strerror(errno));
         // warn("failed to get acl entries while setting %s", to.p_path);
 		return (1);
 	}
@@ -482,7 +482,7 @@ preserve_fd_acls(int source_fd, int dest_fd)
 	if (aclp->acl_cnt == 3)
 		return (0);
 	if (acl_set_fd(dest_fd, acl) < 0) {
-        fprintf(stderr, "cp: failed to set acl entries for %s\n", to.p_path);
+        fprintf(stderr, "cp: failed to set acl entries for %s: %s\n", to.p_path, strerror(errno));
         // warn("failed to set acl entries for %s", to.p_path);
 		return (1);
 	}
@@ -518,27 +518,27 @@ preserve_dir_acls(struct stat *fs, char *source_dir, char *dest_dir)
 	acl = aclgetf(source_dir, ACL_TYPE_DEFAULT);
 	if (acl == NULL) {
 		// warn("failed to get default acl entries on %s",
-        fprintf(stderr, "cp: failed to get default acl entries on %s\n",
-		    source_dir);
+        fprintf(stderr, "cp: failed to get default acl entries on %s: %s\n",
+		    source_dir, strerror(errno));
 		return (1);
 	}
 	aclp = &acl->ats_acl;
 	if (aclp->acl_cnt != 0 && aclsetf(dest_dir,
 	    ACL_TYPE_DEFAULT, acl) < 0) {
         // warn("failed to set default acl entries on %s",
-        fprintf(stderr, "cp: failed to set default acl entries on %s\n",
-		    dest_dir);
+        fprintf(stderr, "cp: failed to set default acl entries on %s: %s\n",
+		    dest_dir, strerror(errno));
 		return (1);
 	}
 	acl = aclgetf(source_dir, ACL_TYPE_ACCESS);
 	if (acl == NULL) {
-        fprintf(stderr, "cp: failed to get acl entries on %s\n", source_dir);
+        fprintf(stderr, "cp: failed to get acl entries on %s: %s\n", source_dir, strerror(errno));
         // warn("failed to get acl entries on %s", source_dir);
 		return (1);
 	}
 	aclp = &acl->ats_acl;
 	if (aclsetf(dest_dir, ACL_TYPE_ACCESS, acl) < 0) {
-        fprintf(stderr, "cp: failed to set acl entries on %s\n", dest_dir);
+        fprintf(stderr, "cp: failed to set acl entries on %s: %s\n", dest_dir, strerror(errno));
         // warn("failed to set acl entries on %s", dest_dir);
 		return (1);
 	}

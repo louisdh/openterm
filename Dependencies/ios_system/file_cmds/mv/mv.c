@@ -262,7 +262,7 @@ do_move(char *from, char *to)
 
 		/* prompt only if source exist */
 	        if (lstat(from, &sb) == -1) {
-            fprintf(stderr, "mv: %s\n", from);
+                fprintf(stderr, "mv: %s: %s\n", from, strerror(errno));
             //warn("%s", from);
 			return (1);
 		}
@@ -316,7 +316,7 @@ do_move(char *from, char *to)
 			return (1);
 		}
 	} else {
-        fprintf(stderr, "mv: rename %s to %s\n", from, to);
+        fprintf(stderr, "mv: rename %s to %s: %s\n", from, to, strerror(errno));
         // warn("rename %s to %s", from, to);
 		return (1);
 	}
@@ -327,7 +327,7 @@ do_move(char *from, char *to)
 	 * cp and rm.
 	 */
 	if (lstat(from, &sb)) {
-        fprintf(stderr, "mv: %s\n", from);
+        fprintf(stderr, "mv: %s: %s\n", from, strerror(errno));
         // warn("%s", from);
 		return (1);
 	}
@@ -346,7 +346,7 @@ fastcopy(char *from, char *to, struct stat *sbp)
 	int from_fd, to_fd;
 
 	if ((from_fd = open(from, O_RDONLY, 0)) < 0) {
-        fprintf(stderr, "mv: %s\n", from);
+        fprintf(stderr, "mv: %s: %s\n", from, strerror(errno));
 		// warn("%s", from);
 		return (1);
 	}
@@ -365,7 +365,7 @@ fastcopy(char *from, char *to, struct stat *sbp)
 	    open(to, O_CREAT | O_EXCL | O_TRUNC | O_WRONLY, 0)) < 0) {
 		if (errno == EEXIST && unlink(to) == 0)
 			continue;
-        fprintf(stderr, "mv: %s\n", to);
+        fprintf(stderr, "mv: %s: %s\n", to, strerror(errno));
 		// warn("%s", to);
 		(void)close(from_fd);
 		return (1);
@@ -393,15 +393,15 @@ fastcopy(char *from, char *to, struct stat *sbp)
 #endif /* __APPLE__ */
 	while ((nread = read(from_fd, bp, (size_t)blen)) > 0)
 		if (write(to_fd, bp, (size_t)nread) != nread) {
-            fprintf(stderr, "mv: %s\n", to);
+            fprintf(stderr, "mv: %s: %s\n", to, strerror(errno));
 			// warn("%s", to);
 			goto err;
 		}
 	if (nread < 0) {
-        fprintf(stderr, "mv: %s\n", from);
+        fprintf(stderr, "mv: %s: %s\n", from, strerror(errno));
 		// warn("%s", from);
 err:		if (unlink(to))
-            fprintf(stderr, "mv: %s: remove\n", to);
+                fprintf(stderr, "mv: %s: remove: %s\n", to, strerror(errno));
             // warn("%s: remove", to);
 		(void)close(from_fd);
 		(void)close(to_fd);
@@ -411,8 +411,8 @@ err:		if (unlink(to))
 	/* XATTR can fail if to_fd has mode 000 */
 	if (fcopyfile(from_fd, to_fd, NULL, COPYFILE_ACL | COPYFILE_XATTR) < 0) {
         // warn("%s: unable to move extended attributes and ACL from %s",
-        fprintf(stderr, "mv: %s: unable to move extended attributes and ACL from %s\n",
-		     to, from);
+        fprintf(stderr, "mv: %s: unable to move extended attributes and ACL from %s: %s\n",
+                to, from, strerror(errno));
 	}
 #endif
 	(void)close(from_fd);
@@ -420,8 +420,8 @@ err:		if (unlink(to))
 	oldmode = sbp->st_mode & ALLPERMS;
 	if (fchown(to_fd, sbp->st_uid, sbp->st_gid)) {
         // warn("%s: set owner/group (was: %lu/%lu)", to,
-        fprintf(stderr, "mv: %s: set owner/group (was: %lu/%lu)\n", to,
-		    (u_long)sbp->st_uid, (u_long)sbp->st_gid);
+        fprintf(stderr, "mv: %s: set owner/group (was: %lu/%lu): %s\n", to,
+		    (u_long)sbp->st_uid, (u_long)sbp->st_gid, strerror(errno));
 		if (oldmode & (S_ISUID | S_ISGID)) {
             // warnx(
 			fprintf(stderr,
@@ -431,7 +431,7 @@ err:		if (unlink(to))
 		}
 	}
 	if (fchmod(to_fd, sbp->st_mode))
-        fprintf(stderr, "mv: %s: set mode (was: 0%03o)\n", to, oldmode);
+        fprintf(stderr, "mv: %s: set mode (was: 0%03o): %s\n", to, oldmode, strerror(errno));
         // warn("%s: set mode (was: 0%03o)", to, oldmode);
 	/*
 	 * XXX
@@ -443,14 +443,14 @@ err:		if (unlink(to))
 	errno = 0;
 	if (fchflags(to_fd, (u_int)sbp->st_flags))
 		if (errno != ENOTSUP || sbp->st_flags != 0)
-            fprintf(stderr, "mv: %s: set flags (was: 0%07o)\n", to, sbp->st_flags);
+            fprintf(stderr, "mv: %s: set flags (was: 0%07o): %s\n", to, sbp->st_flags, strerror(errno));
             // warn("%s: set flags (was: 0%07o)", to, sbp->st_flags);
 
 	tval[0].tv_sec = sbp->st_atime;
 	tval[1].tv_sec = sbp->st_mtime;
 	tval[0].tv_usec = tval[1].tv_usec = 0;
 	if (utimes(to, tval))
-        fprintf(stderr, "mv: %s: set times\n", to);
+        fprintf(stderr, "mv: %s: set times: %s\n", to, strerror(errno));
         // warn("%s: set times", to);
 
 	if (close(to_fd)) {
@@ -460,7 +460,7 @@ err:		if (unlink(to))
 	}
 
 	if (unlink(from)) {
-        fprintf(stderr, "mv: %s: remove\n", from);
+        fprintf(stderr, "mv: %s: remove: %s\n", from, strerror(errno));
         // warn("%s: remove", from);
 		return (1);
 	}

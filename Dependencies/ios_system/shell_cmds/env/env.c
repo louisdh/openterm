@@ -91,7 +91,7 @@ env_main(int argc, char **argv)
 			rtrn = unsetenv(optarg);
             if (rtrn == -1) {
 				// err(EXIT_FAILURE, "unsetenv %s", optarg);
-                fprintf(stderr, "unsetenv %s\n", optarg);
+                fprintf(stderr, "unsetenv %s: %s\n", optarg, strerror(errno));
                 pthread_exit(NULL);
             }
 			break;
@@ -119,7 +119,7 @@ env_main(int argc, char **argv)
 		*p = '=';
         if (rtrn == -1) {
 			// err(EXIT_FAILURE, "setenv %s", *argv);
-            fprintf(stderr, "setenv %s\n", *argv);
+            fprintf(stderr, "setenv %s: %s\n", *argv, strerror(errno));
             pthread_exit(NULL);
         }
 	}
@@ -135,7 +135,7 @@ env_main(int argc, char **argv)
 				sleep(1);
 		}
         execvp(*argv, argv);
-        fprintf(stderr, "env: %s\n", *argv);
+        fprintf(stderr, "env: %s: %s\n", *argv, strerror(errno));
         pthread_exit(NULL);
 		// err(errno == ENOENT ? 127 : 126, "%s", *argv);
 	}

@@ -138,7 +138,7 @@ grep_tree(char **argv)
 
     if (!(fts = fts_open(argv, fts_flags, NULL))) {
 		// err(2, "fts_open");
-        fprintf(stderr, "grep: fts_open\n");
+        fprintf(stderr, "grep: fts_open: %s\n", strerror(errno));
         pthread_exit(NULL);
     }
 	while ((p = fts_read(fts)) != NULL) {
@@ -222,7 +222,7 @@ procfile(const char *fn)
 	if (f == NULL) {
 		file_err = true;
 		if (!sflag)
-            fprintf(stderr, "grep: %s\n", fn);
+            fprintf(stderr, "grep: %s: %s\n", fn, strerror(errno));
             // warn("%s", fn);
 		return (0);
 	}
@@ -504,7 +504,7 @@ grep_malloc(size_t size)
 
     if ((ptr = malloc(size)) == NULL) {
 		// err(2, "malloc");
-        fprintf(stderr, "grep: malloc\n");
+        fprintf(stderr, "grep: malloc: %s\n", strerror(errno));
         pthread_exit(NULL);
     }
 	return (ptr);
@@ -520,7 +520,7 @@ grep_calloc(size_t nmemb, size_t size)
 
     if ((ptr = calloc(nmemb, size)) == NULL) {
         // err(2, "calloc");
-        fprintf(stderr, "grep: malloc\n");
+        fprintf(stderr, "grep: calloc: %s\n", strerror(errno));
     pthread_exit(NULL);
 }
 	return (ptr);
@@ -535,7 +535,7 @@ grep_realloc(void *ptr, size_t size)
 
     if ((ptr = realloc(ptr, size)) == NULL) {
         // err(2, "realloc");
-        fprintf(stderr, "grep: realloc\n");
+        fprintf(stderr, "grep: realloc: %s\n", strerror(errno));
         pthread_exit(NULL);
     }
 	return (ptr);
@@ -551,7 +551,7 @@ grep_strdup(const char *str)
 
     if ((ret = strdup(str)) == NULL) {
         // err(2, "strdup");
-        fprintf(stderr, "grep: strdup\n");
+        fprintf(stderr, "grep: strdup: %s\n", strerror(errno));
         pthread_exit(NULL);
     }
 	return (ret);
