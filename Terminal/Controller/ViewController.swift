@@ -126,7 +126,6 @@ class ViewController: UIViewController {
 			return []
 		}
 		
-		arr.append("cd")
 		arr.append("clear")
 		arr.append("help")
 
@@ -382,6 +381,7 @@ extension ViewController: TerminalProcessor {
 
 		ios_system(command.utf8CString)
 
+        updateTitle()
 		readFile(stdout)
 		readFile(stderr)
 
