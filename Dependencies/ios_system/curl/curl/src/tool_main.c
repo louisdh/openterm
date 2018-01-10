@@ -227,6 +227,77 @@ static void main_free(struct GlobalConfig *config)
 }
 
 /*
+ * iOS_system specifics: if the call is actually scp or sftp, we convert it to curl proper.
+ * scp user@host:~/distantFile localFile => curl scp://user@host/~/distantFile -o localFile
+ * scp user@host:/path/distantFile localFile => curl scp://user@host//path/distantFile -o localFile
+ * scp user@host:~/distantFile . => curl scp://user@host/~/distantFile -O
+ * scp user@host:~/distantFile /path/ => curl scp://user@host/~/distantFile -o /path/distantFile
+ * scp localFile user@host:~/path/       => curl -T localFile scp://user@host/~/path/localFile
+ */
+int curl_main(int argc, char *argv[]);
+
+static int scp_convert(int argc, char* argv[]) {
+    int argc2 = 0;
+    int i = 1;
+    char** argv2 = (char**) malloc((argc + 2) * sizeof(char*));
+    char* localFileName = NULL;
+    char* distantFileName = NULL;
+    char* protocol = argv[0];
+    argv2[0] = strdup("curl");
+    for (i = 1, argc2 = 1; i < argc; i++, argc2++) {
+        // it's just a flag:
+        if ((argv[i][0] == '-') || (distantFileName && localFileName)) { argv2[argc2] = strdup(argv[i]); continue; } 
+        char* position;
+        if ((position = strstr(argv[i], ":")) != NULL) {
+            // distant file
+            distantFileName = position + 1; // after the ":"
+            *position = 0; // split argv[i] into "user@host" and distantFileName
+            asprintf(argv2 + argc2, "%s://%s/%s", protocol, argv[i], distantFileName);
+            // get the actual filename
+            while ((position = strstr(distantFileName, "/")) != NULL) distantFileName = position + 1;
+        } else {
+            // Not beginning with "-", not containing ":", must be a local filename
+            // if it's ".", replace with -O
+            // if it's a directory, add name of file from previous argument at the end.
+            localFileName = argv[i];
+            if (!distantFileName) {
+                // local file before remote file: upload
+                argv2[argc2] = strdup("-T"); argc2++;
+                argv2[argc2] = strdup(argv[i]);
+            } else { // download
+                if ((strlen(argv[i]) == 1) && (strcmp(argv[i], ".") == 0)) argv2[argc2] = strdup("-O");
+                else {
+                    argv2[argc2] = strdup("-o"); argc2++;
+                    if (argv[i][strlen(argv[i]) - 1] == '/') {
+                        // if localFileName ends with '/' we assume it's a directory
+                        asprintf(argv2 + argc2, "%s%s", localFileName, distantFileName);
+                    } else {
+                        struct stat localFileBuf;
+                        bool localFileExists = (stat(localFileName, &localFileBuf) == 0);
+                        int localFileIsDir = S_ISDIR(localFileBuf.st_mode);
+                        if (localFileExists && localFileIsDir) {
+                            // localFileName exists *and* is a directory: concatenate distantFileName to directory
+                            asprintf(argv2 + argc2, "%s/%s", localFileName, distantFileName);
+                        } else {
+                            // all other cases: localFileName is name of output
+                            argv2[argc2] = strdup(argv[i]);
+                        }
+                    }
+                }
+            }
+        }
+    }
+    argv2[argc2] = NULL;
+#ifdef BLINKSHELL
+    int returnValue = curl_static_main(argc2, argv2);
+#else
+    int returnValue = curl_main(argc2, argv2);
+#endif
+    for (int i = 0; i < argc2; i++) free(argv2[i]);
+    free(argv2);
+    return returnValue;
+}
+/*
 ** curl tool main function.
 */
 #ifdef BLINKSHELL
@@ -235,6 +306,10 @@ int curl_static_main(int argc, char *argv[])
 int curl_main(int argc, char *argv[])
 #endif
 {
+    // scp, sftp: edit arguments and relaunch
+    if ((strcmp(argv[0], "scp") == 0) || (strcmp(argv[0], "sftp") == 0)) {
+        return scp_convert(argc, argv);
+    }
   CURLcode result = CURLE_OK;
   struct GlobalConfig global;
   memset(&global, 0, sizeof(global));

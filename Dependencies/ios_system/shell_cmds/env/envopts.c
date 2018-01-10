@@ -127,7 +127,7 @@ search_paths(char *path, char **argv)
 	if (fqname == NULL) {
 		errno = ENOENT;
 		// err(127, "%s", filename);
-        fprintf(stderr, "env: %s\n", filename);
+        fprintf(stderr, "env: %s: %s\n", filename, strerror(errno));
         pthread_exit(NULL);
 	}
 	*argv = strdup(candidate);

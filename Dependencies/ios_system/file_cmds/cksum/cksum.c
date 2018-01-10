@@ -61,6 +61,7 @@ __FBSDID("$FreeBSD: src/usr.bin/cksum/cksum.c,v 1.17 2003/03/13 23:32:28 robert 
 #include <unistd.h>
 
 #include "extern.h"
+#include <errno.h>
 #include "ios_error.h" // remap exit to pthread_exit
 
 static void usage(void);
@@ -127,14 +128,14 @@ chksum_main(int argc, char **argv)
 		if (*argv) {
 			fn = *argv++;
 			if ((fd = open(fn, O_RDONLY, 0)) < 0) {
-                fprintf(stderr, "chksum: %s\n", fn);
+                fprintf(stderr, "chksum: %s: %s\n", fn, strerror(errno));
                 // warn("%s", fn);
 				rval = 1;
 				continue;
 			}
 		}
 		if (cfncn(fd, &val, &len)) {
-            fprintf(stderr, "chksum: %s\n", fn ? fn : "stdin");
+            fprintf(stderr, "chksum: %s: %s\n", fn ? fn : "stdin", strerror(errno));
             // warn("%s", fn ? fn : "stdin");
 			rval = 1;
 		} else

@@ -334,7 +334,7 @@ read_patterns(const char *fn)
 
     if ((f = fopen(fn, "r")) == NULL) {
 		// err(2, "%s", fn);
-        fprintf(stderr, "grep: %s\n", fn);
+        fprintf(stderr, "grep: %s: %s\n", fn, strerror(errno));
         pthread_exit(NULL);
     }
 	if ((fstat(fileno(f), &st) == -1) || (S_ISDIR(st.st_mode))) {
@@ -345,7 +345,7 @@ read_patterns(const char *fn)
 		add_pattern(line, line[0] == '\n' ? 0 : len);
     if (ferror(f)) {
 		// err(2, "%s", fn);
-        fprintf(stderr, "grep: %s\n", fn);
+        fprintf(stderr, "grep: %s: %s\n", fn, strerror(errno));
         pthread_exit(NULL);
     }
 	fclose(f);
@@ -482,6 +482,7 @@ grep_main(int argc, char *argv[])
 				Aflag = 0;
 			else if (Aflag > LLONG_MAX / 10) {
 				errno = ERANGE;
+                fprintf(stderr, "grep: %s\n", strerror(errno));
                 pthread_exit(NULL);
 				// err(2, NULL);
 			}
@@ -499,11 +500,14 @@ grep_main(int argc, char *argv[])
 			errno = 0;
 			l = strtoull(optarg, &ep, 10);
 			if (((errno == ERANGE) && (l == ULLONG_MAX)) ||
-			    ((errno == EINVAL) && (l == 0)))
+                ((errno == EINVAL) && (l == 0))) {
+                fprintf(stderr, "grep: %s\n", strerror(errno));
                 pthread_exit(NULL);
                 // err(2, NULL);
+            }
 			else if (ep[0] != '\0') {
 				errno = EINVAL;
+                fprintf(stderr, "grep: %s\n", strerror(errno));
                 pthread_exit(NULL);
                 // err(2, NULL);
 			}
@@ -584,7 +588,7 @@ grep_main(int argc, char *argv[])
 #ifdef WITHOUT_BZIP2
 			errno = EOPNOTSUPP;
 			// err(2, "bzip2 support was disabled at compile-time");
-            fprintf(stderr, "grep: bzip2 support was disabled at compile-time\n");
+                fprintf(stderr, "grep: bzip2 support was disabled at compile-time: %s\n", strerror(errno));
             pthread_exit(NULL);
 #endif
 			filebehave = FILE_BZIP;
@@ -602,11 +606,14 @@ grep_main(int argc, char *argv[])
 			errno = 0;
 			mcount = strtoll(optarg, &ep, 10);
 			if (((errno == ERANGE) && (mcount == LLONG_MAX)) ||
-			    ((errno == EINVAL) && (mcount == 0)))
+                ((errno == EINVAL) && (mcount == 0))) {
+                fprintf(stderr, "grep: %s\n", strerror(errno));
                 pthread_exit(NULL);
                 // err(2, NULL);
+            }
 			else if (ep[0] != '\0') {
 				errno = EINVAL;
+                fprintf(stderr, "grep: %s\n", strerror(errno));
                 pthread_exit(NULL);
                 // err(2, NULL);
 			}
@@ -615,7 +622,7 @@ grep_main(int argc, char *argv[])
 #ifdef WITHOUT_LZMA
 			errno = EOPNOTSUPP;
 			// err(2, "lzma support was disabled at compile-time");
-            fprintf(stderr, "grep: lzma support was disabled at compile-time\n");
+                fprintf(stderr, "grep: lzma support was disabled at compile-time: %s\n", strerror(errno));
             pthread_exit(NULL);
 #endif
 			filebehave = FILE_LZMA;
@@ -675,7 +682,7 @@ grep_main(int argc, char *argv[])
 #ifdef WITHOUT_LZMA
 			errno = EOPNOTSUPP;
 			// err(2, "xz support was disabled at compile-time");
-            fprintf(stderr, "grep: xz support was disabled at compile-time\n");
+                fprintf(stderr, "grep: xz support was disabled at compile-time: %s\n", strerror(errno));
             pthread_exit(NULL);
 #endif
 			filebehave = FILE_XZ;

@@ -126,7 +126,6 @@ class ViewController: UIViewController {
 			return []
 		}
 		
-		arr.append("cd")
 		arr.append("clear")
 		arr.append("help")
 
@@ -377,22 +376,12 @@ extension ViewController: TerminalProcessor {
 			return availableCommands().joined(separator: "\n")
 		}
 		
-		if command.hasPrefix("cd") {
-            // TODO: move cd to ios_system
-			let result = cd(command: command)
-            if (result) {
-                updateTitle()
-                return ""
-            } else {
-                return "cd: directory not found, or not allowed"
-            }
-		}
-		
 		setStdOut()
 		setStdErr()
 
 		ios_system(command.utf8CString)
 
+        updateTitle()
 		readFile(stdout)
 		readFile(stderr)
 
@@ -400,13 +389,9 @@ extension ViewController: TerminalProcessor {
 
 		if let data = fileManager.contents(atPath: errFilePath) {
 			if let errStr = String(data: data, encoding: .utf8) {
-				
-				let filtered = errStr.replacingOccurrences(of: "Command after parsing: ", with: "")
-				
-				if !filtered.isEmpty {
-					return filtered
-				}
-				
+                if (!errStr.isEmpty) {
+                    return errStr;
+                }
 			}
 		}
 		

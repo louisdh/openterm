@@ -85,7 +85,7 @@ touch_main(int argc, char *argv[])
 	utimes_f = utimes;
     if (gettimeofday(&tv[0], NULL)) {
 		// err(1, "gettimeofday");
-        fprintf(stderr, "touch: gettimeofday\n");
+        fprintf(stderr, "touch: gettimeofday: %s\n", strerror(errno));
         pthread_exit(NULL);
     }
 
@@ -171,7 +171,7 @@ touch_main(int argc, char *argv[])
 		if (stat_f(*argv, &sb) != 0) {
 			if (errno != ENOENT) {
 				rval = 1;
-                fprintf(stderr, "touch: %s\n", *argv);
+                fprintf(stderr, "touch: %s: %s\n", *argv, strerror(errno));
                 // warn("%s", *argv);
 				continue;
 			}
@@ -181,7 +181,7 @@ touch_main(int argc, char *argv[])
 				    O_WRONLY | O_CREAT, DEFFILEMODE);
 				if (fd == -1 || fstat(fd, &sb) || close(fd)) {
 					rval = 1;
-					fprintf(stderr, "touch: %s\n", *argv);
+                    fprintf(stderr, "touch: %s: %s\n", *argv, strerror(errno));
                     // warn("%s", *argv);
 					continue;
 				}
@@ -220,7 +220,7 @@ touch_main(int argc, char *argv[])
 		/* If the user specified a time, nothing else we can do. */
 		if (timeset || Aflag) {
 			rval = 1;
-            fprintf(stderr, "touch: %s\n", *argv);
+            fprintf(stderr, "touch: %s: %s\n", *argv, strerror(errno));
             // warn("%s", *argv);
 			continue;
 		}
@@ -240,7 +240,7 @@ touch_main(int argc, char *argv[])
 				rval = 1;
 		} else {
 			rval = 1;
-            fprintf(stderr, "touch: %s\n", *argv);
+            fprintf(stderr, "touch: %s: %s\n", *argv, strerror(errno));
             // warn("%s", *argv);
 		}
 	}
@@ -260,7 +260,7 @@ stime_arg1(char *arg, struct timeval *tvp)
 	now = tvp[0].tv_sec;
     if ((t = localtime(&now)) == NULL) {
 		// err(1, "localtime");
-        fprintf(stderr, "touch: localtime\n");
+        fprintf(stderr, "touch: localtime: %s\n", strerror(errno));
         pthread_exit(NULL);
     }
 					/* [[CC]YY]MMDDhhmm[.SS] */
@@ -324,7 +324,7 @@ stime_arg2(char *arg, int year, struct timeval *tvp)
 	now = tvp[0].tv_sec;
     if ((t = localtime(&now)) == NULL) {
 		// err(1, "localtime");
-        fprintf(stderr, "touch: localtime\n");
+        fprintf(stderr, "touch: localtime: %s\n", strerror(errno));
         pthread_exit(NULL);
     }
 
@@ -390,7 +390,7 @@ stime_file(char *fname, struct timeval *tvp)
 
     if (stat(fname, &sb)) {
 		// err(1, "%s", fname);
-        fprintf(stderr, "touch: %s\n", fname);
+        fprintf(stderr, "touch: %s: %s\n", fname, strerror(errno));
         pthread_exit(NULL);
     }
 	TIMESPEC_TO_TIMEVAL(tvp, &sb.st_atimespec);
@@ -429,11 +429,11 @@ rw(char *fname, struct stat *sbp, int force)
 	} else {
 		if (write(fd, &byte, sizeof(byte)) != sizeof(byte)) {
 err:			rval = 1;
-            fprintf(stderr, "touch: %s\n", fname);
+            fprintf(stderr, "touch: %s: %s\n", fname, strerror(errno));
             // warn("%s", fname);
 		} else if (ftruncate(fd, (off_t)0)) {
 			rval = 1;
-			fprintf(stderr, "touch: %s: file modified\n", fname);
+            fprintf(stderr, "touch: %s: file modified: %s\n", fname, strerror(errno));
             // warn("%s: file modified", fname);
 		}
 	}
@@ -445,7 +445,7 @@ err:			rval = 1;
 	}
 	if (needed_chmod && chmod(fname, sbp->st_mode) && rval != 1) {
 		rval = 1;
-		fprintf(stderr, "touch: %s: permissions modified\n", fname);
+        fprintf(stderr, "touch: %s: permissions modified: %s\n", fname, strerror(errno));
         // warn("%s: permissions modified", fname);
 	}
 	return (rval);

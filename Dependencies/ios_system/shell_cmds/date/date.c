@@ -64,6 +64,7 @@ __FBSDID("$FreeBSD$");
 
 #include "extern.h"
 #include "vary.h"
+#include <errno.h>
 #include "ios_error.h"
 
 #ifndef	TM_YEAR_BASE
@@ -165,13 +166,13 @@ date_main(int argc, char *argv[])
 	 */
     if (set_timezone && settimeofday(NULL, &tz) != 0) {
 		// err(1, "settimeofday (timezone)");
-        fprintf(stderr, "date: settimeofday (timezone)\n");
+        fprintf(stderr, "date: settimeofday (timezone): %s\n", strerror(errno));
         pthread_exit(NULL);
     }
 
     if (!rflag && time(&tval) == -1) {
 		// err(1, "time");
-        fprintf(stderr, "date: time\n");
+        fprintf(stderr, "date: time: %s\n", strerror(errno));
         pthread_exit(NULL);
     }
 
@@ -200,7 +201,7 @@ date_main(int argc, char *argv[])
 	struct tm *ltp = localtime(&tval);
 	if (ltp == NULL) {
 		// err(1, "localtime");
-        fprintf(stderr, "date: localtime\n");
+        fprintf(stderr, "date: localtime: %s\n", strerror(errno));
         pthread_exit(NULL);
 	}
 	lt = *ltp;
@@ -227,7 +228,7 @@ date_main(int argc, char *argv[])
 	(void)printf("%s\n", buf);
     if (fflush(stdout)) {
 		// err(1, "stdout");
-        fprintf(stderr, "date: stdout\n");
+        fprintf(stderr, "date: stdout: %s\n", strerror(errno));
         pthread_exit(NULL);
     }
 	/*
@@ -348,7 +349,7 @@ setthetime(const char *fmt, const char *p, int jflag, int nflag)
 			tv.tv_usec = 0;
             if (settimeofday(&tv, NULL) != 0) {
 				// err(1, "settimeofday (timeval)");
-                fprintf(stderr, "date: settimeofday (timeval)\n");
+                fprintf(stderr, "date: settimeofday (timeval): %s\n", strerror(errno));
                 pthread_exit(NULL);
             }
 			utx.ut_type = NEW_TIME;

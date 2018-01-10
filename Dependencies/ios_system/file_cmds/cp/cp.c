@@ -259,7 +259,7 @@ cp_main(int argc, char *argv[])
 	r = stat(to.p_path, &to_stat);
     if (r == -1 && errno != ENOENT) {
 		// err(1, "%s", to.p_path);
-        fprintf(stderr, "cp: %s\n", to.p_path);
+        fprintf(stderr, "cp: %s: %s\n", to.p_path, strerror(errno));
         pthread_exit(NULL);
     }
 	if (r == -1 || !S_ISDIR(to_stat.st_mode)) {
@@ -332,7 +332,7 @@ copy(char *argv[], enum op type, int fts_options)
 
     if ((ftsp = fts_open(argv, fts_options, NULL)) == NULL) {
 		// err(1, "fts_open");
-        fprintf(stderr, "cp: fts_open\n");
+        fprintf(stderr, "cp: fts_open: %s\n", strerror(errno));
         pthread_exit(NULL);
     }
 	for (badcp = rval = 0; (curr = fts_read(ftsp)) != NULL; badcp = 0) {
@@ -463,7 +463,7 @@ copy(char *argv[], enum op type, int fts_options)
 				/* setfile will fail if writeattr is denied */
 				if (copyfile(curr->fts_path, to.p_path, NULL, COPYFILE_ACL)<0)
 					// warn("%s: unable to copy ACL to %s", curr->fts_path, to.p_path);
-                    fprintf(stderr, "cp: %s: unable to copy ACL to %s\n", curr->fts_path, to.p_path);
+                    fprintf(stderr, "cp: %s: unable to copy ACL to %s: %s\n", curr->fts_path, to.p_path, strerror(errno));
 #else  /* !__APPLE__ */
 				if (preserve_dir_acls(curr->fts_statp,
 				    curr->fts_accpath, to.p_path) != 0)
@@ -475,7 +475,7 @@ copy(char *argv[], enum op type, int fts_options)
 				    ((mode | S_IRWXU) & mask) != (mode & mask))
 					if (chmod(to.p_path, mode & mask) != 0){
 						// warn("chmod: %s", to.p_path);
-                        fprintf(stderr, "cp: chmod: %s\n", to.p_path);
+                        fprintf(stderr, "cp: chmod: %s: %s\n", to.p_path, strerror(errno));
 						rval = 1;
 					}
 			}
@@ -542,11 +542,11 @@ copy(char *argv[], enum op type, int fts_options)
 				if (mkdir(to.p_path,
 					  curr->fts_statp->st_mode | S_IRWXU) < 0) {
 					if (COMPAT_MODE("bin/cp", "unix2003")) {
-                        fprintf(stderr, "cp: %s\n", to.p_path);
+                        fprintf(stderr, "cp: %s: %s\n", to.p_path, strerror(errno));
                         // warn("%s", to.p_path);
 					} else {
 						// err(1, "%s", to.p_path);
-                        fprintf(stderr, "cp: %s\n", to.p_path);
+                        fprintf(stderr, "cp: %s: %s\n", to.p_path, strerror(errno));
                         pthread_exit(NULL);
 					}
 				}
@@ -554,10 +554,10 @@ copy(char *argv[], enum op type, int fts_options)
 				errno = ENOTDIR;
 				if (COMPAT_MODE("bin/cp", "unix2003")) {
 					// warn("%s", to.p_path);
-                    fprintf(stderr, "cp: %s\n", to.p_path);
+                    fprintf(stderr, "cp: %s: %s\n", to.p_path, strerror(errno));
 				} else {
 					// err(1, "%s", to.p_path);
-                    fprintf(stderr, "cp: %s\n", to.p_path);
+                    fprintf(stderr, "cp: %s: %s\n", to.p_path, strerror(errno));
                     pthread_exit(NULL);
 				}
 			}
@@ -570,7 +570,7 @@ copy(char *argv[], enum op type, int fts_options)
 #ifdef __APPLE__
 			if (!Xflag) {
 				if (copyfile(curr->fts_path, to.p_path, NULL, COPYFILE_XATTR) < 0)
-                    fprintf(stderr, "cp: %s: unable to copy extended attributes to %s\n", curr->fts_path, to.p_path);
+                    fprintf(stderr, "cp: %s: unable to copy extended attributes to %s: %s\n", curr->fts_path, to.p_path, strerror(errno));
                 // warn("%s: unable to copy extended attributes to %s", curr->fts_path, to.p_path);
 				/* ACL and mtime set in postorder traversal */
 			}
@@ -605,7 +605,7 @@ copy(char *argv[], enum op type, int fts_options)
 	}
     fts_close(ftsp);
     if (errno) {
-        fprintf(stderr, "cp: fts_read\n");
+        fprintf(stderr, "cp: fts_read: %s\n", strerror(errno));
         pthread_exit(NULL);
 		// err(1, "fts_read");
     }

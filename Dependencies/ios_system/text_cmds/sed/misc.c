@@ -49,6 +49,9 @@ static const char sccsid[] = "@(#)misc.c	8.1 (Berkeley) 6/6/93";
 
 #include "defs.h"
 #include "extern.h"
+// iOS
+#include <errno.h>
+#include "ios_error.h"
 
 /*
  * Return a string for a regular expression error passed.  This is overkill,
@@ -65,7 +68,7 @@ strregerror(int errcode, regex_t *preg)
 		free(oe);
 	s = regerror(errcode, preg, NULL, 0);
 	if ((oe = malloc(s)) == NULL)
-		err(1, "malloc");
+        fprintf(stderr, "sed: malloc: %s\n", strerror(errno)); // err(1, "malloc");
 	(void)regerror(errcode, preg, oe, s);
 	return (oe);
 }

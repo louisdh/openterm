@@ -33,6 +33,10 @@ __FBSDID("$FreeBSD: src/bin/ed/buf.c,v 1.22 2002/06/30 05:13:53 obrien Exp $");
 #include <sys/stat.h>
 
 #include "ed.h"
+// from ios_system:
+#include "ios_error.h"
+#include <pthread.h>
+#import <Foundation/Foundation.h>
 
 
 FILE *sfp;				/* scratch file pointer */
@@ -185,7 +189,7 @@ get_addressed_line_node(long n)
 
 extern int newline_added;
 
-char sfn[15] = "";				/* scratch file name */
+char sfn[PATH_MAX] = "";				/* scratch file name */
 
 /* open_sbuf: open scratch file */
 int
@@ -196,7 +200,10 @@ open_sbuf(void)
 
 	isbinary = newline_added = 0;
 	u = umask(077);
-	strcpy(sfn, "/tmp/ed.XXXXXX");
+    // getenv($HOME) + "/tmp/" or NSString * NSTemporaryDirectory(void);
+    // the latter, I guess.
+    sprintf(sfn, "%s/ed.XXXXXX", NSTemporaryDirectory().UTF8String);
+	// strcpy(sfn, "/tmp/ed.XXXXXX");
 	if ((fd = mkstemp(sfn)) == -1 ||
 	    (sfp = fdopen(fd, "w+")) == NULL) {
 		if (fd != -1)
@@ -237,7 +244,8 @@ quit(int n)
 		fclose(sfp);
 		unlink(sfn);
 	}
-	exit(n);
+	// exit(n);
+    pthread_exit(NULL);
 }
 
 

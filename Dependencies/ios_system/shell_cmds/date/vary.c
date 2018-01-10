@@ -33,6 +33,7 @@ __FBSDID("$FreeBSD$");
 #include <stdlib.h>
 #include <stdio.h>
 #include "vary.h"
+#include <errno.h>
 #include "ios_error.h"
 
 struct trans {
@@ -96,7 +97,7 @@ vary_append(struct vary *v, char *arg)
 
     if ((*nextp = (struct vary *)malloc(sizeof(struct vary))) == NULL) {
         // err(1, "malloc");
-        fprintf(stderr, "date: malloc\n");
+        fprintf(stderr, "date: malloc: %s\n", strerror(errno));
         pthread_exit(NULL);
     }
   (*nextp)->arg = arg;

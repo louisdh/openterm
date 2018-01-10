@@ -44,6 +44,7 @@ __used static const char rcsid[] =
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#include <errno.h>
 #include "ios_error.h"
 
 #ifndef __APPLE__
@@ -90,7 +91,7 @@ makevfslist(fslist)
 		if (*cnextcp == ',')
 			i++;
 	if ((av = malloc((size_t)(i + 2) * sizeof(char *))) == NULL) {
-        fprintf(stderr, "df: malloc failed\n");
+        fprintf(stderr, "df: malloc failed: %s\n", strerror(errno));
         // warnx("malloc failed");
 		return (NULL);
 	}

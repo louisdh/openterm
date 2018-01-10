@@ -50,6 +50,7 @@ __FBSDID("$FreeBSD: src/bin/pwd/pwd.c,v 1.25 2005/02/09 17:37:38 ru Exp $");
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <string.h>
 #include "ios_error.h"
 
 static char *getcwd_logical(void);
@@ -95,7 +96,7 @@ pwd_main(int argc, char *argv[])
 		printf("%s\n", p);
     else {
 		// err(1, ".");
-        fprintf(stderr, "pwd: .\n");
+        fprintf(stderr, "pwd: .: %s\n", strerror(errno));
         pthread_exit(NULL);
     }
 

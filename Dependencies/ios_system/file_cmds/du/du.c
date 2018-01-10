@@ -262,7 +262,7 @@ du_main(int argc, char *argv[])
 
     if ((fts = fts_open(argv, ftsoptions, NULL)) == NULL) {
 		// err(1, "fts_open");
-        fprintf(stderr, "du: fts_open\n");
+        fprintf(stderr, "du: fts_open: %s\n", strerror(errno));
         pthread_exit(NULL);
     }
 
@@ -361,7 +361,7 @@ du_main(int argc, char *argv[])
 
     if (errno) {
 		// err(1, "fts_read");
-        fprintf(stderr, "du: fts_read\n");
+        fprintf(stderr, "du: fts_read: %s\n", strerror(errno));
         pthread_exit(NULL);
     }
 

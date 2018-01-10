@@ -559,7 +559,7 @@ traverse(int argc, char *argv[], int options)
 	if ((ftsp =
          fts_open(argv, options, f_nosort ? NULL : mastercmp)) == NULL) {
 		// err(1, "fts_open");
-        fprintf(stderr, "ls: fts_open\n");
+        fprintf(stderr, "ls: fts_open: %s\n", strerror(errno));
         pthread_exit(NULL);
     }
 
@@ -638,7 +638,7 @@ traverse(int argc, char *argv[], int options)
 	errno = error;
 
     if (errno) {
-        fprintf(stderr, "ls: fts_read\n");
+        fprintf(stderr, "ls: fts_read: %s\n", strerror(errno));
         pthread_exit(NULL);
 		// err(1, "fts_read");
     }
@@ -700,7 +700,7 @@ display(FTSENT *p, FTSENT *list)
 		/* Fill-in "::" as "0:0:0" for the sake of scanf. */
 		jinitmax = initmax2 = malloc(strlen(initmax) * 2 + 2);
         if (jinitmax == NULL) {
-			fprintf(stderr, "ls: malloc\n");
+            fprintf(stderr, "ls: malloc: %s\n", strerror((errno)));
             pthread_exit(NULL);
             // err(1, "malloc");
         }
@@ -841,7 +841,7 @@ display(FTSENT *p, FTSENT *list)
 						flags = strdup("-");
 					}
                     if (flags == NULL) {
-						fprintf(stderr, "ls: fflagstostr\n");
+                        fprintf(stderr, "ls: fflagstostr: %s\n", strerror(errno));
                         pthread_exit(NULL);
                         // err(1, "fflagstostr");
                     }
@@ -856,7 +856,7 @@ display(FTSENT *p, FTSENT *list)
 				if ((np = calloc(1, sizeof(NAMES) + lattrlen +
 				    ulen + glen + flen + 4)) == NULL)
                 {
-                    fprintf(stderr, "ls: malloc\n");
+                    fprintf(stderr, "ls: malloc: %s\n", strerror(errno));
                     // err(1, "malloc");
                     pthread_exit(NULL);
                 }

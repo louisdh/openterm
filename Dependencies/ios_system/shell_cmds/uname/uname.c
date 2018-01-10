@@ -49,6 +49,7 @@ __RCSID("$NetBSD: uname.c,v 1.10 1998/11/09 13:24:05 kleink Exp $");
 
 #include <sys/sysctl.h>
 #include <sys/utsname.h>
+#include <errno.h>
 #include "ios_error.h"
 
 #ifdef __APPLE__
@@ -131,7 +132,7 @@ uname_main(argc, argv)
 
 	if (uname(&u) != 0) {
 		// err(EXIT_FAILURE, "uname");
-        fprintf(stderr, "uname\n");
+        fprintf(stderr, "uname: %s\n", strerror(errno));
         pthread_exit(NULL);
 		/* NOTREACHED */
 	}

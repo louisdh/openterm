@@ -156,7 +156,7 @@ scanfiles(char *argv[], int cooked)
 #endif
 		}
 		if (fd < 0) {
-            fprintf(stderr, "cat: %s\n", path);
+            fprintf(stderr, "cat: %s: %s\n", path, strerror(errno));
             // warn("%s", path);
 			rval = 1;
 		} else if (cooked) {
@@ -231,14 +231,14 @@ cook_cat(FILE *fp)
 			break;
 	}
 	if (ferror(fp)) {
-        fprintf(stderr, "cat: %s\n", filename);
+        fprintf(stderr, "cat: %s: %s\n", filename, strerror(errno));
         // warn("%s", filename);
 		rval = 1;
 		clearerr(fp);
 	}
     if (ferror(stdout)) {
 		// err(1, "stdout");
-        fprintf(stderr, "cat: stdout\n");
+        fprintf(stderr, "cat: stdout: %s\n", strerror(errno));
         pthread_exit(NULL);
     }
 }
@@ -259,7 +259,7 @@ raw_cat(int rfd)
         bsize = 1024; // MAX(sbuf.st_blksize, 1024);
         if ((buf = malloc(bsize)) == NULL) {
             // err(1, "buffer");
-            fprintf(stderr, "cat: buffer\n");
+            fprintf(stderr, "cat: buffer: %s\n", strerror(errno));
             pthread_exit(NULL);
         }
 	}
@@ -274,7 +274,7 @@ raw_cat(int rfd)
 			// if ((nw = write(wfd, buf + off, (size_t)nr)) < 0) err(1, "stdout");
         }
 	if (nr < 0) {
-        fprintf(stderr, "cat: %s\n", filename);
+        fprintf(stderr, "cat: %s: %s\n", filename, strerror(errno));
         // warn("%s", filename);
 		rval = 1;
 	}
@@ -319,12 +319,12 @@ udom_open(const char *path, int flags)
 		switch(flags & O_ACCMODE) {
 		case O_RDONLY:
 			if (shutdown(fd, SHUT_WR) == -1)
-				fprintf(stderr, "\n");
+                fprintf(stderr, "cat: %s\n", strerror(errno));
                 // warn(NULL);
 			break;
 		case O_WRONLY:
 			if (shutdown(fd, SHUT_RD) == -1)
-                fprintf(stderr, "\n");
+                fprintf(stderr, "cat: %s\n", strerror(errno));
 				// warn(NULL);
 			break;
 		default:

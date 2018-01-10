@@ -211,7 +211,7 @@ uuid_to_name(uuid_t *uu)
 	name = (char *) malloc(MAXNAMETAG);
 	
 	if (NULL == name) {
-        fprintf(stderr, "ls: malloc\n");
+        fprintf(stderr, "ls: malloc: %s\n", strerror(errno));
         pthread_exit(NULL);
         // err(1, "malloc");
 	}
@@ -490,7 +490,7 @@ printcol(DISPLAY *dp)
 		lastentries = dp->entries;
 		if ((array = realloc(array, dp->entries * sizeof(FTSENT *))) == NULL) {
 			// warn(NULL);
-            fprintf(stderr, "\n");
+            fprintf(stderr, "%s\n", strerror(errno));
 			printscol(dp);
 			return;
 		}
