@@ -342,8 +342,8 @@ extension ViewController: TerminalProcessor {
 
 		if let data = fileManager.contents(atPath: errFilePath) {
 			if let errStr = String(data: data, encoding: .utf8) {
-                if (!errStr.isEmpty) {
-                    return errStr;
+                if !errStr.isEmpty {
+                    return errStr
                 }
 			}
 		}
