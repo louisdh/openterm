@@ -318,53 +318,6 @@ extension ViewController {
 	
 }
 
-extension ViewController {
-    
-	func cd(command: String) -> Bool {
-
-		let fileManager = DocumentManager.shared.fileManager
-		
-		var arguments = command.split(separator: " ")
-		arguments.removeFirst()
-		
-		if arguments.count == 1 {
-			let folderName = arguments[0]
-			
-			if folderName == ".." {
-				
-				let dirPath = URL(fileURLWithPath: fileManager.currentDirectoryPath).deletingLastPathComponent()
-				
-				if dirPath.lastPathComponent == "iCloud~com~silverfox~Terminal" {
-					return true
-				}
-				
-				return fileManager.changeCurrentDirectoryPath(dirPath.path)
-				
-			} else if folderName.hasPrefix("/") {
-				
-				let documents = DocumentManager.shared.activeDocumentsFolderURL
-				
-				let dirPath = documents.appendingPathComponent(String(folderName)).path
-				
-				return fileManager.changeCurrentDirectoryPath(dirPath)
-				
-			} else {
-				
-				let dirPath = fileManager.currentDirectoryPath.appending("/\(folderName)")
-				
-				return fileManager.changeCurrentDirectoryPath(dirPath)
-				
-			}
-		} else {
-            // command is just "cd", we go home, that is the Documents folder
-            let documents = DocumentManager.shared.activeDocumentsFolderURL
-            return fileManager.changeCurrentDirectoryPath(documents.path)
-		}
-		
-	}
-	
-}
-
 extension ViewController: TerminalProcessor {
 	
 	@discardableResult
