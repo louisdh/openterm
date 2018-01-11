@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>OpenSourceProject</key>
+	<string>awk</string>
+	<key>OpenSourceVersion</key>
+	<string>October 23, 2007</string>
+	<key>OpenSourceWebsiteURL</key>
+	<string>http://www.cs.princeton.edu/~bwk/btl.mirror/index.html</string>
+	<key>OpenSourceURL</key>
+	<string>http://www.cs.princeton.edu/~bwk/btl.mirror/awk.tar.gz</string>
+	<key>OpenSourceSHA1</key>
+	<string>433317b8ed6d68bbfb18667384edfe64344b8074</string>
+	<key>OpenSourceImportDate</key>
+	<string>2008-11-12</string>
+	<key>OpenSourceModifications</key>
+	<array>
+		<string>3668527</string>
+		<string>Fix build warnings.</string>
+		<string>Rename getline to awk_getline (7556911).</string>
+		<string>27852967: Implement UPLUS operator (awkgram.y, maketab.c, run.c)</string>
+		<string>27852967: Upstream fix for -0 (tran.c)</string>
+		<string>27852967: Modify isclvar to accept var== (lib.c)</string>
+	</array>
+	<key>OpenSourceLicense</key>
+	<string>Other</string>
+	<key>OpenSourceLicenseFile</key>
+	<string>awk.txt</string>
+</dict>
+</plist>
