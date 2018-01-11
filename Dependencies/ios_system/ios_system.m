@@ -135,6 +135,7 @@ static void* run_function(void* parameters) {
     return NULL;
 }
 
+static NSString* miniRoot = nil; // limit operations to below a certain directory (~, usually).
 static NSDictionary *commandList = nil;
 // do recompute directoriesInPath only if $PATH has changed
 static NSString* fullCommandPath = @"";
@@ -216,10 +217,13 @@ static char* parseArgument(char* argument, char* command) {
     // If there are multiple users on iOS, this code will need to be changed.
     if([argumentString hasPrefix:@"~"]) {
         // So it begins with "~".
-        argumentString = [argumentString stringByExpandingTildeInPath]; // replaces "~", "~/"
-        if ([argumentString hasPrefix:@"~:"]) { // not done by stringByExpandingTildeInPath
+        if (miniRoot == nil) argumentString = [argumentString stringByExpandingTildeInPath]; // replaces "~", "~/"
+        if ((miniRoot != nil) || ([argumentString hasPrefix:@"~:"])) { // not done by stringByExpandingTildeInPath
             NSString* test_string = @"~";
-            NSString* replacement_string = [NSString stringWithCString:(getenv("HOME")) encoding:NSASCIIStringEncoding];
+            NSString* replacement_string;
+            if (miniRoot == nil)
+                replacement_string = [NSString stringWithCString:(getenv("HOME")) encoding:NSASCIIStringEncoding];
+            else replacement_string = miniRoot;
             argumentString = [argumentString stringByReplacingOccurrencesOfString:test_string withString:replacement_string options:NULL range:NSMakeRange(0, 1)];
         }
     }
@@ -229,20 +233,23 @@ static char* parseArgument(char* argument, char* command) {
     if (strcmp(command, "setenv") == 0) {
         // This is something we need to avoid if the command is "scp" or "sftp"
         if ([argumentString containsString:@":~"]) {
+            NSString* homeDir;
+            if (miniRoot == nil) homeDir = [NSString stringWithCString:(getenv("HOME")) encoding:NSASCIIStringEncoding];
+            else homeDir = miniRoot;
             // Only 1 possibility: ":~" (same as $HOME)
-            if (getenv("HOME")) {
+            if (homeDir.length > 0) {
                 if ([argumentString containsString:@":~/"]) {
                     NSString* test_string = @":~/";
-                    NSString* replacement_string = [[NSString stringWithCString:":" encoding:NSASCIIStringEncoding] stringByAppendingString:[NSString stringWithCString:(getenv("HOME")) encoding:NSASCIIStringEncoding]];
+                    NSString* replacement_string = [[NSString stringWithCString:":" encoding:NSASCIIStringEncoding] stringByAppendingString:homeDir];
                     replacement_string = [replacement_string stringByAppendingString:[NSString stringWithCString:"/" encoding:NSASCIIStringEncoding]];
                     argumentString = [argumentString stringByReplacingOccurrencesOfString:test_string withString:replacement_string];
                 } else if ([argumentString hasSuffix:@":~"]) {
                     NSString* test_string = @":~";
-                    NSString* replacement_string = [[NSString stringWithCString:":" encoding:NSASCIIStringEncoding] stringByAppendingString:[NSString stringWithCString:(getenv("HOME")) encoding:NSASCIIStringEncoding]];
+                    NSString* replacement_string = [[NSString stringWithCString:":" encoding:NSASCIIStringEncoding] stringByAppendingString:homeDir];
                     argumentString = [argumentString stringByReplacingOccurrencesOfString:test_string withString:replacement_string options:NULL range:NSMakeRange([argumentString length] - 2, 2)];
                 } else if ([argumentString hasSuffix:@":"]) {
                     NSString* test_string = @":";
-                    NSString* replacement_string = [[NSString stringWithCString:":" encoding:NSASCIIStringEncoding] stringByAppendingString:[NSString stringWithCString:(getenv("HOME")) encoding:NSASCIIStringEncoding]];
+                    NSString* replacement_string = [[NSString stringWithCString:":" encoding:NSASCIIStringEncoding] stringByAppendingString:homeDir];
                     argumentString = [argumentString stringByReplacingOccurrencesOfString:test_string withString:replacement_string options:NULL range:NSMakeRange([argumentString length] - 2, 2)];
                 }
             }
@@ -404,6 +411,26 @@ static int unsetenv_main(int argc, char** argv) {
     return 0;
 }
 
+int ios_setMiniRoot(NSString* mRoot) {
+    BOOL isDir;
+    if ([[NSFileManager defaultManager] fileExistsAtPath:mRoot isDirectory:&isDir]) {
+        if (isDir) {
+            // fileManager has different ways of expressing the same directory.
+            // We need to actually change to the directory to get its "real name".
+            NSString* currentDir = [[NSFileManager defaultManager] currentDirectoryPath];
+            if ([[NSFileManager defaultManager] changeCurrentDirectoryPath:mRoot]) {
+                // also don't set the miniRoot if we can't go in there
+                // get the real name for miniRoot:
+                miniRoot = [[NSFileManager defaultManager] currentDirectoryPath];
+                return 1; // mission accomplished
+            }
+            // Back to where we we before:
+            [[NSFileManager defaultManager] changeCurrentDirectoryPath:currentDir];
+        }
+    }
+    return 0;
+}
+
 static int cd_main(int argc, char** argv) {
     NSString* currentDir = [[NSFileManager defaultManager] currentDirectoryPath];
     if (argc > 1) {
@@ -415,9 +442,17 @@ static int cd_main(int argc, char** argv) {
         BOOL isDir;
         if ([[NSFileManager defaultManager] fileExistsAtPath:newDir isDirectory:&isDir]) {
             if (isDir) {
-                if ([[NSFileManager defaultManager] changeCurrentDirectoryPath:newDir])
+                if ([[NSFileManager defaultManager] changeCurrentDirectoryPath:newDir]) {
+                    // We managed to change the directory.
+                    // Was that allowed?
+                    NSString* resultDir = [[NSFileManager defaultManager] currentDirectoryPath];
+                    if ((miniRoot != nil) && (![resultDir hasPrefix:miniRoot])) {
+                        fprintf(stderr, "cd: %s: permission denied\n", [newDir UTF8String]);
+                        [[NSFileManager defaultManager] changeCurrentDirectoryPath:miniRoot];
+                        currentDir = miniRoot;
+                    }
                     previousDirectory = currentDir;
-                else fprintf(stderr, "cd: %s: permission denied\n", [newDir UTF8String]);
+                } else fprintf(stderr, "cd: %s: permission denied\n", [newDir UTF8String]);
             }
             else  fprintf(stderr, "cd: %s: not a directory\n", [newDir UTF8String]);
         } else {
