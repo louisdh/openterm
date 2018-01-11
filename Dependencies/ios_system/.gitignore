@@ -28,7 +28,6 @@ text_cmds//
 
 # Libraries
 *.lib
-*.a
 *.la
 *.lo
 
