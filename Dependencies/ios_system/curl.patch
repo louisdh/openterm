@@ -300,8 +300,8 @@ diff -Naur curl-105/curl/lib/version.c curl/curl/lib/version.c
  #ifdef HAVE_LIBSSH2_VERSION
 diff -Naur curl-105/curl/src/tool_main.c curl/curl/src/tool_main.c
 --- curl-105/curl/src/tool_main.c	2016-07-06 23:44:05.000000000 +0200
-+++ curl/curl/src/tool_main.c	2018-01-10 15:05:06.000000000 +0100
-@@ -227,10 +227,89 @@
++++ curl/curl/src/tool_main.c	2018-01-11 17:42:40.000000000 +0100
+@@ -227,10 +227,93 @@
  }
  
  /*
@@ -312,7 +312,11 @@ diff -Naur curl-105/curl/src/tool_main.c curl/curl/src/tool_main.c
 + * scp user@host:~/distantFile /path/ => curl scp://user@host/~/distantFile -o /path/distantFile
 + * scp localFile user@host:~/path/       => curl -T localFile scp://user@host/~/path/localFile
 + */
++#ifdef BLINKSHELL
++int curl_static_main(int argc, char *argv[]);
++#else
 +int curl_main(int argc, char *argv[]);
++#endif
 +
 +static int scp_convert(int argc, char* argv[]) {
 +    int argc2 = 0;

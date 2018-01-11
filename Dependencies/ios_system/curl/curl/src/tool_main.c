@@ -234,7 +234,11 @@ static void main_free(struct GlobalConfig *config)
  * scp user@host:~/distantFile /path/ => curl scp://user@host/~/distantFile -o /path/distantFile
  * scp localFile user@host:~/path/       => curl -T localFile scp://user@host/~/path/localFile
  */
+#ifdef BLINKSHELL
+int curl_static_main(int argc, char *argv[]);
+#else
 int curl_main(int argc, char *argv[]);
+#endif
 
 static int scp_convert(int argc, char* argv[]) {
     int argc2 = 0;

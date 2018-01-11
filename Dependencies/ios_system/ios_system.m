@@ -73,6 +73,7 @@ extern int curl_main(int argc, char **argv);
 
 #ifdef SHELL_UTILITIES
 extern int date_main(int argc, char *argv[]);
+extern int echo_main(int argc, char *argv[]);
 extern int env_main(int argc, char *argv[]);     // does the same as printenv
 extern int hostname_main(int argc, char *argv[]);
 extern int id_main(int argc, char *argv[]); // also groups, whoami
@@ -86,6 +87,7 @@ extern int cat_main(int argc, char *argv[]);
 extern int grep_main(int argc, char *argv[]);
 extern int wc_main(int argc, char *argv[]);
 extern int ed_main(int argc, char *argv[]);
+extern int tr_main(int argc, char *argv[]);
 extern int sed_main(int argc, char *argv[]);
 extern int awk_main(int argc, char *argv[]);
 #endif
@@ -298,6 +300,7 @@ static void initializeCommandList()
 #endif
 #ifdef SHELL_UTILITIES
                     // Commands from Apple shell_cmds:
+                    @"echo" : [NSValue valueWithPointer: echo_main], 
                     @"printenv": [NSValue valueWithPointer: printenv_main],
                     @"pwd"    : [NSValue valueWithPointer: pwd_main],
                     @"uname"  : [NSValue valueWithPointer: uname_main],
@@ -313,6 +316,7 @@ static void initializeCommandList()
                     // Commands from Apple text_cmds:
                     @"cat"    : [NSValue valueWithPointer: cat_main],
                     @"wc"     : [NSValue valueWithPointer: wc_main],
+                    @"tr"     : [NSValue valueWithPointer: tr_main],
                     // compiled, but deactivated until we have interactive mode
 //                    @"ed"     : [NSValue valueWithPointer: ed_main],
 //                    @"red"     : [NSValue valueWithPointer: ed_main],

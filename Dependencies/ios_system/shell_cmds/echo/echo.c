@@ -50,6 +50,10 @@ __FBSDID("$FreeBSD: src/bin/echo/echo.c,v 1.18 2005/01/10 08:39:22 imp Exp $");
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+// iOS
+#include <stdio.h>
+#include "ios_error.h"
+#include <pthread.h>
 
 /*
  * Report an error and exit.
@@ -59,17 +63,18 @@ static void
 errexit(const char *prog, const char *reason)
 {
 	char *errstr = strerror(errno);
-	write(STDERR_FILENO, prog, strlen(prog));
-	write(STDERR_FILENO, ": ", 2);
-	write(STDERR_FILENO, reason, strlen(reason));
-	write(STDERR_FILENO, ": ", 2);
-	write(STDERR_FILENO, errstr, strlen(errstr));
-	write(STDERR_FILENO, "\n", 1);
-	exit(1);
+    fprintf(stderr, "%s: %s: %s\n", prog, reason, errstr);
+//    write(STDERR_FILENO, prog, strlen(prog));
+//    write(STDERR_FILENO, ": ", 2);
+//    write(STDERR_FILENO, reason, strlen(reason));
+//    write(STDERR_FILENO, ": ", 2);
+//    write(STDERR_FILENO, errstr, strlen(errstr));
+//    write(STDERR_FILENO, "\n", 1);
+    pthread_exit(NULL); // exit(1);
 }
 	
 int
-main(int argc, char *argv[])
+echo_main(int argc, char *argv[])
 {
 	int nflag;	/* if not set, output a trailing newline. */
 	int veclen;	/* number of writev arguments. */
@@ -128,8 +133,14 @@ main(int argc, char *argv[])
 		int nwrite;
 
 		nwrite = (veclen > IOV_MAX) ? IOV_MAX : veclen;
-		if (writev(STDOUT_FILENO, iov, nwrite) == -1)
-			errexit(progname, "write");
+        // if (writev(STDOUT_FILENO, iov, nwrite) == -1)
+        //         errexit(progname, "write");
+        struct iovec *cp = iov;
+        for (int i = 0; i < nwrite; i++) {
+            if (fprintf(stdout, "%s", (char*)(cp->iov_base)) == -1)
+                errexit(progname, "write");
+            cp++;
+        }
 		iov += nwrite;
 		veclen -= nwrite;
 	}

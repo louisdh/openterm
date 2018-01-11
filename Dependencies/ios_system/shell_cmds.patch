@@ -167,6 +167,64 @@ diff -Naur shell_cmds-203/date/vary.c shell_cmds/date/vary.c
    (*nextp)->arg = arg;
    (*nextp)->next = NULL;
    return result;
+diff -Naur shell_cmds-203/echo/echo.c shell_cmds/echo/echo.c
+--- shell_cmds-203/echo/echo.c	2006-12-21 02:07:57.000000000 +0100
++++ shell_cmds/echo/echo.c	2018-01-11 17:46:10.000000000 +0100
+@@ -50,6 +50,10 @@
+ #include <stdlib.h>
+ #include <string.h>
+ #include <unistd.h>
++// iOS
++#include <stdio.h>
++#include "ios_error.h"
++#include <pthread.h>
+ 
+ /*
+  * Report an error and exit.
+@@ -59,17 +63,18 @@
+ errexit(const char *prog, const char *reason)
+ {
+ 	char *errstr = strerror(errno);
+-	write(STDERR_FILENO, prog, strlen(prog));
+-	write(STDERR_FILENO, ": ", 2);
+-	write(STDERR_FILENO, reason, strlen(reason));
+-	write(STDERR_FILENO, ": ", 2);
+-	write(STDERR_FILENO, errstr, strlen(errstr));
+-	write(STDERR_FILENO, "\n", 1);
+-	exit(1);
++    fprintf(stderr, "%s: %s: %s\n", prog, reason, errstr);
++//    write(STDERR_FILENO, prog, strlen(prog));
++//    write(STDERR_FILENO, ": ", 2);
++//    write(STDERR_FILENO, reason, strlen(reason));
++//    write(STDERR_FILENO, ": ", 2);
++//    write(STDERR_FILENO, errstr, strlen(errstr));
++//    write(STDERR_FILENO, "\n", 1);
++    pthread_exit(NULL); // exit(1);
+ }
+ 	
+ int
+-main(int argc, char *argv[])
++echo_main(int argc, char *argv[])
+ {
+ 	int nflag;	/* if not set, output a trailing newline. */
+ 	int veclen;	/* number of writev arguments. */
+@@ -128,8 +133,14 @@
+ 		int nwrite;
+ 
+ 		nwrite = (veclen > IOV_MAX) ? IOV_MAX : veclen;
+-		if (writev(STDOUT_FILENO, iov, nwrite) == -1)
+-			errexit(progname, "write");
++        // if (writev(STDOUT_FILENO, iov, nwrite) == -1)
++        //         errexit(progname, "write");
++        struct iovec *cp = iov;
++        for (int i = 0; i < nwrite; i++) {
++            if (fprintf(stdout, "%s", (char*)(cp->iov_base)) == -1)
++                errexit(progname, "write");
++            cp++;
++        }
+ 		iov += nwrite;
+ 		veclen -= nwrite;
+ 	}
 diff -Naur shell_cmds-203/env/env.c shell_cmds/env/env.c
 --- shell_cmds-203/env/env.c	2014-08-05 00:47:11.000000000 +0200
 +++ shell_cmds/env/env.c	2018-01-10 11:31:01.000000000 +0100
