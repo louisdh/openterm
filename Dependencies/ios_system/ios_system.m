@@ -166,6 +166,7 @@ void initializeEnvironment() {
     }
     setenv("APPDIR", [[NSBundle mainBundle] resourcePath].UTF8String, 1);
     setenv("PATH", fullCommandPath.UTF8String, 1); // 1 = override existing value
+    setenv("TERM", "xterm", 1); // 1 = override existing value
     directoriesInPath = [fullCommandPath componentsSeparatedByString:@":"];
     
     // We can't write in $HOME so we need to set the position of config files:
@@ -441,9 +442,33 @@ int ios_executable(char* inputCmd) {
     else return 0;
 }
 
+// For customization:
+// replaces a function pointer (e.g. ls_main) with another one, provided by the user (ls_mine_main)
+// if the function does not exist, add it to the list
+// if "allOccurences" is true, search for all commands that share the same function, replace them too.
+// ("compress" and "uncompress" both point to compress_main. You probably want to replace both, but maybe
+// you just happen to have a very fast uncompress, different from compress).
+void replaceCommand(NSString* commandName, int (*newFunction)(int argc, char *argv[]), bool allOccurences) {
+    if (commandList == nil) initializeCommandList();
+    
+    int (*oldFunction)(int ac, char** av) = [[commandList objectForKey: commandName] pointerValue];
+    NSMutableDictionary *mutableDict = [commandList mutableCopy];
+    mutableDict[commandName] = [NSValue valueWithPointer: newFunction];
+    
+    if (oldFunction && allOccurences) {
+        // scan through all dictionary entries
+        
+        for (NSString* existingCommand in mutableDict.allKeys) {
+            int (*existingFunction)(int ac, char** av) = [[mutableDict objectForKey: existingCommand] pointerValue];
+            if (existingFunction == oldFunction) {
+                [mutableDict setValue: [NSValue valueWithPointer: newFunction] forKey: existingCommand];
+            }
+        }
+    }
+    commandList = [mutableDict mutableCopy];
+}
 
-
-char* commandsAsString() {
+NSString* commandsAsString() {
 
 	if (commandList == nil) initializeCommandList();
 
@@ -451,7 +476,12 @@ char* commandsAsString() {
 	NSData * jsonData = [NSJSONSerialization  dataWithJSONObject:commandList.allKeys options:0 error:&err];
 	NSString * myString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
 
-	return myString.cString;
+	return myString;
+}
+
+NSArray* commandsAsArray() {
+    if (commandList == nil) initializeCommandList();
+    return commandList.allKeys;
 }
 
 int ios_system(char* inputCmd) {
@@ -637,9 +667,6 @@ int ios_system(char* inputCmd) {
         // We have the arguments. Parse them for environment variables, ~, etc.
         for (int i = 1; i < argc; i++) if (!dontExpand[i]) argv[i] = parseArgument(argv[i], argv[0]);
         free(dontExpand); 
-        // Because some commands change argv, keep a local copy for release.
-        char** argv_ref = (char **)malloc(sizeof(char*) * (argc + 1));
-        for (int i = 0; i < argc; i++) argv_ref[i] = argv[i];
         // Now call the actual command:
         // - is argv[0] a command that refers to a file? (either absolute path, or in $PATH)
         //   if so, does it exist, does it have +x bit set, does it have #! python or #! lua on the first line?
@@ -721,7 +748,7 @@ int ios_system(char* inputCmd) {
                         argc += 1;
                         argv = (char **)realloc(argv, sizeof(char*) * argc);
                         // Move everything one step up
-                        for (int i = argc; i >= 1; i--) argv[i] = argv[i-1];
+                        for (int i = argc; i >= 1; i--) { argv[i] = argv[i-1]; }
                         argv[1] = realloc(argv[1], strlen(locationName.UTF8String));
                         strcpy(argv[1], locationName.UTF8String);
                         argv[0] = strdup(scriptName); // this one is new
@@ -731,6 +758,9 @@ int ios_system(char* inputCmd) {
                 if (cmdIsAFile) break; // else keep going through the path elements.
             }
         }
+        // Because some commands change argv, keep a local copy for release.
+        char** argv_ref = (char **)malloc(sizeof(char*) * (argc + 1));
+        for (int i = 0; i < argc; i++) argv_ref[i] = argv[i];
         // fprintf(stderr, "Command after parsing: ");
         // for (int i = 0; i < argc; i++)
         //    fprintf(stderr, "[%s] ", argv[i]);
