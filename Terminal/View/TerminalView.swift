@@ -195,8 +195,11 @@ extension TerminalView: UITextViewDelegate {
 				} else {
 					
 					let output = processor.process(command: String(input))
-					if !output.isEmpty {
-						textView.text = textView.text + "\n\(output)"
+                    let outputParsed = output.replacingOccurrences(of: DocumentManager.shared.activeDocumentsFolderURL.path, with: "~")
+                    // Sometimes, fileManager adds /private in front of the directory
+                    let outputParsed2 = outputParsed.replacingOccurrences(of: "/private", with: "")
+					if !outputParsed2.isEmpty {
+						textView.text = textView.text + "\n\(outputParsed2)"
 					}
 					
 				}

@@ -53,6 +53,10 @@ static const char sccsid[] = "@(#)str.c	8.2 (Berkeley) 4/28/95";
 #include <wctype.h>
 
 #include "extern.h"
+// iOS changes:
+#include "ios_error.h"
+#include <pthread.h>
+
 
 static int      backslash(STR *, int *);
 static int	bracket(STR *);
@@ -193,8 +197,10 @@ genclass(s)
 	STR *s;
 {
 
-	if ((s->cclass = wctype(s->str)) == 0)
-		errx(1, "unknown class %s", s->str);
+    if ((s->cclass = wctype(s->str)) == 0) {
+		fprintf(stderr, "tr: unknown class %s\n", s->str); // errx
+        pthread_exit(NULL);
+    }
 	s->cnt = 0;
 	s->lastch = -1;		/* incremented before check in next() */
 	if (strcmp(s->str, "upper") == 0)
@@ -216,17 +222,21 @@ genequiv(s)
 
 	if (*s->str == '\\') {
 		s->equiv[0] = backslash(s, NULL);
-		if (*s->str != '=')
-			errx(1, "misplaced equivalence equals sign");
+        if (*s->str != '=') {
+			fprintf(stderr, "tr: misplaced equivalence equals sign\n"); // errx
+            pthread_exit(NULL);
+        }
 		s->str += 2;
 	} else {
 		clen = mbrtowc(&wc, s->str, MB_LEN_MAX, NULL);
 		if (clen == (size_t)-1 || clen == (size_t)-2 || clen == 0)
 			errc(1, EILSEQ, NULL);
 		s->equiv[0] = wc;
-		if (s->str[clen] != '=')
-			errx(1, "misplaced equivalence equals sign");
-		s->str += clen + 2;
+        if (s->str[clen] != '=') {
+			fprintf(stderr, "tr: misplaced equivalence equals sign\n"); // errx
+            pthread_exit(NULL);
+        }
+        s->str += clen + 2;
 	}
 
 	/*
@@ -294,8 +304,11 @@ genrange(STR *s, int was_octal)
 		s->str = savestart;
 		return (0);
 	}
-	if ((s->set = p = malloc((NCHARS_SB + 1) * sizeof(int))) == NULL)
-		err(1, "genrange() malloc");
+    if ((s->set = p = malloc((NCHARS_SB + 1) * sizeof(int))) == NULL) {
+		// err(1, "genrange() malloc");
+        fprintf(stderr, "tr: genrange() malloc: %s", strerror(errno));
+        pthread_exit(NULL);
+    }
 	for (cnt = 0; cnt < NCHARS_SB; cnt++)
 		if (charcoll((const void *)&cnt, (const void *)&(s->lastch)) >= 0 &&
 		    charcoll((const void *)&cnt, (const void *)&stopval) <= 0)
@@ -319,8 +332,11 @@ genseq(s)
 	size_t clen;
 
 #ifndef __APPLE__
-	if (s->which == STRING1)
-		errx(1, "sequences only valid in string2");
+    if (s->which == STRING1) {
+		fprintf(stderr, "tr: sequences only valid in string2\n"); // errx
+        pthread_exit(NULL);
+    }
+        
 #endif /* !__APPLE__ */
 
 	if (*s->str == '\\')
@@ -332,8 +348,10 @@ genseq(s)
 		s->lastch = wc;
 		s->str += clen;
 	}
-	if (*s->str != '*')
-		errx(1, "misplaced sequence asterisk");
+    if (*s->str != '*') {
+		fprintf(stderr, "tr: misplaced sequence asterisk\n"); // errx
+        pthread_exit(NULL);
+    }
 
 	switch (*++s->str) {
 	case '\\':
@@ -351,7 +369,8 @@ genseq(s)
 				break;
 			}
 		}
-		errx(1, "illegal sequence count");
+		fprintf(stderr, "tr: illegal sequence count\n"); // errx
+        pthread_exit(NULL);
 		/* NOTREACHED */
 	}
 

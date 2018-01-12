@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import ios_system
 
 class DocumentManager {
 	
@@ -22,6 +23,7 @@ class DocumentManager {
 		let baseURL = self.activeDocumentsFolderURL
 		
 		fileManager.changeCurrentDirectoryPath(baseURL.path)
+        ios_setMiniRoot(baseURL.path)
 		
 	}
 	

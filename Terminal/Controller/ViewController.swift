@@ -109,7 +109,7 @@ class ViewController: UIViewController {
 	
 	func availableCommands() -> [String] {
 
-		let commands = String(cString: commandsAsString())
+        let commands = String(commandsAsString())
 		
 		guard let data = commands.data(using: .utf8) else {
 			assertionFailure("Expected valid data")
@@ -326,7 +326,7 @@ extension ViewController: TerminalProcessor {
 		let fileManager = DocumentManager.shared.fileManager
 
 		if command == "help" || command == "?" {
-			return availableCommands().joined(separator: "\n")
+			return availableCommands().joined(separator: ", ")
 		}
 		
 		setStdOut()
