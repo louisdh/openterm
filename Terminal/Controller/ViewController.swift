@@ -81,11 +81,18 @@ class ViewController: UIViewController {
 
 	}
 	
+	var didRequestReview = false
+	
 	@objc
 	func didDismissKeyboard() {
 		
+		guard !didRequestReview else {
+			return
+		}
+		
 		if historyViewController.commands.count > 5 {
 			SKStoreReviewController.requestReview()
+			didRequestReview = true
 		}
 		
 	}
