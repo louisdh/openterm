@@ -35,7 +35,7 @@
 	<key>CFBundleShortVersionString</key>
 	<string>1.1</string>
 	<key>CFBundleVersion</key>
-	<string>8</string>
+	<string>9</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSUbiquitousContainers</key>
