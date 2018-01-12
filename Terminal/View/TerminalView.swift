@@ -77,7 +77,8 @@ class TerminalView: UIView {
 		
 		currentCommandStartIndex = textView.text.endIndex
 		
-		textView.font = UIFont(name: "Menlo", size: 14.0)
+        let terminalfontSize = UserDefaults.standard.integer(forKey: "terminalFontSize")
+        textView.font = UIFont(name: "Menlo", size: CGFloat(terminalfontSize))
 		
 		textView.textColor = tintColor
 		
@@ -92,7 +93,7 @@ class TerminalView: UIView {
 		
 		textView.textDragDelegate = self
 		textView.textDropDelegate = self
-
+        
 		keyboardObserver.observe { (state) in
 			
 			let rect = self.textView.convert(state.keyboardFrameEnd, from: nil).intersection(self.textView.bounds)
@@ -105,8 +106,17 @@ class TerminalView: UIView {
 			}, completion: nil)
 			
 		}
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(self.appearanceSettingsDidChange), name: NSNotification.Name(rawValue: "appearanceDidChange"), object: nil)
 		
 	}
+    
+    @objc func appearanceSettingsDidChange() {
+        
+        let terminalFontSize = UserDefaults.standard.integer(forKey: "terminalFontSize")
+        textView.font = UIFont(name: "Menlo", size: CGFloat(terminalFontSize))
+        
+    }
 	
 	@discardableResult
 	override func becomeFirstResponder() -> Bool {
