@@ -81,6 +81,25 @@ class ViewController: UIViewController {
 
 	}
 	
+	override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+		super.viewWillTransition(to: size, with: coordinator)
+		
+		coordinator.animate(alongsideTransition: { (context) in
+			
+		}) { (context) in
+			
+			if !self.allowFloatingPanels {
+				self.closeAllFloatingPanels()
+			}
+			
+			if !self.allowPanelPinning {
+				self.closeAllPinnedPanels()
+			}
+			
+		}
+		
+	}
+	
 	var didRequestReview = false
 	
 	@objc
