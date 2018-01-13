@@ -187,9 +187,7 @@ extension TerminalView: UITextViewDelegate {
 
 				if input == "clear" {
 					
-					currentCommandStartIndex = nil
-					textView.text = "\(deviceName): "
-					currentCommandStartIndex = textView.text.endIndex
+					clearScreen()
 					return false
 					
 				} else {
@@ -214,6 +212,14 @@ extension TerminalView: UITextViewDelegate {
 		print(text)
 		
 		return true
+	}
+	
+	func clearScreen() {
+		
+		currentCommandStartIndex = nil
+		textView.text = "\(deviceName): "
+		currentCommandStartIndex = textView.text.endIndex
+		
 	}
 	
 	func textViewDidChange(_ textView: UITextView) {

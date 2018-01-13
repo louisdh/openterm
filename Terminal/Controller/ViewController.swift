@@ -244,13 +244,31 @@ class ViewController: UIViewController {
 
 	}
 	
-	override var keyCommands: [UIKeyCommand]? {
-		let prevCmd = UIKeyCommand(input: UIKeyInputUpArrow, modifierFlags: UIKeyModifierFlags(rawValue: 0), action: #selector(selectPreviousCommand))
-
-		let nextCmd = UIKeyCommand(input: UIKeyInputDownArrow, modifierFlags: UIKeyModifierFlags(rawValue: 0), action: #selector(selectNextCommand))
-
+	@objc func clearScreen() {
 		
-		return [prevCmd, nextCmd]
+		terminalView.clearScreen()
+		
+	}
+	
+	override var keyCommands: [UIKeyCommand]? {
+		
+		let prevCmd = UIKeyCommand(input: UIKeyInputUpArrow,
+								   modifierFlags: UIKeyModifierFlags(rawValue: 0),
+								   action: #selector(selectPreviousCommand),
+								   discoverabilityTitle: "Previous command")
+		
+		let nextCmd = UIKeyCommand(input: UIKeyInputDownArrow,
+								   modifierFlags: UIKeyModifierFlags(rawValue: 0),
+								   action: #selector(selectNextCommand),
+								   discoverabilityTitle: "Next command")
+		
+		let clearCmd = UIKeyCommand(input: "L",
+									modifierFlags: .control,
+									action: #selector(clearScreen),
+									discoverabilityTitle: "Clear screen")
+		
+		return [prevCmd, nextCmd, clearCmd]
+		
 	}
 	
 }
