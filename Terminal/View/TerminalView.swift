@@ -53,12 +53,6 @@ class TerminalView: UIView {
 		setup()
 	}
 	
-	override func tintColorDidChange() {
-		super.tintColorDidChange()
-		
-		textView.textColor = tintColor
-	}
-	
 	private func setup() {
 		
 		textView.translatesAutoresizingMaskIntoConstraints = false
@@ -69,20 +63,12 @@ class TerminalView: UIView {
 		textView.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
 		textView.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
 		
-		textView.backgroundColor = .clear
-		
 		textView.delegate = self
 		
 		textView.text = "\(deviceName): "
 		
 		currentCommandStartIndex = textView.text.endIndex
 		
-        let terminalfontSize = UserDefaults.standard.integer(forKey: "terminalFontSize")
-        textView.font = UIFont(name: "Menlo", size: CGFloat(terminalfontSize))
-		
-		textView.textColor = tintColor
-		
-		textView.keyboardAppearance = .dark
 		textView.autocorrectionType = .no
 		textView.smartDashesType = .no
 		textView.smartQuotesType = .no
@@ -107,14 +93,28 @@ class TerminalView: UIView {
 			
 		}
         
-        NotificationCenter.default.addObserver(self, selector: #selector(self.appearanceSettingsDidChange), name: NSNotification.Name(rawValue: "appearanceDidChange"), object: nil)
+        updateAppearanceFromSettings()
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(self.updateAppearanceFromSettings), name: NSNotification.Name(rawValue: "appearanceDidChange"), object: nil)
 		
 	}
     
-    @objc func appearanceSettingsDidChange() {
+    @objc func updateAppearanceFromSettings() {
         
         let terminalFontSize = UserDefaults.standard.integer(forKey: "terminalFontSize")
         textView.font = UIFont(name: "Menlo", size: CGFloat(terminalFontSize))
+        
+        let terminaltextColor = UserDefaults.standard.colorForKey(forKey: "terminalTextColor")
+        textView.textColor = terminaltextColor
+        textView.tintColor = terminaltextColor
+        
+        textView.backgroundColor = UserDefaults.standard.colorForKey(forKey: "terminalBackgroundColor")
+        
+        if UserDefaults.standard.bool(forKey: "userDarkKeyboardInTerminal") == true {
+            textView.keyboardAppearance = .dark
+        } else {
+            textView.keyboardAppearance = .light
+        }
         
     }
 	

@@ -16,5 +16,12 @@ extension UIColor {
 		}
 		return defaultMainTintColor
 	}
+    
+    static var panelBackgroundColor: UIColor {
+        guard let panelBackgroundColor = UIColor(named: "Panel Background Color") else {
+            fatalError("Expected color, check asset catalog")
+        }
+        return panelBackgroundColor
+    }
 	
 }

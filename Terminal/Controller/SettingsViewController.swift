@@ -40,12 +40,23 @@ class SettingsViewController: UITableViewController {
     @IBOutlet weak var fontSizeLabel: UILabel!
     @IBOutlet weak var fontSizeStepper: UIStepper!
     
+    @IBOutlet weak var terminalTextColorView: UIView!
+    @IBOutlet weak var terminalBackgroundColorView: UIView!
+    
+    @IBOutlet weak var useDarkKeyboardSwitch: UISwitch!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
     }
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(true)
+    
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        
+        updateView()
+    }
+    
+    func updateView() {
         
         let fontSize = UserDefaults.standard.integer(forKey: "terminalFontSize")
         fontSizeStepper.value = Double(fontSize)
@@ -53,12 +64,24 @@ class SettingsViewController: UITableViewController {
         fontSizeStepper.minimumValue = 8
         fontSizeStepper.maximumValue = 32
         
+        terminalTextColorView.backgroundColor = UserDefaults.standard.colorForKey(forKey: "terminalTextColor")
+        terminalBackgroundColorView.backgroundColor = UserDefaults.standard.colorForKey(forKey: "terminalBackgroundColor")
+        
+        useDarkKeyboardSwitch.isOn = UserDefaults.standard.bool(forKey: "userDarkKeyboardInTerminal")
+        
     }
 
     @IBAction func fontSizeStepperDidChange(_ sender: UIStepper) {
         
         UserDefaults.standard.set(sender.value, forKey: "terminalFontSize")
         fontSizeLabel.text = String(UserDefaults.standard.integer(forKey: "terminalFontSize"))
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "appearanceDidChange"), object: nil)
+        
+    }
+    
+    @IBAction func useDarkKeyboardSwitchDidChange(_ sender: UISwitch) {
+        
+        UserDefaults.standard.set(useDarkKeyboardSwitch.isOn, forKey: "userDarkKeyboardInTerminal")
         NotificationCenter.default.post(name: NSNotification.Name(rawValue: "appearanceDidChange"), object: nil)
         
     }
@@ -106,11 +129,31 @@ class SettingsViewController: UITableViewController {
 		
 	}
 	
-	
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 	
 		tableView.deselectRow(at: indexPath, animated: true)
 
+        if indexPath.section == 1 {
+            
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let colorPickerViewController = storyboard.instantiateViewController(withIdentifier: "ColorPickerViewController") as! ColorPickerViewController
+            
+            if indexPath.row == 1 {
+                
+                colorPickerViewController.delegate = UpdateTerminalTextColor()
+                navigationController?.pushViewController(colorPickerViewController, animated: true)
+                
+            }
+            
+            if indexPath.row == 2 {
+                
+                colorPickerViewController.delegate = UpdateTerminalBackgroundColor()
+                navigationController?.pushViewController(colorPickerViewController, animated: true)
+                
+            }
+            
+        }
+        
 		if indexPath.section == 2 {
 
 			if indexPath.row == 0 {

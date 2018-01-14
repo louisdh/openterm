@@ -19,7 +19,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		
 		window?.tintColor = .defaultMainTintColor
         
-        UserDefaults.standard.register(defaults: ["terminalFontSize" : 14])
+        UserDefaults.standard.register(defaults: [
+            "terminalFontSize" : 14,
+            "terminalTextColor": NSKeyedArchiver.archivedData(withRootObject: UIColor.defaultMainTintColor),
+            "terminalBackgroundColor": NSKeyedArchiver.archivedData(withRootObject: UIColor.panelBackgroundColor),
+            "userDarkKeyboardInTerminal": true])
 		
 		return true
 	}
