@@ -108,6 +108,14 @@ class TerminalView: UIView {
 		
 	}
 	
+	func clearScreen() {
+		
+		currentCommandStartIndex = nil
+		textView.text = "\(deviceName): "
+		currentCommandStartIndex = textView.text.endIndex
+		
+	}
+	
 	@discardableResult
 	override func becomeFirstResponder() -> Bool {
 		return textView.becomeFirstResponder()
@@ -212,14 +220,6 @@ extension TerminalView: UITextViewDelegate {
 		print(text)
 		
 		return true
-	}
-	
-	func clearScreen() {
-		
-		currentCommandStartIndex = nil
-		textView.text = "\(deviceName): "
-		currentCommandStartIndex = textView.text.endIndex
-		
 	}
 	
 	func textViewDidChange(_ textView: UITextView) {
