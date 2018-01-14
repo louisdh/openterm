@@ -27,7 +27,7 @@ class ColorPickerViewController: UIViewController {
         
         collectIonView.dataSource = self
         collectIonView.delegate = self
-        colors = [.defaultMainTintColor, .panelBackgroundColor, .black, .darkGray, .gray, .lightGray, .white, .orange, .brown, .red, .magenta, .purple, .blue, .cyan]
+        colors = [.defaultMainTintColor, .green, .panelBackgroundColor, .black, .darkGray, .gray, .lightGray, .white, .orange, .brown, .red, .magenta, .purple, .blue, .cyan]
         
     }
     
