@@ -108,6 +108,14 @@ class TerminalView: UIView {
 		
 	}
 	
+	func clearScreen() {
+		
+		currentCommandStartIndex = nil
+		textView.text = "\(deviceName): "
+		currentCommandStartIndex = textView.text.endIndex
+		
+	}
+	
 	@discardableResult
 	override func becomeFirstResponder() -> Bool {
 		return textView.becomeFirstResponder()
@@ -187,7 +195,8 @@ extension TerminalView: UITextViewDelegate {
 
 				if input == "clear" {
 					
-					clearBuffer()
+					clearScreen()
+
 					return false
 					
 				} else {
