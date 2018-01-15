@@ -135,6 +135,7 @@ typedef struct Node {
 	struct	Node *nnext;
 	int	lineno;
 	int	nobj;
+	int nnarg; 
 	struct	Node *narg[1];	/* variable: actual size set by calling malloc */
 } Node;
 

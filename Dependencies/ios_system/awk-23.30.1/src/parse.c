@@ -37,6 +37,7 @@ Node *nodealloc(int n)
 	x = (Node *) malloc(sizeof(Node) + (n-1)*sizeof(Node *));
 	if (x == NULL)
 		FATAL("out of space in nodealloc");
+    x->nnarg = n;
 	x->nnext = NULL;
 	x->lineno = lineno;
 	return(x);
