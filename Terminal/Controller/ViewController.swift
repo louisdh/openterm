@@ -243,14 +243,40 @@ class ViewController: UIViewController {
 		}
 
 	}
+
+    @objc func clearBufferCommand() {
+        terminalView.clearBuffer()
+    }
+
+//    @objc func selectCommandHome() {
+//        // FIXME: set cursor to start of line and offset with deviceName
+//        // Maybe by finding the last "\n"?
+//    }
+
+    @objc func selectCommandEnd() {
+        let endPosition = terminalView.textView.endOfDocument
+        terminalView.textView.selectedTextRange = terminalView.textView.textRange(from: endPosition, to: endPosition)
+    }
 	
 	override var keyCommands: [UIKeyCommand]? {
 		let prevCmd = UIKeyCommand(input: UIKeyInputUpArrow, modifierFlags: UIKeyModifierFlags(rawValue: 0), action: #selector(selectPreviousCommand))
 
 		let nextCmd = UIKeyCommand(input: UIKeyInputDownArrow, modifierFlags: UIKeyModifierFlags(rawValue: 0), action: #selector(selectNextCommand))
 
+        let clearBufferCmd = UIKeyCommand(input: "K", modifierFlags: .command, action: #selector(clearBufferCommand), discoverabilityTitle: NSLocalizedString("Clear Buffer", comment: ""))
+
+//        let homeCmd = UIKeyCommand(input: "A", modifierFlags: .control, action: #selector(selectCommandHome), discoverabilityTitle: NSLocalizedString("Home", comment: ""))
+
+        let endCmd = UIKeyCommand(input: "E", modifierFlags: .control, action: #selector(selectCommandEnd), discoverabilityTitle: NSLocalizedString("End", comment: ""))
+
 		
-		return [prevCmd, nextCmd]
+		return [
+            prevCmd,
+            nextCmd,
+            clearBufferCmd,
+//            homeCmd,
+            endCmd
+        ]
 	}
 	
 }
