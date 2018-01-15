@@ -243,6 +243,20 @@ class ViewController: UIViewController {
 		}
 
 	}
+
+    @objc func clearBufferCommand() {
+        terminalView.clearBuffer()
+    }
+
+//    @objc func selectCommandHome() {
+//        // FIXME: set cursor to start of line and offset with deviceName
+//        // Maybe by finding the last "\n"?
+//    }
+
+    @objc func selectCommandEnd() {
+        let endPosition = terminalView.textView.endOfDocument
+        terminalView.textView.selectedTextRange = terminalView.textView.textRange(from: endPosition, to: endPosition)
+    }
 	
 	@objc func clearScreen() {
 		
@@ -251,24 +265,24 @@ class ViewController: UIViewController {
 	}
 	
 	override var keyCommands: [UIKeyCommand]? {
+
+		let prevCmd = UIKeyCommand(input: UIKeyInputUpArrow, modifierFlags: UIKeyModifierFlags(rawValue: 0), action: #selector(selectPreviousCommand), discoverabilityTitle: "Previous command")
 		
-		let prevCmd = UIKeyCommand(input: UIKeyInputUpArrow,
-								   modifierFlags: UIKeyModifierFlags(rawValue: 0),
-								   action: #selector(selectPreviousCommand),
-								   discoverabilityTitle: "Previous command")
+		let nextCmd = UIKeyCommand(input: UIKeyInputDownArrow, modifierFlags: UIKeyModifierFlags(rawValue: 0), action: #selector(selectNextCommand), discoverabilityTitle: "Next command")
 		
-		let nextCmd = UIKeyCommand(input: UIKeyInputDownArrow,
-								   modifierFlags: UIKeyModifierFlags(rawValue: 0),
-								   action: #selector(selectNextCommand),
-								   discoverabilityTitle: "Next command")
+		let clearBufferCmd = UIKeyCommand(input: "K", modifierFlags: .command, action: #selector(clearBufferCommand), discoverabilityTitle: "Clear Buffer")
 		
-		let clearCmd = UIKeyCommand(input: "L",
-									modifierFlags: .control,
-									action: #selector(clearScreen),
-									discoverabilityTitle: "Clear screen")
+		// let homeCmd = UIKeyCommand(input: "A", modifierFlags: .control, action: #selector(selectCommandHome), discoverabilityTitle: "Home")
 		
-		return [prevCmd, nextCmd, clearCmd]
+		let endCmd = UIKeyCommand(input: "E", modifierFlags: .control, action: #selector(selectCommandEnd), discoverabilityTitle: "End")
 		
+		return [
+			prevCmd,
+			nextCmd,
+			clearBufferCmd,
+			//            homeCmd,
+			endCmd
+		]
 	}
 	
 }
