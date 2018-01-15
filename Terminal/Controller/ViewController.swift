@@ -271,8 +271,8 @@ class ViewController: UIViewController {
 		let nextCmd = UIKeyCommand(input: UIKeyInputDownArrow, modifierFlags: UIKeyModifierFlags(rawValue: 0), action: #selector(selectNextCommand), discoverabilityTitle: "Next command")
 		
 		let clearBufferCmd = UIKeyCommand(input: "K", modifierFlags: .command, action: #selector(clearBufferCommand), discoverabilityTitle: "Clear Buffer")
-		
-		// let homeCmd = UIKeyCommand(input: "A", modifierFlags: .control, action: #selector(selectCommandHome), discoverabilityTitle: "Home")
+
+//		let homeCmd = UIKeyCommand(input: "A", modifierFlags: .control, action: #selector(selectCommandHome), discoverabilityTitle: "Home")
 		
 		let endCmd = UIKeyCommand(input: "E", modifierFlags: .control, action: #selector(selectCommandEnd), discoverabilityTitle: "End")
 		
@@ -280,7 +280,7 @@ class ViewController: UIViewController {
 			prevCmd,
 			nextCmd,
 			clearBufferCmd,
-			//            homeCmd,
+//			homeCmd,
 			endCmd
 		]
 	}
