@@ -258,12 +258,6 @@ class ViewController: UIViewController {
         terminalView.textView.selectedTextRange = terminalView.textView.textRange(from: endPosition, to: endPosition)
     }
 	
-	@objc func clearScreen() {
-		
-		terminalView.clearScreen()
-		
-	}
-	
 	override var keyCommands: [UIKeyCommand]? {
 
 		let prevCmd = UIKeyCommand(input: UIKeyInputUpArrow, modifierFlags: UIKeyModifierFlags(rawValue: 0), action: #selector(selectPreviousCommand), discoverabilityTitle: "Previous command")
