@@ -464,7 +464,13 @@ static int cd_main(int argc, char** argv) {
         }
     } else { // [cd] Help, I'm lost, bring me back home
         previousDirectory = [[NSFileManager defaultManager] currentDirectoryPath];
-        [[NSFileManager defaultManager] changeCurrentDirectoryPath:[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject]];
+		
+		if (miniRoot != nil) {
+			[[NSFileManager defaultManager] changeCurrentDirectoryPath:miniRoot];
+		} else {
+			[[NSFileManager defaultManager] changeCurrentDirectoryPath:[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject]];
+		}
+		
     }
     return 0;
 }

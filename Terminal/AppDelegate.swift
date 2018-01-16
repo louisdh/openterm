@@ -18,6 +18,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		// Override point for customization after application launch.
 		
 		window?.tintColor = .defaultMainTintColor
+        
+        UserDefaults.standard.register(defaults: [
+            "terminalFontSize" : 14,
+            "terminalTextColor": NSKeyedArchiver.archivedData(withRootObject: UIColor.defaultMainTintColor),
+            "terminalBackgroundColor": NSKeyedArchiver.archivedData(withRootObject: UIColor.panelBackgroundColor),
+            "userDarkKeyboardInTerminal": true])
 		
 		return true
 	}
