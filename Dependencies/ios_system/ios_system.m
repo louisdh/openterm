@@ -18,6 +18,7 @@
 
 #include <pthread.h>
 #include <sys/stat.h>
+#define S_ISXXX(m) ((m) & (S_IXUSR | S_IXGRP | S_IXOTH)) // is executable, looking at "x" bit. Other methods fails on iOS
 
 // Note: we could use dlsym() to make this code simpler, but it would also make it harder
 // to be accepted in the AppleStore. Dynamic libraries are already loaded, so it would be:
@@ -426,10 +427,10 @@ int ios_setMiniRoot(NSString* mRoot) {
                 // also don't set the miniRoot if we can't go in there
                 // get the real name for miniRoot:
                 miniRoot = [[NSFileManager defaultManager] currentDirectoryPath];
+                // Back to where we we before:
+                [[NSFileManager defaultManager] changeCurrentDirectoryPath:currentDir];
                 return 1; // mission accomplished
             }
-            // Back to where we we before:
-            [[NSFileManager defaultManager] changeCurrentDirectoryPath:currentDir];
         }
     }
     return 0;
@@ -464,18 +465,15 @@ static int cd_main(int argc, char** argv) {
         }
     } else { // [cd] Help, I'm lost, bring me back home
         previousDirectory = [[NSFileManager defaultManager] currentDirectoryPath];
-		
-		if (miniRoot != nil) {
-			[[NSFileManager defaultManager] changeCurrentDirectoryPath:miniRoot];
-		} else {
-			[[NSFileManager defaultManager] changeCurrentDirectoryPath:[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject]];
-		}
-		
+
+        if (miniRoot != nil) {
+            [[NSFileManager defaultManager] changeCurrentDirectoryPath:miniRoot];
+        } else {
+            [[NSFileManager defaultManager] changeCurrentDirectoryPath:[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject]];
+        }
     }
     return 0;
 }
-
-// static void
 
 int ios_executable(char* inputCmd) {
  // returns 1 if this is one of the commands we define in ios_system, 0 otherwise
@@ -681,7 +679,7 @@ int ios_system(char* inputCmd) {
             if (!end) break;
             end[0] = 0x0;
             str = end + 1;
-        } if (str[0] == '\"') { // argument begins with a double quote.
+        } else if (str[0] == '\"') { // argument begins with a double quote.
             // everything until next double quote is part of the argument
             argv[argc-1] = str + 1;
             char* end = strstr(argv[argc-1], "\"");
@@ -731,7 +729,7 @@ int ios_system(char* inputCmd) {
             if ([[NSFileManager defaultManager] fileExistsAtPath:commandName isDirectory:&isDir]  && (!isDir)) {
                 // File exists, is a file.
                 struct stat sb;
-                if ((stat(commandName.UTF8String, &sb) == 0 && (sb.st_mode & S_IXUSR))) {
+                if ((stat(commandName.UTF8String, &sb) == 0) && S_ISXXX(sb.st_mode)) {
                     // File exists, is executable, not a directory.
                     cmdIsAFile = true;
                 }
@@ -764,7 +762,7 @@ int ios_system(char* inputCmd) {
                     // isExecutableFileAtPath replies "NO" even if file has x-bit set.
                     // if (![[NSFileManager defaultManager]  isExecutableFileAtPath:cmdname]) continue;
                     struct stat sb;
-                    if (!(stat(locationName.UTF8String, &sb) == 0 && (sb.st_mode & S_IXUSR))) continue;
+                    if (!((stat(locationName.UTF8String, &sb) == 0) && S_ISXXX(sb.st_mode))) continue;
                     // File exists, is executable, not a directory.
                 } else
                     // if (cmdIsAFile) we are now ready to execute this file:

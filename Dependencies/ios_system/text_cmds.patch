@@ -1797,6 +1797,325 @@ diff -Naur text_cmds-99/sed/process.c text_cmds/sed/process.c
  			cp->u.fd = -1;
  			break;
  		case '{':
+diff -Naur text_cmds-99/tr/str.c text_cmds/tr/str.c
+--- text_cmds-99/tr/str.c	2005-08-18 23:20:18.000000000 +0200
++++ text_cmds/tr/str.c	2018-01-11 17:47:54.000000000 +0100
+@@ -53,6 +53,10 @@
+ #include <wctype.h>
+ 
+ #include "extern.h"
++// iOS changes:
++#include "ios_error.h"
++#include <pthread.h>
++
+ 
+ static int      backslash(STR *, int *);
+ static int	bracket(STR *);
+@@ -193,8 +197,10 @@
+ 	STR *s;
+ {
+ 
+-	if ((s->cclass = wctype(s->str)) == 0)
+-		errx(1, "unknown class %s", s->str);
++    if ((s->cclass = wctype(s->str)) == 0) {
++		fprintf(stderr, "tr: unknown class %s\n", s->str); // errx
++        pthread_exit(NULL);
++    }
+ 	s->cnt = 0;
+ 	s->lastch = -1;		/* incremented before check in next() */
+ 	if (strcmp(s->str, "upper") == 0)
+@@ -216,17 +222,21 @@
+ 
+ 	if (*s->str == '\\') {
+ 		s->equiv[0] = backslash(s, NULL);
+-		if (*s->str != '=')
+-			errx(1, "misplaced equivalence equals sign");
++        if (*s->str != '=') {
++			fprintf(stderr, "tr: misplaced equivalence equals sign\n"); // errx
++            pthread_exit(NULL);
++        }
+ 		s->str += 2;
+ 	} else {
+ 		clen = mbrtowc(&wc, s->str, MB_LEN_MAX, NULL);
+ 		if (clen == (size_t)-1 || clen == (size_t)-2 || clen == 0)
+ 			errc(1, EILSEQ, NULL);
+ 		s->equiv[0] = wc;
+-		if (s->str[clen] != '=')
+-			errx(1, "misplaced equivalence equals sign");
+-		s->str += clen + 2;
++        if (s->str[clen] != '=') {
++			fprintf(stderr, "tr: misplaced equivalence equals sign\n"); // errx
++            pthread_exit(NULL);
++        }
++        s->str += clen + 2;
+ 	}
+ 
+ 	/*
+@@ -294,8 +304,11 @@
+ 		s->str = savestart;
+ 		return (0);
+ 	}
+-	if ((s->set = p = malloc((NCHARS_SB + 1) * sizeof(int))) == NULL)
+-		err(1, "genrange() malloc");
++    if ((s->set = p = malloc((NCHARS_SB + 1) * sizeof(int))) == NULL) {
++		// err(1, "genrange() malloc");
++        fprintf(stderr, "tr: genrange() malloc: %s", strerror(errno));
++        pthread_exit(NULL);
++    }
+ 	for (cnt = 0; cnt < NCHARS_SB; cnt++)
+ 		if (charcoll((const void *)&cnt, (const void *)&(s->lastch)) >= 0 &&
+ 		    charcoll((const void *)&cnt, (const void *)&stopval) <= 0)
+@@ -319,8 +332,11 @@
+ 	size_t clen;
+ 
+ #ifndef __APPLE__
+-	if (s->which == STRING1)
+-		errx(1, "sequences only valid in string2");
++    if (s->which == STRING1) {
++		fprintf(stderr, "tr: sequences only valid in string2\n"); // errx
++        pthread_exit(NULL);
++    }
++        
+ #endif /* !__APPLE__ */
+ 
+ 	if (*s->str == '\\')
+@@ -332,8 +348,10 @@
+ 		s->lastch = wc;
+ 		s->str += clen;
+ 	}
+-	if (*s->str != '*')
+-		errx(1, "misplaced sequence asterisk");
++    if (*s->str != '*') {
++		fprintf(stderr, "tr: misplaced sequence asterisk\n"); // errx
++        pthread_exit(NULL);
++    }
+ 
+ 	switch (*++s->str) {
+ 	case '\\':
+@@ -351,7 +369,8 @@
+ 				break;
+ 			}
+ 		}
+-		errx(1, "illegal sequence count");
++		fprintf(stderr, "tr: illegal sequence count\n"); // errx
++        pthread_exit(NULL);
+ 		/* NOTREACHED */
+ 	}
+ 
+diff -Naur text_cmds-99/tr/tr.c text_cmds/tr/tr.c
+--- text_cmds-99/tr/tr.c	2006-04-21 01:51:01.000000000 +0200
++++ text_cmds/tr/tr.c	2018-01-11 17:58:50.000000000 +0100
+@@ -61,6 +61,9 @@
+ #include "cmap.h"
+ #include "cset.h"
+ #include "extern.h"
++// iOS changes:
++#include "ios_error.h"
++#include <errno.h>
+ 
+ STR s1 = { STRING1, NORMAL, 0, OOBCH, 0, { 0, OOBCH }, NULL, NULL };
+ STR s2 = { STRING2, NORMAL, 0, OOBCH, 0, { 0, OOBCH }, NULL, NULL };
+@@ -68,15 +71,71 @@
+ static struct cset *setup(char *, STR *, int, int);
+ static void usage(void);
+ 
++static void initSTR(STR* s) {
++    s->which = STRING1;
++    s->state = NORMAL;
++    s->cnt = 0;
++    s->lastch = OOBCH;
++    s->cclass = 0;
++    s->equiv[0] = 0;
++    s->equiv[1] = OOBCH;
++    if (s->set != NULL) { free(s->set); s->set = NULL; }
++    s->str = NULL;
++}
++
++static void csnode_free(struct csnode *c) {
++    if (c == NULL) return;
++    
++    struct csnode* left = c->csn_left;
++    struct csnode* right = c->csn_right;
++    free(c); c = NULL;
++    csnode_free(left); left = NULL;
++    csnode_free(right); right = NULL;
++}
++
++static void cset_free(struct cset *t)
++{
++    if (t == NULL) return;
++    struct csclass* class = t->cs_classes;
++    while (class) { struct csclass* n = class->csc_next; free(class); class = n; }
++    t->cs_classes = NULL;
++    
++    struct csnode* root = t->cs_root;
++    csnode_free(root);
++    t->cs_root = NULL;
++}
++
++static void cmapnode_free(struct cmapnode *c) {
++    if (c == NULL) return;
++    
++    struct cmapnode* left = c->cmn_left;
++    struct cmapnode* right = c->cmn_right;
++    free(c); c = NULL;
++    cmapnode_free(left); left = NULL;
++    cmapnode_free(right); right = NULL;
++}
++
++static void cmap_free(struct cmap *m)
++{
++    if (m == NULL) return;
++    cmapnode_free(m->cm_root);
++    free(m);
++    m = NULL;
++}
++
++
+ int
+-main(int argc, char **argv)
++tr_main(int argc, char **argv)
+ {
+ 	static int carray[NCHARS_SB];
+ 	struct cmap *map;
+-	struct cset *delete, *squeeze;
++	struct cset *delete , *squeeze;
+ 	int n, *p;
+ 	int Cflag, cflag, dflag, sflag, isstring2;
+ 	wint_t ch, cnt, lastch;
++    
++    // iOS: reinitialize parameters:
++    initSTR(&s1); initSTR(&s2); s2.which = STRING2;
+ 
+ 	(void)setlocale(LC_ALL, "");
+ 
+@@ -138,11 +197,13 @@
+ 			if (!cset_in(delete, ch) &&
+ 			    (lastch != ch || !cset_in(squeeze, ch))) {
+ 				lastch = ch;
+-				(void)putwchar(ch);
++                (void)putwc(ch, stdout); // (void)putwchar(ch);
+ 			}
+ 		if (ferror(stdin))
+-			err(1, NULL);
+-		exit(0);
++            fprintf(stderr, "tr: %s\n", strerror(errno)); // err(1, NULL);
++        cset_free(delete);
++        cset_free(squeeze);
++        pthread_exit(NULL); // exit(0);
+ 	}
+ 
+ 	/*
+@@ -157,10 +218,11 @@
+ 
+ 		while ((ch = getwchar()) != WEOF)
+ 			if (!cset_in(delete, ch))
+-				(void)putwchar(ch);
++				(void)putwc(ch, stdout); // (void)putwchar(ch);
+ 		if (ferror(stdin))
+-			err(1, NULL);
+-		exit(0);
++            fprintf(stderr, "tr: %s\n", strerror(errno)); // err(1, NULL);
++        cset_free(delete);
++		pthread_exit(NULL); // exit(0);
+ 	}
+ 
+ 	/*
+@@ -173,11 +235,12 @@
+ 		for (lastch = OOBCH; (ch = getwchar()) != WEOF;)
+ 			if (lastch != ch || !cset_in(squeeze, ch)) {
+ 				lastch = ch;
+-				(void)putwchar(ch);
++				(void)putwc(ch, stdout); // (void)putwchar(ch);
+ 			}
+ 		if (ferror(stdin))
+-			err(1, NULL);
+-		exit(0);
++			fprintf(stderr, "tr: %s\n", strerror(errno)); // err(1, NULL);
++        cset_free(squeeze);
++		pthread_exit(NULL); // exit(0);
+ 	}
+ 
+ 	/*
+@@ -191,22 +254,30 @@
+ 
+ 	map = cmap_alloc();
+ 	if (map == NULL)
+-		err(1, NULL);
++    { fprintf(stderr, "tr: %s\n", strerror(errno)); pthread_exit(NULL); }// err(1, NULL);
+ 	squeeze = cset_alloc();
+ 	if (squeeze == NULL)
+-		err(1, NULL);
++    { fprintf(stderr, "tr: %s\n", strerror(errno)); cmap_free(map); pthread_exit(NULL); } // err(1, NULL);
+ 
+ 	s1.str = argv[0];
+ 
+ 	if (Cflag || cflag) {
+ 		cmap_default(map, OOBCH);
+-		if ((s2.str = strdup(argv[1])) == NULL)
+-			errx(1, "strdup(argv[1])");
++        if ((s2.str = strdup(argv[1])) == NULL) { // potential memory leak
++			fprintf(stderr, "tr: %s\n", "strdup(argv[1])"); // errx
++            cset_free(squeeze);
++            cmap_free(map);
++            pthread_exit(NULL);
++        }
+ 	} else
+ 		s2.str = argv[1];
+ 
+-	if (!next(&s2))
+-		errx(1, "empty string2");
++    if (!next(&s2)) {
++        fprintf(stderr, "tr: %s\n", "empty string2"); // errx
++        cset_free(squeeze);
++        cmap_free(map);
++        pthread_exit(NULL);
++    }
+ 
+ 	/*
+ 	 * For -s result will contain only those characters defined
+@@ -323,18 +394,21 @@
+ 				ch = cmap_lookup(map, ch);
+ 			if (lastch != ch || !cset_in(squeeze, ch)) {
+ 				lastch = ch;
+-				(void)putwchar(ch);
++				(void)putwc(ch, stdout); // (void)putwchar(ch);
+ 			}
+ 		}
+ 	else
+ 		while ((ch = getwchar()) != WEOF) {
+ 			if (!Cflag || iswrune(ch))
+ 				ch = cmap_lookup(map, ch);
+-			(void)putwchar(ch);
++			(void)putwc(ch, stdout); // (void)putwchar(ch);
+ 		}
+ 	if (ferror(stdin))
+-		err(1, NULL);
+-	exit (0);
++		fprintf(stderr, "tr: %s\n", strerror(errno)); // err(1, NULL);
++    cset_free(squeeze);
++    cmap_free(map);
++    pthread_exit(NULL);
++	// exit (0);
+ }
+ 
+ static struct cset *
+@@ -344,7 +418,7 @@
+ 
+ 	cs = cset_alloc();
+ 	if (cs == NULL)
+-		err(1, NULL);
++    { fprintf(stderr, "tr: %s\n", strerror(errno)); pthread_exit(NULL); } // err(1, NULL);
+ 	str->str = arg;
+ 	while (next(str))
+ 		cset_add(cs, str->lastch);
+@@ -374,5 +448,5 @@
+ 		"       tr [-Ccu] -d string1",
+ 		"       tr [-Ccu] -s string1",
+ 		"       tr [-Ccu] -ds string1 string2");
+-	exit(1);
++	pthread_exit(NULL); // exit(1);
+ }
 diff -Naur text_cmds-99/wc/wc.c text_cmds/wc/wc.c
 --- text_cmds-99/wc/wc.c	2008-02-26 02:39:32.000000000 +0100
 +++ text_cmds/wc/wc.c	2018-01-10 11:31:02.000000000 +0100
