@@ -57,7 +57,7 @@
 		BE38085C1FD9BFB600393EB8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		BE38085F1FD9BFB600393EB8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		BE3808611FD9BFB600393EB8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		BEA499241FD9C46C001B9B9D /* Terminal.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Terminal.entitlements; sourceTree = "<group>"; };
+		BEA499241FD9C46C001B9B9D /* OpenTerm.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = OpenTerm.entitlements; sourceTree = "<group>"; };
 		BEA499251FD9C4D7001B9B9D /* DocumentManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentManager.swift; sourceTree = "<group>"; };
 		BEA4992B1FDC0918001B9B9D /* icon-320.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-320.png"; sourceTree = "<group>"; };
 		BEA4992D1FDC305B001B9B9D /* KeyboardObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardObserver.swift; sourceTree = "<group>"; };
@@ -103,7 +103,7 @@
 		BE3808491FD9BFB600393EB8 = {
 			isa = PBXGroup;
 			children = (
-				BE3808541FD9BFB600393EB8 /* Terminal */,
+				BE3808541FD9BFB600393EB8 /* OpenTerm */,
 				BE3808531FD9BFB600393EB8 /* Products */,
 				BE3768EC1FEC4DCE00D5A2D1 /* Frameworks */,
 				EDE154E4BB3A66786AACAA5C /* Pods */,
@@ -118,7 +118,7 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		BE3808541FD9BFB600393EB8 /* Terminal */ = {
+		BE3808541FD9BFB600393EB8 /* OpenTerm */ = {
 			isa = PBXGroup;
 			children = (
 				BEA8E28F2001346D00002475 /* Util */,
@@ -126,14 +126,14 @@
 				BEA8E28D2001344400002475 /* Controller */,
 				F4602B4A200A68DA009D0547 /* Delegate */,
 				BEA4992B1FDC0918001B9B9D /* icon-320.png */,
-				BEA499241FD9C46C001B9B9D /* Terminal.entitlements */,
+				BEA499241FD9C46C001B9B9D /* OpenTerm.entitlements */,
 				BE3808551FD9BFB600393EB8 /* AppDelegate.swift */,
 				BE3808591FD9BFB600393EB8 /* Main.storyboard */,
 				BE38085C1FD9BFB600393EB8 /* Assets.xcassets */,
 				BE38085E1FD9BFB600393EB8 /* LaunchScreen.storyboard */,
 				BE3808611FD9BFB600393EB8 /* Info.plist */,
 			);
-			path = Terminal;
+			path = OpenTerm;
 			sourceTree = "<group>";
 		};
 		BEA8E28D2001344400002475 /* Controller */ = {
@@ -476,12 +476,12 @@
 			baseConfigurationReference = 448CC7691FD84EB5D2C24705 /* Pods-OpenTerm.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = Terminal/Terminal.entitlements;
+				CODE_SIGN_ENTITLEMENTS = OpenTerm/OpenTerm.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 6G5LMQ72D8;
 				ENABLE_BITCODE = NO;
-				INFOPLIST_FILE = Terminal/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/OpenTerm/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.silverfox.Terminal;
@@ -497,12 +497,12 @@
 			baseConfigurationReference = D4433523D5E174B363623AD4 /* Pods-OpenTerm.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = Terminal/Terminal.entitlements;
+				CODE_SIGN_ENTITLEMENTS = OpenTerm/OpenTerm.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 6G5LMQ72D8;
 				ENABLE_BITCODE = NO;
-				INFOPLIST_FILE = Terminal/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/OpenTerm/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.silverfox.Terminal;
