@@ -17,7 +17,7 @@
                BlueprintIdentifier = "BE3808511FD9BFB600393EB8"
                BuildableName = "OpenTerm.app"
                BlueprintName = "OpenTerm"
-               ReferencedContainer = "container:Terminal.xcodeproj">
+               ReferencedContainer = "container:OpenTerm.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -36,7 +36,7 @@
             BlueprintIdentifier = "BE3808511FD9BFB600393EB8"
             BuildableName = "OpenTerm.app"
             BlueprintName = "OpenTerm"
-            ReferencedContainer = "container:Terminal.xcodeproj">
+            ReferencedContainer = "container:OpenTerm.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -60,7 +60,7 @@
             BlueprintIdentifier = "BE3808511FD9BFB600393EB8"
             BuildableName = "OpenTerm.app"
             BlueprintName = "OpenTerm"
-            ReferencedContainer = "container:Terminal.xcodeproj">
+            ReferencedContainer = "container:OpenTerm.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -79,7 +79,7 @@
             BlueprintIdentifier = "BE3808511FD9BFB600393EB8"
             BuildableName = "OpenTerm.app"
             BlueprintName = "OpenTerm"
-            ReferencedContainer = "container:Terminal.xcodeproj">
+            ReferencedContainer = "container:OpenTerm.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

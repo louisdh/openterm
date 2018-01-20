@@ -2,7 +2,7 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:Terminal.xcodeproj">
+      location = "group:/Users/louisdhauwe/projects/private/terminal/OpenTerm.xcodeproj">
    </FileRef>
    <FileRef
       location = "group:Pods/Pods.xcodeproj">
