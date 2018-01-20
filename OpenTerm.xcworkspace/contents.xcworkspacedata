@@ -10,4 +10,7 @@
    <FileRef
       location = "group:Dependencies/ios_system/ios_system.xcodeproj">
    </FileRef>
+   <FileRef
+      location = "group:OpenTerm.xcodeproj">
+   </FileRef>
 </Workspace>
