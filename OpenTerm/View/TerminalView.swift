@@ -241,15 +241,11 @@ extension TerminalView: UITextViewDelegate {
 			return false
 		}
 		
-		print(text)
-		
 		return true
 	}
 	
 	func textViewDidChange(_ textView: UITextView) {
-		
-		print(textView.text)
-		
+				
 	}
 	
 }
