@@ -3,10 +3,11 @@
 </p>
 
 <h1 align="center">OpenTerm</h1>
-<p align="center">(Previously called Terminal for iOS)</p>
 
 <p align="center">
 <a href="https://itunes.apple.com/app/terminal/id1323205755?mt=8&at=1010lII4"><img src="readme-resources/app_store_badge.svg" alt="Download on the App Store"/></a>
+<br><span align="center">(Previously called Terminal for iOS)</span>
+
 </p>
 
 <p align="center">
