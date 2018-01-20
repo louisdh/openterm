@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1FCD3FDCFED5D0751DE8D71A /* Pods_Terminal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 83138AA9A57F46310B4DFF53 /* Pods_Terminal.framework */; };
 		5A38CC73C499E1A878353871 /* Pods_OpenTerm.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC01604DAC695ABD64544260 /* Pods_OpenTerm.framework */; };
 		BE000C081FEC4F6C00D06B91 /* ios_system.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BE3768EE1FEC4DCE00D5A2D1 /* ios_system.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		BE000C091FEC4F6F00D06B91 /* ios_system.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BE3768EE1FEC4DCE00D5A2D1 /* ios_system.framework */; settings = {ATTRIBUTES = (Required, ); }; };
@@ -80,7 +79,6 @@
 			files = (
 				BE000C081FEC4F6C00D06B91 /* ios_system.framework in Frameworks */,
 				BE000C091FEC4F6F00D06B91 /* ios_system.framework in Frameworks */,
-				1FCD3FDCFED5D0751DE8D71A /* Pods_Terminal.framework in Frameworks */,
 				5A38CC73C499E1A878353871 /* Pods_OpenTerm.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
