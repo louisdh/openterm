@@ -169,7 +169,7 @@ diff -Naur shell_cmds-203/date/vary.c shell_cmds/date/vary.c
    return result;
 diff -Naur shell_cmds-203/echo/echo.c shell_cmds/echo/echo.c
 --- shell_cmds-203/echo/echo.c	2006-12-21 02:07:57.000000000 +0100
-+++ shell_cmds/echo/echo.c	2018-01-11 17:46:10.000000000 +0100
++++ shell_cmds/echo/echo.c	2018-01-11 17:58:57.000000000 +0100
 @@ -50,6 +50,10 @@
  #include <stdlib.h>
  #include <string.h>

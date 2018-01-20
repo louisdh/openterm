@@ -137,7 +137,52 @@ void run(Node *a)	/* execution of parse tree starts here */
 	stdinit();
 	execute(a);
 	closeall();
+    freeTree(a, 1);
+    // Reset main variables at exit:
+    curnode = NULL;
+    winner = NULL;
+    // These are defined in ytab.c
+    extern Node    *beginloc;
+    extern Node    *endloc;
+    beginloc = 0;
+    endloc = 0;
 }
+
+void freeTree(Node *u, int eraseSelf)    /* scan the entire tree, and frees the allocated memory */
+{
+    Node *a;
+    Node *anext;
+    
+    if (u == NULL) return;
+    
+    // If it's a tree, freetr will do the job:
+    if ((u->nobj == CCL) || (u->nobj == NCCL) || (u->nobj == CHAR) || (u->nobj == DOT) || (u->nobj == FINAL)
+        || (u->nobj == ALL) || (u->nobj == EMPTYRE) || (u->nobj == STAR) || (u->nobj == PLUS) || (u->nobj == QUEST)
+        || (u->nobj == CAT) || (u->nobj == OR)) {
+        freetr(u);
+        return;
+    }
+    for (a = u; a; a = anext) {
+        if ((a->ntype == NSTAT) || (a->ntype == NEXPR)) {
+            for (int i = 0; i < a->nnarg; i++) {
+                freeTree(a->narg[i], 0); // never free narg, it was allocated as part of the node
+                a->narg[i] = NULL;
+            }
+        }
+        // Erase all values, all pointers.
+        anext = a->nnext;
+        a->ntype = 0;
+        a->nnext = NULL;
+        a->lineno = 0;
+        a->nobj = 0;
+        a->nnarg = 0;
+        a->narg[0] = NULL;
+        if (eraseSelf) free(a);
+        eraseSelf = 1; // but free node->next
+        a = NULL;
+    }
+}
+
 
 Cell *execute(Node *u)	/* execute a node of the parse tree */
 {

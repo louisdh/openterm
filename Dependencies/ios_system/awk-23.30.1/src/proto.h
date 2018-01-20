@@ -143,6 +143,7 @@ extern	int	is_number(const char *);
 
 extern	int	adjbuf(char **pb, int *sz, int min, int q, char **pbp, const char *what);
 extern	void	run(Node *);
+extern  void    freeTree(Node *, int eraseSelf);
 extern	Cell	*execute(Node *);
 extern	Cell	*program(Node **, int);
 extern	Cell	*call(Node **, int);

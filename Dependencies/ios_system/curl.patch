@@ -300,8 +300,8 @@ diff -Naur curl-105/curl/lib/version.c curl/curl/lib/version.c
  #ifdef HAVE_LIBSSH2_VERSION
 diff -Naur curl-105/curl/src/tool_main.c curl/curl/src/tool_main.c
 --- curl-105/curl/src/tool_main.c	2016-07-06 23:44:05.000000000 +0200
-+++ curl/curl/src/tool_main.c	2018-01-11 17:42:40.000000000 +0100
-@@ -227,10 +227,93 @@
++++ curl/curl/src/tool_main.c	2018-01-16 13:06:30.000000000 +0100
+@@ -227,10 +227,98 @@
  }
  
  /*
@@ -328,7 +328,12 @@ diff -Naur curl-105/curl/src/tool_main.c curl/curl/src/tool_main.c
 +    argv2[0] = strdup("curl");
 +    for (i = 1, argc2 = 1; i < argc; i++, argc2++) {
 +        // it's just a flag:
-+        if ((argv[i][0] == '-') || (distantFileName && localFileName)) { argv2[argc2] = strdup(argv[i]); continue; } 
++        if ((argv[i][0] == '-') || (distantFileName && localFileName)) {
++            // scp -q (quiet) is equivalent to curl -s (silent)
++            if (strcmp(argv[i], "-q") == 0) argv2[argc2] = strdup("-s");
++            else argv2[argc2] = strdup(argv[i]);
++            continue;
++        }
 +        char* position;
 +        if ((position = strstr(argv[i], ":")) != NULL) {
 +            // distant file

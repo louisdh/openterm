@@ -250,7 +250,12 @@ static int scp_convert(int argc, char* argv[]) {
     argv2[0] = strdup("curl");
     for (i = 1, argc2 = 1; i < argc; i++, argc2++) {
         // it's just a flag:
-        if ((argv[i][0] == '-') || (distantFileName && localFileName)) { argv2[argc2] = strdup(argv[i]); continue; } 
+        if ((argv[i][0] == '-') || (distantFileName && localFileName)) {
+            // scp -q (quiet) is equivalent to curl -s (silent)
+            if (strcmp(argv[i], "-q") == 0) argv2[argc2] = strdup("-s");
+            else argv2[argc2] = strdup(argv[i]);
+            continue;
+        }
         char* position;
         if ((position = strstr(argv[i], ":")) != NULL) {
             // distant file

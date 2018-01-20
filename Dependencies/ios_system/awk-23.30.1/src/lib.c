@@ -558,7 +558,7 @@ void FATAL(const char *fmt, ...)
 	va_list varg;
 
 	fflush(stdout);
-	fprintf(stderr, "%s: ", cmdname);
+    fprintf(stderr, "%s: ", cmdname);
 	va_start(varg, fmt);
 	vfprintf(stderr, fmt, varg);
 	va_end(varg);

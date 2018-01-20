@@ -63,14 +63,12 @@ int	Unix2003_compat;
 
 static void initializeVariables() {
     // initialize all flags:
-    dbg = 0;
     cmdname = NULL;
-    extern Node *curnode;
-    curnode = NULL;
-    if (winner != NULL) {
-        while (winner != NULL) { Node* a = winner->nnext; free(winner); winner = a;}
-    }
-    winner = NULL;
+    extern int    infunc;
+    infunc = 0;    /* = 1 if in arglist or body of func */
+    extern int    inloop;
+    inloop = 0;    /* = 1 if in while, for, do */
+
     extern int    *setvec;
     extern int    *tmpset;
     if (setvec != 0) {    /* first time through any RE */
@@ -91,6 +89,20 @@ static void initializeVariables() {
     lastfld    = 0;    /* last used field */
     extern int argno;
     argno    = 1;    /* current input argument number */
+    if (symtab != NULL) {
+        free(symtab->tab);
+        free(symtab);
+        symtab = NULL;
+    }
+    // Variables from lib.c
+    if (record) { free(record); record = NULL;}
+    recsize    = RECSIZE;
+    extern char    *fields;
+    if (fields) { free(fields); fields = NULL; }
+    extern int fieldssize;
+    fieldssize = RECSIZE;
+    extern Cell    **fldtab;    /* pointers to Cells */
+    if (fldtab) { free(fldtab); fldtab = NULL; }
 }
 
 
@@ -200,6 +212,7 @@ int awk_main(int argc, char *argv[])
 	if (errorflag == 0) {
 		compile_time = 0;
 		run(winner);
+        winner = NULL;
 	} else
 		bracecheck();
 	return(errorflag);
