@@ -15,8 +15,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "BE3808511FD9BFB600393EB8"
-               BuildableName = "Terminal.app"
-               BlueprintName = "Terminal"
+               BuildableName = "OpenTerm.app"
+               BlueprintName = "OpenTerm"
                ReferencedContainer = "container:Terminal.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -34,8 +34,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "BE3808511FD9BFB600393EB8"
-            BuildableName = "Terminal.app"
-            BlueprintName = "Terminal"
+            BuildableName = "OpenTerm.app"
+            BlueprintName = "OpenTerm"
             ReferencedContainer = "container:Terminal.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -58,8 +58,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "BE3808511FD9BFB600393EB8"
-            BuildableName = "Terminal.app"
-            BlueprintName = "Terminal"
+            BuildableName = "OpenTerm.app"
+            BlueprintName = "OpenTerm"
             ReferencedContainer = "container:Terminal.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -77,8 +77,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "BE3808511FD9BFB600393EB8"
-            BuildableName = "Terminal.app"
-            BlueprintName = "Terminal"
+            BuildableName = "OpenTerm.app"
+            BlueprintName = "OpenTerm"
             ReferencedContainer = "container:Terminal.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
