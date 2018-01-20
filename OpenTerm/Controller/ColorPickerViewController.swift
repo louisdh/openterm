@@ -8,29 +8,38 @@
 
 import UIKit
 
-protocol ColorPickerViewControllerDelegate {
-    
-    func didSelectColor(color: UIColor)
-    
-}
-
 class ColorPickerViewController: UIViewController {
     
-    var colors = [UIColor]()
+	lazy var colors: [UIColor] = {
+		return [.defaultMainTintColor,
+				.green,
+				.panelBackgroundColor,
+				.black,
+				.darkGray,
+				.gray,
+				.lightGray,
+				.white,
+				.orange,
+				.brown,
+				.red,
+				.magenta,
+				.purple,
+				.blue,
+				.cyan]
+	}()
     
-    var delegate: ColorPickerViewControllerDelegate?
+	var didSelectCallback: ((UIColor) -> Void)?
     
-    @IBOutlet weak var collectIonView: UICollectionView!
+    @IBOutlet weak var collectionView: UICollectionView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        collectIonView.dataSource = self
-        collectIonView.delegate = self
-        colors = [.defaultMainTintColor, .green, .panelBackgroundColor, .black, .darkGray, .gray, .lightGray, .white, .orange, .brown, .red, .magenta, .purple, .blue, .cyan]
-        
+        collectionView.dataSource = self
+        collectionView.delegate = self
+		
     }
-    
+
 }
 
 extension ColorPickerViewController: UICollectionViewDataSource {
@@ -41,7 +50,7 @@ extension ColorPickerViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
-        let cell = collectIonView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath)
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath)
         
         cell.backgroundColor = colors[indexPath.row]
         cell.layer.borderWidth = 2
@@ -49,7 +58,6 @@ extension ColorPickerViewController: UICollectionViewDataSource {
         cell.layer.cornerRadius = 5
         
         return cell
-        
     }
     
 }
@@ -57,11 +65,13 @@ extension ColorPickerViewController: UICollectionViewDataSource {
 extension ColorPickerViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        
-        delegate?.didSelectColor(color: colors[indexPath.row])
-        navigationController?.popViewController(animated: true)
+		
+		let color = colors[indexPath.row]
+		didSelectCallback?(color)
+
+		navigationController?.popViewController(animated: true)
         collectionView.deselectItem(at: indexPath, animated: true)
-        
+		
     }
     
 }
