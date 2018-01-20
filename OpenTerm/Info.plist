@@ -45,7 +45,7 @@
 			<key>NSUbiquitousContainerIsDocumentScopePublic</key>
 			<true/>
 			<key>NSUbiquitousContainerName</key>
-			<string>Terminal</string>
+			<string>OpenTerm</string>
 			<key>NSUbiquitousContainerSupportedFolderLevels</key>
 			<string>0</string>
 		</dict>
