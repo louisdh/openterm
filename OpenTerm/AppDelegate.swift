@@ -1,6 +1,6 @@
 //
 //  AppDelegate.swift
-//  Terminal
+//  OpenTerm
 //
 //  Created by Louis D'hauwe on 07/12/2017.
 //  Copyright © 2017 Silver Fox. All rights reserved.

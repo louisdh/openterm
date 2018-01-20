@@ -1,6 +1,6 @@
 //
 //  HistoryViewController.swift
-//  Terminal
+//  OpenTerm
 //
 //  Created by Louis D'hauwe on 02/01/2018.
 //  Copyright © 2018 Silver Fox. All rights reserved.

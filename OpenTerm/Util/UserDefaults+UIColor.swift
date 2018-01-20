@@ -1,6 +1,6 @@
 //
 //  UserDefaults+UIColor.swift
-//  Terminal
+//  OpenTerm
 //
 //  Created by Simon Andersson on 2018-01-13.
 //  Copyright © 2018 Silver Fox. All rights reserved.

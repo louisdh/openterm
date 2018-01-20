@@ -1,6 +1,6 @@
 //
 //  UIColor+AssetCatalog.swift
-//  Terminal
+//  OpenTerm
 //
 //  Created by Louis D'hauwe on 06/01/2018.
 //  Copyright © 2018 Silver Fox. All rights reserved.

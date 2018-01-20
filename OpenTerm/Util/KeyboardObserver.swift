@@ -1,6 +1,6 @@
 //
 //  KeyboardObserver.swift
-//  Terminal
+//  OpenTerm
 //
 //  Created by Louis D'hauwe on 09/12/2017.
 //  Copyright © 2017 Silver Fox. All rights reserved.
