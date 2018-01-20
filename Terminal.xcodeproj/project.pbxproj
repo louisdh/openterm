@@ -48,7 +48,7 @@
 		24F6A88F715402F565B82F26 /* Pods-Terminal.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Terminal.release.xcconfig"; path = "Pods/Target Support Files/Pods-Terminal/Pods-Terminal.release.xcconfig"; sourceTree = "<group>"; };
 		83138AA9A57F46310B4DFF53 /* Pods_Terminal.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Terminal.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		BE3768EE1FEC4DCE00D5A2D1 /* ios_system.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = ios_system.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		BE3808521FD9BFB600393EB8 /* Terminal.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Terminal.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		BE3808521FD9BFB600393EB8 /* OpenTerm.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OpenTerm.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BE3808551FD9BFB600393EB8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		BE3808571FD9BFB600393EB8 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		BE38085A1FD9BFB600393EB8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -107,7 +107,7 @@
 		BE3808531FD9BFB600393EB8 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				BE3808521FD9BFB600393EB8 /* Terminal.app */,
+				BE3808521FD9BFB600393EB8 /* OpenTerm.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -182,9 +182,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		BE3808511FD9BFB600393EB8 /* Terminal */ = {
+		BE3808511FD9BFB600393EB8 /* OpenTerm */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = BE3808641FD9BFB600393EB8 /* Build configuration list for PBXNativeTarget "Terminal" */;
+			buildConfigurationList = BE3808641FD9BFB600393EB8 /* Build configuration list for PBXNativeTarget "OpenTerm" */;
 			buildPhases = (
 				4B5DFD929D217199A76A3C45 /* [CP] Check Pods Manifest.lock */,
 				BE38084E1FD9BFB600393EB8 /* Sources */,
@@ -198,9 +198,9 @@
 			);
 			dependencies = (
 			);
-			name = Terminal;
+			name = OpenTerm;
 			productName = Terminal;
-			productReference = BE3808521FD9BFB600393EB8 /* Terminal.app */;
+			productReference = BE3808521FD9BFB600393EB8 /* OpenTerm.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -240,7 +240,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				BE3808511FD9BFB600393EB8 /* Terminal */,
+				BE3808511FD9BFB600393EB8 /* OpenTerm */,
 			);
 		};
 /* End PBXProject section */
@@ -517,7 +517,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		BE3808641FD9BFB600393EB8 /* Build configuration list for PBXNativeTarget "Terminal" */ = {
+		BE3808641FD9BFB600393EB8 /* Build configuration list for PBXNativeTarget "OpenTerm" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				BE3808651FD9BFB600393EB8 /* Debug */,

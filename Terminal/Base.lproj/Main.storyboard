@@ -67,7 +67,7 @@
             </objects>
             <point key="canvasLocation" x="479.19999999999999" y="133.5832083958021"/>
         </scene>
-        <!--About Terminal-->
+        <!--About OpenTerm-->
         <scene sceneID="zxZ-bs-AwC">
             <objects>
                 <tableViewController id="iJD-Lv-nas" customClass="SettingsViewController" customModule="Terminal" customModuleProvider="target" sceneMemberID="viewController">
@@ -89,7 +89,7 @@
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="ESh-O6-iiM">
                                                     <rect key="frame" x="16" y="0.0" width="343" height="43.5"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <string key="text">Terminal is a sandboxed command line interface for iOS. Type "help" or "?" to get a list of available commands. 
+                                                    <string key="text">OpenTerm is a sandboxed command line interface for iOS. Type "help" or "?" to get a list of available commands. 
 
 This project uses the open source ios_system project by Nicolas Holzschuch. This project is also open source and available on GitHub.</string>
                                                     <fontDescription key="fontDescription" type="system" pointSize="16"/>
@@ -313,7 +313,7 @@ This project uses the open source ios_system project by Nicolas Holzschuch. This
                                             <rect key="frame" x="0.0" y="0.0" width="341" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Review Terminal on the App Store" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="2uu-C0-q4m">
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Review OpenTerm on the App Store" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="2uu-C0-q4m">
                                                     <rect key="frame" x="16" y="0.0" width="324" height="43.5"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="16"/>
@@ -368,7 +368,7 @@ This project uses the open source ios_system project by Nicolas Holzschuch. This
                             <outlet property="delegate" destination="iJD-Lv-nas" id="kuX-ua-ees"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="About Terminal" id="geP-qF-jkD">
+                    <navigationItem key="navigationItem" title="About OpenTerm" id="geP-qF-jkD">
                         <barButtonItem key="leftBarButtonItem" systemItem="done" id="T8X-MY-44c">
                             <connections>
                                 <action selector="close:" destination="iJD-Lv-nas" id="Vie-mO-6S8"/>
@@ -507,9 +507,6 @@ This project uses the open source ios_system project by Nicolas Holzschuch. This
     <resources>
         <image name="clock" width="32" height="32"/>
         <image name="gear" width="20" height="20"/>
-        <namedColor name="Main Tint Color">
-            <color red="0.0" green="0.85882352941176465" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
         <namedColor name="Main Tint Color">
             <color red="0.0" green="0.85882352941176465" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
