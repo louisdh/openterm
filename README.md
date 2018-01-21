@@ -23,17 +23,17 @@ This is a sandboxed command line interface for iOS.
 
 Commands included:
 
-|	| 	|  | |
-| ------------- |-------------| -----| -----|
-|cat | cd | chflags | chksum |
-| clear | compress | cp | curl |
-| date | du | egrep | fgrep |
-| grep | gunzip | gzip | help |
-| link | ln | ls | mkdir |
-| mv | printenv | readlink | rm |
-| rmdir | stat | sum | tar |
-| touch | uname | uncompress | uptime |
-| wc | whoami | | |
+|          |          |          |          |
+| ---- | ---- | ---- | ---- |
+|awk|cat|cd|chflags|chksum|
+|clear|compress|cp|curl|date|
+|du|echo|egrep|env|fgrep|
+|grep|gunzip|gzip|help|link|
+|ln|ls|mkdir|mv|printenv|
+|pwd|readlink|rm|rmdir|scp|
+|sed|setenv|sftp|stat|sum|
+|tar|touch|tr|uname|uncompress|
+|unsetenv|uptime|wc|whoami|
 
 
 ## Dependencies
