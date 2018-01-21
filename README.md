@@ -14,6 +14,8 @@
 <a href="https://developer.apple.com/swift/"><img src="https://img.shields.io/badge/Swift-4.0-orange.svg?style=flat" alt="Swift"/></a>
 
 <img src="https://img.shields.io/badge/Platform-iOS%2011.0+-lightgrey.svg" alt="Platform: iOS">
+<a href="https://travis-ci.org/louisdh/terminal"><img src="https://travis-ci.org/louisdh/terminal.svg?branch=master" alt="Build Status"/></a>
+<br>
 <a href="http://twitter.com/LouisDhauwe"><img src="https://img.shields.io/badge/Twitter-@LouisDhauwe-blue.svg?style=flat" alt="Twitter"/></a>
 </p>
 
