@@ -56,6 +56,7 @@
 #include <unistd.h>
 #endif
 #include "tool_getpass.h"
+#include "ios_error.h"
 
 #include "memdebug.h" /* keep this as LAST include */
 
@@ -105,7 +106,7 @@ char *getpass_r(const char *prompt, char *buffer, size_t buflen)
 char *getpass_r(const char *prompt, char *buffer, size_t buflen)
 {
   size_t i;
-  fputs(prompt, stderr);
+  fputs(prompt, thread_stderr);
 
   for(i = 0; i < buflen; i++) {
     buffer[i] = (char)getch();
@@ -121,7 +122,7 @@ char *getpass_r(const char *prompt, char *buffer, size_t buflen)
   }
 #ifndef __SYMBIAN32__
   /* since echo is disabled, print a newline */
-  fputs("\n", stderr);
+  fputs("\n", thread_stderr);
 #endif
   /* if user didn't hit ENTER, terminate buffer */
   if(i == buflen)
@@ -144,14 +145,14 @@ char *getpass_r(const char *prompt, char *buffer, size_t buflen)
 {
   size_t i = 0;
 
-  printf("%s", prompt);
+  fprintf(thread_stdout, "%s", prompt);
   do {
     buffer[i++] = getch();
     if(buffer[i-1] == '\b') {
       /* remove this letter and if this is not the first key,
          remove the previous one as well */
       if(i > 1) {
-        printf("\b \b");
+        fprintf(thread_stdout, "\b \b");
         i = i - 2;
       }
       else {
@@ -164,7 +165,7 @@ char *getpass_r(const char *prompt, char *buffer, size_t buflen)
 
   } while((buffer[i-1] != 13) && (i < buflen));
   buffer[i-1] = '\0';
-  printf("\r\n");
+  fprintf(thread_stdout, "\r\n");
   return buffer;
 }
 #endif /* __NOVELL_LIBC__ */
@@ -227,11 +228,11 @@ char *getpass_r(const char *prompt, /* prompt to display */
   bool disabled;
   int fd = open("/dev/tty", O_RDONLY);
   if(-1 == fd)
-    fd = STDIN_FILENO; /* use stdin if the tty couldn't be used */
+    fd = fileno(thread_stdin); /* use stdin if the tty couldn't be used */
 
   disabled = ttyecho(FALSE, fd); /* disable terminal echo */
 
-  fputs(prompt, stderr);
+  fputs(prompt, thread_stderr);
   nread = read(fd, password, buflen);
   if(nread > 0)
     password[--nread] = '\0'; /* zero terminate where enter is stored */
@@ -240,11 +241,11 @@ char *getpass_r(const char *prompt, /* prompt to display */
 
   if(disabled) {
     /* if echo actually was disabled, add a newline */
-    fputs("\n", stderr);
+    fputs("\n", thread_stderr);
     (void)ttyecho(TRUE, fd); /* enable echo */
   }
 
-  if(STDIN_FILENO != fd)
+  if(fileno(thread_stdin) != fd)
     close(fd);
 
   return password; /* return pointer to buffer */

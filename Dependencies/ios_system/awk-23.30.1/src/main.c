@@ -42,35 +42,35 @@ const char	*version = "version 20070501";
 #include "ios_error.h"
 
 extern	char	**environ;
-extern	int	nfields;
+extern	__thread int	nfields;
 
-int	dbg	= 0;
-char	*cmdname;	/* gets argv[0] for error messages */
-extern	FILE	*yyin;	/* lex input file */
-char	*lexprog;	/* points to program argument if it exists */
-extern	int errorflag;	/* non-zero if any syntax errors; set by yyerror */
-int	compile_time = 2;	/* for error printing: */
+__thread int	dbg	= 0;
+__thread char	*cmdname;	/* gets argv[0] for error messages */
+extern	__thread FILE	*yyin;	/* lex input file */
+__thread char	*lexprog;	/* points to program argument if it exists */
+extern	__thread int errorflag;	/* non-zero if any syntax errors; set by yyerror */
+__thread int	compile_time = 2;	/* for error printing: */
 				/* 2 = cmdline, 1 = compile, 0 = running */
 
 #define	MAX_PFILE	20	/* max number of -f's */
 
-char	*pfile[MAX_PFILE];	/* program filenames from -f's */
-int	npfile = 0;	/* number of filenames */
-int	curpfile = 0;	/* current filename */
+static char	*pfile[MAX_PFILE];	/* program filenames from -f's */
+static int	npfile = 0;	/* number of filenames */
+static int	curpfile = 0;	/* current filename */
 
-int	safe	= 0;	/* 1 => "safe" mode */
-int	Unix2003_compat;
+__thread int	safe	= 0;	/* 1 => "safe" mode */
+__thread int	Unix2003_compat;
 
 static void initializeVariables() {
     // initialize all flags:
     cmdname = NULL;
-    extern int    infunc;
+    extern __thread int    infunc;
     infunc = 0;    /* = 1 if in arglist or body of func */
-    extern int    inloop;
+    extern __thread int    inloop;
     inloop = 0;    /* = 1 if in while, for, do */
 
-    extern int    *setvec;
-    extern int    *tmpset;
+    extern __thread int    *setvec;
+    extern __thread int    *tmpset;
     if (setvec != 0) {    /* first time through any RE */
         free(setvec); setvec = 0;
         free(tmpset); tmpset = 0;
@@ -82,12 +82,12 @@ static void initializeVariables() {
     compile_time = 2;
     errorflag = 0;
     lexprog = 0;
-    extern int awk_firsttime;
+    extern __thread int awk_firsttime;
     awk_firsttime = 1;
     
-    extern int lastfld;
+    extern __thread int lastfld;
     lastfld    = 0;    /* last used field */
-    extern int argno;
+    extern __thread int argno;
     argno    = 1;    /* current input argument number */
     if (symtab != NULL) {
         free(symtab->tab);
@@ -97,11 +97,11 @@ static void initializeVariables() {
     // Variables from lib.c
     if (record) { free(record); record = NULL;}
     recsize    = RECSIZE;
-    extern char    *fields;
+    extern __thread char    *fields;
     if (fields) { free(fields); fields = NULL; }
-    extern int fieldssize;
+    extern __thread int fieldssize;
     fieldssize = RECSIZE;
-    extern Cell    **fldtab;    /* pointers to Cells */
+    extern __thread Cell    **fldtab;    /* pointers to Cells */
     if (fldtab) { free(fldtab); fldtab = NULL; }
 }
 
@@ -115,7 +115,7 @@ int awk_main(int argc, char *argv[])
 	setlocale(LC_NUMERIC, "C"); /* for parsing cmdline & prog */
 	cmdname = argv[0];
 	if (argc == 1) {
-		fprintf(stderr, 
+		fprintf(thread_stderr, 
 		  "usage: %s [-F fs] [-v var=value] [-f progfile | 'prog'] [file ...]\n", 
 		  cmdname);
         pthread_exit(NULL); // exit(1);
@@ -126,7 +126,7 @@ int awk_main(int argc, char *argv[])
 	symtab = makesymtab(NSYMTAB/NSYMTAB);
 	while (argc > 1 && argv[1][0] == '-' && argv[1][1] != '\0') {
 		if (strcmp(argv[1],"-version") == 0 || strcmp(argv[1],"--version") == 0) {
-			printf("awk %s\n", version);
+			fprintf(thread_stdout, "awk %s\n", version);
 			pthread_exit(NULL); // exit(0);
 			break;
 		}
@@ -175,7 +175,7 @@ int awk_main(int argc, char *argv[])
 			dbg = atoi(&argv[1][2]);
 			if (dbg == 0)
 				dbg = 1;
-			printf("awk %s\n", version);
+			fprintf(thread_stdout, "awk %s\n", version);
 			break;
 		default:
 			WARNING("unknown option %s ignored", argv[1]);
@@ -191,7 +191,7 @@ int awk_main(int argc, char *argv[])
                 pthread_exit(NULL); // exit(0);
 			FATAL("no program given");
 		}
-		   dprintf( ("program = |%s|\n", argv[1]) );
+		   dprintf( (thread_stdout, "program = |%s|\n", argv[1]) );
 		lexprog = argv[1];
 		argc--;
 		argv++;
@@ -200,7 +200,7 @@ int awk_main(int argc, char *argv[])
 	syminit();
 	compile_time = 1;
 	argv[0] = cmdname;	/* put prog name at front of arglist */
-	   dprintf( ("argc=%d, argv[0]=%s\n", argc, argv[0]) );
+	   dprintf( (thread_stdout, "argc=%d, argv[0]=%s\n", argc, argv[0]) );
 	arginit(argc, argv);
 	if (!safe)
 		envinit(environ);
@@ -208,7 +208,7 @@ int awk_main(int argc, char *argv[])
 	setlocale(LC_NUMERIC, ""); /* back to whatever it is locally */
 	if (fs)
 		*FS = qstring(fs, '\0');
-	   dprintf( ("errorflag=%d\n", errorflag) );
+	   dprintf( (thread_stdout, "errorflag=%d\n", errorflag) );
 	if (errorflag == 0) {
 		compile_time = 0;
 		run(winner);
@@ -227,14 +227,14 @@ int pgetc(void)		/* get 1 character from awk program */
 			if (curpfile >= npfile)
 				return EOF;
 			if (strcmp(pfile[curpfile], "-") == 0)
-				yyin = stdin;
+				yyin = thread_stdin;
 			else if ((yyin = fopen(pfile[curpfile], "r")) == NULL)
 				FATAL("can't open file %s", pfile[curpfile]);
 			lineno = 1;
 		}
 		if ((c = getc(yyin)) != EOF)
 			return c;
-		if (yyin != stdin)
+		if (yyin != thread_stdin)
 			fclose(yyin);
 		yyin = NULL;
 		curpfile++;

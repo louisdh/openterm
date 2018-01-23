@@ -132,16 +132,16 @@ bool Curl_ipvalid(struct connectdata *conn)
 #ifdef DEBUG_ADDRINFO
 static void dump_addrinfo(struct connectdata *conn, const Curl_addrinfo *ai)
 {
-  printf("dump_addrinfo:\n");
+  fprintf(thread_stdout, "dump_addrinfo:\n");
   for(; ai; ai = ai->ai_next) {
     char  buf[INET6_ADDRSTRLEN];
 
-    printf("    fam %2d, CNAME %s, ",
+    fprintf(thread_stdout, "    fam %2d, CNAME %s, ",
            ai->ai_family, ai->ai_canonname ? ai->ai_canonname : "<none>");
     if(Curl_printable_address(ai, buf, sizeof(buf)))
-      printf("%s\n", buf);
+      fprintf(thread_stdout, "%s\n", buf);
     else
-      printf("failed; %s\n", Curl_strerror(conn, SOCKERRNO));
+      fprintf(thread_stdout, "failed; %s\n", Curl_strerror(conn, SOCKERRNO));
   }
 }
 #else

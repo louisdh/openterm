@@ -39,6 +39,7 @@
 #include <curl/mprintf.h>
 
 #include "curl_memory.h"
+#include "ios_error.h"
 /* The last #include file should be: */
 #include "memdebug.h"
 
@@ -1149,7 +1150,7 @@ int curl_mprintf(const char *format, ...)
   va_list ap_save; /* argument pointer */
   va_start(ap_save, format);
 
-  retcode = dprintf_formatf(stdout, fputc, format, ap_save);
+  retcode = dprintf_formatf(thread_stdout, fputc, format, ap_save);
   va_end(ap_save);
   return retcode;
 }
@@ -1174,7 +1175,7 @@ int curl_mvsprintf(char *buffer, const char *format, va_list ap_save)
 
 int curl_mvprintf(const char *format, va_list ap_save)
 {
-  return dprintf_formatf(stdout, fputc, format, ap_save);
+  return dprintf_formatf(thread_stdout, fputc, format, ap_save);
 }
 
 int curl_mvfprintf(FILE *whereto, const char *format, va_list ap_save)

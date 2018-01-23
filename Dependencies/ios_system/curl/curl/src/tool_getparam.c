@@ -38,6 +38,7 @@
 #include "tool_msgs.h"
 #include "tool_paramhlp.h"
 #include "tool_parsecfg.h"
+#include "ios_error.h"
 
 #include "memdebug.h" /* keep this as LAST include */
 
@@ -731,7 +732,7 @@ ParameterError getparameter(char *flag,    /* f or -long-flag */
           }
         }
         else
-          global->errors = stdout;
+          global->errors = thread_stdout;
         break;
       case 'w': /* --interface */
         /* interface */
@@ -1214,8 +1215,8 @@ ParameterError getparameter(char *flag,    /* f or -long-flag */
         if('@' == is_file) {
           /* a '@' letter, it means that a file name or - (stdin) follows */
           if(!strcmp("-", p)) {
-            file = stdin;
-            set_binmode(stdin);
+            file = thread_stdin;
+            set_binmode(thread_stdin);
           }
           else {
             file = fopen(p, "rb");
@@ -1227,7 +1228,7 @@ ParameterError getparameter(char *flag,    /* f or -long-flag */
 
           err = file2memory(&postdata, &size, file);
 
-          if(file && (file != stdin))
+          if(file && (file != thread_stdin))
             fclose(file);
           if(err)
             return err;
@@ -1279,9 +1280,9 @@ ParameterError getparameter(char *flag,    /* f or -long-flag */
         nextarg++; /* pass the @ */
 
         if(!strcmp("-", nextarg)) {
-          file = stdin;
+          file = thread_stdin;
           if(subletter == 'b') /* forced data-binary */
-            set_binmode(stdin);
+            set_binmode(thread_stdin);
         }
         else {
           file = fopen(nextarg, "rb");
@@ -1299,7 +1300,7 @@ ParameterError getparameter(char *flag,    /* f or -long-flag */
             size = strlen(postdata);
         }
 
-        if(file && (file != stdin))
+        if(file && (file != thread_stdin))
           fclose(file);
         if(err)
           return err;
@@ -1916,14 +1917,14 @@ ParameterError getparameter(char *flag,    /* f or -long-flag */
         nextarg++; /* pass the @ */
         if(!strcmp("-", nextarg)) {
           fname = "<stdin>";
-          file = stdin;
+          file = thread_stdin;
         }
         else {
           fname = nextarg;
           file = fopen(nextarg, FOPEN_READTEXT);
         }
         err = file2string(&config->writeout, file);
-        if(file && (file != stdin))
+        if(file && (file != thread_stdin))
           fclose(file);
         if(err)
           return err;

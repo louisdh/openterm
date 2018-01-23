@@ -34,24 +34,24 @@ THIS SOFTWARE.
 #include "ios_error.h"
 
 static FILE	*infile	= NULL;
-char	*file	= "";
-char	*record;
-int	recsize	= RECSIZE;
-char	*fields;
-int	fieldssize = RECSIZE;
+static char	*file	= "";
+__thread char	*record;
+__thread int	recsize	= RECSIZE;
+__thread char	*fields;
+__thread int	fieldssize = RECSIZE;
 
-Cell	**fldtab;	/* pointers to Cells */
-char	inputFS[100] = " ";
+__thread Cell	**fldtab;	/* pointers to Cells */
+__thread char	inputFS[100] = " ";
 
 #define	MAXFLD	2
-int	nfields	= MAXFLD;	/* last allocated slot for $i */
+__thread int	nfields	= MAXFLD;	/* last allocated slot for $i */
 
-int	donefld;	/* 1 = implies rec broken into fields */
-int	donerec;	/* 1 = record is valid (no flds have changed) */
+__thread int	donefld;	/* 1 = implies rec broken into fields */
+__thread int	donerec;	/* 1 = record is valid (no flds have changed) */
 
-int	lastfld	= 0;	/* last used field */
-int	argno	= 1;	/* current input argument number */
-extern	Awkfloat *ARGC;
+__thread int	lastfld	= 0;	/* last used field */
+__thread int	argno	= 1;	/* current input argument number */
+extern	__thread Awkfloat *ARGC;
 
 static Cell dollar0 = { OCELL, CFLD, NULL, "", 0.0, REC|STR|DONTFREE };
 static Cell dollar1 = { OCELL, CFLD, NULL, "", 0.0, FLD|STR|DONTFREE };
@@ -97,10 +97,10 @@ void initgetrec(void)
 		setclvar(p);	/* a commandline assignment before filename */
 		argno++;
 	}
-	infile = stdin;		/* no filenames, so use stdin */
+	infile = thread_stdin;		/* no filenames, so use stdin */
 }
 
-int awk_firsttime = 1;
+__thread int awk_firsttime = 1;
 
 int getrec(char **pbuf, int *pbufsize, int isrecord)	/* get next input record */
 {			/* note: cares whether buf == record */
@@ -113,7 +113,7 @@ int getrec(char **pbuf, int *pbufsize, int isrecord)	/* get next input record */
 		awk_firsttime = 0;
 		initgetrec();
 	}
-	   dprintf( ("RS=<%s>, FS=<%s>, ARGC=%g, FILENAME=%s\n",
+	   dprintf( (thread_stdout, "RS=<%s>, FS=<%s>, ARGC=%g, FILENAME=%s\n",
 		*RS, *FS, *ARGC, *FILENAME) );
 	if (isrecord) {
 		donefld = 0;
@@ -121,8 +121,8 @@ int getrec(char **pbuf, int *pbufsize, int isrecord)	/* get next input record */
 	}
 	saveb0 = buf[0];
 	buf[0] = 0;
-	while (argno < *ARGC || infile == stdin) {
-		   dprintf( ("argno=%d, file=|%s|\n", argno, file) );
+	while (argno < *ARGC || infile == thread_stdin) {
+		   dprintf( (thread_stdout, "argno=%d, file=|%s|\n", argno, file) );
 		if (infile == NULL) {	/* have to open a new file */
 			file = getargv(argno);
 			if (*file == '\0') {	/* it's been zapped */
@@ -135,9 +135,9 @@ int getrec(char **pbuf, int *pbufsize, int isrecord)	/* get next input record */
 				continue;
 			}
 			*FILENAME = file;
-			   dprintf( ("opening file %s\n", file) );
+			   dprintf( (thread_stdout, "opening file %s\n", file) );
 			if (*file == '-' && *(file+1) == '\0')
-				infile = stdin;
+				infile = thread_stdin;
 			else if ((infile = fopen(file, "r")) == NULL)
 				FATAL("can't open file %s", file);
 			setfval(fnrloc, 0.0);
@@ -163,7 +163,7 @@ int getrec(char **pbuf, int *pbufsize, int isrecord)	/* get next input record */
 			return 1;
 		}
 		/* EOF arrived on this file; set up next */
-		if (infile != stdin)
+		if (infile != thread_stdin)
 			fclose(infile);
 		infile = NULL;
 		argno++;
@@ -176,7 +176,7 @@ int getrec(char **pbuf, int *pbufsize, int isrecord)	/* get next input record */
 
 void nextfile(void)
 {
-	if (infile != NULL && infile != stdin)
+	if (infile != NULL && infile != thread_stdin)
 		fclose(infile);
 	infile = NULL;
 	argno++;
@@ -217,7 +217,7 @@ int readrec(char **pbuf, int *pbufsize, FILE *inf)	/* read one record into buf *
 	if (!adjbuf(&buf, &bufsize, 1+rr-buf, recsize, &rr, "readrec 3"))
 		FATAL("input record `%.30s...' too long", buf);
 	*rr = 0;
-	   dprintf( ("readrec saw <%s>, returns %d\n", buf, c == EOF && rr == buf ? 0 : 1) );
+	   dprintf( (thread_stdout, "readrec saw <%s>, returns %d\n", buf, c == EOF && rr == buf ? 0 : 1) );
 	*pbuf = buf;
 	*pbufsize = bufsize;
 	return c == EOF && rr == buf ? 0 : 1;
@@ -227,12 +227,12 @@ char *getargv(int n)	/* get ARGV[n] */
 {
 	Cell *x;
 	char *s, temp[50];
-	extern Array *ARGVtab;
+	extern __thread Array *ARGVtab;
 
 	sprintf(temp, "%d", n);
 	x = setsymtab(temp, "", 0.0, STR, ARGVtab);
 	s = getsval(x);
-	   dprintf( ("getargv(%d) returns |%s|\n", n, s) );
+	   dprintf( (thread_stdout, "getargv(%d) returns |%s|\n", n, s) );
 	return s;
 }
 
@@ -251,7 +251,7 @@ void setclvar(char *s)	/* set var=value from s */
 		q->fval = atof(q->sval);
 		q->tval |= NUM;
 	}
-	   dprintf( ("command line set %s to |%s|\n", s, p) );
+	   dprintf( (thread_stdout, "command line set %s to |%s|\n", s, p) );
 }
 
 
@@ -352,7 +352,7 @@ void fldbld(void)	/* create fields from current record */
 	if (dbg) {
 		for (j = 0; j <= lastfld; j++) {
 			p = fldtab[j];
-			printf("field %d (%s): |%s|\n", j, p->nval, p->sval);
+			fprintf(thread_stdout, "field %d (%s): |%s|\n", j, p->nval, p->sval);
 		}
 	}
 }
@@ -427,7 +427,7 @@ int refldbld(const char *rec, const char *fs)	/* build fields from reg expr in F
 	if (*rec == '\0')
 		return 0;
 	pfa = makedfa(fs, 1);
-	   dprintf( ("into refldbld, rec = <%s>, pat = <%s>\n", rec, fs) );
+	   dprintf( (thread_stdout, "into refldbld, rec = <%s>, pat = <%s>\n", rec, fs) );
 	tempstat = pfa->initstat;
 	for (i = 1; ; i++) {
 		if (i > nfields)
@@ -436,16 +436,16 @@ int refldbld(const char *rec, const char *fs)	/* build fields from reg expr in F
 			xfree(fldtab[i]->sval);
 		fldtab[i]->tval = FLD | STR | DONTFREE;
 		fldtab[i]->sval = fr;
-		   dprintf( ("refldbld: i=%d\n", i) );
+		   dprintf( (thread_stdout, "refldbld: i=%d\n", i) );
 		if (nematch(pfa, rec)) {
 			pfa->initstat = 2;	/* horrible coupling to b.c */
-			   dprintf( ("match %s (%d chars)\n", patbeg, patlen) );
+			   dprintf( (thread_stdout, "match %s (%d chars)\n", patbeg, patlen) );
 			strncpy(fr, rec, patbeg-rec);
 			fr += patbeg - rec + 1;
 			*(fr-1) = '\0';
 			rec = patbeg + patlen;
 		} else {
-			   dprintf( ("no match %s\n", rec) );
+			   dprintf( (thread_stdout, "no match %s\n", rec) );
 			strcpy(fr, rec);
 			pfa->initstat = tempstat;
 			break;
@@ -478,19 +478,19 @@ void recbld(void)	/* create $0 from $1..$NF if necessary */
 	if (!adjbuf(&record, &recsize, 2+r-record, recsize, &r, "recbld 3"))
 		FATAL("built giant record `%.30s...'", record);
 	*r = '\0';
-	   dprintf( ("in recbld inputFS=%s, fldtab[0]=%p\n", inputFS, fldtab[0]) );
+	   dprintf( (thread_stdout, "in recbld inputFS=%s, fldtab[0]=%p\n", inputFS, fldtab[0]) );
 
 	if (freeable(fldtab[0]))
 		xfree(fldtab[0]->sval);
 	fldtab[0]->tval = REC | STR | DONTFREE;
 	fldtab[0]->sval = record;
 
-	   dprintf( ("in recbld inputFS=%s, fldtab[0]=%p\n", inputFS, fldtab[0]) );
-	   dprintf( ("recbld = |%s|\n", record) );
+	   dprintf( (thread_stdout, "in recbld inputFS=%s, fldtab[0]=%p\n", inputFS, fldtab[0]) );
+	   dprintf( (thread_stdout, "recbld = |%s|\n", record) );
 	donerec = 1;
 }
 
-int	errorflag	= 0;
+__thread int	errorflag	= 0;
 
 void yyerror(const char *s)
 {
@@ -499,22 +499,22 @@ void yyerror(const char *s)
 
 void SYNTAX(const char *fmt, ...)
 {
-	extern char *cmdname, *curfname;
+	extern __thread char *cmdname, *curfname;
 	static int been_here = 0;
 	va_list varg;
 
 	if (been_here++ > 2)
 		return;
-	fprintf(stderr, "%s: ", cmdname);
+	fprintf(thread_stderr, "%s: ", cmdname);
 	va_start(varg, fmt);
-	vfprintf(stderr, fmt, varg);
+	vfprintf(thread_stderr, fmt, varg);
 	va_end(varg);
-	fprintf(stderr, " at source line %d", lineno);
+	fprintf(thread_stderr, " at source line %d", lineno);
 	if (curfname != NULL)
-		fprintf(stderr, " in function %s", curfname);
+		fprintf(thread_stderr, " in function %s", curfname);
 	if (compile_time == 1 && cursource() != NULL)
-		fprintf(stderr, " source file %s", cursource());
-	fprintf(stderr, "\n");
+		fprintf(thread_stderr, " source file %s", cursource());
+	fprintf(thread_stderr, "\n");
 	errorflag = 2;
 	eprint();
 }
@@ -524,7 +524,7 @@ void fpecatch(int n)
 	FATAL("floating point exception %d", n);
 }
 
-extern int bracecnt, brackcnt, parencnt;
+extern __thread int bracecnt, brackcnt, parencnt;
 
 void bracecheck(void)
 {
@@ -543,24 +543,24 @@ void bracecheck(void)
 void bcheck2(int n, int c1, int c2)
 {
 	if (n == 1)
-		fprintf(stderr, "\tmissing %c\n", c2);
+		fprintf(thread_stderr, "\tmissing %c\n", c2);
 	else if (n > 1)
-		fprintf(stderr, "\t%d missing %c's\n", n, c2);
+		fprintf(thread_stderr, "\t%d missing %c's\n", n, c2);
 	else if (n == -1)
-		fprintf(stderr, "\textra %c\n", c2);
+		fprintf(thread_stderr, "\textra %c\n", c2);
 	else if (n < -1)
-		fprintf(stderr, "\t%d extra %c's\n", -n, c2);
+		fprintf(thread_stderr, "\t%d extra %c's\n", -n, c2);
 }
 
 void FATAL(const char *fmt, ...)
 {
-	extern char *cmdname;
+	extern __thread char *cmdname;
 	va_list varg;
 
-	fflush(stdout);
-    fprintf(stderr, "%s: ", cmdname);
+	fflush(thread_stdout);
+    fprintf(thread_stderr, "%s: ", cmdname);
 	va_start(varg, fmt);
-	vfprintf(stderr, fmt, varg);
+	vfprintf(thread_stderr, fmt, varg);
 	va_end(varg);
 	error();
 	// if (dbg > 1)		/* core dump if serious debugging on */
@@ -571,35 +571,35 @@ void FATAL(const char *fmt, ...)
 
 void WARNING(const char *fmt, ...)
 {
-	extern char *cmdname;
+	extern __thread char *cmdname;
 	va_list varg;
 
-	fflush(stdout);
-	fprintf(stderr, "%s: ", cmdname);
+	fflush(thread_stdout);
+	fprintf(thread_stderr, "%s: ", cmdname);
 	va_start(varg, fmt);
-	vfprintf(stderr, fmt, varg);
+	vfprintf(thread_stderr, fmt, varg);
 	va_end(varg);
 	error();
 }
 
 void error()
 {
-	extern Node *curnode;
+	extern __thread Node *curnode;
 
-	fprintf(stderr, "\n");
+	fprintf(thread_stderr, "\n");
 	if (compile_time != 2 && NR && *NR > 0) {
-		fprintf(stderr, " input record number %d", (int) (*FNR));
+		fprintf(thread_stderr, " input record number %d", (int) (*FNR));
 		if (strcmp(*FILENAME, "-") != 0)
-			fprintf(stderr, ", file %s", *FILENAME);
-		fprintf(stderr, "\n");
+			fprintf(thread_stderr, ", file %s", *FILENAME);
+		fprintf(thread_stderr, "\n");
 	}
 	if (compile_time != 2 && curnode)
-		fprintf(stderr, " source line number %d", curnode->lineno);
+		fprintf(thread_stderr, " source line number %d", curnode->lineno);
 	else if (compile_time != 2 && lineno)
-		fprintf(stderr, " source line number %d", lineno);
+		fprintf(thread_stderr, " source line number %d", lineno);
 	if (compile_time == 1 && cursource() != NULL)
-		fprintf(stderr, " source file %s", cursource());
-	fprintf(stderr, "\n");
+		fprintf(thread_stderr, " source file %s", cursource());
+	fprintf(thread_stderr, "\n");
 	eprint();
 }
 
@@ -619,23 +619,23 @@ void eprint(void)	/* try to print context around error */
 		;
 	while (*p == '\n')
 		p++;
-	fprintf(stderr, " context is\n\t");
+	fprintf(thread_stderr, " context is\n\t");
 	for (q=ep-1; q>=p && *q!=' ' && *q!='\t' && *q!='\n'; q--)
 		;
 	for ( ; p < q; p++)
 		if (*p)
-			putc(*p, stderr);
-	fprintf(stderr, " >>> ");
+			putc(*p, thread_stderr);
+	fprintf(thread_stderr, " >>> ");
 	for ( ; p < ep; p++)
 		if (*p)
-			putc(*p, stderr);
-	fprintf(stderr, " <<< ");
+			putc(*p, thread_stderr);
+	fprintf(thread_stderr, " <<< ");
 	if (*ep)
 		while ((c = input()) != '\n' && c != '\0' && c != EOF) {
-			putc(c, stderr);
+			putc(c, thread_stderr);
 			bclass(c);
 		}
-	putc('\n', stderr);
+	putc('\n', thread_stderr);
 	ep = ebuf;
 }
 

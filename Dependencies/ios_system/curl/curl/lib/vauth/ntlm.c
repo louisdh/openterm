@@ -141,9 +141,9 @@ static void ntlm_print_hex(FILE *handle, const char *buf, size_t len)
 
   (void) handle;
 
-  fprintf(stderr, "0x");
+  fprintf(thread_stderr, "0x");
   while(len-- > 0)
-    fprintf(stderr, "%02.2x", (unsigned int)*p++);
+    fprintf(thread_stderr, "%02.2x", (unsigned int)*p++);
 }
 #else
 # define DEBUG_OUT(x) Curl_nop_stmt
@@ -318,12 +318,12 @@ CURLcode Curl_auth_decode_ntlm_type2_message(struct Curl_easy *data,
   }
 
   DEBUG_OUT({
-    fprintf(stderr, "**** TYPE2 header flags=0x%08.8lx ", ntlm->flags);
-    ntlm_print_flags(stderr, ntlm->flags);
-    fprintf(stderr, "\n                  nonce=");
-    ntlm_print_hex(stderr, (char *)ntlm->nonce, 8);
-    fprintf(stderr, "\n****\n");
-    fprintf(stderr, "**** Header %s\n ", header);
+    fprintf(thread_stderr, "**** TYPE2 header flags=0x%08.8lx ", ntlm->flags);
+    ntlm_print_flags(thread_stderr, ntlm->flags);
+    fprintf(thread_stderr, "\n                  nonce=");
+    ntlm_print_hex(thread_stderr, (char *)ntlm->nonce, 8);
+    fprintf(thread_stderr, "\n****\n");
+    fprintf(thread_stderr, "**** Header %s\n ", header);
   });
 
   free(type2);
@@ -436,7 +436,7 @@ CURLcode Curl_auth_create_ntlm_type1_message(const char *userp,
   size = 32 + hostlen + domlen;
 
   DEBUG_OUT({
-    fprintf(stderr, "* TYPE1 header flags=0x%02.2x%02.2x%02.2x%02.2x "
+    fprintf(thread_stderr, "* TYPE1 header flags=0x%02.2x%02.2x%02.2x%02.2x "
             "0x%08.8x ",
             LONGQUARTET(NTLMFLAG_NEGOTIATE_OEM |
                         NTLMFLAG_REQUEST_TARGET |
@@ -448,13 +448,13 @@ CURLcode Curl_auth_create_ntlm_type1_message(const char *userp,
             NTLMFLAG_NEGOTIATE_NTLM_KEY |
             NTLM2FLAG |
             NTLMFLAG_NEGOTIATE_ALWAYS_SIGN);
-    ntlm_print_flags(stderr,
+    ntlm_print_flags(thread_stderr,
                      NTLMFLAG_NEGOTIATE_OEM |
                      NTLMFLAG_REQUEST_TARGET |
                      NTLMFLAG_NEGOTIATE_NTLM_KEY |
                      NTLM2FLAG |
                      NTLMFLAG_NEGOTIATE_ALWAYS_SIGN);
-    fprintf(stderr, "\n****\n");
+    fprintf(thread_stderr, "\n****\n");
   });
 
   /* Return with binary blob encoded into base64 */
@@ -764,8 +764,8 @@ CURLcode Curl_auth_create_ntlm_type3_message(struct Curl_easy *data,
   }
 
   DEBUG_OUT({
-    fprintf(stderr, "**** TYPE3 header lmresp=");
-    ntlm_print_hex(stderr, (char *)&ntlmbuf[lmrespoff], 0x18);
+    fprintf(thread_stderr, "**** TYPE3 header lmresp=");
+    ntlm_print_hex(thread_stderr, (char *)&ntlmbuf[lmrespoff], 0x18);
   });
 
 #ifdef USE_NTRESPONSES
@@ -776,8 +776,8 @@ CURLcode Curl_auth_create_ntlm_type3_message(struct Curl_easy *data,
   }
 
   DEBUG_OUT({
-    fprintf(stderr, "\n   ntresp=");
-    ntlm_print_hex(stderr, (char *)&ntlmbuf[ntrespoff], ntresplen);
+    fprintf(thread_stderr, "\n   ntresp=");
+    ntlm_print_hex(thread_stderr, (char *)&ntlmbuf[ntrespoff], ntresplen);
   });
 
   free(ntlmv2resp);/* Free the dynamic buffer allocated for NTLMv2 */
@@ -785,10 +785,10 @@ CURLcode Curl_auth_create_ntlm_type3_message(struct Curl_easy *data,
 #endif
 
   DEBUG_OUT({
-    fprintf(stderr, "\n   flags=0x%02.2x%02.2x%02.2x%02.2x 0x%08.8x ",
+    fprintf(thread_stderr, "\n   flags=0x%02.2x%02.2x%02.2x%02.2x 0x%08.8x ",
             LONGQUARTET(ntlm->flags), ntlm->flags);
-    ntlm_print_flags(stderr, ntlm->flags);
-    fprintf(stderr, "\n****\n");
+    ntlm_print_flags(thread_stderr, ntlm->flags);
+    fprintf(thread_stderr, "\n****\n");
   });
 
   /* Make sure that the domain, user and host strings fit in the

@@ -225,11 +225,11 @@ kbd_callback(const char *name, int name_len, const char *instruction,
   struct connectdata *conn = (struct connectdata *)*abstract;
 
 #ifdef CURL_LIBSSH2_DEBUG
-  fprintf(stderr, "name=%s\n", name);
-  fprintf(stderr, "name_len=%d\n", name_len);
-  fprintf(stderr, "instruction=%s\n", instruction);
-  fprintf(stderr, "instruction_len=%d\n", instruction_len);
-  fprintf(stderr, "num_prompts=%d\n", num_prompts);
+  fprintf(thread_stderr, "name=%s\n", name);
+  fprintf(thread_stderr, "name_len=%d\n", name_len);
+  fprintf(thread_stderr, "instruction=%s\n", instruction);
+  fprintf(thread_stderr, "instruction_len=%d\n", instruction_len);
+  fprintf(thread_stderr, "num_prompts=%d\n", num_prompts);
 #else
   (void)name;
   (void)name_len;
@@ -737,7 +737,7 @@ static CURLcode ssh_statemach_act(struct connectdata *conn, bool *block)
             && [host.user length]) {
             Curl_safefree(conn->user);
             conn->user = strdup([host.user UTF8String]);
-            fprintf(stderr, "Found user = %s, host = %s\n", conn->user, conn->host.name);
+            // fprintf(stderr, "Found user = %s, host = %s\n", conn->user, conn->host.name);
         }
     }
 #endif

@@ -52,6 +52,7 @@
 #include "url.h"
 #include "strerror.h"
 #include "strdup.h"
+#include "ios_error.h"
 /* The last 3 #include files should be in this order */
 #include "curl_printf.h"
 #include "curl_memory.h"
@@ -207,14 +208,14 @@ static CURLcode ntlm_wb_init(struct connectdata *conn, const char *userp)
 
     /* Don't use sclose in the child since it fools the socket leak detector */
     sclose_nolog(sockfds[0]);
-    if(dup2(sockfds[1], STDIN_FILENO) == -1) {
+    if(dup2(sockfds[1], fileno(thread_stdin)) == -1) {
       error = ERRNO;
       failf(conn->data, "Could not redirect child stdin. errno %d: %s",
             error, Curl_strerror(conn, error));
       exit(1);
     }
 
-    if(dup2(sockfds[1], STDOUT_FILENO) == -1) {
+    if(dup2(sockfds[1], fileno(thread_stdout)) == -1) {
       error = ERRNO;
       failf(conn->data, "Could not redirect child stdout. errno %d: %s",
             error, Curl_strerror(conn, error));
@@ -393,7 +394,7 @@ CURLcode Curl_output_ntlm_wb(struct connectdata *conn,
     *allocuserpwd = aprintf("%sAuthorization: %s\r\n",
                             proxy ? "Proxy-" : "",
                             conn->response_header);
-    DEBUG_OUT(fprintf(stderr, "**** Header %s\n ", *allocuserpwd));
+    DEBUG_OUT(fprintf(thread_stderr, "**** Header %s\n ", *allocuserpwd));
     free(conn->response_header);
     conn->response_header = NULL;
     break;
@@ -411,7 +412,7 @@ CURLcode Curl_output_ntlm_wb(struct connectdata *conn,
     *allocuserpwd = aprintf("%sAuthorization: %s\r\n",
                             proxy ? "Proxy-" : "",
                             conn->response_header);
-    DEBUG_OUT(fprintf(stderr, "**** %s\n ", *allocuserpwd));
+    DEBUG_OUT(fprintf(thread_stderr, "**** %s\n ", *allocuserpwd));
     ntlm->state = NTLMSTATE_TYPE3; /* we sent a type-3 */
     authp->done = TRUE;
     Curl_ntlm_wb_cleanup(conn);

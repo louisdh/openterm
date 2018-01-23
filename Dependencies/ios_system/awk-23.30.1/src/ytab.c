@@ -274,12 +274,12 @@
 void checkdup(Node *list, Cell *item);
 int yywrap(void) { return(1); }
 
-Node	*beginloc = 0;
-Node	*endloc = 0;
-int	infunc	= 0;	/* = 1 if in arglist or body of func */
-int	inloop	= 0;	/* = 1 if in while, for, do */
-char	*curfname = 0;	/* current function name */
-Node	*arglist = 0;	/* list of args for current function */
+__thread Node	*beginloc = 0;
+__thread Node	*endloc = 0;
+__thread int	infunc	= 0;	/* = 1 if in arglist or body of func */
+__thread int	inloop	= 0;	/* = 1 if in while, for, do */
+__thread char	*curfname = 0;	/* current function name */
+__thread Node	*arglist = 0;	/* list of args for current function */
 
 
 /* Enabling traces.  */
@@ -2048,10 +2048,10 @@ do {						\
 do {									  \
   if (yydebug)								  \
     {									  \
-      YYFPRINTF (stderr, "%s ", Title);					  \
-      yy_symbol_print (stderr,						  \
+      YYFPRINTF (thread_stderr, "%s ", Title);					  \
+      yy_symbol_print (thread_stderr,						  \
 		  Type, Value); \
-      YYFPRINTF (stderr, "\n");						  \
+      YYFPRINTF (thread_stderr, "\n");						  \
     }									  \
 } while (YYID (0))
 
@@ -2130,10 +2130,10 @@ yy_stack_print (bottom, top)
     yytype_int16 *top;
 #endif
 {
-  YYFPRINTF (stderr, "Stack now");
+  YYFPRINTF (thread_stderr, "Stack now");
   for (; bottom <= top; ++bottom)
-    YYFPRINTF (stderr, " %d", *bottom);
-  YYFPRINTF (stderr, "\n");
+    YYFPRINTF (thread_stderr, " %d", *bottom);
+  YYFPRINTF (thread_stderr, "\n");
 }
 
 # define YY_STACK_PRINT(Bottom, Top)				\
@@ -2161,16 +2161,16 @@ yy_reduce_print (yyvsp, yyrule)
   int yynrhs = yyr2[yyrule];
   int yyi;
   unsigned long int yylno = yyrline[yyrule];
-  YYFPRINTF (stderr, "Reducing stack by rule %d (line %lu):\n",
+  YYFPRINTF (thread_stderr, "Reducing stack by rule %d (line %lu):\n",
 	     yyrule - 1, yylno);
   /* The symbols being reduced.  */
   for (yyi = 0; yyi < yynrhs; yyi++)
     {
-      fprintf (stderr, "   $%d = ", yyi + 1);
-      yy_symbol_print (stderr, yyrhs[yyprhs[yyrule] + yyi],
+      fprintf (thread_stderr, "   $%d = ", yyi + 1);
+      yy_symbol_print (thread_stderr, yyrhs[yyprhs[yyrule] + yyi],
 		       &(yyvsp[(yyi + 1) - (yynrhs)])
 		       		       );
-      fprintf (stderr, "\n");
+      fprintf (thread_stderr, "\n");
     }
 }
 
@@ -2471,13 +2471,13 @@ int yyparse ();
 
 
 /* The look-ahead symbol.  */
-int yychar;
+static int yychar;
 
 /* The semantic value of the look-ahead symbol.  */
-YYSTYPE yylval;
+__thread YYSTYPE yylval;
 
 /* Number of syntax errors so far.  */
-int yynerrs;
+static int yynerrs;
 
 
 
@@ -2555,7 +2555,7 @@ yyparse ()
      Keep to zero when no symbol should be popped.  */
   int yylen = 0;
 
-  YYDPRINTF ((stderr, "Starting parse\n"));
+  YYDPRINTF ((thread_stderr, "Starting parse\n"));
 
   yystate = 0;
   yyerrstatus = 0;
@@ -2641,14 +2641,14 @@ yyparse ()
       yyvsp = yyvs + yysize - 1;
 
 
-      YYDPRINTF ((stderr, "Stack size increased to %lu\n",
+      YYDPRINTF ((thread_stderr, "Stack size increased to %lu\n",
 		  (unsigned long int) yystacksize));
 
       if (yyss + yystacksize - 1 <= yyssp)
 	YYABORT;
     }
 
-  YYDPRINTF ((stderr, "Entering state %d\n", yystate));
+  YYDPRINTF ((thread_stderr, "Entering state %d\n", yystate));
 
   goto yybackup;
 
@@ -2670,14 +2670,14 @@ yybackup:
   /* YYCHAR is either YYEMPTY or YYEOF or a valid look-ahead symbol.  */
   if (yychar == YYEMPTY)
     {
-      YYDPRINTF ((stderr, "Reading a token: "));
+      YYDPRINTF ((thread_stderr, "Reading a token: "));
       yychar = YYLEX;
     }
 
   if (yychar <= YYEOF)
     {
       yychar = yytoken = YYEOF;
-      YYDPRINTF ((stderr, "Now at end of input.\n"));
+      YYDPRINTF ((thread_stderr, "Now at end of input.\n"));
     }
   else
     {

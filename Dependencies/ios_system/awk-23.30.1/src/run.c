@@ -35,7 +35,6 @@ THIS SOFTWARE.
 #include "ytab.h"
 
 #include "ios_error.h"
-extern int ios_system(char* inputCmd); // execute this command (executable file or builtin command)
 
 #define tempfree(x)	if (istemp(x)) tfree(x); else
 
@@ -68,9 +67,9 @@ void tempfree(Cell *p) {
 /* #endif */
 
 static jmp_buf env;
-extern	int	pairstack[];
+extern	__thread int	pairstack[];
 
-Node	*winner = NULL;	/* root of parse tree */
+__thread Node	*winner = NULL;	/* root of parse tree */
 Cell	*tmps;		/* free temporary cells for execution */
 
 static Cell	truecell	={ OBOOL, BTRUE, 0, 0, 1.0, NUM };
@@ -91,7 +90,7 @@ static Cell	retcell		={ OJUMP, JRET, 0, 0, 0.0, NUM };
 Cell	*jret	= &retcell;
 static Cell	tempcell	={ OCELL, CTEMP, 0, "", 0.0, NUM|STR|DONTFREE };
 
-Node	*curnode = NULL;	/* the node being executed, for debugging */
+__thread Node	*curnode = NULL;	/* the node being executed, for debugging */
 
 static Awkfloat prev_srand, tmp_srand;
 
@@ -116,7 +115,7 @@ int adjbuf(char **pbuf, int *psiz, int minlen, int quantum, char **pbptr,
 		if (rminlen)
 			minlen += quantum - rminlen;
 		tbuf = (char *) realloc(*pbuf, minlen);
-		dprintf( ("adjbuf %s: %d %d (pbuf=%p, tbuf=%p)\n", whatrtn, *psiz, minlen, *pbuf, tbuf) );
+		dprintf( (thread_stdout, "adjbuf %s: %d %d (pbuf=%p, tbuf=%p)\n", whatrtn, *psiz, minlen, *pbuf, tbuf) );
 		if (tbuf == NULL) {
 			if (whatrtn)
 				FATAL("out of memory in %s", whatrtn);
@@ -142,8 +141,8 @@ void run(Node *a)	/* execution of parse tree starts here */
     curnode = NULL;
     winner = NULL;
     // These are defined in ytab.c
-    extern Node    *beginloc;
-    extern Node    *endloc;
+    extern __thread Node    *beginloc;
+    extern __thread Node    *endloc;
     beginloc = 0;
     endloc = 0;
 }
@@ -291,17 +290,17 @@ Cell *call(Node **a, int n)	/* function call.  very kludgy and fragile */
 	for (ncall = 0, x = a[1]; x != NULL; x = x->nnext)	/* args in call */
 		ncall++;
 	ndef = (int) fcn->fval;			/* args in defn */
-	   dprintf( ("calling %s, %d args (%d in defn), fp=%d\n", s, ncall, ndef, (int) (fp-frame)) );
+	   dprintf( (thread_stdout, "calling %s, %d args (%d in defn), fp=%d\n", s, ncall, ndef, (int) (fp-frame)) );
 	if (ncall > ndef)
 		WARNING("function %s called with %d args, uses only %d",
 			s, ncall, ndef);
 	if (ncall + ndef > NARGS)
 		FATAL("function %s has %d arguments, limit %d", s, ncall+ndef, NARGS);
 	for (i = 0, x = a[1]; x != NULL; i++, x = x->nnext) {	/* get call args */
-		   dprintf( ("evaluate args[%d], fp=%d:\n", i, (int) (fp-frame)) );
+		   dprintf( (thread_stdout, "evaluate args[%d], fp=%d:\n", i, (int) (fp-frame)) );
 		y = execute(x);
 		oargs[i] = y;
-		   dprintf( ("args[%d]: %s %f <%s>, t=%o\n",
+		   dprintf( (thread_stdout, "args[%d]: %s %f <%s>, t=%o\n",
 			   i, NN(y->nval), y->fval, isarr(y) ? "(array)" : NN(y->sval), y->tval) );
 		if (isfcn(y))
 			FATAL("can't use function %s as argument in %s", y->nval, s);
@@ -329,9 +328,9 @@ Cell *call(Node **a, int n)	/* function call.  very kludgy and fragile */
 	fp->nargs = ndef;	/* number defined with (excess are locals) */
 	fp->retval = gettemp();
 
-	   dprintf( ("start exec of %s, fp=%d\n", s, (int) (fp-frame)) );
+	   dprintf( (thread_stdout, "start exec of %s, fp=%d\n", s, (int) (fp-frame)) );
 	y = execute((Node *)(fcn->sval));	/* execute body */
-	   dprintf( ("finished exec of %s, fp=%d\n", s, (int) (fp-frame)) );
+	   dprintf( (thread_stdout, "finished exec of %s, fp=%d\n", s, (int) (fp-frame)) );
 
 	for (i = 0; i < ndef; i++) {
 		Cell *t = fp->args[i];
@@ -364,7 +363,7 @@ Cell *call(Node **a, int n)	/* function call.  very kludgy and fragile */
 		tempfree(y);	/* don't free twice! */
 	}
 	z = fp->retval;			/* return value */
-	   dprintf( ("%s returns %g |%s| %o\n", s, getfval(z), getsval(z), z->tval) );
+	   dprintf( (thread_stdout, "%s returns %g |%s| %o\n", s, getfval(z), getsval(z), z->tval) );
 	fp--;
 	return(z);
 }
@@ -388,7 +387,7 @@ Cell *arg(Node **a, int n)	/* nth argument of a function */
 {
 
 	n = ptoi(a[0]);	/* argument number, counting from 0 */
-	   dprintf( ("arg(%d), fp->nargs=%d\n", n, fp->nargs) );
+	   dprintf( (thread_stdout, "arg(%d), fp->nargs=%d\n", n, fp->nargs) );
 	if (n+1 > fp->nargs)
 		FATAL("argument #%d of function %s was not supplied",
 			n+1, fp->fcncell->nval);
@@ -442,7 +441,7 @@ Cell *jump(Node **a, int n)	/* break, continue, next, nextfile, return */
 Cell *awk_getline(Node **a, int n)	/* get next line from specific input */
 {		/* a[0] is variable, a[1] is operator, a[2] is filename */
 	Cell *r, *x;
-	extern Cell **fldtab;
+	extern __thread Cell **fldtab;
 	FILE *fp;
 	char *buf;
 	int bufsize = recsize;
@@ -451,7 +450,7 @@ Cell *awk_getline(Node **a, int n)	/* get next line from specific input */
 	if ((buf = (char *) malloc(bufsize)) == NULL)
 		FATAL("out of memory in getline");
 
-	fflush(stdout);	/* in case someone is waiting for a prompt */
+	fflush(thread_stdout);	/* in case someone is waiting for a prompt */
 	r = gettemp();
 	if (a[1] != NULL) {		/* getline < file */
 		x = execute(a[2]);		/* filename */
@@ -524,7 +523,7 @@ Cell *array(Node **a, int n)	/* a[0] is symtab, a[1] is list of subscripts */
 		tempfree(y);
 	}
 	if (!isarr(x)) {
-		   dprintf( ("making %s into an array\n", NN(x->nval)) );
+		   dprintf( (thread_stdout, "making %s into an array\n", NN(x->nval)) );
 		if (freeable(x))
 			xfree(x->sval);
 		x->tval &= ~(STR|NUM|DONTFREE);
@@ -588,7 +587,7 @@ Cell *intest(Node **a, int n)	/* a[0] is index (list), a[1] is symtab */
 
 	ap = execute(a[1]);	/* array name */
 	if (!isarr(ap)) {
-		   dprintf( ("making %s into an array\n", ap->nval) );
+		   dprintf( (thread_stdout, "making %s into an array\n", ap->nval) );
 		if (freeable(ap))
 			xfree(ap->sval);
 		ap->tval &= ~(STR|NUM|DONTFREE);
@@ -730,7 +729,7 @@ Cell *relop(Node **a, int n)	/* a[0 < a[1], etc. */
 void tfree(Cell *a)	/* free a tempcell */
 {
 	if (freeable(a)) {
-		   dprintf( ("freeing %s %s %o\n", NN(a->nval), NN(a->sval), a->tval) );
+		   dprintf( (thread_stdout, "freeing %s %s %o\n", NN(a->nval), NN(a->sval), a->tval) );
 		xfree(a->sval);
 	}
 	if (a == tmps)
@@ -817,7 +816,7 @@ Cell *substr(Node **a, int nnn)		/* substr(a[0], a[1], a[2]) */
 		n = 0;
 	else if (n > k - m)
 		n = k - m;
-	   dprintf( ("substr: m=%d, n=%d, s=%s\n", m, n, s) );
+	   dprintf( (thread_stdout, "substr: m=%d, n=%d, s=%s\n", m, n, s) );
 	y = gettemp();
 	temp = s[n+m-1];	/* with thanks to John Linderman */
 	s[n+m-1] = '\0';
@@ -1003,9 +1002,9 @@ struct files {
 
 void stdinit(void)    /* in case stdin, etc., are not constants */
 {
-    files[0].fp = stdin;
-    files[1].fp = stdout;
-    files[2].fp = stderr;
+    files[0].fp = thread_stdin;
+    files[1].fp = thread_stdout;
+    files[2].fp = thread_stderr;
 }
 
 static const char *filename(FILE *fp)
@@ -1057,8 +1056,8 @@ Cell *awkprintf(Node **a, int n)		/* printf */
 	tempfree(x);
 	if (a[1] == NULL) {
 		/* fputs(buf, stdout); */
-		fwrite(buf, len, 1, stdout);
-		if (ferror(stdout))
+		fwrite(buf, len, 1, thread_stdout);
+		if (ferror(thread_stdout))
 			FATAL("write error on stdout");
 	} else {
 		fp = redirect(ptoi(a[1]), a[2]);
@@ -1311,7 +1310,7 @@ Cell *split(Node **a, int nnn)	/* split(a[0], a[1], a[2]); a[3] is type */
 	sep = *fs;
 	ap = execute(a[1]);	/* array name */
 	freesymtab(ap);
-	   dprintf( ("split: s=|%s|, a=%s, sep=|%s|\n", s, NN(ap->nval), fs) );
+	   dprintf( (thread_stdout, "split: s=|%s|, a=%s, sep=|%s|\n", s, NN(ap->nval), fs) );
 	ap->tval &= ~STR;
 	ap->tval |= ARR;
 	ap->sval = (char *) makesymtab(NSYMTAB);
@@ -1587,7 +1586,7 @@ Cell *bltin(Node **a, int n)	/* builtin functions. a[0] is type, a[1] is arg lis
 		}
 		break;
 	case FSYSTEM:
-		fflush(stdout);		/* in case something is buffered already */
+		fflush(thread_stdout);		/* in case something is buffered already */
 		u = (Awkfloat) ios_system(getsval(x)) / 256;   /* 256 is unix-dep */
 		break;
 	case FRAND:
@@ -1652,7 +1651,7 @@ Cell *printstat(Node **a, int n)	/* print a[0] */
 	FILE *fp;
 
 	if (a[1] == 0)	/* a[1] is redirection operator, a[2] is file */
-		fp = stdout;
+		fp = thread_stdout;
 	else
 		fp = redirect(ptoi(a[1]), a[2]);
 	for (x = a[0]; x != NULL; x = x->nnext) {
@@ -1718,7 +1717,7 @@ FILE *openfile(int a, const char *us)
 			break;
 	if (i >= FOPEN_MAX)
 		FATAL("%s makes too many open files", s);
-	fflush(stdout);	/* force a semblance of order */
+	fflush(thread_stdout);	/* force a semblance of order */
 	m = a;
 	if (a == GT) {
 		fp = fopen(s, "w");
@@ -1730,7 +1729,7 @@ FILE *openfile(int a, const char *us)
 	} else if (a == LE) {	/* input pipe */
 		fp = popen(s, "r");
 	} else if (a == LT) {	/* getline <file */
-		fp = strcmp(s, "-") == 0 ? stdin : fopen(s, "r");	/* "-" is stdin */
+		fp = strcmp(s, "-") == 0 ? thread_stdin : fopen(s, "r");	/* "-" is stdin */
 	} else	/* can't happen */
 		FATAL("illegal redirection %d", a);
 	if (fp != NULL) {
@@ -1781,9 +1780,9 @@ void closeall(void)
 	for (i = 0; i < FOPEN_MAX; i++) {
 		if (files[i].fp) {
             // Do not close stdin or the others
-            if (files[i].fp == stdin) continue;
-            if (files[i].fp == stdout) continue;
-            if (files[i].fp == stderr) continue;
+            if (files[i].fp == thread_stdin) continue;
+            if (files[i].fp == thread_stdout) continue;
+            if (files[i].fp == thread_stderr) continue;
 			if (ferror(files[i].fp))
 				WARNING( "i/o error occurred on %s", files[i].fname );
 			if (files[i].mode == '|' || files[i].mode == LE)

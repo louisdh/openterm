@@ -37,6 +37,8 @@
 #include "sendf.h"
 #include "strdup.h"
 #include "rand.h"
+#include "ios_error.h"
+
 /* The last 3 #include files should be in this order */
 #include "curl_printf.h"
 #include "curl_memory.h"
@@ -1306,7 +1308,7 @@ CURLcode Curl_getformdata(struct Curl_easy *data,
         FILE *fileread;
 
         fileread = !strcmp("-", file->contents)?
-          stdin:fopen(file->contents, "rb"); /* binary read for win32  */
+          thread_stdin:fopen(file->contents, "rb"); /* binary read for win32  */
 
         /*
          * VMS: This only allows for stream files on VMS.  Stream files are
@@ -1315,7 +1317,7 @@ CURLcode Curl_getformdata(struct Curl_easy *data,
          */
 
         if(fileread) {
-          if(fileread != stdin) {
+          if(fileread != thread_stdin) {
             /* close the file */
             fclose(fileread);
             /* add the file name only - for later reading from this */

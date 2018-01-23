@@ -25,6 +25,7 @@
 #include "tool_help.h"
 #include "tool_libinfo.h"
 #include "tool_version.h"
+#include "ios_error.h"
 
 #include "memdebug.h" /* keep this as LAST include */
 
@@ -338,26 +339,26 @@ void tool_version_info(void)
 {
   const char *const *proto;
 
-  printf(CURL_ID "%s\n", curl_version());
+  fprintf(thread_stdout, CURL_ID "%s\n", curl_version());
   if(curlinfo->protocols) {
-    printf("Protocols: ");
+    fprintf(thread_stdout, "Protocols: ");
     for(proto = curlinfo->protocols; *proto; ++proto) {
-      printf("%s ", *proto);
+      fprintf(thread_stdout, "%s ", *proto);
     }
     puts(""); /* newline */
   }
   if(curlinfo->features) {
     unsigned int i;
-    printf("Features: ");
+    fprintf(thread_stdout, "Features: ");
     for(i = 0; i < sizeof(feats)/sizeof(feats[0]); i++) {
       if(curlinfo->features & feats[i].bitmask)
-        printf("%s ", feats[i].name);
+        fprintf(thread_stdout, "%s ", feats[i].name);
     }
 #ifdef USE_METALINK
-    printf("Metalink ");
+    fprintf(thread_stdout, "Metalink ");
 #endif
 #ifdef USE_LIBPSL
-    printf("PSL ");
+    fprintf(thread_stdout, "PSL ");
 #endif
     puts(""); /* newline */
   }
@@ -373,7 +374,7 @@ void tool_list_engines(CURL *curl)
   puts("Build-time engines:");
   if(engines) {
     for(; engines; engines = engines->next)
-      printf("  %s\n", engines->data);
+      fprintf(thread_stdout, "  %s\n", engines->data);
   }
   else {
     puts("  <none>");

@@ -25,6 +25,7 @@
 #include "curlx.h"
 #include "tool_cfgable.h"
 #include "tool_writeout.h"
+#include "ios_error.h"
 
 #include "memdebug.h" /* keep this as LAST include */
 
@@ -106,7 +107,7 @@ static const struct variable replacements[]={
 
 void ourWriteOut(CURL *curl, struct OutStruct *outs, const char *writeinfo)
 {
-  FILE *stream = stdout;
+  FILE *stream = thread_stdout;
   const char *ptr = writeinfo;
   char *stringp = NULL;
   long longinfo;
@@ -328,7 +329,7 @@ void ourWriteOut(CURL *curl, struct OutStruct *outs, const char *writeinfo)
             }
           }
           if(!match) {
-            fprintf(stderr, "curl: unknown --write-out variable: '%s'\n", ptr);
+            fprintf(thread_stderr, "curl: unknown --write-out variable: '%s'\n", ptr);
           }
           ptr = end + 1; /* pass the end */
           *end = keepit;

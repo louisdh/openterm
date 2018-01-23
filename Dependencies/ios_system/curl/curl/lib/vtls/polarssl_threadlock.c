@@ -107,7 +107,7 @@ int Curl_polarsslthreadlock_lock_function(int n)
   if(n < NUMT) {
     ret = pthread_mutex_lock(&mutex_buf[n]);
     if(ret) {
-      DEBUGF(fprintf(stderr,
+      DEBUGF(fprintf(thread_stderr,
                      "Error: polarsslthreadlock_lock_function failed\n"));
       return 0; /* pthread_mutex_lock failed */
     }
@@ -116,7 +116,7 @@ int Curl_polarsslthreadlock_lock_function(int n)
   if(n < NUMT) {
     ret = (WaitForSingleObject(mutex_buf[n], INFINITE)==WAIT_FAILED?1:0);
     if(ret) {
-      DEBUGF(fprintf(stderr,
+      DEBUGF(fprintf(thread_stderr,
                      "Error: polarsslthreadlock_lock_function failed\n"));
       return 0; /* pthread_mutex_lock failed */
     }
@@ -132,7 +132,7 @@ int Curl_polarsslthreadlock_unlock_function(int n)
   if(n < NUMT) {
     ret = pthread_mutex_unlock(&mutex_buf[n]);
     if(ret) {
-      DEBUGF(fprintf(stderr,
+      DEBUGF(fprintf(thread_stderr,
                      "Error: polarsslthreadlock_unlock_function failed\n"));
       return 0; /* pthread_mutex_unlock failed */
     }
@@ -141,7 +141,7 @@ int Curl_polarsslthreadlock_unlock_function(int n)
   if(n < NUMT) {
     ret = ReleaseMutex(mutex_buf[n]);
     if(!ret) {
-      DEBUGF(fprintf(stderr,
+      DEBUGF(fprintf(thread_stderr,
                      "Error: polarsslthreadlock_unlock_function failed\n"));
       return 0; /* pthread_mutex_lock failed */
     }

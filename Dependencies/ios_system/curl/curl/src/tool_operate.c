@@ -40,6 +40,7 @@
 #endif
 
 #include "strcase.h"
+#include "ios_error.h"
 
 // iOS:
 #import <Foundation/Foundation.h>
@@ -277,7 +278,7 @@ static CURLcode operate_do(struct GlobalConfig *global,
   /* default headers output stream is stdout */
   memset(&hdrcbdata, 0, sizeof(struct HdrCbData));
   memset(&heads, 0, sizeof(struct OutStruct));
-  heads.stream = stdout;
+  heads.stream = thread_stdout;
   heads.config = config;
 
   /*
@@ -545,12 +546,12 @@ static CURLcode operate_do(struct GlobalConfig *global,
 
         outfile = NULL;
         infdopen = FALSE;
-        infd = STDIN_FILENO;
+        infd = fileno(thread_stdin);
         uploadfilesize = -1; /* -1 means unknown */
 
         /* default output stream is stdout */
         memset(&outs, 0, sizeof(struct OutStruct));
-        outs.stream = stdout;
+        outs.stream = thread_stdout;
         outs.config = config;
 
         if(metalink) {
@@ -734,7 +735,7 @@ static CURLcode operate_do(struct GlobalConfig *global,
             helpf(global->errors, "Can't open '%s'!\n", uploadfile);
             if(infd != -1) {
               close(infd);
-              infd = STDIN_FILENO;
+              infd = fileno(thread_stdin);
             }
             result = CURLE_READ_ERROR;
             goto quit_urls;
@@ -773,9 +774,9 @@ static CURLcode operate_do(struct GlobalConfig *global,
           }
 
           DEBUGASSERT(infdopen == FALSE);
-          DEBUGASSERT(infd == STDIN_FILENO);
+          DEBUGASSERT(infd == fileno(thread_stdin));
 
-          set_binmode(stdin);
+          set_binmode(thread_stdin);
           if(!strcmp(uploadfile, ".")) {
             if(curlx_nonblock((curl_socket_t)infd, TRUE) < 0)
               warnf(config->global,
@@ -845,12 +846,12 @@ static CURLcode operate_do(struct GlobalConfig *global,
         }
 
         if(!global->errors)
-          global->errors = stderr;
+          global->errors = thread_stderr;
 
         if((!outfile || !strcmp(outfile, "-")) && !config->use_ascii) {
           /* We get the output to stdout and we have not got the ASCII/text
              flag, then set stdout to be binary */
-          set_binmode(stdout);
+          set_binmode(thread_stdout);
         }
 
         if(!config->tcp_nodelay)
@@ -1564,7 +1565,7 @@ static CURLcode operate_do(struct GlobalConfig *global,
 
           if(outs.is_cd_filename && outs.stream && !global->mute &&
              outs.filename)
-            printf("curl: Saved to filename '%s'\n", outs.filename);
+            fprintf(thread_stdout, "curl: Saved to filename '%s'\n", outs.filename);
 
           /* if retry-max-time is non-zero, make sure we haven't exceeded the
              time */

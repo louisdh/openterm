@@ -81,6 +81,7 @@ Example set of cookies:
 
 
 #include "curl_setup.h"
+#include "ios_error.h"
 
 #if !defined(CURL_DISABLE_HTTP) && !defined(CURL_DISABLE_COOKIES)
 
@@ -976,7 +977,7 @@ struct CookieInfo *Curl_cookie_init(struct Curl_easy *data,
   c->running = FALSE; /* this is not running, this is init */
 
   if(file && !strcmp(file, "-")) {
-    fp = stdin;
+    fp = thread_stdin;
     fromfile=FALSE;
   }
   else if(file && !*file) {
@@ -1348,7 +1349,7 @@ static int cookie_output(struct CookieInfo *c, const char *dumphere)
 
   if(!strcmp("-", dumphere)) {
     /* use stdout */
-    out = stdout;
+    out = thread_stdout;
     use_stdout=TRUE;
   }
   else {

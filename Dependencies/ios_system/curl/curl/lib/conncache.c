@@ -335,7 +335,7 @@ void Curl_conncache_print(struct conncache *connc)
   if(!connc)
     return;
 
-  fprintf(stderr, "=Bundle cache=\n");
+  fprintf(thread_stderr, "=Bundle cache=\n");
 
   Curl_hash_start_iterate(connc->hash, &iter);
 
@@ -346,15 +346,15 @@ void Curl_conncache_print(struct conncache *connc)
 
     bundle = he->ptr;
 
-    fprintf(stderr, "%s -", he->key);
+    fprintf(thread_stderr, "%s -", he->key);
     curr = bundle->conn_list->head;
     while(curr) {
       conn = curr->ptr;
 
-      fprintf(stderr, " [%p %d]", (void *)conn, conn->inuse);
+      fprintf(thread_stderr, " [%p %d]", (void *)conn, conn->inuse);
       curr = curr->next;
     }
-    fprintf(stderr, "\n");
+    fprintf(thread_stderr, "\n");
 
     he = Curl_hash_next_element(&iter);
   }
