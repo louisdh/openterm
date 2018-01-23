@@ -73,6 +73,7 @@ __FBSDID("$FreeBSD: src/usr.bin/tar/tree.c,v 1.9 2008/11/27 05:49:52 kientzle Ex
 #if defined(HAVE_WINDOWS_H) && !defined(__CYGWIN__)
 #include <windows.h>
 #endif
+#include "ios_error.h"
 
 #include "tree.h"
 
@@ -400,7 +401,7 @@ tree_next(struct tree *t)
 	/* If we're called again after a fatal error, that's an API
 	 * violation.  Just crash now. */
 	if (t->visit_type == TREE_ERROR_FATAL) {
-		fprintf(stderr, "Unable to continue traversing"
+		fprintf(thread_stderr, "Unable to continue traversing"
 		    " directory heirarchy after a fatal error.");
 		abort();
 	}

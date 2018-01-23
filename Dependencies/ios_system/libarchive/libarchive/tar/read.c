@@ -80,6 +80,7 @@ __FBSDID("$FreeBSD: src/usr.bin/tar/read.c,v 1.40 2008/08/21 06:41:14 kientzle E
 
 #include "bsdtar.h"
 #include "lafe_err.h"
+#include "ios_error.h"
 
 struct progress_data {
 	struct bsdtar *bsdtar;
@@ -128,20 +129,20 @@ progress_func(void *cookie)
 		return;
 
 	if (bsdtar->verbose)
-		fprintf(stderr, "\n");
+		fprintf(thread_stderr, "\n");
 	if (a != NULL) {
 		comp = archive_position_compressed(a);
 		uncomp = archive_position_uncompressed(a);
-		fprintf(stderr,
+		fprintf(thread_stderr,
 		    "In: %s bytes, compression %d%%;",
 		    tar_i64toa(comp), (int)((uncomp - comp) * 100 / uncomp));
-		fprintf(stderr, "  Out: %d files, %s bytes\n",
+		fprintf(thread_stderr, "  Out: %d files, %s bytes\n",
 		    archive_file_count(a), tar_i64toa(uncomp));
 	}
 	if (entry != NULL) {
-		safe_fprintf(stderr, "Current: %s",
+		safe_fprintf(thread_stderr, "Current: %s",
 		    archive_entry_pathname(entry));
-		fprintf(stderr, " (%s bytes)\n",
+		fprintf(thread_stderr, " (%s bytes)\n",
 		    tar_i64toa(archive_entry_size(entry)));
 	}
 }
@@ -315,7 +316,7 @@ read_archive(struct bsdtar *bsdtar, char mode)
 		if (mode == 't') {
 			/* Perversely, gtar uses -O to mean "send to stderr"
 			 * when used with -t. */
-			out = bsdtar->option_stdout ? stderr : stdout;
+			out = bsdtar->option_stdout ? thread_stderr : thread_stdout;
 
 			/*
 			 * TODO: Provide some reasonable way to
@@ -362,9 +363,9 @@ read_archive(struct bsdtar *bsdtar, char mode)
 			 * deferred '\n'.
 			 */
 			if (bsdtar->verbose) {
-				safe_fprintf(stderr, "x %s",
+				safe_fprintf(thread_stderr, "x %s",
 				    archive_entry_pathname(entry));
-				fflush(stderr);
+				fflush(thread_stderr);
 			}
 
 			// TODO siginfo_printinfo(bsdtar, 0);
@@ -393,16 +394,16 @@ read_archive(struct bsdtar *bsdtar, char mode)
 			}
 			if (r != ARCHIVE_OK) {
 				if (!bsdtar->verbose)
-					safe_fprintf(stderr, "%s",
+					safe_fprintf(thread_stderr, "%s",
 					    archive_entry_pathname(entry));
-				safe_fprintf(stderr, ": %s",
+				safe_fprintf(thread_stderr, ": %s",
 				    archive_error_string(a));
 				if (!bsdtar->verbose)
-					fprintf(stderr, "\n");
+					fprintf(thread_stderr, "\n");
 				bsdtar->return_value = 1;
 			}
 			if (bsdtar->verbose)
-				fprintf(stderr, "\n");
+				fprintf(thread_stderr, "\n");
 			if (r == ARCHIVE_FATAL)
 				break;
 		}
@@ -432,7 +433,7 @@ read_archive(struct bsdtar *bsdtar, char mode)
 	}
 
 	if (bsdtar->verbose > 2)
-		fprintf(stdout, "Archive Format: %s,  Compression: %s\n",
+		fprintf(thread_stdout, "Archive Format: %s,  Compression: %s\n",
 		    archive_format_name(a), archive_compression_name(a));
 
 	archive_read_finish(a);

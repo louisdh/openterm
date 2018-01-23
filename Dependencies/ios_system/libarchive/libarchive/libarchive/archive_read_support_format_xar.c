@@ -23,6 +23,7 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #include "archive_platform.h"
+
 __FBSDID("$FreeBSD$");
 
 #ifdef HAVE_ERRNO_H
@@ -49,6 +50,7 @@ __FBSDID("$FreeBSD$");
 #ifdef HAVE_ZLIB_H
 #include <zlib.h>
 #endif
+#include "ios_error.h"
 
 #include "archive.h"
 #include "archive_endian.h"
@@ -88,8 +90,8 @@ archive_read_support_format_xar(struct archive *_a)
 	unsigned char *x = (unsigned char *)(uintptr_t)d;	\
 	unsigned char c = x[outbytes-1];			\
 	x[outbytes - 1] = 0;					\
-	fprintf(stderr, "%s", x);				\
-	fprintf(stderr, "%c", c);				\
+	fprintf(thread_stderr, "%s", x);				\
+	fprintf(thread_stderr, "%c", c);				\
 	x[outbytes - 1] = c;					\
 } while (0)
 #else
@@ -1801,7 +1803,7 @@ unknowntag_start(struct xar *xar, const char *name)
 	struct unknown_tag *tag;
 
 #if DEBUG
-	fprintf(stderr, "unknowntag_start:%s\n", name);
+	fprintf(thread_stderr, "unknowntag_start:%s\n", name);
 #endif
 	tag = malloc(sizeof(*tag));
 	if (tag == NULL)
@@ -1822,7 +1824,7 @@ unknowntag_end(struct xar *xar, const char *name)
 	struct unknown_tag *tag;
 
 #if DEBUG
-	fprintf(stderr, "unknowntag_end:%s\n", name);
+	fprintf(thread_stderr, "unknowntag_end:%s\n", name);
 #endif
 	tag = xar->unknowntags;
 	if (tag == NULL || name == NULL)
@@ -1847,9 +1849,9 @@ xml_start(void *userData, const char *name, struct xmlattr_list *list)
 	xar = (struct xar *)(a->format->data);
 
 #if DEBUG
-	fprintf(stderr, "xml_sta:[%s]\n", name);
+	fprintf(thread_stderr, "xml_sta:[%s]\n", name);
 	for (attr = list->first; attr != NULL; attr = attr->next)
-		fprintf(stderr, "    attr:\"%s\"=\"%s\"\n",
+		fprintf(thread_stderr, "    attr:\"%s\"=\"%s\"\n",
 		    attr->name, attr->value);
 #endif
 	xar->base64text = 0;
@@ -2110,7 +2112,7 @@ xml_end(void *userData, const char *name)
 	xar = (struct xar *)(a->format->data);
 
 #if DEBUG
-	fprintf(stderr, "xml_end:[%s]\n", name);
+	fprintf(thread_stderr, "xml_end:[%s]\n", name);
 #endif
 	switch (xar->xmlsts) {
 	case INIT:
@@ -2533,7 +2535,7 @@ xml_data(void *userData, const char *s, int len)
 			len = sizeof(buff)-1;
 		memcpy(buff, s, len);
 		buff[len] = 0;
-		fprintf(stderr, "\tlen=%d:\"%s\"\n", len, buff);
+		fprintf(thread_stderr, "\tlen=%d:\"%s\"\n", len, buff);
 	}
 #endif
 	switch (xar->xmlsts) {

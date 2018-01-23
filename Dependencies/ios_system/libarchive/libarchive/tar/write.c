@@ -187,7 +187,7 @@ tar_mode_c(struct bsdtar *bsdtar)
 		r = archive_write_set_format_by_name(a, bsdtar->create_format);
 	}
 	if (r != ARCHIVE_OK) {
-		fprintf(stderr, "Can't use format %s: %s\n",
+		fprintf(thread_stderr, "Can't use format %s: %s\n",
 		    bsdtar->create_format,
 		    archive_error_string(a));
 		usage();
@@ -512,7 +512,7 @@ cleanup:
 	bsdtar->diskreader = NULL;
 
 	if (bsdtar->option_totals) {
-		fprintf(stderr, "Total bytes written: %s\n",
+		fprintf(thread_stderr, "Total bytes written: %s\n",
 		    tar_i64toa(archive_position_compressed(a)));
 	}
 
@@ -608,7 +608,7 @@ append_archive(struct bsdtar *bsdtar, struct archive *a, struct archive *ina)
 		    !yes("copy '%s'", archive_entry_pathname(in_entry)))
 			continue;
 		if (bsdtar->verbose)
-			safe_fprintf(stderr, "a %s",
+			safe_fprintf(thread_stderr, "a %s",
 			    archive_entry_pathname(in_entry));
 		if (need_report())
 			report_write(bsdtar, a, in_entry, 0);
@@ -620,7 +620,7 @@ append_archive(struct bsdtar *bsdtar, struct archive *a, struct archive *ina)
 				    archive_entry_pathname(in_entry),
 				    archive_error_string(a));
 			else
-				fprintf(stderr, ": %s", archive_error_string(a));
+				fprintf(thread_stderr, ": %s", archive_error_string(a));
 		}
 		if (e == ARCHIVE_FATAL)
 			exit(1);
@@ -633,7 +633,7 @@ append_archive(struct bsdtar *bsdtar, struct archive *a, struct archive *ina)
 		}
 
 		if (bsdtar->verbose)
-			fprintf(stderr, "\n");
+			fprintf(thread_stderr, "\n");
 	}
 
 	/* Note: If we got here, we saw no write errors, so return success. */
@@ -933,7 +933,7 @@ write_hierarchy(struct bsdtar *bsdtar, struct archive *a, const char *path)
 		/* Display entry as we process it.
 		 * This format is required by SUSv2. */
 		if (bsdtar->verbose)
-			safe_fprintf(stderr, "a %s",
+			safe_fprintf(thread_stderr, "a %s",
 			    archive_entry_pathname(entry));
 
 		/* Non-regular files get archived with zero size. */
@@ -950,7 +950,7 @@ write_hierarchy(struct bsdtar *bsdtar, struct archive *a, const char *path)
 		}
 
 		if (bsdtar->verbose)
-			fprintf(stderr, "\n");
+			fprintf(thread_stderr, "\n");
 	}
 	archive_entry_free(entry);
 	tree_close(tree);
@@ -974,7 +974,7 @@ write_entry_backend(struct bsdtar *bsdtar, struct archive *a,
 				lafe_warnc(errno,
 				    "%s: could not open file", pathname);
 			else
-				fprintf(stderr, ": %s", strerror(errno));
+				fprintf(thread_stderr, ": %s", strerror(errno));
 			return;
 		}
 	}
@@ -986,7 +986,7 @@ write_entry_backend(struct bsdtar *bsdtar, struct archive *a,
 			    archive_entry_pathname(entry),
 			    archive_error_string(a));
 		else
-			fprintf(stderr, ": %s", archive_error_string(a));
+			fprintf(thread_stderr, ": %s", archive_error_string(a));
 	}
 
 	if (e == ARCHIVE_FATAL)
@@ -1017,19 +1017,19 @@ report_write(struct bsdtar *bsdtar, struct archive *a,
 {
 	uint64_t comp, uncomp;
 	if (bsdtar->verbose)
-		fprintf(stderr, "\n");
+		fprintf(thread_stderr, "\n");
 	comp = archive_position_compressed(a);
 	uncomp = archive_position_uncompressed(a);
-	fprintf(stderr, "In: %d files, %s bytes;",
+	fprintf(thread_stderr, "In: %d files, %s bytes;",
 	    archive_file_count(a), tar_i64toa(uncomp));
-	fprintf(stderr,
+	fprintf(thread_stderr,
 	    " Out: %s bytes, compression %d%%\n",
 	    tar_i64toa(comp), (int)((uncomp - comp) * 100 / uncomp));
 	/* Can't have two calls to tar_i64toa() pending, so split the output. */
-	safe_fprintf(stderr, "Current: %s (%s",
+	safe_fprintf(thread_stderr, "Current: %s (%s",
 	    archive_entry_pathname(entry),
 	    tar_i64toa(progress));
-	fprintf(stderr, "/%s bytes)\n",
+	fprintf(thread_stderr, "/%s bytes)\n",
 	    tar_i64toa(archive_entry_size(entry)));
 }
 

@@ -61,6 +61,7 @@ __FBSDID("$FreeBSD: src/usr.bin/tar/util.c,v 1.23 2008/12/15 06:00:25 kientzle E
 
 #include "bsdtar.h"
 #include "lafe_err.h"
+#include "ios_error.h"
 
 static size_t	bsdtar_expand_char(char *, size_t, char);
 static const char *strip_components(const char *path, int elements);
@@ -220,10 +221,10 @@ yes(const char *fmt, ...)
 
 	va_list ap;
 	va_start(ap, fmt);
-	vfprintf(stderr, fmt, ap);
+	vfprintf(thread_stderr, fmt, ap);
 	va_end(ap);
-	fprintf(stderr, " (y/N)? ");
-	fflush(stderr);
+	fprintf(thread_stderr, " (y/N)? ");
+	fflush(thread_stderr);
 
 	l = read(2, buff, sizeof(buff) - 1);
 	if (l <= 0)

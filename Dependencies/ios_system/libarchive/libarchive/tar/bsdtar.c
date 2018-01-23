@@ -649,18 +649,18 @@ usage(void)
 
 	p = lafe_progname;
 
-	fprintf(stderr, "Usage:\n");
-	fprintf(stderr, "  List:    %s -tf <archive-filename>\n", p);
-	fprintf(stderr, "  Extract: %s -xf <archive-filename>\n", p);
-	fprintf(stderr, "  Create:  %s -cf <archive-filename> [filenames...]\n", p);
-	fprintf(stderr, "  Help:    %s --help\n", p);
+	fprintf(thread_stderr, "Usage:\n");
+	fprintf(thread_stderr, "  List:    %s -tf <archive-filename>\n", p);
+	fprintf(thread_stderr, "  Extract: %s -xf <archive-filename>\n", p);
+	fprintf(thread_stderr, "  Create:  %s -cf <archive-filename> [filenames...]\n", p);
+	fprintf(thread_stderr, "  Help:    %s --help\n", p);
 	exit(1);
 }
 
 static void
 version(void)
 {
-	printf("bsdtar %s - %s\n",
+	fprintf(thread_stdout, "bsdtar %s - %s\n",
 	    BSDTAR_VERSION_STRING,
 	    archive_version());
 	exit(0);
@@ -709,15 +709,15 @@ long_help(void)
 
 	prog = lafe_progname;
 
-	fflush(stderr);
+	fflush(thread_stderr);
 
 	p = (strcmp(prog,"bsdtar") != 0) ? "(bsdtar)" : "";
-	printf("%s%s: manipulate archive files\n", prog, p);
+	fprintf(thread_stdout, "%s%s: manipulate archive files\n", prog, p);
 
 	for (p = long_help_msg; *p != '\0'; p++) {
 		if (*p == '%') {
 			if (p[1] == 'p') {
-				fputs(prog, stdout);
+				fputs(prog, thread_stdout);
 				p++;
 			} else
 				putchar('%');

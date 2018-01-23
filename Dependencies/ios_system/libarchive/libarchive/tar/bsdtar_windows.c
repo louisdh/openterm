@@ -290,7 +290,7 @@ __tar_dosmaperr(unsigned long e)
 		}
 	}
 
-	/* fprintf(stderr, "unrecognized win32 error code: %lu", e); */
+	/* fprintf(thread_stderr, "unrecognized win32 error code: %lu", e); */
 	errno = EINVAL;
 	return;
 }

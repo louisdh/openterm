@@ -33,6 +33,7 @@ __FBSDID("$FreeBSD: src/usr.bin/tar/subst.c,v 1.4 2008/06/15 10:08:16 kientzle E
 #include <regex.h>
 #include <stdlib.h>
 #include <string.h>
+#include "ios_error.h"
 
 #ifndef REG_BASIC
 #define	REG_BASIC 0
@@ -265,7 +266,7 @@ apply_substitution(struct bsdtar *bsdtar, const char *name, char **result, int s
 		realloc_strcat(result, name);
 
 	if (print_match)
-		fprintf(stderr, "%s >> %s\n", path, *result);
+		fprintf(thread_stderr, "%s >> %s\n", path, *result);
 
 	return got_match;
 }

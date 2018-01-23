@@ -46,6 +46,7 @@ __FBSDID("$FreeBSD: head/lib/libarchive/archive_check_magic.c 201089 2009-12-28 
 #endif
 
 #include "archive_private.h"
+#include "ios_error.h"
 
 static void
 errmsg(const char *m)
@@ -54,7 +55,7 @@ errmsg(const char *m)
 	ssize_t written;
 
 	while (s > 0) {
-		written = write(2, m, strlen(m));
+        written = fwrite(m, 1, strlen(m), thread_stderr); //write(2, m, strlen(m));
 		if (written <= 0)
 			return;
 		m += written;

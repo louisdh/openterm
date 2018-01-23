@@ -37,6 +37,7 @@ __FBSDID("$FreeBSD: head/lib/libarchive/archive_read_support_format_zip.c 201102
 #ifdef HAVE_ZLIB_H
 #include <zlib.h>
 #endif
+#include "ios_error.h"
 
 #include "archive.h"
 #include "archive_entry.h"
@@ -845,7 +846,7 @@ process_extra(struct archive_read *a, const void* extra, struct zip* zip)
 			return ARCHIVE_FAILED;
 		}
 #ifdef DEBUG
-		fprintf(stderr, "Header id 0x%04x, length %d\n",
+		fprintf(thread_stderr, "Header id 0x%04x, length %d\n",
 		    headerid, datasize);
 #endif
 		switch (headerid) {
@@ -866,7 +867,7 @@ process_extra(struct archive_read *a, const void* extra, struct zip* zip)
 			if (flags & 0x01)
 			{
 #ifdef DEBUG
-				fprintf(stderr, "mtime: %lld -> %d\n",
+				fprintf(thread_stderr, "mtime: %lld -> %d\n",
 				    (long long)zip->mtime,
 				    archive_le32dec(p + offset));
 #endif
@@ -897,7 +898,7 @@ process_extra(struct archive_read *a, const void* extra, struct zip* zip)
 		case 0x7855:
 			/* Info-ZIP Unix Extra Field (type 2) "Ux". */
 #ifdef DEBUG
-			fprintf(stderr, "uid %d gid %d\n",
+			fprintf(thread_stderr, "uid %d gid %d\n",
 			    archive_le16dec(p + offset),
 			    archive_le16dec(p + offset + 2));
 #endif
