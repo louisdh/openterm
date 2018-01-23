@@ -132,7 +132,7 @@ uname_main(argc, argv)
 
 	if (uname(&u) != 0) {
 		// err(EXIT_FAILURE, "uname");
-        fprintf(stderr, "uname: %s\n", strerror(errno));
+        fprintf(thread_stderr, "uname: %s\n", strerror(errno));
         pthread_exit(NULL);
 		/* NOTREACHED */
 	}
@@ -165,37 +165,37 @@ uname_main(argc, argv)
 
 	if (print_mask & PRINT_SYSNAME) {
 		space++;
-		fputs(u.sysname, stdout);
+		fputs(u.sysname, thread_stdout);
 	}
 	if (print_mask & PRINT_NODENAME) {
 		if (space++) putchar(' ');
-		fputs(u.nodename, stdout);
+		fputs(u.nodename, thread_stdout);
 	}
 	if (print_mask & PRINT_RELEASE) {
 		if (space++) putchar(' ');
-		fputs(u.release, stdout);
+		fputs(u.release, thread_stdout);
 	}
 	if (print_mask & PRINT_VERSION) {
 		if (space++) putchar(' ');
-		fputs(u.version, stdout);
+		fputs(u.version, thread_stdout);
 	}
 	if (print_mask & PRINT_MACHINE) {
 		if (space++) putchar(' ');
-		fputs(u.machine, stdout);
+		fputs(u.machine, thread_stdout);
 	}
 	if (print_mask & PRINT_MACHINE_ARCH) {
 		if (space++) putchar(' ');
 #ifndef __APPLE__
-		fputs(machine_arch, stdout);
+		fputs(machine_arch, thread_stdout);
 #else
 #if defined(__ppc__) || defined(__ppc64__)
-		fputs("powerpc", stdout);
+		fputs("powerpc", thread_stdout);
 #elif defined(__i386__) || defined(__x86_64__)
-		fputs("i386", stdout);
+		fputs("i386", thread_stdout);
 #elif defined(__arm__) || defined(__arm64__)
-		fputs("arm", stdout);
+		fputs("arm", thread_stdout);
 #else
-		fputs("unknown", stdout);
+		fputs("unknown", thread_stdout);
 #endif
 #endif /* __APPLE__ */
 	}
@@ -208,6 +208,6 @@ uname_main(argc, argv)
 static void
 usage()
 {
-	fprintf(stderr, "usage: uname [-amnprsv]\n");
+	fprintf(thread_stderr, "usage: uname [-amnprsv]\n");
 	exit(EXIT_FAILURE);
 }

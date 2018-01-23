@@ -68,7 +68,7 @@ strregerror(int errcode, regex_t *preg)
 		free(oe);
 	s = regerror(errcode, preg, NULL, 0);
 	if ((oe = malloc(s)) == NULL)
-        fprintf(stderr, "sed: malloc: %s\n", strerror(errno)); // err(1, "malloc");
+        fprintf(thread_stderr, "sed: malloc: %s\n", strerror(errno)); // err(1, "malloc");
 	(void)regerror(errcode, preg, oe, s);
 	return (oe);
 }

@@ -83,7 +83,7 @@ rmdir_main(int argc, char *argv[])
 
 	for (errors = 0; *argv; argv++) {
 		if (rmdir(*argv) < 0) {
-            fprintf(stderr, "rmdir: %s: %s\n", *argv, strerror(errno));
+            fprintf(thread_stderr, "rmdir: %s: %s\n", *argv, strerror(errno));
             // warn("%s", *argv);
 			errors = 1;
 		} else if (pflag)
@@ -109,7 +109,7 @@ rm_path(char *path)
 		*++p = '\0';
 
 		if (rmdir(path) < 0) {
-            fprintf(stderr, "rmdir: %s: %s\n", path, strerror(errno));
+            fprintf(thread_stderr, "rmdir: %s: %s\n", path, strerror(errno));
             // warn("%s", path);
 			return (1);
 		}
@@ -122,6 +122,6 @@ void
 usage(void)
 {
 
-	(void)fprintf(stderr, "usage: rmdir [-p] directory ...\n");
+	(void)fprintf(thread_stderr, "usage: rmdir [-p] directory ...\n");
 	exit(1);
 }

@@ -63,7 +63,7 @@ static void
 errexit(const char *prog, const char *reason)
 {
 	char *errstr = strerror(errno);
-    fprintf(stderr, "%s: %s: %s\n", prog, reason, errstr);
+    fprintf(thread_stderr, "%s: %s: %s\n", prog, reason, errstr);
 //    write(STDERR_FILENO, prog, strlen(prog));
 //    write(STDERR_FILENO, ": ", 2);
 //    write(STDERR_FILENO, reason, strlen(reason));
@@ -137,7 +137,7 @@ echo_main(int argc, char *argv[])
         //         errexit(progname, "write");
         struct iovec *cp = iov;
         for (int i = 0; i < nwrite; i++) {
-            if (fprintf(stdout, "%s", (char*)(cp->iov_base)) == -1)
+            if (fprintf(thread_stdout, "%s", (char*)(cp->iov_base)) == -1)
                 errexit(progname, "write");
             cp++;
         }

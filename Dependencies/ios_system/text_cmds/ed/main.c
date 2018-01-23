@@ -69,8 +69,6 @@ static const char copyright[] =
 // from ios_system:
 #include "ios_error.h"
 #include <pthread.h>
-extern int ios_system(char* cmd);
-
 
 #ifdef _POSIX_SOURCE
 sigjmp_buf env;
@@ -79,36 +77,36 @@ jmp_buf env;
 #endif
 
 /* static buffers */
-char stdinbuf[1];		/* stdin buffer */
-char *shcmd;			/* shell command buffer */
-int shcmdsz;			/* shell command buffer size */
-int shcmdi;			/* shell command buffer index */
-char *ibuf;			/* ed command-line buffer */
-int ibufsz;			/* ed command-line buffer size */
-char *ibufp;			/* pointer to ed command-line buffer */
+__thread char stdinbuf[1];		/* stdin buffer */
+static char *shcmd;			/* shell command buffer */
+static int shcmdsz;			/* shell command buffer size */
+static int shcmdi;			/* shell command buffer index */
+__thread char *ibuf;			/* ed command-line buffer */
+__thread int ibufsz;			/* ed command-line buffer size */
+__thread char *ibufp;			/* pointer to ed command-line buffer */
 
 /* global flags */
-int des = 0;			/* if set, use crypt(3) for i/o */
-int garrulous = 0;		/* if set, print all error messages */
-int isbinary;			/* if set, buffer contains ASCII NULs */
-int isglobal;			/* if set, doing a global command */
-int modified;			/* if set, buffer modified since last write */
-int mutex = 0;			/* if set, signals set "sigflags" */
-int red = 0;			/* if set, restrict shell/directory access */
-int scripted = 0;		/* if set, suppress diagnostics */
-int sigflags = 0;		/* if set, signals received while mutex set */
-int sigactive = 0;		/* if set, signal handlers are enabled */
-int posixly_correct = 0;	/* if set, POSIX behavior as per */
+__thread int des = 0;			/* if set, use crypt(3) for i/o */
+static int garrulous = 0;		/* if set, print all error messages */
+__thread int isbinary;			/* if set, buffer contains ASCII NULs */
+__thread int isglobal;			/* if set, doing a global command */
+__thread int modified;			/* if set, buffer modified since last write */
+__thread int mutex = 0;			/* if set, signals set "sigflags" */
+static int red = 0;			/* if set, restrict shell/directory access */
+__thread int scripted = 0;		/* if set, suppress diagnostics */
+__thread int sigflags = 0;		/* if set, signals received while mutex set */
+static int sigactive = 0;		/* if set, signal handlers are enabled */
+__thread int posixly_correct = 0;	/* if set, POSIX behavior as per */
 /* http://www.opengroup.org/onlinepubs/009695399/utilities/ed.html */
 
-char old_filename[PATH_MAX + 1] = "";	/* default filename */
-long current_addr;		/* current address in editor buffer */
-long addr_last;			/* last address in editor buffer */
-int ed_lineno;			/* script line number */
-const char *prompt;		/* command-line prompt */
-const char *dps = "*";		/* default command-line prompt */
+static char old_filename[PATH_MAX + 1] = "";	/* default filename */
+__thread long current_addr;		/* current address in editor buffer */
+__thread long addr_last;			/* last address in editor buffer */
+__thread int ed_lineno;			/* script line number */
+static const char *prompt;		/* command-line prompt */
+static const char *dps = "*";		/* default command-line prompt */
 
-const char ed_usage[] = "usage: %s [-] [-sx] [-p string] [file]\n";
+static const char ed_usage[] = "usage: %s [-] [-sx] [-p string] [file]\n";
 
 /* ed: line editor */
 int
@@ -168,12 +166,12 @@ top:
 #ifdef DES
 			des = get_keyword();
 #else
-			fprintf(stderr, "crypt unavailable\n?\n");
+			fprintf(thread_stderr, "crypt unavailable\n?\n");
 #endif
 			break;
 
 		default:
-			fprintf(stderr, ed_usage, red ? "red" : "ed");
+			fprintf(thread_stderr, ed_usage, red ? "red" : "ed");
             pthread_exit(NULL);
 			// exit(1);
 		}
@@ -191,7 +189,9 @@ top:
 	/* assert: reliable signals! */
 #ifdef SIGWINCH
 	handle_winch(SIGWINCH);
-	if (isatty(0)) signal(SIGWINCH, handle_winch);
+//	if (isatty(0)) signal(SIGWINCH, handle_winch);
+//  also replaced 6x !isatty(0) below
+    if (fileno(thread_stdin) == fileno(stdin)) signal(SIGWINCH, handle_winch);
 #endif
 	signal(SIGHUP, signal_hup);
 	signal(SIGQUIT, SIG_IGN);
@@ -202,51 +202,51 @@ top:
 	if ((status = setjmp(env)))
 #endif
 	{
-		fputs("\n?\n", stderr);
+		fputs("\n?\n", thread_stderr);
 		errmsg = "interrupt";
 	} else {
 		init_buffers();
 		sigactive = 1;			/* enable signal handlers */
 		if (argc>0 && *argv && is_legal_filename(*argv)) {
-			if (read_file(*argv, 0) < 0 && !isatty(0))
+			if (read_file(*argv, 0) < 0 && !(fileno(thread_stdin) == fileno(stdin)))
 				quit(2);
 			else if (**argv != '!') {
 				if (strlen(*argv) < sizeof(old_filename)) {
 					strcpy(old_filename, *argv);
 				} else {
-					fprintf(stderr, "%s: filename too long\n", *argv);
+					fprintf(thread_stderr, "%s: filename too long\n", *argv);
 					quit(2);
 				}
 			}
 		} else if (argc>0) {
-			fputs("?\n", stdout);
+			fputs("?\n", thread_stdout);
 			if (**argv == '\0')
 				errmsg = "invalid filename";
-			if (!isatty(0))
+			if (!(fileno(thread_stdin) == fileno(stdin)))
 				quit(2);
 		}
 	}
 	for (;;) {
 		if (status < 0 && garrulous)
-			fprintf(stderr, "%s\n", errmsg);
+			fprintf(thread_stderr, "%s\n", errmsg);
 		if (prompt) {
-			printf("%s", prompt);
-			fflush(stdout);
+			fprintf(thread_stdout, "%s", prompt);
+			fflush(thread_stdout);
 		}
 		if ((n = get_tty_line()) < 0) {
 			status = ERR;
 			continue;
 		} else if (n == 0) {
 			if (modified && !scripted) {
-				fputs("?\n", stderr);
+				fputs("?\n", thread_stderr);
 				errmsg = "warning: file modified";
-				if (!isatty(0)) {
-					fprintf(stderr, garrulous ?
+				if (!(fileno(thread_stdin) == fileno(stdin))) {
+					fprintf(thread_stderr, garrulous ?
 					    "script, line %d: %s\n" :
 					    "", ed_lineno, errmsg);
 					quit(2);
 				}
-				clearerr(stdin);
+				clearerr(thread_stdin);
 				modified = 0;
 				status = EMOD;
 				continue;
@@ -255,7 +255,7 @@ top:
 		} else if (ibuf[n - 1] != '\n') {
 			/* discard line */
 			errmsg = "unexpected end-of-file";
-			clearerr(stdin);
+			clearerr(thread_stdin);
 			status = ERR;
 			continue;
 		}
@@ -271,28 +271,28 @@ top:
 			quit(0);
 		case EMOD:
 			modified = 0;
-			fputs("?\n", stderr);		/* give warning */
+			fputs("?\n", thread_stderr);		/* give warning */
 			errmsg = "warning: file modified";
-			if (!isatty(0)) {
-				fprintf(stderr, garrulous ?
+			if (!(fileno(thread_stdin) == fileno(stdin))) {
+				fprintf(thread_stderr, garrulous ?
 				    "script, line %d: %s\n" :
 				    "", ed_lineno, errmsg);
 				quit(2);
 			}
 			break;
 		case FATAL:
-			if (!isatty(0))
-				fprintf(stderr, garrulous ?
+			if (!(fileno(thread_stdin) == fileno(stdin)))
+				fprintf(thread_stderr, garrulous ?
 				    "script, line %d: %s\n" : "",
 				    ed_lineno, errmsg);
 			else
-				fprintf(stderr, garrulous ? "%s\n" : "",
+				fprintf(thread_stderr, garrulous ? "%s\n" : "",
 				    errmsg);
 			quit(3);
 		default:
-			fputs("?\n", stdout);
-			if (!isatty(0)) {
-				fprintf(stderr, garrulous ?
+			fputs("?\n", thread_stdout);
+			if (!(fileno(thread_stdin) == fileno(stdin))) {
+				fprintf(thread_stderr, garrulous ?
 				    "script, line %d: %s\n" : "",
 				    ed_lineno, errmsg);
 				quit(2);
@@ -303,7 +303,7 @@ top:
 	/*NOTREACHED*/
 }
 
-long first_addr, second_addr, addr_cnt;
+__thread long first_addr, second_addr, addr_cnt;
 
 /* extract_addr_range: get line addresses from the command buffer until an
    illegal address is seen; return status */
@@ -473,9 +473,9 @@ next_addr(void)
 #define SGR 004		/* use last regex instead of last pat */
 #define SGF 010		/* repeat last substitution */
 
-int patlock = 0;	/* if set, pattern not freed by get_compiled_pattern() */
+__thread int patlock = 0;	/* if set, pattern not freed by get_compiled_pattern() */
 
-long rows = 22;		/* scroll length: ws_row - 2 */
+__thread long rows = 22;		/* scroll length: ws_row - 2 */
 
 /* exec_command: execute the next command in command buffer; return print
    request, if any */
@@ -552,7 +552,7 @@ exec_command(void)
 			if (strlen(fnp) < sizeof(old_filename)) {
 				strcpy(old_filename, fnp);
 			} else {
-				fprintf(stderr, "%s: filename too long\n", fnp);
+				fprintf(thread_stderr, "%s: filename too long\n", fnp);
 				quit(2);
 			}
 		}
@@ -585,11 +585,11 @@ exec_command(void)
 			if (strlen(fnp) < sizeof(old_filename)) {
 				strcpy(old_filename, fnp);
 			} else {
-				fprintf(stderr, "%s: filename too long\n", fnp);
+				fprintf(thread_stderr, "%s: filename too long\n", fnp);
 				quit(2);
 			}
 		}
-		printf("%s\n", strip_escapes(old_filename));
+		fprintf(thread_stdout, "%s\n", strip_escapes(old_filename));
 		break;
 	case 'g':
 	case 'v':
@@ -617,7 +617,7 @@ exec_command(void)
 			return ERR;
 		}
 		GET_COMMAND_SUFFIX();
-		if (*errmsg) fprintf(stderr, "%s\n", errmsg);
+		if (*errmsg) fprintf(thread_stderr, "%s\n", errmsg);
 		break;
 	case 'H':
 		if (addr_cnt > 0) {
@@ -626,7 +626,7 @@ exec_command(void)
 		}
 		GET_COMMAND_SUFFIX();
 		if ((garrulous = 1 - garrulous) && *errmsg)
-			fprintf(stderr, "%s\n", errmsg);
+			fprintf(thread_stderr, "%s\n", errmsg);
 		break;
 	case 'i':
 		if (second_addr == 0) {
@@ -726,7 +726,7 @@ exec_command(void)
 			if (strlen(fnp) < sizeof(old_filename)) {
 				strcpy(old_filename, fnp);
 			} else {
-				fprintf(stderr, "%s: filename too long\n", fnp);
+				fprintf(thread_stderr, "%s: filename too long\n", fnp);
 				quit(2);
 			}
 		}
@@ -868,7 +868,7 @@ exec_command(void)
 			if  (strlen(fnp) < sizeof(old_filename)) {
 				strcpy(old_filename, fnp);
 			} else {
-				fprintf(stderr, "%s: filename too long\n", fnp);
+				fprintf(thread_stderr, "%s: filename too long\n", fnp);
 				quit(2);
 			}
 		}
@@ -910,7 +910,7 @@ exec_command(void)
 		break;
 	case '=':
 		GET_COMMAND_SUFFIX();
-		printf("%ld\n", addr_cnt ? second_addr : addr_last);
+		fprintf(thread_stdout, "%ld\n", addr_cnt ? second_addr : addr_last);
 		break;
 	case '!':
 		if (addr_cnt > 0) {
@@ -919,10 +919,10 @@ exec_command(void)
 		} else if ((sflags = get_shell_command()) < 0)
 			return ERR;
 		GET_COMMAND_SUFFIX();
-		if (sflags) printf("%s\n", shcmd + 1);
-		fflush(stdout);
+		if (sflags) fprintf(thread_stdout, "%s\n", shcmd + 1);
+		fflush(thread_stdout);
 		ios_system(shcmd + 1);
-		if (!scripted) printf("!\n");
+		if (!scripted) fprintf(thread_stdout, "!\n");
 		break;
 	case '\n':
 		if (check_addr_range(first_addr = 1, current_addr + (posixly_correct ? !isglobal : 1)) < 0
@@ -1002,7 +1002,7 @@ get_filename(void)
 			if ((n = get_shell_command()) < 0)
 				return NULL;
 			if (n)
-				printf("%s\n", shcmd + 1);
+				fprintf(thread_stdout, "%s\n", shcmd + 1);
 			return shcmd;
 		} else if (n > PATH_MAX) {
 			errmsg = "filename too long";
@@ -1098,7 +1098,7 @@ append_lines(long n)
 			if ((l = get_tty_line()) < 0)
 				return ERR;
 			else if (l == 0 || ibuf[l - 1] != '\n') {
-				clearerr(stdin);
+				clearerr(thread_stdin);
 				return  l ? EOF : 0;
 			}
 			lp = ibuf;
@@ -1363,7 +1363,7 @@ dup_line_node(line_t *lp)
 	line_t *np;
 
 	if ((np = (line_t *) malloc(sizeof(line_t))) == NULL) {
-		fprintf(stderr, "%s\n", strerror(errno));
+		fprintf(thread_stderr, "%s\n", strerror(errno));
 		errmsg = "out of memory";
 		return NULL;
 	}
@@ -1458,7 +1458,7 @@ handle_int(int signo)
 }
 
 
-int cols = 72;				/* wrap column */
+__thread int cols = 72;				/* wrap column */
 
 void
 handle_winch(int signo)

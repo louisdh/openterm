@@ -54,7 +54,7 @@ __FBSDID("$FreeBSD$");
 
 extern char **environ;
 
-int	 env_verbosity;
+__thread int	 env_verbosity;
 
 static void usage(void);
 
@@ -87,18 +87,18 @@ env_main(int argc, char **argv)
 			break;
 		case 'u':
 			if (env_verbosity)
-				fprintf(stderr, "#env unset:\t%s\n", optarg);
+				fprintf(thread_stderr, "#env unset:\t%s\n", optarg);
 			rtrn = unsetenv(optarg);
             if (rtrn == -1) {
 				// err(EXIT_FAILURE, "unsetenv %s", optarg);
-                fprintf(stderr, "unsetenv %s: %s\n", optarg, strerror(errno));
+                fprintf(thread_stderr, "unsetenv %s: %s\n", optarg, strerror(errno));
                 pthread_exit(NULL);
             }
 			break;
 		case 'v':
 			env_verbosity++;
 			if (env_verbosity > 1)
-				fprintf(stderr, "#env verbosity now at %d\n",
+				fprintf(thread_stderr, "#env verbosity now at %d\n",
 				    env_verbosity);
 			break;
 		case '?':
@@ -109,17 +109,17 @@ env_main(int argc, char **argv)
 		environ = cleanenv;
 		cleanenv[0] = NULL;
 		if (env_verbosity)
-			fprintf(stderr, "#env clearing environ\n");
+			fprintf(thread_stderr, "#env clearing environ\n");
 	}
 	for (argv += optind; *argv && (p = strchr(*argv, '=')); ++argv) {
 		if (env_verbosity)
-			fprintf(stderr, "#env setenv:\t%s\n", *argv);
+			fprintf(thread_stderr, "#env setenv:\t%s\n", *argv);
 		*p = '\0';
 		rtrn = setenv(*argv, p + 1, 1);
 		*p = '=';
         if (rtrn == -1) {
 			// err(EXIT_FAILURE, "setenv %s", *argv);
-            fprintf(stderr, "setenv %s: %s\n", *argv, strerror(errno));
+            fprintf(thread_stderr, "setenv %s: %s\n", *argv, strerror(errno));
             pthread_exit(NULL);
         }
 	}
@@ -127,27 +127,27 @@ env_main(int argc, char **argv)
 		if (altpath)
 			search_paths(altpath, argv);
 		if (env_verbosity) {
-			fprintf(stderr, "#env executing:\t%s\n", *argv);
+			fprintf(thread_stderr, "#env executing:\t%s\n", *argv);
 			for (parg = argv, argc = 0; *parg; parg++, argc++)
-				fprintf(stderr, "#env    arg[%d]=\t'%s'\n",
+				fprintf(thread_stderr, "#env    arg[%d]=\t'%s'\n",
 				    argc, *parg);
 			if (env_verbosity > 1)
 				sleep(1);
 		}
         execvp(*argv, argv);
-        fprintf(stderr, "env: %s: %s\n", *argv, strerror(errno));
+        fprintf(thread_stderr, "env: %s: %s\n", *argv, strerror(errno));
         pthread_exit(NULL);
 		// err(errno == ENOENT ? 127 : 126, "%s", *argv);
 	}
 	for (ep = environ; *ep; ep++)
-		(void)printf("%s\n", *ep);
+		(void)fprintf(thread_stdout, "%s\n", *ep);
 	exit(0);
 }
 
 static void
 usage(void)
 {
-	(void)fprintf(stderr,
+	(void)fprintf(thread_stderr,
 	    "usage: env [-iv] [-P utilpath] [-S string] [-u name]\n"
 	    "           [name=value ...] [utility [argument ...]]\n");
 	exit(1);

@@ -67,7 +67,7 @@ prn_normal(const char *s)
 	n = 0;
 	while ((clen = mbrtowc(&wc, s, MB_LEN_MAX, &mbs)) != 0) {
 		if (clen == (size_t)-2) {
-			n += printf("%s", s);
+			n += fprintf(thread_stdout, "%s", s);
 			break;
 		}
 		if (clen == (size_t)-1) {
@@ -221,7 +221,7 @@ prn_octal(const char *s)
 void
 ls_usage(void)
 {
-	(void)fprintf(stderr,
+	(void)fprintf(thread_stderr,
 #ifdef COLORLS
 	"usage: ls [-ABCFGHLOPRSTUWabcdefghiklmnopqrstuwx1]"
 #else

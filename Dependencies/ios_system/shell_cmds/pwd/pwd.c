@@ -93,21 +93,22 @@ pwd_main(int argc, char *argv[])
 	 */
 	if ((!physical && (p = getcwd_logical()) != NULL) ||
 	    ((physical || errno == ENOENT) && (p = getcwd(NULL, 0)) != NULL))
-		printf("%s\n", p);
+		fprintf(thread_stdout, "%s\n", p);
     else {
 		// err(1, ".");
-        fprintf(stderr, "pwd: .: %s\n", strerror(errno));
+        fprintf(thread_stderr, "pwd: .: %s\n", strerror(errno));
         pthread_exit(NULL);
     }
-
-	exit(0);
+    
+    return 0; // Don't exit the main thread
+	// exit(0);
 }
 
 static void
 usage(void)
 {
 
-	(void)fprintf(stderr, "usage: pwd [-L | -P]\n");
+	(void)fprintf(thread_stderr, "usage: pwd [-L | -P]\n");
   	exit(1);
 }
 

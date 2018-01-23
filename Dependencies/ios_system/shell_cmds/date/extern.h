@@ -30,6 +30,6 @@
  * $FreeBSD$
  */
 
-extern int retval;
+extern __thread int retval;
 
 int	netsettime(time_t);

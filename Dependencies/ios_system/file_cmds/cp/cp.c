@@ -91,13 +91,13 @@ static char emptystring[] = "";
 
 PATH_T to = { to.p_path, emptystring, "" };
 
-int cp_fflag, cp_iflag, cp_nflag, cp_pflag, cp_vflag;
+__thread int cp_fflag, cp_iflag, cp_nflag, cp_pflag, cp_vflag;
 #ifdef __APPLE__
-int Xflag;
+__thread int Xflag;
 #endif /* __APPLE__ */
 static int Rflag, rflag;
-	int cp_cflag = 0;
-volatile sig_atomic_t info;
+__thread int cp_cflag = 0;
+volatile __thread sig_atomic_t info;
 
 enum op { FILE_TO_FILE, FILE_TO_DIR, DIR_TO_DNE };
 
@@ -188,7 +188,7 @@ cp_main(int argc, char *argv[])
 
 	if (cp_cflag && Xflag) {
 		// errx(1, "the -c and -X options may not be specified together");
-        fprintf(stderr, "cp: the -c and -X options may not be specified together\n");
+        fprintf(thread_stderr, "cp: the -c and -X options may not be specified together\n");
         pthread_exit(NULL);
 	}
 
@@ -196,13 +196,13 @@ cp_main(int argc, char *argv[])
 	if (rflag) {
         if (Rflag) {
             // errx(1,
-			fprintf(stderr,
+			fprintf(thread_stderr,
 		    "cp: the -R and -r options may not be specified together.\n");
             pthread_exit(NULL);
         }
         if (Hflag || Lflag || Pflag) {
             // errx(1,
-            fprintf(stderr,
+            fprintf(thread_stderr,
 	"cp: the -H, -L, and -P options may not be specified with the -r option.\n");
             pthread_exit(NULL);
         }
@@ -226,7 +226,7 @@ cp_main(int argc, char *argv[])
 	target = argv[--argc];
     if (strlcpy(to.p_path, target, sizeof(to.p_path)) >= sizeof(to.p_path)) {
 		// errx(1, "%s: name too long", target);
-        fprintf(stderr, "cp: %s: name too long\n", target);
+        fprintf(thread_stderr, "cp: %s: name too long\n", target);
         pthread_exit(NULL);
     }
 	to.p_end = to.p_path + strlen(to.p_path);
@@ -259,7 +259,7 @@ cp_main(int argc, char *argv[])
 	r = stat(to.p_path, &to_stat);
     if (r == -1 && errno != ENOENT) {
 		// err(1, "%s", to.p_path);
-        fprintf(stderr, "cp: %s: %s\n", to.p_path, strerror(errno));
+        fprintf(thread_stderr, "cp: %s: %s\n", to.p_path, strerror(errno));
         pthread_exit(NULL);
     }
 	if (r == -1 || !S_ISDIR(to_stat.st_mode)) {
@@ -293,13 +293,13 @@ cp_main(int argc, char *argv[])
 		if (have_trailing_slash && type == FILE_TO_FILE) {
             if (r == -1) {
                 // errx(1, "directory %s does not exist",
-				fprintf(stderr, "cp: directory %s does not exist\n",
+				fprintf(thread_stderr, "cp: directory %s does not exist\n",
 				     to.p_path);
                 pthread_exit(NULL);
             }
             else {
 				// errx(1, "%s is not a directory", to.p_path);
-                fprintf(stderr, "cp: %s is not a directory\n", to.p_path);
+                fprintf(thread_stderr, "cp: %s is not a directory\n", to.p_path);
                 pthread_exit(NULL); 
             }
 		}
@@ -332,7 +332,7 @@ copy(char *argv[], enum op type, int fts_options)
 
     if ((ftsp = fts_open(argv, fts_options, NULL)) == NULL) {
 		// err(1, "fts_open");
-        fprintf(stderr, "cp: fts_open: %s\n", strerror(errno));
+        fprintf(thread_stderr, "cp: fts_open: %s\n", strerror(errno));
         pthread_exit(NULL);
     }
 	for (badcp = rval = 0; (curr = fts_read(ftsp)) != NULL; badcp = 0) {
@@ -341,13 +341,13 @@ copy(char *argv[], enum op type, int fts_options)
 		case FTS_DNR:
 		case FTS_ERR:
 			// warnx("%s: %s",
-            fprintf(stderr, "cp: %s: %s\n",
+            fprintf(thread_stderr, "cp: %s: %s\n",
 			    curr->fts_path, strerror(curr->fts_errno));
 			rval = 1;
 			continue;
 		case FTS_DC:			/* Warn, continue. */
 			// warnx("%s: directory causes a cycle", curr->fts_path);
-            fprintf(stderr, "cp: %s: directory causes a cycle\n", curr->fts_path);
+            fprintf(thread_stderr, "cp: %s: directory causes a cycle\n", curr->fts_path);
 			rval = 1;
 			continue;
 		default:
@@ -428,7 +428,7 @@ copy(char *argv[], enum op type, int fts_options)
 			*target_mid = 0;
 			if (target_mid - to.p_path + nlen >= PATH_MAX) {
 				// warnx("%s%s: name too long (not copied)",
-                fprintf(stderr, "cp: %s%s: name too long (not copied)\n",
+                fprintf(thread_stderr, "cp: %s%s: name too long (not copied)\n",
 				    to.p_path, p);
 				rval = 1;
 				continue;
@@ -463,7 +463,7 @@ copy(char *argv[], enum op type, int fts_options)
 				/* setfile will fail if writeattr is denied */
 				if (copyfile(curr->fts_path, to.p_path, NULL, COPYFILE_ACL)<0)
 					// warn("%s: unable to copy ACL to %s", curr->fts_path, to.p_path);
-                    fprintf(stderr, "cp: %s: unable to copy ACL to %s: %s\n", curr->fts_path, to.p_path, strerror(errno));
+                    fprintf(thread_stderr, "cp: %s: unable to copy ACL to %s: %s\n", curr->fts_path, to.p_path, strerror(errno));
 #else  /* !__APPLE__ */
 				if (preserve_dir_acls(curr->fts_statp,
 				    curr->fts_accpath, to.p_path) != 0)
@@ -475,7 +475,7 @@ copy(char *argv[], enum op type, int fts_options)
 				    ((mode | S_IRWXU) & mask) != (mode & mask))
 					if (chmod(to.p_path, mode & mask) != 0){
 						// warn("chmod: %s", to.p_path);
-                        fprintf(stderr, "cp: chmod: %s: %s\n", to.p_path, strerror(errno));
+                        fprintf(thread_stderr, "cp: chmod: %s: %s\n", to.p_path, strerror(errno));
 						rval = 1;
 					}
 			}
@@ -489,7 +489,7 @@ copy(char *argv[], enum op type, int fts_options)
 			if (to_stat.st_dev == curr->fts_statp->st_dev &&
 			    to_stat.st_ino == curr->fts_statp->st_ino) {
 				// warnx("%s and %s are identical (not copied).",
-                fprintf(stderr, "cp: %s and %s are identical (not copied).\n",
+                fprintf(thread_stderr, "cp: %s and %s are identical (not copied).\n",
 				    to.p_path, curr->fts_path);
 				rval = 1;
 				if (S_ISDIR(curr->fts_statp->st_mode))
@@ -499,7 +499,7 @@ copy(char *argv[], enum op type, int fts_options)
 			if (!S_ISDIR(curr->fts_statp->st_mode) &&
 			    S_ISDIR(to_stat.st_mode)) {
                 // warnx("cannot overwrite directory %s with "
-                fprintf(stderr, "cp: cannot overwrite directory %s with "
+                fprintf(thread_stderr, "cp: cannot overwrite directory %s with "
 				    "non-directory %s\n",
 				    to.p_path, curr->fts_path);
 				rval = 1;
@@ -524,7 +524,7 @@ copy(char *argv[], enum op type, int fts_options)
 		case S_IFDIR:
 			if (!Rflag && !rflag) {
                 // warnx("%s is a directory (not copied).",
-                fprintf(stderr, "cp: %s is a directory (not copied).\n",
+                fprintf(thread_stderr, "cp: %s is a directory (not copied).\n",
 				    curr->fts_path);
 				(void)fts_set(ftsp, curr, FTS_SKIP);
 				badcp = rval = 1;
@@ -542,11 +542,11 @@ copy(char *argv[], enum op type, int fts_options)
 				if (mkdir(to.p_path,
 					  curr->fts_statp->st_mode | S_IRWXU) < 0) {
 					if (COMPAT_MODE("bin/cp", "unix2003")) {
-                        fprintf(stderr, "cp: %s: %s\n", to.p_path, strerror(errno));
+                        fprintf(thread_stderr, "cp: %s: %s\n", to.p_path, strerror(errno));
                         // warn("%s", to.p_path);
 					} else {
 						// err(1, "%s", to.p_path);
-                        fprintf(stderr, "cp: %s: %s\n", to.p_path, strerror(errno));
+                        fprintf(thread_stderr, "cp: %s: %s\n", to.p_path, strerror(errno));
                         pthread_exit(NULL);
 					}
 				}
@@ -554,10 +554,10 @@ copy(char *argv[], enum op type, int fts_options)
 				errno = ENOTDIR;
 				if (COMPAT_MODE("bin/cp", "unix2003")) {
 					// warn("%s", to.p_path);
-                    fprintf(stderr, "cp: %s: %s\n", to.p_path, strerror(errno));
+                    fprintf(thread_stderr, "cp: %s: %s\n", to.p_path, strerror(errno));
 				} else {
 					// err(1, "%s", to.p_path);
-                    fprintf(stderr, "cp: %s: %s\n", to.p_path, strerror(errno));
+                    fprintf(thread_stderr, "cp: %s: %s\n", to.p_path, strerror(errno));
                     pthread_exit(NULL);
 				}
 			}
@@ -570,7 +570,7 @@ copy(char *argv[], enum op type, int fts_options)
 #ifdef __APPLE__
 			if (!Xflag) {
 				if (copyfile(curr->fts_path, to.p_path, NULL, COPYFILE_XATTR) < 0)
-                    fprintf(stderr, "cp: %s: unable to copy extended attributes to %s: %s\n", curr->fts_path, to.p_path, strerror(errno));
+                    fprintf(thread_stderr, "cp: %s: unable to copy extended attributes to %s: %s\n", curr->fts_path, to.p_path, strerror(errno));
                 // warn("%s: unable to copy extended attributes to %s", curr->fts_path, to.p_path);
 				/* ACL and mtime set in postorder traversal */
 			}
@@ -601,11 +601,11 @@ copy(char *argv[], enum op type, int fts_options)
 			break;
 		}
 		if (cp_vflag && !badcp)
-			(void)printf("%s -> %s\n", curr->fts_path, to.p_path);
+			(void)fprintf(thread_stdout, "%s -> %s\n", curr->fts_path, to.p_path);
 	}
     fts_close(ftsp);
     if (errno) {
-        fprintf(stderr, "cp: fts_read: %s\n", strerror(errno));
+        fprintf(thread_stderr, "cp: fts_read: %s\n", strerror(errno));
         pthread_exit(NULL);
 		// err(1, "fts_read");
     }

@@ -91,7 +91,7 @@ makevfslist(fslist)
 		if (*cnextcp == ',')
 			i++;
 	if ((av = malloc((size_t)(i + 2) * sizeof(char *))) == NULL) {
-        fprintf(stderr, "df: malloc failed: %s\n", strerror(errno));
+        fprintf(thread_stderr, "df: malloc failed: %s\n", strerror(errno));
         // warnx("malloc failed");
 		return (NULL);
 	}

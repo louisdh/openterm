@@ -258,25 +258,25 @@ long write_file(char *, const char *, long, long);
 long write_stream(FILE *, long, long);
 
 /* global buffers */
-extern char stdinbuf[];
-extern char *ibuf;
-extern char *ibufp;
-extern int ibufsz;
+extern __thread char stdinbuf[];
+extern __thread char *ibuf;
+extern __thread char *ibufp;
+extern __thread int ibufsz;
 
 /* global flags */
-extern int isbinary;
-extern int isglobal;
-extern int modified;
-extern int mutex;
-extern int sigflags;
+extern __thread int isbinary;
+extern __thread int isglobal;
+extern __thread int modified;
+extern __thread int mutex;
+extern __thread int sigflags;
 
 /* global vars */
-extern long addr_last;
-extern long current_addr;
-extern const char *errmsg;
-extern long first_addr;
-extern int ed_lineno;
-extern long second_addr;
-extern long u_addr_last;
-extern long u_current_addr;
-extern int posixly_correct;
+extern __thread long addr_last;
+extern __thread long current_addr;
+extern __thread const char *errmsg;
+extern __thread long first_addr;
+extern __thread int ed_lineno;
+extern __thread long second_addr;
+extern __thread long u_addr_last;
+extern __thread long u_current_addr;
+extern __thread int posixly_correct;

@@ -130,7 +130,7 @@ static struct s_format cmd_fmts[] = {
 };
 
 /* The compiled program. */
-struct s_command *prog;
+__thread struct s_command *prog;
 
 /*
  * Compile the program into prog.
@@ -146,9 +146,9 @@ compile(void)
 		appends = NULL;
 	else if ((appends = malloc(sizeof(struct s_appends) * appendnum)) ==
 	    NULL)
-    { fprintf(stderr, "sed: malloc: %s\n", strerror(errno)); pthread_exit(NULL); } // err(1, "malloc");
+    { fprintf(thread_stderr, "sed: malloc: %s\n", strerror(errno)); pthread_exit(NULL); } // err(1, "malloc");
 	if ((match = malloc((maxnsub + 1) * sizeof(regmatch_t))) == NULL)
-    { fprintf(stderr, "sed: malloc: %s\n", strerror(errno)); pthread_exit(NULL); } // err(1, "malloc");
+    { fprintf(thread_stderr, "sed: malloc: %s\n", strerror(errno)); pthread_exit(NULL); } // err(1, "malloc");
 }
 
 #define EATSPACE() do {							\
@@ -170,7 +170,7 @@ compile_stream(struct s_command **link)
 	for (;;) {
 		if ((p = cu_fgets(lbuf, sizeof(lbuf), NULL)) == NULL) {
 			if (stack != 0)
-            { fprintf(stderr, "sed: %lu: %s: unexpected EOF (pending }'s)\n",
+            { fprintf(thread_stderr, "sed: %lu: %s: unexpected EOF (pending }'s)\n",
 				// errx(1, "%lu: %s: unexpected EOF (pending }'s)",
 							linenum, fname);
                 pthread_exit(NULL);
@@ -188,7 +188,7 @@ semicolon:	EATSPACE();
 			}
 		}
 		if ((*link = cmd = malloc(sizeof(struct s_command))) == NULL)
-        { fprintf(stderr, "sed: malloc: %s\n", strerror(errno)); pthread_exit(NULL); } // err(1, "malloc");
+        { fprintf(thread_stderr, "sed: malloc: %s\n", strerror(errno)); pthread_exit(NULL); } // err(1, "malloc");
 		link = &cmd->next;
 		cmd->nonsel = cmd->inrange = 0;
 		/* First parse the addresses */
@@ -199,7 +199,7 @@ semicolon:	EATSPACE();
 		if (addrchar(*p)) {
 			naddr++;
 			if ((cmd->a1 = malloc(sizeof(struct s_addr))) == NULL)
-            { fprintf(stderr, "sed: malloc: %s\n", strerror(errno)); pthread_exit(NULL); } // err(1, "malloc");
+            { fprintf(thread_stderr, "sed: malloc: %s\n", strerror(errno)); pthread_exit(NULL); } // err(1, "malloc");
 			p = compile_addr(p, cmd->a1);
 			EATSPACE();				/* EXTENSION */
 			if (*p == ',') {
@@ -208,7 +208,7 @@ semicolon:	EATSPACE();
 				naddr++;
 				if ((cmd->a2 = malloc(sizeof(struct s_addr)))
 				    == NULL)
-                { fprintf(stderr, "sed: malloc: %s\n", strerror(errno)); pthread_exit(NULL); } // err(1, "malloc");
+                { fprintf(thread_stderr, "sed: malloc: %s\n", strerror(errno)); pthread_exit(NULL); } // err(1, "malloc");
 				p = compile_addr(p, cmd->a2);
 				EATSPACE();
 			} else
@@ -218,17 +218,17 @@ semicolon:	EATSPACE();
 
 nonsel:		/* Now parse the command */
 		if (!*p)
-        { fprintf(stderr, "sed: %lu: %s: command expected\n", linenum, fname); pthread_exit(NULL); }
+        { fprintf(thread_stderr, "sed: %lu: %s: command expected\n", linenum, fname); pthread_exit(NULL); }
             // errx(1, "%lu: %s: command expected", linenum, fname);
 		cmd->code = *p;
 		for (fp = cmd_fmts; fp->code; fp++)
 			if (fp->code == *p)
 				break;
 		if (!fp->code)
-        { fprintf(stderr, "sed: %lu: %s: invalid command code %c\n", linenum, fname, *p); pthread_exit(NULL); }
+        { fprintf(thread_stderr, "sed: %lu: %s: invalid command code %c\n", linenum, fname, *p); pthread_exit(NULL); }
 			// errx(1, "%lu: %s: invalid command code %c", linenum, fname, *p);
 		if (naddr > fp->naddr)
-        { fprintf(stderr,
+        { fprintf(thread_stderr,
                   "sed: %lu: %s: command %c expects up to %d address(es), found %d\n",
                  linenum, fname, *p, fp->naddr, naddr);
             pthread_exit(NULL);
@@ -258,7 +258,7 @@ nonsel:		/* Now parse the command */
 			 */
 			cmd->nonsel = 1;
 			if (stack == 0)
-            { fprintf(stderr, "sed: %lu: %s: unexpected }\n", linenum, fname); pthread_exit(NULL); }
+            { fprintf(thread_stderr, "sed: %lu: %s: unexpected }\n", linenum, fname); pthread_exit(NULL); }
                 // errx(1, "%lu: %s: unexpected }", linenum, fname);
 			cmd2 = stack;
 			stack = cmd2->next;
@@ -273,7 +273,7 @@ nonsel:		/* Now parse the command */
 				goto semicolon;
 			}
 			if (*p)
-            { fprintf(stderr, "sed: %lu: %s: extra characters at the end of %c command\n", linenum, fname, cmd->code); pthread_exit(NULL); }
+            { fprintf(thread_stderr, "sed: %lu: %s: extra characters at the end of %c command\n", linenum, fname, cmd->code); pthread_exit(NULL); }
 				// errx(1, "%lu: %s: extra characters at the end of %c command",
 						// linenum, fname, cmd->code);
 			break;
@@ -281,7 +281,7 @@ nonsel:		/* Now parse the command */
 			p++;
 			EATSPACE();
 			if (*p != '\\')
-            { fprintf(stderr,
+            { fprintf(thread_stderr,
                       "sed: %lu: %s: command %c expects \\ followed by text\n", linenum, fname, cmd->code);
                 pthread_exit(NULL);
             }
@@ -290,7 +290,7 @@ nonsel:		/* Now parse the command */
 			p++;
 			EATSPACE();
 			if (*p)
-            { fprintf(stderr,
+            { fprintf(thread_stderr,
                       "sed: %lu: %s: extra characters after \\ at the end of %c command\n",
                      linenum, fname, cmd->code);
                 pthread_exit(NULL);
@@ -306,7 +306,7 @@ nonsel:		/* Now parse the command */
 			p++;
 			EATSPACE();
 			if (*p == '\0')
-            { fprintf(stderr, "sed: %lu: %s: filename expected\n", linenum, fname);
+            { fprintf(thread_stderr, "sed: %lu: %s: filename expected\n", linenum, fname);
                 pthread_exit(NULL);
             }
              //   errx(1, "%lu: %s: filename expected", linenum, fname);
@@ -316,13 +316,13 @@ nonsel:		/* Now parse the command */
 			else if ((cmd->u.fd = open(p,
 			    O_WRONLY|O_APPEND|O_CREAT|O_TRUNC,
 			    DEFFILEMODE)) == -1)
-            { fprintf(stderr, "sed: %s: %s\n", p, strerror(errno)); pthread_exit(NULL); }  // err(1, "%s", p);
+            { fprintf(thread_stderr, "sed: %s: %s\n", p, strerror(errno)); pthread_exit(NULL); }  // err(1, "%s", p);
 			break;
 		case RFILE:			/* r */
 			p++;
 			EATSPACE();
 			if (*p == '\0')
-            { fprintf(stderr, "sed: %lu: %s: filename expected\n", linenum, fname);
+            { fprintf(thread_stderr, "sed: %lu: %s: filename expected\n", linenum, fname);
                 pthread_exit(NULL);
             }
 				// errx(1, "%lu: %s: filename expected", linenum, fname);
@@ -342,7 +342,7 @@ nonsel:		/* Now parse the command */
 			EATSPACE();
 			cmd->t = duptoeol(p, "label");
 			if (strlen(p) == 0)
-            { fprintf(stderr, "sed: %lu: %s: empty label\n", linenum, fname);
+            { fprintf(thread_stderr, "sed: %lu: %s: empty label\n", linenum, fname);
                 pthread_exit(NULL);
             }
 			//	errx(1, "%lu: %s: empty label", linenum, fname);
@@ -351,17 +351,17 @@ nonsel:		/* Now parse the command */
 		case SUBST:			/* s */
 			p++;
 			if (*p == '\0' || *p == '\\')
-            { fprintf(stderr, "sed: %lu: %s: substitute pattern can not be delimited by newline or backslash\n", linenum, fname);
+            { fprintf(thread_stderr, "sed: %lu: %s: substitute pattern can not be delimited by newline or backslash\n", linenum, fname);
                 pthread_exit(NULL);
             }
 				// errx(1,
 //"%lu: %s: substitute pattern can not be delimited by newline or backslash",
 	//				linenum, fname);
 			if ((cmd->u.s = malloc(sizeof(struct s_subst))) == NULL)
-            { fprintf(stderr, "sed: malloc: %s\n", strerror(errno)); pthread_exit(NULL); } // err(1, "malloc");
+            { fprintf(thread_stderr, "sed: malloc: %s\n", strerror(errno)); pthread_exit(NULL); } // err(1, "malloc");
 			p = compile_re(p, &cmd->u.s->re);
 			if (p == NULL)
-            { fprintf(stderr, "sed: %lu: %s: unterminated substitute pattern\n", linenum, fname);
+            { fprintf(thread_stderr, "sed: %lu: %s: unterminated substitute pattern\n", linenum, fname);
                 pthread_exit(NULL);
             }
 				//errx(1,
@@ -386,7 +386,7 @@ nonsel:		/* Now parse the command */
 				goto semicolon;
 			}
 			if (*p)
-            { fprintf(stderr,
+            { fprintf(thread_stderr,
                       "sed: %lu: %s: extra text at the end of a transform command\n", linenum, fname);
                 pthread_exit(NULL);
             }
@@ -415,13 +415,13 @@ compile_delimited(char *p, char *d, int is_tr)
 	if (c == '\0')
 		return (NULL);
 	else if (c == '\\')
-    { fprintf(stderr, "sed: %lu: %s: \\ can not be used as a string delimiter\n",
+    { fprintf(thread_stderr, "sed: %lu: %s: \\ can not be used as a string delimiter\n",
              //errx(1, "%lu: %s: \\ can not be used as a string delimiter",
 				linenum, fname);
         pthread_exit(NULL);
     }
 	else if (c == '\n')
-    { fprintf(stderr, "sed: %lu: %s: newline can not be used as a string delimiter\n",
+    { fprintf(thread_stderr, "sed: %lu: %s: newline can not be used as a string delimiter\n",
               // errx(1, "%lu: %s: newline can not be used as a string delimiter",
 				linenum, fname);
         pthread_exit(NULL);
@@ -429,7 +429,7 @@ compile_delimited(char *p, char *d, int is_tr)
 	while (*p) {
 		if (*p == '[' && c != *p) {
 			if ((d = compile_ccl(&p, d)) == NULL)
-            { fprintf(stderr, "sed: %lu: %s: unbalanced brackets ([])", linenum, fname);
+            { fprintf(thread_stderr, "sed: %lu: %s: unbalanced brackets ([])", linenum, fname);
 				//errx(1, "%lu: %s: unbalanced brackets ([])", linenum, fname);
                 pthread_exit(NULL);
             }
@@ -501,9 +501,9 @@ compile_re(char *p, regex_t **repp)
 		return (p);
 	}
 	if ((*repp = malloc(sizeof(regex_t))) == NULL)
-    { fprintf(stderr, "sed: malloc: %s\n", strerror(errno)); pthread_exit(NULL); } // err(1, "malloc");
+    { fprintf(thread_stderr, "sed: malloc: %s\n", strerror(errno)); pthread_exit(NULL); } // err(1, "malloc");
 	if (p && (eval = regcomp(*repp, re, rflags)) != 0)
-    { fprintf(stderr, "sed: %lu: %s: RE error: %s\n",
+    { fprintf(thread_stderr, "sed: %lu: %s: RE error: %s\n",
 		// errx(1, "%lu: %s: RE error: %s",
 				linenum, fname, strregerror(eval, *repp));
         pthread_exit(NULL);
@@ -535,7 +535,7 @@ compile_subst(char *p, struct s_subst *s)
 	s->linenum = linenum;
 	asize = 2 * _POSIX2_LINE_MAX + 1;
 	if ((text = malloc(asize)) == NULL)
-    { fprintf(stderr, "sed: malloc: %s\n", strerror(errno)); pthread_exit(NULL); } // err(1, "malloc");
+    { fprintf(thread_stderr, "sed: malloc: %s\n", strerror(errno)); pthread_exit(NULL); } // err(1, "malloc");
 	size = 0;
 	do {
 		op = sp = text + size;
@@ -567,7 +567,7 @@ compile_subst(char *p, struct s_subst *s)
 					ref = *p - '0';
 					if (s->re != NULL &&
 					    ref > s->re->re_nsub)
-                    { fprintf(stderr, "sed: %lu: %s: \\%c not defined in the RE\n",
+                    { fprintf(thread_stderr, "sed: %lu: %s: \\%c not defined in the RE\n",
 						// errx(1, "%lu: %s: \\%c not defined in the RE",
 								linenum, fname, *p);
                         pthread_exit(NULL);
@@ -584,10 +584,10 @@ compile_subst(char *p, struct s_subst *s)
 				*sp++ = '\0';
 				size += sp - op;
 				if ((s->new = realloc(text, size)) == NULL)
-                { fprintf(stderr, "sed: realloc: %s\n", strerror(errno)); pthread_exit(NULL); } // err(1, "malloc");
+                { fprintf(thread_stderr, "sed: realloc: %s\n", strerror(errno)); pthread_exit(NULL); } // err(1, "malloc");
 				return (p);
 			} else if (*p == '\n') {
-				fprintf(stderr,
+				fprintf(thread_stderr,
                     // errx(1,
                         "sed: %lu: %s: unescaped newline inside substitute pattern\n", linenum, fname);
                 pthread_exit(NULL);
@@ -599,10 +599,10 @@ compile_subst(char *p, struct s_subst *s)
 		if (asize - size < _POSIX2_LINE_MAX + 1) {
 			asize *= 2;
 			if ((text = realloc(text, asize)) == NULL)
-            { fprintf(stderr, "sed: realloc: %s\n", strerror(errno)); pthread_exit(NULL); } // err(1, "malloc");
+            { fprintf(thread_stderr, "sed: realloc: %s\n", strerror(errno)); pthread_exit(NULL); } // err(1, "malloc");
 		}
 	} while (cu_fgets(p = lbuf, sizeof(lbuf), &more));
-    fprintf(stderr, "sed: %lu: %s: unterminated substitute in regular expression\n",
+    fprintf(thread_stderr, "sed: %lu: %s: unterminated substitute in regular expression\n",
          // errx(1, "%lu: %s: unterminated substitute in regular expression",
 			linenum, fname);
     pthread_exit(NULL);
@@ -628,7 +628,7 @@ compile_flags(char *p, struct s_subst *s)
 		switch (*p) {
 		case 'g':
 			if (gn)
-            { fprintf(stderr,
+            { fprintf(thread_stderr,
                      //errx(1,
                       "sed: %lu: %s: more than one number or 'g' in substitute flags\n", linenum, fname);
                 pthread_exit(NULL);
@@ -647,7 +647,7 @@ compile_flags(char *p, struct s_subst *s)
 		case '4': case '5': case '6':
 		case '7': case '8': case '9':
 			if (gn)
-            { fprintf(stderr,
+            { fprintf(thread_stderr,
 				// errx(1,
                       "sed: %lu: %s: more than one number or 'g' in substitute flags\n", linenum, fname);
                 pthread_exit(NULL);
@@ -656,7 +656,7 @@ compile_flags(char *p, struct s_subst *s)
 			errno = 0;
 			nval = strtol(p, &p, 10);
 			if (errno == ERANGE || nval > INT_MAX)
-            { fprintf(stderr,
+            { fprintf(thread_stderr,
 				//errx(1,
                       "sed: %lu: %s: overflow in the 'N' substitute flag\n", linenum, fname);
                 pthread_exit(NULL);
@@ -682,7 +682,7 @@ compile_flags(char *p, struct s_subst *s)
 			}
 			*q = '\0';
 			if (q == wfile)
-            { fprintf(stderr, "sed: %lu: %s: no wfile specified\n", linenum, fname);
+            { fprintf(thread_stderr, "sed: %lu: %s: no wfile specified\n", linenum, fname);
                 pthread_exit(NULL);
             }
                 // errx(1, "%lu: %s: no wfile specified", linenum, fname);
@@ -690,10 +690,10 @@ compile_flags(char *p, struct s_subst *s)
 			if (!aflag && (s->wfd = open(wfile,
 			    O_WRONLY|O_APPEND|O_CREAT|O_TRUNC,
 			    DEFFILEMODE)) == -1)
-            { fprintf(stderr, "sed: %s: %s\n", wfile, strerror(errno)); pthread_exit(NULL); } // err(1, "%s", wfile);
+            { fprintf(thread_stderr, "sed: %s: %s\n", wfile, strerror(errno)); pthread_exit(NULL); } // err(1, "%s", wfile);
 			return (p);
 		default:
-                fprintf(stderr, "sed: %lu: %s: bad flag in substitute command: '%c'\n",
+                fprintf(thread_stderr, "sed: %lu: %s: bad flag in substitute command: '%c'\n",
 			// errx(1, "%lu: %s: bad flag in substitute command: '%c'",
 					linenum, fname, *p);
                 pthread_exit(NULL);
@@ -718,12 +718,12 @@ compile_tr(char *p, struct s_tr **py)
 	mbstate_t mbs1, mbs2;
 
 	if ((*py = y = malloc(sizeof(*y))) == NULL)
-    { fprintf(stderr, "sed: %s\n", strerror(errno)); pthread_exit(NULL); } // err(1, "malloc");
+    { fprintf(thread_stderr, "sed: %s\n", strerror(errno)); pthread_exit(NULL); } // err(1, "malloc");
 	y->multis = NULL;
 	y->nmultis = 0;
 
 	if (*p == '\0' || *p == '\\')
-    { fprintf(stderr,
+    { fprintf(thread_stderr,
              // errx(1,
               "sed: %lu: %s: transform pattern can not be delimited by newline or backslash\n",
 			linenum, fname);
@@ -731,14 +731,14 @@ compile_tr(char *p, struct s_tr **py)
     }
 	p = compile_delimited(p, old, 1);
 	if (p == NULL)
-    { fprintf(stderr, "sed: %lu: %s: unterminated transform source string\n",
+    { fprintf(thread_stderr, "sed: %lu: %s: unterminated transform source string\n",
 		// errx(1, "%lu: %s: unterminated transform source string",
 				linenum, fname);
         pthread_exit(NULL);
     }
 	p = compile_delimited(p - 1, new, 1);
 	if (p == NULL)
-    { fprintf(stderr, "sed: %lu: %s: unterminated transform target string\n",
+    { fprintf(thread_stderr, "sed: %lu: %s: unterminated transform target string\n",
 		// errx(1, "%lu: %s: unterminated transform target string",
 				linenum, fname);
         pthread_exit(NULL);
@@ -747,13 +747,13 @@ compile_tr(char *p, struct s_tr **py)
 	op = old;
 	oldlen = mbsrtowcs(NULL, &op, 0, NULL);
 	if (oldlen == (size_t)-1)
-    { fprintf(stderr, "sed: %s\n", strerror(errno)); pthread_exit(NULL); } // err(1, "malloc");
+    { fprintf(thread_stderr, "sed: %s\n", strerror(errno)); pthread_exit(NULL); } // err(1, "malloc");
 	np = new;
 	newlen = mbsrtowcs(NULL, &np, 0, NULL);
 	if (newlen == (size_t)-1)
-    { fprintf(stderr, "sed: %s\n", strerror(errno)); pthread_exit(NULL); } // err(1, "malloc");
+    { fprintf(thread_stderr, "sed: %s\n", strerror(errno)); pthread_exit(NULL); } // err(1, "malloc");
 	if (newlen != oldlen)
-    { fprintf(stderr, "sed: %lu: %s: transform strings are not the same length\n",
+    { fprintf(thread_stderr, "sed: %lu: %s: transform strings are not the same length\n",
 		// errx(1, "%lu: %s: transform strings are not the same length",
 				linenum, fname);
         pthread_exit(NULL);
@@ -793,7 +793,7 @@ compile_tr(char *p, struct s_tr **py)
 				y->multis = realloc(y->multis,
 				    (y->nmultis + 1) * sizeof(*y->multis));
 				if (y->multis == NULL)
-                { fprintf(stderr, "sed: %s\n", strerror(errno)); pthread_exit(NULL); } // err(1, "malloc");
+                { fprintf(thread_stderr, "sed: %s\n", strerror(errno)); pthread_exit(NULL); } // err(1, "malloc");
 				i = y->nmultis++;
 				y->multis[i].fromlen = oclen;
 				memcpy(y->multis[i].from, op, oclen);
@@ -819,7 +819,7 @@ compile_text(void)
 
 	asize = 2 * _POSIX2_LINE_MAX + 1;
 	if ((text = malloc(asize)) == NULL)
-    { fprintf(stderr, "sed: malloc: %s\n", strerror(errno)); pthread_exit(NULL); } // err(1, "malloc");
+    { fprintf(thread_stderr, "sed: malloc: %s\n", strerror(errno)); pthread_exit(NULL); } // err(1, "malloc");
 	size = 0;
 	while (cu_fgets(lbuf, sizeof(lbuf), NULL)) {
 		op = s = text + size;
@@ -838,12 +838,12 @@ compile_text(void)
 		if (asize - size < _POSIX2_LINE_MAX + 1) {
 			asize *= 2;
 			if ((text = realloc(text, asize)) == NULL)
-            { fprintf(stderr, "sed: realloc: %s\n", strerror(errno)); pthread_exit(NULL); } // err(1, "malloc");
+            { fprintf(thread_stderr, "sed: realloc: %s\n", strerror(errno)); pthread_exit(NULL); } // err(1, "malloc");
 		}
 	}
 	text[size] = '\0';
 	if ((p = realloc(text, size + 1)) == NULL)
-    { fprintf(stderr, "sed: realloc: %s\n", strerror(errno)); pthread_exit(NULL); } // err(1, "malloc");
+    { fprintf(thread_stderr, "sed: realloc: %s\n", strerror(errno)); pthread_exit(NULL); } // err(1, "malloc");
 	return (p);
 }
 
@@ -863,7 +863,7 @@ compile_addr(char *p, struct s_addr *a)
 	case '/':				/* Context address */
 		p = compile_re(p, &a->u.r);
 		if (p == NULL)
-        { fprintf(stderr, "sed: %lu: %s: unterminated regular expression\n", linenum, fname);
+        { fprintf(thread_stderr, "sed: %lu: %s: unterminated regular expression\n", linenum, fname);
             pthread_exit(NULL);
          //   errx(1, "%lu: %s: unterminated regular expression", linenum, fname);
         }
@@ -880,7 +880,7 @@ compile_addr(char *p, struct s_addr *a)
 		a->u.l = strtol(p, &end, 10);
 		return (end);
 	default:
-            fprintf(stderr, "sed: %lu: %s: expected context address\n", linenum, fname);
+            fprintf(thread_stderr, "sed: %lu: %s: expected context address\n", linenum, fname);
             pthread_exit(NULL);
 		// errx(1, "%lu: %s: expected context address", linenum, fname);
 		return (NULL);
@@ -903,11 +903,11 @@ duptoeol(char *s, const char *ctype)
 		ws = isspace((unsigned char)*s);
 	*s = '\0';
 	if (ws)
-        fprintf(stderr, "sed: %lu: %s: whitespace after %s\n", linenum, fname, ctype);
+        fprintf(thread_stderr, "sed: %lu: %s: whitespace after %s\n", linenum, fname, ctype);
 		// warnx("%lu: %s: whitespace after %s", linenum, fname, ctype);
 	len = s - start + 1;
 	if ((p = malloc(len)) == NULL)
-    { fprintf(stderr, "sed: malloc: %s\n", strerror(errno)); pthread_exit(NULL); } // err(1, "malloc");
+    { fprintf(thread_stderr, "sed: malloc: %s\n", strerror(errno)); pthread_exit(NULL); } // err(1, "malloc");
 	return (memmove(p, start, len));
 }
 
@@ -936,7 +936,7 @@ fixuplabel(struct s_command *cp, struct s_command *end)
 				break;
 			}
 			if ((cp->u.c = findlabel(cp->t)) == NULL)
-            { fprintf(stderr, "sed: %lu: %s: undefined label '%s'\n", linenum, fname, cp->t);
+            { fprintf(thread_stderr, "sed: %lu: %s: undefined label '%s'\n", linenum, fname, cp->t);
                 pthread_exit(NULL);
                 // errx(1, "%lu: %s: undefined label '%s'", linenum, fname, cp->t);
             }
@@ -964,12 +964,12 @@ enterlabel(struct s_command *cp)
 	lhp = &labels[h & LHMASK];
 	for (lh = *lhp; lh != NULL; lh = lh->lh_next)
 		if (lh->lh_hash == h && strcmp(cp->t, lh->lh_cmd->t) == 0)
-        { fprintf(stderr, "sed: %lu: %s: duplicate label '%s'\n", linenum, fname, cp->t);
+        { fprintf(thread_stderr, "sed: %lu: %s: duplicate label '%s'\n", linenum, fname, cp->t);
             pthread_exit(NULL);
     // errx(1, "%lu: %s: duplicate label '%s'", linenum, fname, cp->t);
         }
 	if ((lh = malloc(sizeof *lh)) == NULL)
-    { fprintf(stderr, "sed: malloc: %s\n", strerror(errno)); pthread_exit(NULL); } // err(1, "malloc");
+    { fprintf(thread_stderr, "sed: malloc: %s\n", strerror(errno)); pthread_exit(NULL); } // err(1, "malloc");
 	lh->lh_next = *lhp;
 	lh->lh_hash = h;
 	lh->lh_cmd = cp;
@@ -1024,7 +1024,7 @@ uselabel(void)
 				continue;
 			}
 			if (!lh->lh_ref)
-                fprintf(stderr, "sed: %lu: %s: unused label '%s'\n", linenum, fname, lh->lh_cmd->t);
+                fprintf(thread_stderr, "sed: %lu: %s: unused label '%s'\n", linenum, fname, lh->lh_cmd->t);
             // warnx("%lu: %s: unused label '%s'", linenum, fname, lh->lh_cmd->t);
 			free(lh);
 		}

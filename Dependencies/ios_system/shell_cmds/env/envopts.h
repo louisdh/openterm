@@ -34,4 +34,4 @@ void		 search_paths(char *path, char **argv);
 void		 split_spaces(const char *str, int *origind, int *origc,
 		    char ***origv);
 
-extern int	 env_verbosity;
+extern __thread int	 env_verbosity;

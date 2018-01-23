@@ -45,7 +45,7 @@
 #else
 #include <nl_types.h>
 
-extern nl_catd		 catalog;
+extern __thread nl_catd		 catalog;
 #define getstr(n)	 catgets(catalog, 1, n, errstr[n])
 #endif
 
@@ -113,27 +113,27 @@ struct epat {
 };
 
 /* Flags passed to regcomp() and regexec() */
-extern int	 cflags, eflags;
+extern __thread int	 cflags, eflags;
 
 /* Command line flags */
-extern bool	 Eflag, Fflag, Gflag, Hflag, Lflag,
+extern __thread bool	 Eflag, Fflag, Gflag, Hflag, Lflag,
 		 bflag, cflag, hflag, iflag, lflag, mflag, nflag, oflag,
 		 qflag, sflag, vflag, wflag, xflag;
-extern bool	 dexclude, dinclude, fexclude, finclude, lbflag, nullflag;
-extern unsigned long long Aflag, Bflag;
-extern long long mcount;
-extern char	*label;
-extern const char *color;
-extern int	 binbehave, devbehave, dirbehave, filebehave, grepbehave, linkbehave;
+extern __thread bool	 dexclude, dinclude, fexclude, finclude, lbflag, nullflag;
+extern __thread unsigned long long Aflag, Bflag;
+extern __thread long long mcount;
+extern __thread char	*label;
+extern __thread const char *color;
+extern __thread int	 binbehave, devbehave, dirbehave, filebehave, grepbehave, linkbehave;
 
-extern bool	 file_err, first, matchall, prev;
-extern int	 tail;
-extern unsigned int dpatterns, fpatterns, patterns;
-extern struct pat *pattern;
-extern struct epat *dpattern, *fpattern;
-extern regex_t	*er_pattern, *r_pattern;
+extern __thread bool	 file_err, first, matchall, prev;
+extern __thread int	 tail;
+extern __thread unsigned int dpatterns, fpatterns, patterns;
+extern __thread struct pat *pattern;
+extern __thread struct epat *dpattern, *fpattern;
+extern __thread regex_t	*er_pattern, *r_pattern;
 #ifndef WITHOUT_FASTMATCH
-extern fastmatch_t *fg_pattern;
+extern __thread fastmatch_t *fg_pattern;
 #endif
 
 /* For regex errors  */

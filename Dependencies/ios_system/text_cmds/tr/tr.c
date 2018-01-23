@@ -157,7 +157,7 @@ tr_main(int argc, char **argv)
 			sflag = 1;
 			break;
 		case 'u':
-			setbuf(stdout, (char *)NULL);
+			setbuf(thread_stdout, (char *)NULL);
 			break;
 		case '?':
 		default:
@@ -197,10 +197,10 @@ tr_main(int argc, char **argv)
 			if (!cset_in(delete, ch) &&
 			    (lastch != ch || !cset_in(squeeze, ch))) {
 				lastch = ch;
-                (void)putwc(ch, stdout); // (void)putwchar(ch);
+                (void)putwc(ch, thread_stdout); // (void)putwchar(ch);
 			}
-		if (ferror(stdin))
-            fprintf(stderr, "tr: %s\n", strerror(errno)); // err(1, NULL);
+		if (ferror(thread_stdin))
+            fprintf(thread_stderr, "tr: %s\n", strerror(errno)); // err(1, NULL);
         cset_free(delete);
         cset_free(squeeze);
         pthread_exit(NULL); // exit(0);
@@ -218,9 +218,9 @@ tr_main(int argc, char **argv)
 
 		while ((ch = getwchar()) != WEOF)
 			if (!cset_in(delete, ch))
-				(void)putwc(ch, stdout); // (void)putwchar(ch);
-		if (ferror(stdin))
-            fprintf(stderr, "tr: %s\n", strerror(errno)); // err(1, NULL);
+				(void)putwc(ch, thread_stdout); // (void)putwchar(ch);
+		if (ferror(thread_stdin))
+            fprintf(thread_stderr, "tr: %s\n", strerror(errno)); // err(1, NULL);
         cset_free(delete);
 		pthread_exit(NULL); // exit(0);
 	}
@@ -235,10 +235,10 @@ tr_main(int argc, char **argv)
 		for (lastch = OOBCH; (ch = getwchar()) != WEOF;)
 			if (lastch != ch || !cset_in(squeeze, ch)) {
 				lastch = ch;
-				(void)putwc(ch, stdout); // (void)putwchar(ch);
+				(void)putwc(ch, thread_stdout); // (void)putwchar(ch);
 			}
-		if (ferror(stdin))
-			fprintf(stderr, "tr: %s\n", strerror(errno)); // err(1, NULL);
+		if (ferror(thread_stdin))
+			fprintf(thread_stderr, "tr: %s\n", strerror(errno)); // err(1, NULL);
         cset_free(squeeze);
 		pthread_exit(NULL); // exit(0);
 	}
@@ -254,17 +254,17 @@ tr_main(int argc, char **argv)
 
 	map = cmap_alloc();
 	if (map == NULL)
-    { fprintf(stderr, "tr: %s\n", strerror(errno)); pthread_exit(NULL); }// err(1, NULL);
+    { fprintf(thread_stderr, "tr: %s\n", strerror(errno)); pthread_exit(NULL); }// err(1, NULL);
 	squeeze = cset_alloc();
 	if (squeeze == NULL)
-    { fprintf(stderr, "tr: %s\n", strerror(errno)); cmap_free(map); pthread_exit(NULL); } // err(1, NULL);
+    { fprintf(thread_stderr, "tr: %s\n", strerror(errno)); cmap_free(map); pthread_exit(NULL); } // err(1, NULL);
 
 	s1.str = argv[0];
 
 	if (Cflag || cflag) {
 		cmap_default(map, OOBCH);
         if ((s2.str = strdup(argv[1])) == NULL) { // potential memory leak
-			fprintf(stderr, "tr: %s\n", "strdup(argv[1])"); // errx
+			fprintf(thread_stderr, "tr: %s\n", "strdup(argv[1])"); // errx
             cset_free(squeeze);
             cmap_free(map);
             pthread_exit(NULL);
@@ -273,7 +273,7 @@ tr_main(int argc, char **argv)
 		s2.str = argv[1];
 
     if (!next(&s2)) {
-        fprintf(stderr, "tr: %s\n", "empty string2"); // errx
+        fprintf(thread_stderr, "tr: %s\n", "empty string2"); // errx
         cset_free(squeeze);
         cmap_free(map);
         pthread_exit(NULL);
@@ -394,17 +394,17 @@ endloop:
 				ch = cmap_lookup(map, ch);
 			if (lastch != ch || !cset_in(squeeze, ch)) {
 				lastch = ch;
-				(void)putwc(ch, stdout); // (void)putwchar(ch);
+				(void)putwc(ch, thread_stdout); // (void)putwchar(ch);
 			}
 		}
 	else
 		while ((ch = getwchar()) != WEOF) {
 			if (!Cflag || iswrune(ch))
 				ch = cmap_lookup(map, ch);
-			(void)putwc(ch, stdout); // (void)putwchar(ch);
+			(void)putwc(ch, thread_stdout); // (void)putwchar(ch);
 		}
-	if (ferror(stdin))
-		fprintf(stderr, "tr: %s\n", strerror(errno)); // err(1, NULL);
+	if (ferror(thread_stdin))
+		fprintf(thread_stderr, "tr: %s\n", strerror(errno)); // err(1, NULL);
     cset_free(squeeze);
     cmap_free(map);
     pthread_exit(NULL);
@@ -418,7 +418,7 @@ setup(char *arg, STR *str, int cflag, int Cflag)
 
 	cs = cset_alloc();
 	if (cs == NULL)
-    { fprintf(stderr, "tr: %s\n", strerror(errno)); pthread_exit(NULL); } // err(1, NULL);
+    { fprintf(thread_stderr, "tr: %s\n", strerror(errno)); pthread_exit(NULL); } // err(1, NULL);
 	str->str = arg;
 	while (next(str))
 		cset_add(cs, str->lastch);
@@ -443,7 +443,7 @@ charcoll(const void *a, const void *b)
 static void
 usage(void)
 {
-	(void)fprintf(stderr, "%s\n%s\n%s\n%s\n",
+	(void)fprintf(thread_stderr, "%s\n%s\n%s\n%s\n",
 		"usage: tr [-Ccsu] string1 string2",
 		"       tr [-Ccu] -d string1",
 		"       tr [-Ccu] -s string1",

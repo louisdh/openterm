@@ -159,12 +159,12 @@ ln_main(int argc, char *argv[])
 		 */
 		errno = ENOTDIR;
 		// err(1, "%s", sourcedir);
-        fprintf(stderr, "ln: %s: %s\n", sourcedir, strerror(errno));
+        fprintf(thread_stderr, "ln: %s: %s\n", sourcedir, strerror(errno));
         pthread_exit(NULL);
 	}
     if (stat(sourcedir, &sb)) {
 		// err(1, "%s", sourcedir);
-        fprintf(stderr, "ln: %s: %s\n", sourcedir, strerror(errno));
+        fprintf(thread_stderr, "ln: %s: %s\n", sourcedir, strerror(errno));
         pthread_exit(NULL);
     }
 	if (!S_ISDIR(sb.st_mode))
@@ -186,14 +186,14 @@ linkit(const char *target, const char *source, int isdir)
 	if (!sflag) {
 		/* If target doesn't exist, quit now. */
 		if (stat(target, &sb)) {
-            fprintf(stderr, "ln: %s: %s\n", target, strerror(errno));
+            fprintf(thread_stderr, "ln: %s: %s\n", target, strerror(errno));
             // warn("%s", target);
 			return (1);
 		}
 		/* Only symbolic links to directories. */
 		if (S_ISDIR(sb.st_mode)) {
 			errno = EISDIR;
-            fprintf(stderr, "ln: %s: %s\n", target, strerror(errno));
+            fprintf(thread_stderr, "ln: %s: %s\n", target, strerror(errno));
 			// warn("%s", target);
 			return (1);
 		}
@@ -211,7 +211,7 @@ linkit(const char *target, const char *source, int isdir)
 		    snprintf(path, sizeof(path), "%s/%s", source, p) >=
 		    (ssize_t)sizeof(path)) {
 			errno = ENAMETOOLONG;
-            fprintf(stderr, "ln: %s: %s\n", target, strerror(errno));
+            fprintf(thread_stderr, "ln: %s: %s\n", target, strerror(errno));
 			// warn("%s", target);
 			return (1);
 		}
@@ -226,35 +226,35 @@ linkit(const char *target, const char *source, int isdir)
 	if (fflag && exists) {
 		if (Fflag && S_ISDIR(sb.st_mode)) {
 			if (rmdir(source)) {
-                fprintf(stderr, "ln: %s: %s\n", source, strerror(errno));
+                fprintf(thread_stderr, "ln: %s: %s\n", source, strerror(errno));
 				// warn("%s", source);
 				return (1);
 			}
 		} else if (unlink(source)) {
-            fprintf(stderr, "ln: %s: %s\n", source, strerror(errno));
+            fprintf(thread_stderr, "ln: %s: %s\n", source, strerror(errno));
 			// warn("%s", source);
 			return (1);
 		}
 	} else if (iflag && exists) {
-		fflush(stdout);
-		fprintf(stderr, "replace %s? ", source);
+		fflush(thread_stdout);
+		fprintf(thread_stderr, "replace %s? ", source);
 
 		first = ch = getchar();
 		while(ch != '\n' && ch != EOF)
 			ch = getchar();
 		if (first != 'y' && first != 'Y') {
-			fprintf(stderr, "not replaced\n");
+			fprintf(thread_stderr, "not replaced\n");
 			return (1);
 		}
 
 		if (Fflag && S_ISDIR(sb.st_mode)) {
 			if (rmdir(source)) {
-                fprintf(stderr, "ln: %s: %s\n", source, strerror(errno));
+                fprintf(thread_stderr, "ln: %s: %s\n", source, strerror(errno));
 				// warn("%s", source);
 				return (1);
 			}
 		} else if (unlink(source)) {
-            fprintf(stderr, "ln: %s: %s\n", source, strerror(errno));
+            fprintf(thread_stderr, "ln: %s: %s\n", source, strerror(errno));
 			// warn("%s", source);
 			return (1);
 		}
@@ -262,19 +262,19 @@ linkit(const char *target, const char *source, int isdir)
 
 	/* Attempt the link. */
 	if ((*linkf)(target, source)) {
-        fprintf(stderr, "ln: %s: %s\n", source, strerror(errno));
+        fprintf(thread_stderr, "ln: %s: %s\n", source, strerror(errno));
 		// warn("%s", source);
 		return (1);
 	}
 	if (vflag)
-		(void)printf("%s %c> %s\n", source, linkch, target);
+		(void)fprintf(thread_stdout, "%s %c> %s\n", source, linkch, target);
 	return (0);
 }
 
 static void
 usage(void)
 {
-	(void)fprintf(stderr, "%s\n%s\n%s\n",
+	(void)fprintf(thread_stderr, "%s\n%s\n%s\n",
 	    "usage: ln [-Ffhinsv] source_file [target_file]",
 	    "       ln [-Ffhinsv] source_file ... target_dir",
 	    "       link source_file target_file");

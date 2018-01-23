@@ -101,7 +101,7 @@ mkdir_main(int argc, char *argv[])
 	} else {
         if ((set = setmode(mode)) == NULL) {
 			// errx(1, "invalid file mode: %s", mode);
-            fprintf(stderr, "mkdir: invalid file mode: %s\n", mode);
+            fprintf(thread_stderr, "mkdir: invalid file mode: %s\n", mode);
             pthread_exit(NULL);
         }
 		omode = getmode(set, S_IRWXU | S_IRWXG | S_IRWXO);
@@ -113,20 +113,20 @@ mkdir_main(int argc, char *argv[])
 		if (pflag) {
 			int status = mkpath_np(*argv, omode);
 			if (status && status != EEXIST) {
-                fprintf(stderr, "mkdir: %s: %s\n", *argv, strerror(errno));
+                fprintf(thread_stderr, "mkdir: %s: %s\n", *argv, strerror(errno));
                 // warnc(status, "%s", *argv);
 				success = 0;
 			}
 		} else if (mkdir(*argv, omode) < 0) {
 			if (errno == ENOTDIR || errno == ENOENT)
-                fprintf(stderr, "mkdir: %s: %s\n", dirname(*argv), strerror(errno));
+                fprintf(thread_stderr, "mkdir: %s: %s\n", dirname(*argv), strerror(errno));
 				// warn("%s", dirname(*argv));
 			else
-                fprintf(stderr, "mkdir: %s: %s\n", *argv, strerror(errno));
+                fprintf(thread_stderr, "mkdir: %s: %s\n", *argv, strerror(errno));
 				// warn("%s", *argv);
 			success = 0;
 		} else if (vflag)
-			(void)printf("mkdir: created directory '%s'\n", *argv);
+			(void)fprintf(thread_stdout, "mkdir: created directory '%s'\n", *argv);
 		
 		if (!success)
 			exitval = 1;
@@ -138,18 +138,19 @@ mkdir_main(int argc, char *argv[])
 		 * as chmod will (obviously) ignore the umask.
 		 */
 		if (success && mode != NULL && chmod(*argv, omode) == -1) {
-            fprintf(stderr, "mkdir: %s: %s\n", *argv, strerror(errno));
+            fprintf(thread_stderr, "mkdir: %s: %s\n", *argv, strerror(errno));
 			// warn("%s", *argv);
 			exitval = 1;
 		}
 	}
-	exit(exitval);
+    return exitval;
+	// exit(exitval); // don't exit from main thread
 }
 
 void
 usage(void)
 {
 
-	(void)fprintf(stderr, "usage: mkdir [-pv] [-m mode] directory ...\n");
+	(void)fprintf(thread_stderr, "usage: mkdir [-pv] [-m mode] directory ...\n");
 	exit (EX_USAGE);
 }

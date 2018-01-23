@@ -138,7 +138,7 @@ grep_tree(char **argv)
 
     if (!(fts = fts_open(argv, fts_flags, NULL))) {
 		// err(2, "fts_open");
-        fprintf(stderr, "grep: fts_open: %s\n", strerror(errno));
+        fprintf(thread_stderr, "grep: fts_open: %s\n", strerror(errno));
         pthread_exit(NULL);
     }
 	while ((p = fts_read(fts)) != NULL) {
@@ -148,7 +148,7 @@ grep_tree(char **argv)
 		case FTS_ERR:
 			file_err = true;
 			if(!sflag)
-                fprintf(stderr, "grep: %s: %s\n", p->fts_path, strerror(p->fts_errno));
+                fprintf(thread_stderr, "grep: %s: %s\n", p->fts_path, strerror(p->fts_errno));
                 // warnx("%s: %s", p->fts_path, strerror(p->fts_errno));
 			break;
 		case FTS_D:
@@ -162,7 +162,7 @@ grep_tree(char **argv)
 		case FTS_DC:
 			/* Print a warning for recursive directory loop */
 			// warnx("warning: %s: recursive directory loop",
-                fprintf(stderr, "grep; warning: %s: recursive directory loop\n",
+                fprintf(thread_stderr, "grep; warning: %s: recursive directory loop\n",
 				p->fts_path);
 			break;
 		default:
@@ -200,8 +200,9 @@ procfile(const char *fn)
 	if (strcmp(fn, "-") == 0) {
 #ifdef __APPLE__
 		/* 4053512, 10290183 */
-		if (dirbehave == DIR_RECURSE && isatty(STDIN_FILENO)) {
-            fprintf(stderr, "grep: warning: recursive search of stdin\n");
+		// if (dirbehave == DIR_RECURSE && isatty(fileno(thread_stdin))) {
+        if (dirbehave == DIR_RECURSE && (fileno(thread_stdin) == fileno(stdin))) {
+            fprintf(thread_stderr, "grep: warning: recursive search of stdin\n");
             // warnx("warning: recursive search of stdin");
 		}
 #endif
@@ -222,7 +223,7 @@ procfile(const char *fn)
 	if (f == NULL) {
 		file_err = true;
 		if (!sflag)
-            fprintf(stderr, "grep: %s: %s\n", fn, strerror(errno));
+            fprintf(thread_stderr, "grep: %s: %s\n", fn, strerror(errno));
             // warn("%s", fn);
 		return (0);
 	}
@@ -274,16 +275,16 @@ procfile(const char *fn)
 	if (cflag) {
 #endif
 		if (!hflag)
-			printf("%s:", ln.file);
-		printf("%u\n", c);
+			fprintf(thread_stdout, "%s:", ln.file);
+		fprintf(thread_stdout, "%u\n", c);
 	}
 	if (lflag && !qflag && c != 0)
-		printf("%s%c", fn, nullflag ? 0 : '\n');
+		fprintf(thread_stdout, "%s%c", fn, nullflag ? 0 : '\n');
 	if (Lflag && !qflag && c == 0)
-		printf("%s%c", fn, nullflag ? 0 : '\n');
+		fprintf(thread_stdout, "%s%c", fn, nullflag ? 0 : '\n');
 	if (c && !cflag && !lflag && !Lflag &&
 	    binbehave == BINFILE_BIN && f->binary && !qflag)
-		printf(getstr(8), fn);
+		fprintf(thread_stdout, getstr(8), fn);
 
 	free(ln.file);
 	free(f);
@@ -467,11 +468,11 @@ procline(struct str *l, int nottext)
 	if ((tail || c) && !cflag && !qflag && !lflag && !Lflag) {
 		if (c) {
 			if (!first && !prev && !tail && Aflag)
-				printf("--\n");
+				fprintf(thread_stdout, "--\n");
 			tail = Aflag;
 			if (Bflag > 0) {
 				if (!first && !prev)
-					printf("--\n");
+					fprintf(thread_stdout, "--\n");
 				printqueue();
 			}
 			linesqueued = 0;
@@ -504,7 +505,7 @@ grep_malloc(size_t size)
 
     if ((ptr = malloc(size)) == NULL) {
 		// err(2, "malloc");
-        fprintf(stderr, "grep: malloc: %s\n", strerror(errno));
+        fprintf(thread_stderr, "grep: malloc: %s\n", strerror(errno));
         pthread_exit(NULL);
     }
 	return (ptr);
@@ -520,7 +521,7 @@ grep_calloc(size_t nmemb, size_t size)
 
     if ((ptr = calloc(nmemb, size)) == NULL) {
         // err(2, "calloc");
-        fprintf(stderr, "grep: calloc: %s\n", strerror(errno));
+        fprintf(thread_stderr, "grep: calloc: %s\n", strerror(errno));
     pthread_exit(NULL);
 }
 	return (ptr);
@@ -535,7 +536,7 @@ grep_realloc(void *ptr, size_t size)
 
     if ((ptr = realloc(ptr, size)) == NULL) {
         // err(2, "realloc");
-        fprintf(stderr, "grep: realloc: %s\n", strerror(errno));
+        fprintf(thread_stderr, "grep: realloc: %s\n", strerror(errno));
         pthread_exit(NULL);
     }
 	return (ptr);
@@ -551,7 +552,7 @@ grep_strdup(const char *str)
 
     if ((ret = strdup(str)) == NULL) {
         // err(2, "strdup");
-        fprintf(stderr, "grep: strdup: %s\n", strerror(errno));
+        fprintf(thread_stderr, "grep: strdup: %s\n", strerror(errno));
         pthread_exit(NULL);
     }
 	return (ret);
@@ -568,23 +569,23 @@ printline(struct str *line, int sep, regmatch_t *matches, int m)
 
 	if (!hflag) {
 		if (!nullflag) {
-			fputs(line->file, stdout);
+			fputs(line->file, thread_stdout);
 			++n;
 		} else {
-			printf("%s", line->file);
+			fprintf(thread_stdout, "%s", line->file);
 			putchar(0);
 		}
 	}
 	if (nflag) {
 		if (n > 0)
 			putchar(sep);
-		printf("%d", line->line_no);
+		fprintf(thread_stdout, "%d", line->line_no);
 		++n;
 	}
 	if (bflag) {
 		if (n > 0)
 			putchar(sep);
-		printf("%lld", (long long)line->off);
+		fprintf(thread_stdout, "%lld", (long long)line->off);
 		++n;
 	}
 	if (n)
@@ -594,26 +595,26 @@ printline(struct str *line, int sep, regmatch_t *matches, int m)
 		for (i = 0; i < m; i++) {
 			if (!oflag)
 				fwrite(line->dat + a, matches[i].rm_so - a, 1,
-				    stdout);
+				    thread_stdout);
 			if (color) 
-				fprintf(stdout, "\33[%sm\33[K", color);
+				fprintf(thread_stdout, "\33[%sm\33[K", color);
 
 				fwrite(line->dat + matches[i].rm_so, 
 				    matches[i].rm_eo - matches[i].rm_so, 1,
-				    stdout);
+				    thread_stdout);
 			if (color) 
-				fprintf(stdout, "\33[m\33[K");
+				fprintf(thread_stdout, "\33[m\33[K");
 			a = matches[i].rm_eo;
 			if (oflag)
 				putchar('\n');
 		}
 		if (!oflag) {
 			if (line->len - a > 0)
-				fwrite(line->dat + a, line->len - a, 1, stdout);
+				fwrite(line->dat + a, line->len - a, 1, thread_stdout);
 			putchar('\n');
 		}
 	} else {
-		fwrite(line->dat, line->len, 1, stdout);
+		fwrite(line->dat, line->len, 1, thread_stdout);
 		putchar('\n');
 	}
 }

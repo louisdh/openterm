@@ -61,7 +61,7 @@ get_sbuf_line(line_t *lp)
 	if (sfseek != lp->seek) {
 		sfseek = lp->seek;
 		if (fseeko(sfp, sfseek, SEEK_SET) < 0) {
-			fprintf(stderr, "%s\n", strerror(errno));
+			fprintf(thread_stderr, "%s\n", strerror(errno));
 			errmsg = "cannot seek temp file";
 			return NULL;
 		}
@@ -69,7 +69,7 @@ get_sbuf_line(line_t *lp)
 	len = lp->len;
 	REALLOC(sfbuf, sfbufsz, len + 1, NULL);
 	if ((ct = fread(sfbuf, sizeof(char), len, sfp)) <  0 || ct != len) {
-		fprintf(stderr, "%s\n", strerror(errno));
+		fprintf(thread_stderr, "%s\n", strerror(errno));
 		errmsg = "cannot read temp file";
 		return NULL;
 	}
@@ -89,7 +89,7 @@ put_sbuf_line(const char *cs)
 	const char *s;
 
 	if ((lp = (line_t *) malloc(sizeof(line_t))) == NULL) {
-		fprintf(stderr, "%s\n", strerror(errno));
+		fprintf(thread_stderr, "%s\n", strerror(errno));
 		errmsg = "out of memory";
 		return NULL;
 	}
@@ -104,7 +104,7 @@ put_sbuf_line(const char *cs)
 	/* out of position */
 	if (seek_write) {
 		if (fseeko(sfp, (off_t)0, SEEK_END) < 0) {
-			fprintf(stderr, "%s\n", strerror(errno));
+			fprintf(thread_stderr, "%s\n", strerror(errno));
 			errmsg = "cannot seek temp file";
 			return NULL;
 		}
@@ -114,7 +114,7 @@ put_sbuf_line(const char *cs)
 	/* assert: SPL1() */
 	if ((ct = fwrite(cs, sizeof(char), len, sfp)) < 0 || ct != len) {
 		sfseek = -1;
-		fprintf(stderr, "%s\n", strerror(errno));
+		fprintf(thread_stderr, "%s\n", strerror(errno));
 		errmsg = "cannot write temp file";
 		return NULL;
 	}
@@ -187,7 +187,7 @@ get_addressed_line_node(long n)
 }
 
 
-extern int newline_added;
+extern __thread int newline_added;
 
 char sfn[PATH_MAX] = "";				/* scratch file name */
 
@@ -224,7 +224,7 @@ close_sbuf(void)
 {
 	if (sfp) {
 		if (fclose(sfp) < 0) {
-			fprintf(stderr, "%s: %s\n", sfn, strerror(errno));
+			fprintf(thread_stderr, "%s: %s\n", sfn, strerror(errno));
 			errmsg = "cannot close temp file";
 			return ERR;
 		}
@@ -263,11 +263,11 @@ init_buffers(void)
 	   !cat
 	   hello, world
 	   EOF */
-	setbuffer(stdin, stdinbuf, 1);
+	setbuffer(thread_stdin, stdinbuf, 1);
 
 	/* Ensure stdout is line buffered. This avoids bogus delays
 	   of output if stdout is piped through utilities to a terminal. */
-	setvbuf(stdout, NULL, _IOLBF, 0);
+	setvbuf(thread_stdout, NULL, _IOLBF, 0);
 	if (open_sbuf() < 0)
 		quit(2);
 	REQUE(&buffer_head, &buffer_head);

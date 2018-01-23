@@ -66,12 +66,12 @@ shquote(char **argv)
 	if (buf == NULL) {
         if ((arg_max = sysconf(_SC_ARG_MAX)) == -1) {
 			// errx(1, "sysconf _SC_ARG_MAX failed");
-            fprintf(stderr, "w: sysconf _SC_ARG_MAX failed\n");
+            fprintf(thread_stderr, "w: sysconf _SC_ARG_MAX failed\n");
             pthread_exit(NULL);
         }
         if ((buf = malloc((u_int)(4 * arg_max)  +  1)) == NULL) {
 			// errx(1, "malloc failed");
-            fprintf(stderr, "w: malloc failed\n");
+            fprintf(thread_stderr, "w: malloc failed\n");
             pthread_exit(NULL);
         }
 	}

@@ -30,11 +30,12 @@
 __FBSDID("$FreeBSD: src/bin/ed/re.c,v 1.20 2003/07/20 10:24:09 ru Exp $");
 
 #include "ed.h"
+#include "ios_error.h"
 
 
-extern int patlock;
+extern __thread int patlock;
 
-const char *errmsg = "";
+const __thread char *errmsg = "";
 
 /* get_compiled_pattern: return pointer to compiled pattern from command
    buffer */
@@ -61,7 +62,7 @@ get_compiled_pattern(void)
 	if (expr && !patlock)
 		regfree(expr);
 	else if ((expr = (pattern_t *) malloc(sizeof(pattern_t))) == NULL) {
-		fprintf(stderr, "%s\n", strerror(errno));
+		fprintf(thread_stderr, "%s\n", strerror(errno));
 		errmsg = "out of memory";
 		return NULL;
 	}

@@ -193,7 +193,7 @@ mv_main(int argc, char *argv[])
 	/* It's a directory, move each file into it. */
     if (strlen(argv[argc - 1]) > sizeof(path) - 1) {
 		// errx(1, "%s: destination pathname too long", *argv);
-        fprintf(stderr, "mv: %s: destination pathname too long\n", *argv);
+        fprintf(thread_stderr, "mv: %s: destination pathname too long\n", *argv);
         pthread_exit(NULL);
     }
 	(void)strcpy(path, argv[argc - 1]);
@@ -215,7 +215,7 @@ mv_main(int argc, char *argv[])
 			--p;
 
 		if ((baselen + (len = strlen(p))) >= PATH_MAX) {
-            fprintf(stderr, "mv: %s: destination pathname too long\n", *argv);
+            fprintf(thread_stderr, "mv: %s: destination pathname too long\n", *argv);
             // warnx("%s: destination pathname too long", *argv);
 			rval = 1;
 		} else {
@@ -230,7 +230,7 @@ mv_main(int argc, char *argv[])
 					fsb.st_ino == tsb.st_ino && 
 					fsb.st_dev == tsb.st_dev &&
 					fsb.st_gen == tsb.st_gen) {
-					(void)fprintf(stderr, "mv: %s and %s are identical\n", 
+					(void)fprintf(thread_stderr, "mv: %s and %s are identical\n", 
 								*argv, path);
 					rval = 2; /* Like the Sun */
 				} else {
@@ -262,7 +262,7 @@ do_move(char *from, char *to)
 
 		/* prompt only if source exist */
 	        if (lstat(from, &sb) == -1) {
-                fprintf(stderr, "mv: %s: %s\n", from, strerror(errno));
+                fprintf(thread_stderr, "mv: %s: %s\n", from, strerror(errno));
             //warn("%s", from);
 			return (1);
 		}
@@ -271,14 +271,14 @@ do_move(char *from, char *to)
 		ask = 0;
 		if (nflg) {
 			if (vflg)
-				printf("%s not overwritten\n", to);
+				fprintf(thread_stdout, "%s not overwritten\n", to);
 			return (0);
 		} else if (iflg) {
-			(void)fprintf(stderr, "overwrite %s? %s", to, YESNO);
+			(void)fprintf(thread_stderr, "overwrite %s? %s", to, YESNO);
 			ask = 1;
 		} else if (access(to, W_OK) && !stat(to, &sb)) {
 			strmode(sb.st_mode, modep);
-			(void)fprintf(stderr, "override %s%s%s/%s for %s? %s",
+			(void)fprintf(thread_stderr, "override %s%s%s/%s for %s? %s",
 			    modep + 1, modep[9] == ' ' ? "" : " ",
 			    user_from_uid(sb.st_uid, 0),
 			    group_from_gid(sb.st_gid, 0), to, YESNO);
@@ -289,14 +289,14 @@ do_move(char *from, char *to)
 			while (ch != '\n' && ch != EOF)
 				ch = getchar();
 			if (first != 'y' && first != 'Y') {
-				(void)fprintf(stderr, "not overwritten\n");
+				(void)fprintf(thread_stderr, "not overwritten\n");
 				return (0);
 			}
 		}
 	}
 	if (!rename(from, to)) {
 		if (vflg)
-			printf("%s -> %s\n", from, to);
+			fprintf(thread_stdout, "%s -> %s\n", from, to);
 		return (0);
 	}
 
@@ -306,17 +306,17 @@ do_move(char *from, char *to)
 
 		/* Can't mv(1) a mount point. */
 		if (realpath(from, path) == NULL) {
-            fprintf(stderr, "mv: cannot resolve %s: %s\n", from, path);
+            fprintf(thread_stderr, "mv: cannot resolve %s: %s\n", from, path);
             // warnx("cannot resolve %s: %s", from, path);
 			return (1);
 		}
 		if (!statfs(path, &sfs) && !strcmp(path, sfs.f_mntonname)) {
-            fprintf(stderr, "mv: cannot rename a mount point\n");
+            fprintf(thread_stderr, "mv: cannot rename a mount point\n");
             // warnx("cannot rename a mount point");
 			return (1);
 		}
 	} else {
-        fprintf(stderr, "mv: rename %s to %s: %s\n", from, to, strerror(errno));
+        fprintf(thread_stderr, "mv: rename %s to %s: %s\n", from, to, strerror(errno));
         // warn("rename %s to %s", from, to);
 		return (1);
 	}
@@ -327,7 +327,7 @@ do_move(char *from, char *to)
 	 * cp and rm.
 	 */
 	if (lstat(from, &sb)) {
-        fprintf(stderr, "mv: %s: %s\n", from, strerror(errno));
+        fprintf(thread_stderr, "mv: %s: %s\n", from, strerror(errno));
         // warn("%s", from);
 		return (1);
 	}
@@ -346,7 +346,7 @@ fastcopy(char *from, char *to, struct stat *sbp)
 	int from_fd, to_fd;
 
 	if ((from_fd = open(from, O_RDONLY, 0)) < 0) {
-        fprintf(stderr, "mv: %s: %s\n", from, strerror(errno));
+        fprintf(thread_stderr, "mv: %s: %s\n", from, strerror(errno));
 		// warn("%s", from);
 		return (1);
 	}
@@ -355,7 +355,7 @@ fastcopy(char *from, char *to, struct stat *sbp)
 			free(bp);
 		if ((bp = malloc((size_t)sbp->st_blksize)) == NULL) {
 			blen = 0;
-            fprintf(stderr, "mv: malloc failed\n");
+            fprintf(thread_stderr, "mv: malloc failed\n");
 			// warnx("malloc failed");
 			return (1);
 		}
@@ -365,7 +365,7 @@ fastcopy(char *from, char *to, struct stat *sbp)
 	    open(to, O_CREAT | O_EXCL | O_TRUNC | O_WRONLY, 0)) < 0) {
 		if (errno == EEXIST && unlink(to) == 0)
 			continue;
-        fprintf(stderr, "mv: %s: %s\n", to, strerror(errno));
+        fprintf(thread_stderr, "mv: %s: %s\n", to, strerror(errno));
 		// warn("%s", to);
 		(void)close(from_fd);
 		return (1);
@@ -393,15 +393,15 @@ fastcopy(char *from, char *to, struct stat *sbp)
 #endif /* __APPLE__ */
 	while ((nread = read(from_fd, bp, (size_t)blen)) > 0)
 		if (write(to_fd, bp, (size_t)nread) != nread) {
-            fprintf(stderr, "mv: %s: %s\n", to, strerror(errno));
+            fprintf(thread_stderr, "mv: %s: %s\n", to, strerror(errno));
 			// warn("%s", to);
 			goto err;
 		}
 	if (nread < 0) {
-        fprintf(stderr, "mv: %s: %s\n", from, strerror(errno));
+        fprintf(thread_stderr, "mv: %s: %s\n", from, strerror(errno));
 		// warn("%s", from);
 err:		if (unlink(to))
-                fprintf(stderr, "mv: %s: remove: %s\n", to, strerror(errno));
+                fprintf(thread_stderr, "mv: %s: remove: %s\n", to, strerror(errno));
             // warn("%s: remove", to);
 		(void)close(from_fd);
 		(void)close(to_fd);
@@ -411,7 +411,7 @@ err:		if (unlink(to))
 	/* XATTR can fail if to_fd has mode 000 */
 	if (fcopyfile(from_fd, to_fd, NULL, COPYFILE_ACL | COPYFILE_XATTR) < 0) {
         // warn("%s: unable to move extended attributes and ACL from %s",
-        fprintf(stderr, "mv: %s: unable to move extended attributes and ACL from %s: %s\n",
+        fprintf(thread_stderr, "mv: %s: unable to move extended attributes and ACL from %s: %s\n",
                 to, from, strerror(errno));
 	}
 #endif
@@ -420,18 +420,18 @@ err:		if (unlink(to))
 	oldmode = sbp->st_mode & ALLPERMS;
 	if (fchown(to_fd, sbp->st_uid, sbp->st_gid)) {
         // warn("%s: set owner/group (was: %lu/%lu)", to,
-        fprintf(stderr, "mv: %s: set owner/group (was: %lu/%lu): %s\n", to,
+        fprintf(thread_stderr, "mv: %s: set owner/group (was: %lu/%lu): %s\n", to,
 		    (u_long)sbp->st_uid, (u_long)sbp->st_gid, strerror(errno));
 		if (oldmode & (S_ISUID | S_ISGID)) {
             // warnx(
-			fprintf(stderr,
+			fprintf(thread_stderr,
                     "mv: %s: owner/group changed; clearing suid/sgid (mode was 0%03o)\n",
 			    to, oldmode);
 			sbp->st_mode &= ~(S_ISUID | S_ISGID);
 		}
 	}
 	if (fchmod(to_fd, sbp->st_mode))
-        fprintf(stderr, "mv: %s: set mode (was: 0%03o): %s\n", to, oldmode, strerror(errno));
+        fprintf(thread_stderr, "mv: %s: set mode (was: 0%03o): %s\n", to, oldmode, strerror(errno));
         // warn("%s: set mode (was: 0%03o)", to, oldmode);
 	/*
 	 * XXX
@@ -443,29 +443,29 @@ err:		if (unlink(to))
 	errno = 0;
 	if (fchflags(to_fd, (u_int)sbp->st_flags))
 		if (errno != ENOTSUP || sbp->st_flags != 0)
-            fprintf(stderr, "mv: %s: set flags (was: 0%07o): %s\n", to, sbp->st_flags, strerror(errno));
+            fprintf(thread_stderr, "mv: %s: set flags (was: 0%07o): %s\n", to, sbp->st_flags, strerror(errno));
             // warn("%s: set flags (was: 0%07o)", to, sbp->st_flags);
 
 	tval[0].tv_sec = sbp->st_atime;
 	tval[1].tv_sec = sbp->st_mtime;
 	tval[0].tv_usec = tval[1].tv_usec = 0;
 	if (utimes(to, tval))
-        fprintf(stderr, "mv: %s: set times: %s\n", to, strerror(errno));
+        fprintf(thread_stderr, "mv: %s: set times: %s\n", to, strerror(errno));
         // warn("%s: set times", to);
 
 	if (close(to_fd)) {
-        fprintf(stderr, "mv: %s\n", to);
+        fprintf(thread_stderr, "mv: %s\n", to);
         // warn("%s", to);
 		return (1);
 	}
 
 	if (unlink(from)) {
-        fprintf(stderr, "mv: %s: remove: %s\n", from, strerror(errno));
+        fprintf(thread_stderr, "mv: %s: remove: %s\n", from, strerror(errno));
         // warn("%s: remove", from);
 		return (1);
 	}
 	if (vflg)
-		printf("%s -> %s\n", from, to);
+		fprintf(thread_stdout, "%s -> %s\n", from, to);
 	return (0);
 }
 
@@ -473,7 +473,7 @@ void
 usage(void)
 {
 
-	(void)fprintf(stderr, "%s\n%s\n",
+	(void)fprintf(thread_stderr, "%s\n%s\n",
 		      "usage: mv [-f | -i | -n] [-v] source target",
 		      "       mv [-f | -i | -n] [-v] source ... directory");
 	exit(EX_USAGE);

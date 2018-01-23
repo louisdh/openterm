@@ -96,45 +96,45 @@ static void	 traverse(int, char **, int);
 static void (*printfcn)(DISPLAY *);
 static int (*sortfcn)(const FTSENT *, const FTSENT *);
 
-long blocksize;			/* block size units */
-int termwidth = 80;		/* default terminal width */
+__thread long blocksize;			/* block size units */
+__thread int termwidth = 80;		/* default terminal width */
 static int output;        /* If anything output. */
 
 /* flags */
-       int f_accesstime;	/* use time of last access */
-       int f_birthtime;		/* use time of file birth */
-       int f_flags;		/* show flags associated with a file */
-       int f_humanval;		/* show human-readable file sizes */
-       int f_inode;		/* print inode */
+__thread       int f_accesstime;	/* use time of last access */
+__thread       int f_birthtime;		/* use time of file birth */
+__thread       int f_flags;		/* show flags associated with a file */
+__thread       int f_humanval;		/* show human-readable file sizes */
+__thread       int f_inode;		/* print inode */
 static int f_kblocks;		/* print size in kilobytes */
 static int f_listdir;		/* list actual directory, not contents */
 static int f_listdot;		/* list files beginning with . */
-       int f_longform;		/* long listing format */
-       int f_nonprint;		/* show unprintables as ? */
+__thread       int f_longform;		/* long listing format */
+__thread       int f_nonprint;		/* show unprintables as ? */
 static int f_nosort;		/* don't sort output */
-       int f_notabs;		/* don't use tab-separated multi-col output */
-       int f_numericonly;	/* don't convert uid/gid to name */
-       int f_octal;		/* show unprintables as \xxx */
-       int f_octal_escape;	/* like f_octal but use C escapes if possible */
+__thread       int f_notabs;		/* don't use tab-separated multi-col output */
+__thread       int f_numericonly;	/* don't convert uid/gid to name */
+__thread       int f_octal;		/* show unprintables as \xxx */
+__thread       int f_octal_escape;	/* like f_octal but use C escapes if possible */
 static int f_recursive;		/* ls subdirectories also */
 static int f_reversesort;	/* reverse whatever sort is used */
-       int f_sectime;		/* print the real time for all files */
+__thread       int f_sectime;		/* print the real time for all files */
 static int f_singlecol;		/* use single column output */
-       int f_size;		/* list size in short listing */
-       int f_slash;		/* similar to f_type, but only for dirs */
-       int f_sortacross;	/* sort across rows, not down columns */ 
-       int f_statustime;	/* use time of last mode change */
-       int f_stream;		/* stream the output, separate with commas */
+__thread       int f_size;		/* list size in short listing */
+__thread       int f_slash;		/* similar to f_type, but only for dirs */
+__thread       int f_sortacross;	/* sort across rows, not down columns */
+__thread       int f_statustime;	/* use time of last mode change */
+__thread       int f_stream;		/* stream the output, separate with commas */
 static int f_timesort;		/* sort by time vice name */
 static int f_sizesort;		/* sort by size */
-       int f_type;		/* add type character for non-regular files */
+__thread       int f_type;		/* add type character for non-regular files */
 static int f_whiteout;		/* show whiteout entries */
-       int f_acl;		/* show ACLs in long listing */
-       int f_xattr;		/* show extended attributes in long listing */
-       int f_group;		/* show group */
-       int f_owner;		/* show owner */
+__thread       int f_acl;		/* show ACLs in long listing */
+__thread       int f_xattr;		/* show extended attributes in long listing */
+__thread       int f_group;		/* show group */
+__thread       int f_owner;		/* show owner */
 #ifdef COLORLS
-       int f_color;		/* add type in color for non-regular files */
+__thread       int f_color;		/* add type in color for non-regular files */
 
 char *ansi_bgcol;		/* ANSI sequence to set background colour */
 char *ansi_fgcol;		/* ANSI sequence to set foreground colour */
@@ -211,12 +211,12 @@ ls_main(int argc, char *argv[])
 	(void)setlocale(LC_ALL, "");
 
 	/* Terminal defaults to -Cq, non-terminal defaults to -1. */
-    // iOS: we *are* a terminal, but STDOUT_FILENO doesn't exist
-	if (isatty(STDOUT_FILENO) || 1) {
+    // iOS: we *are* a terminal, but file(thread_stdout) doesn't tell it
+	if (fileno(thread_stdout) == fileno(stdout)) {
 		termwidth = 80;
 		if ((p = getenv("COLUMNS")) != NULL && *p != '\0')
 			termwidth = atoi(p);
-		else if (ioctl(STDOUT_FILENO, TIOCGWINSZ, &win) != -1 &&
+		else if (ioctl(fileno(thread_stdout), TIOCGWINSZ, &win) != -1 &&
 		    win.ws_col > 0)
 			termwidth = win.ws_col;
 		f_nonprint = 1;
@@ -425,7 +425,8 @@ ls_main(int argc, char *argv[])
 
 	/* Enabling of colours is conditional on the environment. */
 	if (getenv("CLICOLOR") &&
-	    (isatty(STDOUT_FILENO) || getenv("CLICOLOR_FORCE")))
+//	    (isatty(fileno(thread_stdout)) || getenv("CLICOLOR_FORCE")))
+        ((fileno(thread_stdout) == fileno(stdout)) || getenv("CLICOLOR_FORCE")))
 #ifdef COLORLS
 		if (tgetent(termcapbuf, getenv("TERM")) == 1) {
 			ansi_fgcol = tgetstr("AF", &bp);
@@ -443,7 +444,7 @@ ls_main(int argc, char *argv[])
 				f_color = 1;
 		}
 #else
-    (void)fprintf(stderr, "Color support not compiled in.\n");
+    (void)fprintf(thread_stderr, "Color support not compiled in.\n");
 #endif /*COLORLS*/
 
 #ifdef COLORLS
@@ -539,7 +540,8 @@ ls_main(int argc, char *argv[])
 		traverse(argc, argv, fts_options);
 	else
 		traverse(1, dotav, fts_options);
-	exit(rval);
+    return 0;  // Don't exit the thread if we don't have to.
+    // exit(rval);
 }
 
 
@@ -559,7 +561,7 @@ traverse(int argc, char *argv[], int options)
 	if ((ftsp =
          fts_open(argv, options, f_nosort ? NULL : mastercmp)) == NULL) {
 		// err(1, "fts_open");
-        fprintf(stderr, "ls: fts_open: %s\n", strerror(errno));
+        fprintf(thread_stderr, "ls: fts_open: %s\n", strerror(errno));
         pthread_exit(NULL);
     }
 
@@ -578,7 +580,7 @@ traverse(int argc, char *argv[], int options)
 	while ((p = fts_read(ftsp)) != NULL)
 		switch (p->fts_info) {
 		case FTS_DC:
-                fprintf(stderr, "ls: %s: directory causes a cycle\n", p->fts_name);
+                fprintf(thread_stderr, "ls: %s: directory causes a cycle\n", p->fts_name);
             //    warnx("%s: directory causes a cycle", p->fts_name);
 			if (COMPAT_MODE("bin/ls", "Unix2003")) {
 				rval = 1;
@@ -587,7 +589,7 @@ traverse(int argc, char *argv[], int options)
 		case FTS_DNR:
 		case FTS_ERR:
 			// warnx("%s: %s", p->fts_name, strerror(p->fts_errno));
-            fprintf(stderr, "ls: %s: %s\n", p->fts_name, strerror(p->fts_errno));
+            fprintf(thread_stderr, "ls: %s: %s\n", p->fts_name, strerror(p->fts_errno));
 			rval = 1;
 			break;
 		case FTS_D:
@@ -603,9 +605,9 @@ traverse(int argc, char *argv[], int options)
 			 * directory with its name.
 			 */
 			if (output)
-				(void)printf("\n%s:\n", p->fts_path);
+				(void)fprintf(thread_stdout, "\n%s:\n", p->fts_path);
 			else if (argc > 1) {
-				(void)printf("%s:\n", p->fts_path);
+				(void)fprintf(thread_stdout, "%s:\n", p->fts_path);
 				output = 1;
 			}
 			chp = fts_children(ftsp, ch_options);
@@ -625,7 +627,7 @@ traverse(int argc, char *argv[], int options)
 			if (COMPAT_MODE("bin/ls", "Unix2003")) {
 				if ((options & FTS_LOGICAL)!=0) {	/* -L was specified */
 					// warnx("%s: %s", p->fts_name, strerror(p->fts_errno ?: ENOENT));
-                    fprintf(stderr, "ls: %s: %s\n", p->fts_name, strerror(p->fts_errno ?: ENOENT));
+                    fprintf(thread_stderr, "ls: %s: %s\n", p->fts_name, strerror(p->fts_errno ?: ENOENT));
 					rval = 1;
 				}
 			}
@@ -638,7 +640,7 @@ traverse(int argc, char *argv[], int options)
 	errno = error;
 
     if (errno) {
-        fprintf(stderr, "ls: fts_read: %s\n", strerror(errno));
+        fprintf(thread_stderr, "ls: fts_read: %s\n", strerror(errno));
         pthread_exit(NULL);
 		// err(1, "fts_read");
     }
@@ -700,7 +702,7 @@ display(FTSENT *p, FTSENT *list)
 		/* Fill-in "::" as "0:0:0" for the sake of scanf. */
 		jinitmax = initmax2 = malloc(strlen(initmax) * 2 + 2);
         if (jinitmax == NULL) {
-            fprintf(stderr, "ls: malloc: %s\n", strerror((errno)));
+            fprintf(thread_stderr, "ls: malloc: %s\n", strerror((errno)));
             pthread_exit(NULL);
             // err(1, "malloc");
         }
@@ -775,7 +777,7 @@ display(FTSENT *p, FTSENT *list)
 	flags = NULL;
 	for (cur = list, entries = 0; cur; cur = cur->fts_link) {
 		if (cur->fts_info == FTS_ERR || cur->fts_info == FTS_NS) {
-            fprintf(stderr, "ls: %s: %s\n", cur->fts_name, strerror(cur->fts_errno));
+            fprintf(thread_stderr, "ls: %s: %s\n", cur->fts_name, strerror(cur->fts_errno));
 			// warnx("%s: %s", cur->fts_name, strerror(cur->fts_errno));
 			cur->fts_number = NO_PRINT;
 			rval = 1;
@@ -841,7 +843,7 @@ display(FTSENT *p, FTSENT *list)
 						flags = strdup("-");
 					}
                     if (flags == NULL) {
-                        fprintf(stderr, "ls: fflagstostr: %s\n", strerror(errno));
+                        fprintf(thread_stderr, "ls: fflagstostr: %s\n", strerror(errno));
                         pthread_exit(NULL);
                         // err(1, "fflagstostr");
                     }
@@ -856,7 +858,7 @@ display(FTSENT *p, FTSENT *list)
 				if ((np = calloc(1, sizeof(NAMES) + lattrlen +
 				    ulen + glen + flen + 4)) == NULL)
                 {
-                    fprintf(stderr, "ls: malloc: %s\n", strerror(errno));
+                    fprintf(thread_stderr, "ls: malloc: %s\n", strerror(errno));
                     // err(1, "malloc");
                     pthread_exit(NULL);
                 }

@@ -214,7 +214,7 @@ df_main(int argc, char *argv[])
 		case 'l':
             if (tflag) {
 				// errx(1, "-l and -T are mutually exclusive.");
-                fprintf(stderr, "df: -l and -T are mutually exclusive.\n");
+                fprintf(thread_stderr, "df: -l and -T are mutually exclusive.\n");
                 pthread_exit(NULL);
             }
 			if (vfslist != NULL)
@@ -238,12 +238,12 @@ df_main(int argc, char *argv[])
 			if (vfslist != NULL) {
                 if (tflag) {
 					// errx(1, "only one -%c option may be specified", ch);
-                    fprintf(stderr, "df: only one -%c option may be specified\n", ch);
+                    fprintf(thread_stderr, "df: only one -%c option may be specified\n", ch);
                     pthread_exit(NULL);
                 }
                 else {
 					// errx(1, "-l and -%c are mutually exclusive.", ch);
-                    fprintf(stderr, "df: -l and -%c are mutually exclusive.\n", ch);
+                    fprintf(thread_stderr, "df: -l and -%c are mutually exclusive.\n", ch);
                     pthread_exit(NULL);
                 }
 			}
@@ -286,13 +286,13 @@ df_main(int argc, char *argv[])
 	for (; *argv; argv++) {
 		if (stat(*argv, &stbuf) < 0) {
 			if ((mntpt = getmntpt(*argv)) == 0) {
-                fprintf(stderr, "df: %s: %s\n", *argv, strerror(errno));
+                fprintf(thread_stderr, "df: %s: %s\n", *argv, strerror(errno));
                 // warn("%s", *argv);
 				rv = 1;
 				continue;
 			}
 		} else if (S_ISCHR(stbuf.st_mode) || S_ISBLK(stbuf.st_mode)) {
-            fprintf(stderr, "df: %s: Raw devices not supported: %s\n", *argv, strerror(errno));
+            fprintf(thread_stderr, "df: %s: Raw devices not supported: %s\n", *argv, strerror(errno));
             // warnx("%s: Raw devices not supported", *argv);
 			rv = 1;
 			continue;
@@ -303,7 +303,7 @@ df_main(int argc, char *argv[])
 		 * implement nflag here.
 		 */
 		if (statfs(mntpt, &statfsbuf) < 0) {
-            fprintf(stderr, "df: %s: %s\n", mntpt, strerror(errno));
+            fprintf(thread_stderr, "df: %s: %s\n", mntpt, strerror(errno));
             // warn("%s", mntpt);
 			rv = 1;
 			continue;
@@ -425,9 +425,9 @@ prthumanval(int64_t bytes)
 			bytes, "", HN_AUTOSCALE, flags);
 
 	if (hflag == UNITS_SI)
-		(void)printf(" %6s", buf);
+		(void)fprintf(thread_stdout, " %6s", buf);
 	else
-		(void)printf("%6si", buf);
+		(void)fprintf(thread_stdout, "%6si", buf);
 	    
 }
 
@@ -438,7 +438,7 @@ prthumanval(int64_t bytes)
 static intmax_t fsbtoblk(int64_t num, uint64_t fsbs, u_long bs, char *fs) 
 {
 	if (num < 0) {
-        fprintf(stderr, "df: negative filesystem block count/size from fs %s\n", fs);
+        fprintf(thread_stderr, "df: negative filesystem block count/size from fs %s\n", fs);
         // warnx("negative filesystem block count/size from fs %s", fs);
 		return 0;
 	} else if ((fsbs != 0) && (fsbs < bs)) {
@@ -477,19 +477,19 @@ prtstat(struct statfs *sfsp, struct maxwidths *mwp)
 		}
 		mwp->avail = imax(mwp->avail, (int)strlen(avail_str));
 
-		(void)printf("%-*s %*s %*s %*s Capacity", mwp->mntfrom,
+		(void)fprintf(thread_stdout, "%-*s %*s %*s %*s Capacity", mwp->mntfrom,
 		    "Filesystem", mwp->total, header, mwp->used, "Used",
 		    mwp->avail, avail_str);
 		if (iflag) {
 			mwp->iused = imax(mwp->iused, (int)strlen("  iused"));
 			mwp->ifree = imax(mwp->ifree, (int)strlen("ifree"));
-			(void)printf(" %*s %*s %%iused", mwp->iused - 2,
+			(void)fprintf(thread_stdout, " %*s %*s %%iused", mwp->iused - 2,
 			    "iused", mwp->ifree, "ifree");
 		}
-		(void)printf("  Mounted on\n");
+		(void)fprintf(thread_stdout, "  Mounted on\n");
 	}
 
-	(void)printf("%-*s", mwp->mntfrom, sfsp->f_mntfromname);
+	(void)fprintf(thread_stdout, "%-*s", mwp->mntfrom, sfsp->f_mntfromname);
 	if (sfsp->f_blocks > sfsp->f_bfree)
 		used = sfsp->f_blocks - sfsp->f_bfree;
 	else
@@ -498,7 +498,7 @@ prtstat(struct statfs *sfsp, struct maxwidths *mwp)
 	if (hflag) {
 		prthuman(sfsp, used);
 	} else {
-		(void)printf(" %*jd %*jd %*jd", mwp->total,
+		(void)fprintf(thread_stdout, " %*jd %*jd %*jd", mwp->total,
 			     fsbtoblk(sfsp->f_blocks, sfsp->f_bsize, blocksize, sfsp->f_mntonname),
 			     mwp->used, fsbtoblk(used, sfsp->f_bsize, blocksize, sfsp->f_mntonname),
 			     mwp->avail, fsbtoblk(sfsp->f_bavail, sfsp->f_bsize, blocksize, sfsp->f_mntonname));
@@ -513,20 +513,20 @@ prtstat(struct statfs *sfsp, struct maxwidths *mwp)
 			value = (double)used / (double)availblks * 100.0;
 			if ((value-(int)value) > 0.0) value = value + 1.0;
 		}
-		(void)printf(" %5.0f%%", trunc(value));
+		(void)fprintf(thread_stdout, " %5.0f%%", trunc(value));
 	} else {
-		(void)printf(" %5.0f%%",
+		(void)fprintf(thread_stdout, " %5.0f%%",
 		    availblks == 0 ? 100.0 : (double)used / (double)availblks * 100.0);
 	}
 	if (iflag) {
 		inodes = sfsp->f_files;
 		used = inodes - sfsp->f_ffree;
-		(void)printf(" %*llu %*llu %4.0f%% ", mwp->iused, used,
+		(void)fprintf(thread_stdout, " %*llu %*llu %4.0f%% ", mwp->iused, used,
 		    mwp->ifree, sfsp->f_ffree, inodes == 0 ? 100.0 :
 		    (double)used / (double)inodes * 100.0);
 	} else
-		(void)printf("  ");
-	(void)printf("  %s\n", sfsp->f_mntonname);
+		(void)fprintf(thread_stdout, "  ");
+	(void)fprintf(thread_stdout, "  %s\n", sfsp->f_mntonname);
 }
 
 /*
@@ -579,7 +579,7 @@ usage(void)
 {
 
 	char *t_flag = COMPAT_MODE("bin/df", "unix2003") ? "[-t]" : "[-t type]";
-	(void)fprintf(stderr,
+	(void)fprintf(thread_stderr,
 	    "usage: df [-b | -H | -h | -k | -m | -g | -P] [-ailn] [-T type] %s [filesystem ...]\n", t_flag);
 	exit(EX_USAGE);
 }
@@ -602,13 +602,13 @@ makenetvfslist(void)
 	miblen=sizeof(maxvfsconf);
 	if (sysctl(mib, 3,
 	    &maxvfsconf, &miblen, NULL, 0)) {
-        fprintf(stderr, "df: sysctl failed: %s\n", strerror(errno));
+        fprintf(thread_stderr, "df: sysctl failed: %s\n", strerror(errno));
         // warn("sysctl failed");
 		return (NULL);
 	}
 
 	if ((listptr = malloc(sizeof(char*) * maxvfsconf)) == NULL) {
-        fprintf(stderr, "df: malloc failed: %s\n", strerror(errno));
+        fprintf(thread_stderr, "df: malloc failed: %s\n", strerror(errno));
         // warnx("malloc failed");
 		return (NULL);
 	}
@@ -618,7 +618,7 @@ makenetvfslist(void)
 		if (ptr->vfc_flags & VFCF_NETWORK) {
 			listptr[cnt++] = strdup(ptr->vfc_name);
 			if (listptr[cnt-1] == NULL) {
-                fprintf(stderr, "df: malloc failed: %s\n", strerror(errno));
+                fprintf(thread_stderr, "df: malloc failed: %s\n", strerror(errno));
 				// warnx("malloc failed");
 				return (NULL);
 			}
@@ -633,7 +633,7 @@ makenetvfslist(void)
 	                        listptr[cnt++] = strdup(vfc.vfc_name);
 	                        if (listptr[cnt-1] == NULL) {
 					free(listptr);
-                                fprintf(stderr, "df: malloc failed: %s\n", strerror(errno));
+                                fprintf(thread_stderr, "df: malloc failed: %s\n", strerror(errno));
 	                                // warnx("malloc failed");
 	                                return (NULL);
 	                        }
@@ -645,7 +645,7 @@ makenetvfslist(void)
 	if (cnt == 0 ||
 	    (str = malloc(sizeof(char) * (32 * cnt + cnt + 2))) == NULL) {
 		if (cnt > 0)
-            fprintf(stderr, "df: malloc failed: %s\n", strerror(errno));
+            fprintf(thread_stderr, "df: malloc failed: %s\n", strerror(errno));
 			// warnx("malloc failed");
 		free(listptr);
 		return (NULL);

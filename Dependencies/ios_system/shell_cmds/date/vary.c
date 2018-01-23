@@ -97,7 +97,7 @@ vary_append(struct vary *v, char *arg)
 
     if ((*nextp = (struct vary *)malloc(sizeof(struct vary))) == NULL) {
         // err(1, "malloc");
-        fprintf(stderr, "date: malloc: %s\n", strerror(errno));
+        fprintf(thread_stderr, "date: malloc: %s\n", strerror(errno));
         pthread_exit(NULL);
     }
   (*nextp)->arg = arg;

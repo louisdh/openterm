@@ -133,7 +133,7 @@ printscol(DISPLAY *dp)
 	assert(dp);
 	if (COMPAT_MODE("bin/ls", "Unix2003") && (dp->list != NULL)) {
 		if (dp->list->fts_level != FTS_ROOTLEVEL && (f_longform || f_size))
-			(void)printf("total %qu\n", (u_int64_t)howmany(dp->btotal, blocksize));
+			(void)fprintf(thread_stdout, "total %qu\n", (u_int64_t)howmany(dp->btotal, blocksize));
 	}
 
 	for (p = dp->list; p; p = p->fts_link) {
@@ -211,7 +211,7 @@ uuid_to_name(uuid_t *uu)
 	name = (char *) malloc(MAXNAMETAG);
 	
 	if (NULL == name) {
-        fprintf(stderr, "ls: malloc: %s\n", strerror(errno));
+        fprintf(thread_stderr, "ls: malloc: %s\n", strerror(errno));
         pthread_exit(NULL);
         // err(1, "malloc");
 	}
@@ -285,7 +285,7 @@ printacl(acl_t acl, int isdir)
 			type = "unknown";
 		}
 
-		(void)printf(" %d: %s%s %s ",
+		(void)fprintf(thread_stdout, " %d: %s%s %s ",
 		    index,
 		    name,
 		    acl_get_flag_np(flags, ACL_ENTRY_INHERITED) ? " inherited" : "",
@@ -299,14 +299,14 @@ printacl(acl_t acl, int isdir)
 				continue;
 			if (!(acl_perms[i].flags & (isdir ? ACL_PERM_DIR : ACL_PERM_FILE)))
 				continue;
-			(void)printf("%s%s", first++ ? "," : "", acl_perms[i].name);
+			(void)fprintf(thread_stdout, "%s%s", first++ ? "," : "", acl_perms[i].name);
 		}
 		for (i = 0; acl_flags[i].name != NULL; i++) {
 			if (acl_get_flag_np(flags, acl_flags[i].flag) == 0)
 				continue;
 			if (!(acl_flags[i].flags & (isdir ? ACL_PERM_DIR : ACL_PERM_FILE)))
 				continue;
-			(void)printf("%s%s", first++ ? "," : "", acl_flags[i].name);
+			(void)fprintf(thread_stdout, "%s%s", first++ ? "," : "", acl_flags[i].name);
 		}
 			
 		(void)putchar('\n');
@@ -326,7 +326,7 @@ printlong(DISPLAY *dp)
 #endif
 
 	if (dp->list->fts_level != FTS_ROOTLEVEL && (f_longform || f_size))
-		(void)printf("total %qu\n", (u_int64_t)howmany(dp->btotal, blocksize));
+		(void)fprintf(thread_stdout, "total %qu\n", (u_int64_t)howmany(dp->btotal, blocksize));
 
 	for (p = dp->list; p; p = p->fts_link) {
 		if (IS_NOPRINT(p))
@@ -334,12 +334,12 @@ printlong(DISPLAY *dp)
 		sp = p->fts_statp;
 		if (f_inode) 
 #if _DARWIN_FEATURE_64_BIT_INODE
-			(void)printf("%*llu ", dp->s_inode, (u_quad_t)sp->st_ino);
+			(void)fprintf(thread_stdout, "%*llu ", dp->s_inode, (u_quad_t)sp->st_ino);
 #else
-			(void)printf("%*lu ", dp->s_inode, (u_long)sp->st_ino);
+			(void)fprintf(thread_stdout, "%*lu ", dp->s_inode, (u_long)sp->st_ino);
 #endif
 		if (f_size)
-			(void)printf("%*qu ",
+			(void)fprintf(thread_stdout, "%*qu ",
 			    dp->s_block, (u_int64_t)howmany(sp->st_blocks, blocksize));
 		strmode(sp->st_mode, buf);
 		np = p->fts_pointer;
@@ -349,54 +349,54 @@ printlong(DISPLAY *dp)
 #endif /* __APPLE__ */
 		if (f_group && f_owner) {	/* means print neither */
 #ifdef __APPLE__
-			(void)printf("%s%s %*u   ", buf, str, dp->s_nlink,
+			(void)fprintf(thread_stdout, "%s%s %*u   ", buf, str, dp->s_nlink,
 				     sp->st_nlink);
 #else  /* ! __APPLE__ */
-			(void)printf("%s %*u   ", buf, dp->s_nlink,
+			(void)fprintf(thread_stdout, "%s %*u   ", buf, dp->s_nlink,
 				     sp->st_nlink);
 #endif /* __APPLE__ */
 		}
 		else if (f_group) {
 #ifdef __APPLE__
-			(void)printf("%s%s %*u %-*s  ", buf, str, dp->s_nlink,
+			(void)fprintf(thread_stdout, "%s%s %*u %-*s  ", buf, str, dp->s_nlink,
 				     sp->st_nlink, dp->s_group, np->group);
 #else  /* ! __APPLE__ */
-			(void)printf("%s %*u %-*s  ", buf, dp->s_nlink,
+			(void)fprintf(thread_stdout, "%s %*u %-*s  ", buf, dp->s_nlink,
 				     sp->st_nlink, dp->s_group, np->group);
 #endif /* __APPLE__ */
 		}
 		else if (f_owner) {
 #ifdef __APPLE__
-			(void)printf("%s%s %*u %-*s  ", buf, str, dp->s_nlink,
+			(void)fprintf(thread_stdout, "%s%s %*u %-*s  ", buf, str, dp->s_nlink,
 				     sp->st_nlink, dp->s_user, np->user);
 #else  /* ! __APPLE__ */
-			(void)printf("%s %*u %-*s  ", buf, dp->s_nlink,
+			(void)fprintf(thread_stdout, "%s %*u %-*s  ", buf, dp->s_nlink,
 				     sp->st_nlink, dp->s_user, np->user);
 #endif /* __APPLE__ */
 		}
 		else {
 #ifdef __APPLE__
-			(void)printf("%s%s %*u %-*s  %-*s  ", buf, str, dp->s_nlink,
+			(void)fprintf(thread_stdout, "%s%s %*u %-*s  %-*s  ", buf, str, dp->s_nlink,
 				     sp->st_nlink, dp->s_user, np->user, dp->s_group,
 				     np->group);
 #else  /* ! __APPLE__ */
-			(void)printf("%s %*u %-*s  %-*s  ", buf, dp->s_nlink,
+			(void)fprintf(thread_stdout, "%s %*u %-*s  %-*s  ", buf, dp->s_nlink,
 				     sp->st_nlink, dp->s_user, np->user, dp->s_group,
 				     np->group);
 #endif /* ! __APPLE__ */
 		}
 		if (f_flags)
-			(void)printf("%-*s ", dp->s_flags, np->flags);
+			(void)fprintf(thread_stdout, "%-*s ", dp->s_flags, np->flags);
 		if (S_ISCHR(sp->st_mode) || S_ISBLK(sp->st_mode))
 			if (minor(sp->st_rdev) > 255 || minor(sp->st_rdev) < 0)
-				(void)printf("%3d, 0x%08x ",
+				(void)fprintf(thread_stdout, "%3d, 0x%08x ",
 				    major(sp->st_rdev),
 				    (u_int)minor(sp->st_rdev));
 			else
-				(void)printf("%3d, %3d ",
+				(void)fprintf(thread_stdout, "%3d, %3d ",
 				    major(sp->st_rdev), minor(sp->st_rdev));
 		else if (dp->bcfile)
-			(void)printf("%*s%*qu ",
+			(void)fprintf(thread_stdout, "%*s%*qu ",
 			    8 - dp->s_size, "", dp->s_size, (u_int64_t)sp->st_size);
 		else
 			printsize(dp->s_size, sp->st_size);
@@ -437,7 +437,7 @@ void
 printstream(DISPLAY *dp)
 {
 	FTSENT *p;
-	extern int termwidth;
+	extern __thread int termwidth;
 	int chcnt;
 
 	for (p = dp->list, chcnt = 0; p; p = p->fts_link) {
@@ -450,7 +450,7 @@ printstream(DISPLAY *dp)
 		}
 		chcnt += printaname(p, dp->s_inode, dp->s_block);
 		if (p->fts_link) {
-			printf(", ");
+			fprintf(thread_stdout, ", ");
 			chcnt += 2;
 		}
 	}
@@ -461,7 +461,7 @@ printstream(DISPLAY *dp)
 void
 printcol(DISPLAY *dp)
 {
-	extern int termwidth;
+	extern __thread int termwidth;
 	static FTSENT **array;
 	static int lastentries = -1;
 	FTSENT *p;
@@ -490,7 +490,7 @@ printcol(DISPLAY *dp)
 		lastentries = dp->entries;
 		if ((array = realloc(array, dp->entries * sizeof(FTSENT *))) == NULL) {
 			// warn(NULL);
-            fprintf(stderr, "%s\n", strerror(errno));
+            fprintf(thread_stderr, "%s\n", strerror(errno));
 			printscol(dp);
 			return;
 		}
@@ -520,7 +520,7 @@ printcol(DISPLAY *dp)
 
 	assert(dp->list);
 	if (dp->list->fts_level != FTS_ROOTLEVEL && (f_longform || f_size))
-		(void)printf("total %qu\n", (u_int64_t)howmany(dp->btotal, blocksize));
+		(void)fprintf(thread_stdout, "total %qu\n", (u_int64_t)howmany(dp->btotal, blocksize));
 
 	base = 0;
 	for (row = 0; row < numrows; ++row) {
@@ -566,12 +566,12 @@ printaname(FTSENT *p, u_long inodefield, u_long sizefield)
 	chcnt = 0;
 	if (f_inode)
 #if _DARWIN_FEATURE_64_BIT_INODE
-		chcnt += printf("%*llu ", (int)inodefield, (u_quad_t)sp->st_ino);
+		chcnt += fprintf(thread_stdout, "%*llu ", (int)inodefield, (u_quad_t)sp->st_ino);
 #else
-		chcnt += printf("%*lu ", (int)inodefield, (u_long)sp->st_ino);
+		chcnt += fprintf(thread_stdout, "%*lu ", (int)inodefield, (u_long)sp->st_ino);
 #endif
 	if (f_size)
-		chcnt += printf("%*qu ",
+		chcnt += fprintf(thread_stdout, "%*qu ",
 		    (int)sizefield, (u_int64_t)howmany(sp->st_blocks, blocksize));
 #ifdef COLORLS
 	if (f_color)
@@ -619,7 +619,7 @@ printtime(time_t ftime)
 		/* mmm dd  yyyy || dd mmm  yyyy */
 		format = d_first ? "%e %b  %Y " : "%b %e  %Y ";
 	strftime(longstring, sizeof(longstring), format, localtime(&ftime));
-	fputs(longstring, stdout);
+	fputs(longstring, thread_stdout);
 }
 
 static int
@@ -673,7 +673,8 @@ writech(int c)
 {
 	char tmp = c;
 
-	(void)write(STDOUT_FILENO, &tmp, 1);
+	//(void)write(fileno(thread_stdout), &tmp, 1);
+    fwrite(&tmp, 1, 1, thread_stdout);
 	return 0;
 }
 
@@ -772,7 +773,7 @@ parsecolors(const char *cs)
 			if (c[j] >= '0' && c[j] <= '7') {
 				colors[i].num[j] = c[j] - '0';
 				if (!legacy_warn) {
-					fprintf(stderr,
+					fprintf(thread_stderr,
 					    "warn: LSCOLORS should use "
 					    "characters a-h instead of 0-9 ("
 					    "see the manual page)\n");
@@ -786,7 +787,7 @@ parsecolors(const char *cs)
 			} else if (tolower((unsigned char)c[j] == 'x'))
 				colors[i].num[j] = -1;
 			else {
-				fprintf(stderr,
+				fprintf(thread_stderr,
 				    "error: invalid character '%c' in LSCOLORS"
 				    " env var\n", c[j]);
 				colors[i].num[j] = -1;
@@ -820,11 +821,11 @@ printlink(FTSENT *p)
 		(void)snprintf(name, sizeof(name),
 		    "%s/%s", p->fts_parent->fts_accpath, p->fts_name);
 	if ((lnklen = readlink(name, path, sizeof(path) - 1)) == -1) {
-		(void)fprintf(stderr, "\nls: %s: %s\n", name, strerror(errno));
+		(void)fprintf(thread_stderr, "\nls: %s: %s\n", name, strerror(errno));
 		return;
 	}
 	path[lnklen] = '\0';
-	(void)printf(" -> ");
+	(void)fprintf(thread_stdout, " -> ");
 	(void)printname(path);
 }
 
@@ -837,7 +838,7 @@ printsize(size_t width, off_t bytes)
 
     humanize_number(buf, sizeof(buf), (int64_t)bytes, "",
 		    HN_AUTOSCALE, HN_B | HN_NOSPACE | HN_DECIMAL);
-    (void)printf("%5s ", buf);
+    (void)fprintf(thread_stdout, "%5s ", buf);
   } else
-    (void)printf("%*jd ", (u_int)width, (intmax_t)bytes);
+    (void)fprintf(thread_stdout, "%*jd ", (u_int)width, (intmax_t)bytes);
 }

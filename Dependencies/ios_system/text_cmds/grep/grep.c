@@ -57,7 +57,7 @@ __FBSDID("$FreeBSD: src/usr.bin/grep/grep.c,v 1.16 2012/01/15 17:01:28 eadler Ex
 
 #ifndef WITHOUT_NLS
 #include <nl_types.h>
-nl_catd	 catalog;
+__thread nl_catd	 catalog;
 #endif
 
 /*
@@ -82,60 +82,60 @@ const char	*errstr[] = {
 };
 
 /* Flags passed to regcomp() and regexec() */
-int		 cflags = REG_NOSUB;
-int		 eflags = REG_STARTEND;
+__thread int		 cflags = REG_NOSUB;
+__thread int		 eflags = REG_STARTEND;
 
 /* Shortcut for matching all cases like empty regex */
-bool		 matchall;
+__thread bool		 matchall;
 
 /* Searching patterns */
-unsigned int	 patterns, pattern_sz;
-struct pat	*pattern;
-regex_t		*r_pattern;
+unsigned __thread int	 patterns, pattern_sz;
+__thread struct pat	*pattern;
+__thread regex_t		*r_pattern;
 #ifndef WITHOUT_FASTMATCH
-fastmatch_t	*fg_pattern;
+__thread fastmatch_t	*fg_pattern;
 #endif
 
 /* Filename exclusion/inclusion patterns */
-unsigned int	 fpatterns, fpattern_sz;
-unsigned int	 dpatterns, dpattern_sz;
-struct epat	*dpattern, *fpattern;
+unsigned __thread int	 fpatterns, fpattern_sz;
+unsigned __thread int	 dpatterns, dpattern_sz;
+__thread struct epat	*dpattern, *fpattern;
 
 /* For regex errors  */
 char	 re_error[RE_ERROR_BUF + 1];
 
 /* Command-line flags */
-unsigned long long Aflag;	/* -A x: print x lines trailing each match */
-unsigned long long Bflag;	/* -B x: print x lines leading each match */
-bool	 Hflag;		/* -H: always print file name */
-bool	 Lflag;		/* -L: only show names of files with no matches */
-bool	 bflag;		/* -b: show block numbers for each match */
-bool	 cflag;		/* -c: only show a count of matching lines */
-bool	 hflag;		/* -h: don't print filename headers */
-bool	 iflag;		/* -i: ignore case */
-bool	 lflag;		/* -l: only show names of files with matches */
-bool	 mflag;		/* -m x: stop reading the files after x matches */
-long long mcount;	/* count for -m */
-bool	 nflag;		/* -n: show line numbers in front of matching lines */
-bool	 oflag;		/* -o: print only matching part */
-bool	 qflag;		/* -q: quiet mode (don't output anything) */
-bool	 sflag;		/* -s: silent mode (ignore errors) */
-bool	 vflag;		/* -v: only show non-matching lines */
-bool	 wflag;		/* -w: pattern must start and end on word boundaries */
-bool	 xflag;		/* -x: pattern must match entire line */
-bool	 lbflag;	/* --line-buffered */
-bool	 nullflag;	/* --null */
-char	*label;		/* --label */
-const char *color;	/* --color */
-int	 grepbehave = GREP_BASIC;	/* -EFGP: type of the regex */
-int	 binbehave = BINFILE_BIN;	/* -aIU: handling of binary files */
-int	 filebehave = FILE_STDIO;	/* -JZ: normal, gzip or bzip2 file */
-int	 devbehave = DEV_READ;		/* -D: handling of devices */
-int	 dirbehave = DIR_READ;		/* -dRr: handling of directories */
-int	 linkbehave = LINK_READ;	/* -OpS: handling of symlinks */
+__thread unsigned long long Aflag;	/* -A x: print x lines trailing each match */
+__thread unsigned long long Bflag;	/* -B x: print x lines leading each match */
+bool	 __thread Hflag;		/* -H: always print file name */
+bool	 __thread Lflag;		/* -L: only show names of files with no matches */
+bool	 __thread bflag;		/* -b: show block numbers for each match */
+bool	 __thread cflag;		/* -c: only show a count of matching lines */
+bool	 __thread hflag;		/* -h: don't print filename headers */
+bool	 __thread iflag;		/* -i: ignore case */
+bool	 __thread lflag;		/* -l: only show names of files with matches */
+bool	 __thread mflag;		/* -m x: stop reading the files after x matches */
+long long __thread mcount;	/* count for -m */
+bool	 __thread nflag;		/* -n: show line numbers in front of matching lines */
+bool	 __thread oflag;		/* -o: print only matching part */
+bool	 __thread qflag;		/* -q: quiet mode (don't output anything) */
+bool	 __thread sflag;		/* -s: silent mode (ignore errors) */
+bool	 __thread vflag;		/* -v: only show non-matching lines */
+bool	 __thread wflag;		/* -w: pattern must start and end on word boundaries */
+bool	 __thread xflag;		/* -x: pattern must match entire line */
+bool	 __thread lbflag;	/* --line-buffered */
+bool	 __thread nullflag;	/* --null */
+char	__thread *label;		/* --label */
+const char __thread *color;	/* --color */
+int	 __thread grepbehave = GREP_BASIC;	/* -EFGP: type of the regex */
+int	 __thread binbehave = BINFILE_BIN;	/* -aIU: handling of binary files */
+int	 __thread filebehave = FILE_STDIO;	/* -JZ: normal, gzip or bzip2 file */
+int	 __thread devbehave = DEV_READ;		/* -D: handling of devices */
+int	 __thread dirbehave = DIR_READ;		/* -dRr: handling of directories */
+int	 __thread linkbehave = LINK_READ;	/* -OpS: handling of symlinks */
 
-bool	 dexclude, dinclude;	/* --exclude-dir and --include-dir */
-bool	 fexclude, finclude;	/* --exclude and --include */
+bool	 __thread dexclude, dinclude;	/* --exclude-dir and --include-dir */
+bool	 __thread fexclude, finclude;	/* --exclude and --include */
 
 enum {
 	BIN_OPT = CHAR_MAX + 1,
@@ -154,10 +154,10 @@ enum {
 static inline const char	*init_color(const char *);
 
 /* Housekeeping */
-bool	 first = true;	/* flag whether we are processing the first match */
-bool	 prev;		/* flag whether or not the previous line matched */
-int	 tail;		/* lines left to print */
-bool	 file_err;	/* file reading error */
+__thread bool	 first = true;	/* flag whether we are processing the first match */
+__thread bool	 prev;		/* flag whether or not the previous line matched */
+__thread int	 tail;		/* lines left to print */
+__thread bool	 file_err;	/* file reading error */
 
 static char* progname;
 
@@ -167,11 +167,11 @@ static char* progname;
 static void
 usage(void)
 {
-	// fprintf(stderr, getstr(4), getprogname());
-    fprintf(stderr, getstr(4), progname);
-	fprintf(stderr, "%s", getstr(5));
-	fprintf(stderr, "%s", getstr(6));
-	fprintf(stderr, "%s", getstr(7));
+	// fprintf(thread_stderr, getstr(4), getprogname());
+    fprintf(thread_stderr, getstr(4), progname);
+	fprintf(thread_stderr, "%s", getstr(5));
+	fprintf(thread_stderr, "%s", getstr(6));
+	fprintf(thread_stderr, "%s", getstr(7));
 	exit(2);
 }
 
@@ -334,7 +334,7 @@ read_patterns(const char *fn)
 
     if ((f = fopen(fn, "r")) == NULL) {
 		// err(2, "%s", fn);
-        fprintf(stderr, "grep: %s: %s\n", fn, strerror(errno));
+        fprintf(thread_stderr, "grep: %s: %s\n", fn, strerror(errno));
         pthread_exit(NULL);
     }
 	if ((fstat(fileno(f), &st) == -1) || (S_ISDIR(st.st_mode))) {
@@ -345,7 +345,7 @@ read_patterns(const char *fn)
 		add_pattern(line, line[0] == '\n' ? 0 : len);
     if (ferror(f)) {
 		// err(2, "%s", fn);
-        fprintf(stderr, "grep: %s: %s\n", fn, strerror(errno));
+        fprintf(thread_stderr, "grep: %s: %s\n", fn, strerror(errno));
         pthread_exit(NULL);
     }
 	fclose(f);
@@ -482,7 +482,7 @@ grep_main(int argc, char *argv[])
 				Aflag = 0;
 			else if (Aflag > LLONG_MAX / 10) {
 				errno = ERANGE;
-                fprintf(stderr, "grep: %s\n", strerror(errno));
+                fprintf(thread_stderr, "grep: %s\n", strerror(errno));
                 pthread_exit(NULL);
 				// err(2, NULL);
 			}
@@ -501,13 +501,13 @@ grep_main(int argc, char *argv[])
 			l = strtoull(optarg, &ep, 10);
 			if (((errno == ERANGE) && (l == ULLONG_MAX)) ||
                 ((errno == EINVAL) && (l == 0))) {
-                fprintf(stderr, "grep: %s\n", strerror(errno));
+                fprintf(thread_stderr, "grep: %s\n", strerror(errno));
                 pthread_exit(NULL);
                 // err(2, NULL);
             }
 			else if (ep[0] != '\0') {
 				errno = EINVAL;
-                fprintf(stderr, "grep: %s\n", strerror(errno));
+                fprintf(thread_stderr, "grep: %s\n", strerror(errno));
                 pthread_exit(NULL);
                 // err(2, NULL);
 			}
@@ -534,7 +534,7 @@ grep_main(int argc, char *argv[])
 				devbehave = DEV_READ;
             else {
 				// errx(2, getstr(3), "--devices");
-                fprintf(stderr, getstr(3), "--devices");
+                fprintf(thread_stderr, getstr(3), "--devices");
                 pthread_exit(NULL);
             }
 			break;
@@ -548,7 +548,7 @@ grep_main(int argc, char *argv[])
 				dirbehave = DIR_READ;
             else {
 				// errx(2, getstr(3), "--directories");
-                fprintf(stderr, getstr(3), "--directories");
+                fprintf(thread_stderr, getstr(3), "--directories");
                 pthread_exit(NULL);
             }
 			break;
@@ -588,7 +588,7 @@ grep_main(int argc, char *argv[])
 #ifdef WITHOUT_BZIP2
 			errno = EOPNOTSUPP;
 			// err(2, "bzip2 support was disabled at compile-time");
-                fprintf(stderr, "grep: bzip2 support was disabled at compile-time: %s\n", strerror(errno));
+                fprintf(thread_stderr, "grep: bzip2 support was disabled at compile-time: %s\n", strerror(errno));
             pthread_exit(NULL);
 #endif
 			filebehave = FILE_BZIP;
@@ -607,13 +607,13 @@ grep_main(int argc, char *argv[])
 			mcount = strtoll(optarg, &ep, 10);
 			if (((errno == ERANGE) && (mcount == LLONG_MAX)) ||
                 ((errno == EINVAL) && (mcount == 0))) {
-                fprintf(stderr, "grep: %s\n", strerror(errno));
+                fprintf(thread_stderr, "grep: %s\n", strerror(errno));
                 pthread_exit(NULL);
                 // err(2, NULL);
             }
 			else if (ep[0] != '\0') {
 				errno = EINVAL;
-                fprintf(stderr, "grep: %s\n", strerror(errno));
+                fprintf(thread_stderr, "grep: %s\n", strerror(errno));
                 pthread_exit(NULL);
                 // err(2, NULL);
 			}
@@ -622,7 +622,7 @@ grep_main(int argc, char *argv[])
 #ifdef WITHOUT_LZMA
 			errno = EOPNOTSUPP;
 			// err(2, "lzma support was disabled at compile-time");
-                fprintf(stderr, "grep: lzma support was disabled at compile-time: %s\n", strerror(errno));
+                fprintf(thread_stderr, "grep: lzma support was disabled at compile-time: %s\n", strerror(errno));
             pthread_exit(NULL);
 #endif
 			filebehave = FILE_LZMA;
@@ -665,7 +665,7 @@ grep_main(int argc, char *argv[])
 #endif
 			break;
 		case 'V':
-			printf(getstr(9), progname, VERSION);
+			fprintf(thread_stdout, getstr(9), progname, VERSION);
 			exit(0);
 		case 'v':
 			vflag = true;
@@ -682,7 +682,7 @@ grep_main(int argc, char *argv[])
 #ifdef WITHOUT_LZMA
 			errno = EOPNOTSUPP;
 			// err(2, "xz support was disabled at compile-time");
-                fprintf(stderr, "grep: xz support was disabled at compile-time: %s\n", strerror(errno));
+                fprintf(thread_stderr, "grep: xz support was disabled at compile-time: %s\n", strerror(errno));
             pthread_exit(NULL);
 #endif
 			filebehave = FILE_XZ;
@@ -699,7 +699,7 @@ grep_main(int argc, char *argv[])
 				binbehave = BINFILE_TEXT;
             else {
 				// errx(2, getstr(3), "--binary-files");
-                fprintf(stderr, getstr(3), "--binary-files");
+                fprintf(thread_stderr, getstr(3), "--binary-files");
                 pthread_exit(NULL);
             }
 			break;
@@ -711,7 +711,8 @@ grep_main(int argc, char *argv[])
 				char *term;
 
 				term = getenv("TERM");
-				if (isatty(STDOUT_FILENO) && term != NULL &&
+//				if (isatty(fileno(thread_stdout)) && term != NULL &&
+                if ((fileno(thread_stdout) == fileno(stdout)) && term != NULL &&
 				    strcasecmp(term, "dumb") != 0)
 					color = init_color("01;31");
 			} else if (strcasecmp("always", optarg) == 0 ||
@@ -722,7 +723,7 @@ grep_main(int argc, char *argv[])
 			    strcasecmp("none", optarg) != 0 &&
                 strcasecmp("no", optarg) != 0) {
 				// errx(2, getstr(3), "--color");
-                fprintf(stderr, getstr(3), "--color");
+                fprintf(thread_stderr, getstr(3), "--color");
                 pthread_exit(NULL);
             }
 			cflags &= ~REG_NOSUB;
@@ -820,7 +821,7 @@ grep_main(int argc, char *argv[])
 				regerror(c, &r_pattern[i], re_error,
 				    RE_ERROR_BUF);
 				// errx(2, "%s", re_error);
-                fprintf(stderr, "grep: %s\n", re_error);
+                fprintf(thread_stderr, "grep: %s\n", re_error);
                 pthread_exit(NULL);
 			}
 #ifndef WITHOUT_FASTMATCH
@@ -829,13 +830,16 @@ grep_main(int argc, char *argv[])
 	}
 
 	if (lbflag)
-		setlinebuf(stdout);
+		setlinebuf(thread_stdout);
 
 	if ((aargc == 0 || aargc == 1) && !Hflag)
 		hflag = true;
 
-	if (aargc == 0)
-		exit(!procfile("-"));
+    if (aargc == 0) {
+        procfile("-");
+        pthread_exit(NULL);
+		// exit(!procfile("-"));
+    }
 
 	if (dirbehave == DIR_RECURSE)
 		c = grep_tree(aargv);

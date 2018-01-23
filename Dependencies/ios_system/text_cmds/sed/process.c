@@ -75,16 +75,16 @@ static __inline int	 regexec_e(regex_t *, const char *, int, int, size_t);
 static void		 regsub(SPACE *, char *, char *);
 static int		 substitute(struct s_command *);
 
-struct s_appends *appends;	/* Array of pointers to strings to append. */
+__thread struct s_appends *appends;	/* Array of pointers to strings to append. */
 static int appendx;		/* Index into appends array. */
-int appendnum;			/* Size of appends array. */
+__thread int appendnum;			/* Size of appends array. */
 
 static int lastaddr;		/* Set by applies if last address of a range. */
 static int sdone;		/* If any substitutes since last line input. */
 				/* Iov structure for 'w' commands. */
 static regex_t *defpreg;
-size_t maxnsub;
-regmatch_t *match;
+__thread size_t maxnsub;
+__thread regmatch_t *match;
 
 #define OUT(s) { fwrite(s, sizeof(u_char), psl, outfile); fputc('\n', outfile); }
 
@@ -117,7 +117,7 @@ redirect:
 					if ((appends = realloc(appends,
 					    sizeof(struct s_appends) *
 					    (appendnum *= 2))) == NULL)
-                        fprintf(stderr, "sed: realloc: %s\n", strerror(errno)); // err(1, "realloc");
+                        fprintf(thread_stderr, "sed: realloc: %s\n", strerror(errno)); // err(1, "realloc");
 				appends[appendx].type = AP_STRING;
 				appends[appendx].s = cp->t;
 				appends[appendx].len = strlen(cp->t);
@@ -202,14 +202,14 @@ redirect:
 				if (!sed_nflag && !pd)
 					OUT(ps)
 				flush_appends();
-				lseek(STDIN_FILENO, ftell(stdin), SEEK_SET);
+				lseek(fileno(thread_stdin), ftell(thread_stdin), SEEK_SET);
 				exit(0);
 			case 'r':
 				if (appendx >= appendnum)
 					if ((appends = realloc(appends,
 					    sizeof(struct s_appends) *
 					    (appendnum *= 2))) == NULL)
-						        fprintf(stderr, "sed: realloc: %s\n", strerror(errno)); // err(1, "realloc");
+						        fprintf(thread_stderr, "sed: realloc: %s\n", strerror(errno)); // err(1, "realloc");
 				appends[appendx].type = AP_FILE;
 				appends[appendx].s = cp->t;
 				appends[appendx].len = strlen(cp->t);
@@ -231,10 +231,10 @@ redirect:
 				if (cp->u.fd == -1 && (cp->u.fd = open(cp->t,
 				    O_WRONLY|O_APPEND|O_CREAT|O_TRUNC,
 				    DEFFILEMODE)) == -1)
-                    fprintf(stderr, "sed: %s: %s\n", cp->t, strerror(errno)); // err(1, "%s", cp->t);
+                    fprintf(thread_stderr, "sed: %s: %s\n", cp->t, strerror(errno)); // err(1, "%s", cp->t);
 				if (write(cp->u.fd, ps, psl) != psl ||
 				    write(cp->u.fd, "\n", 1) != 1)
-                    fprintf(stderr, "sed: %s: %s\n", cp->t, strerror(errno)); // err(1, "%s", cp->t);
+                    fprintf(thread_stderr, "sed: %s: %s\n", cp->t, strerror(errno)); // err(1, "%s", cp->t);
 				break;
 			case 'x':
 				if (hs == NULL)
@@ -330,7 +330,7 @@ substitute(struct s_command *cp)
 	if (re == NULL) {
 		if (defpreg != NULL && cp->u.s->maxbref > defpreg->re_nsub) {
 			linenum = cp->u.s->linenum;
-            fprintf(stderr, "sed: %lu: %s: \\%d not defined in the RE\n",
+            fprintf(thread_stderr, "sed: %lu: %s: \\%d not defined in the RE\n",
 			// errx(1, "%lu: %s: \\%d not defined in the RE",
 					linenum, fname, cp->u.s->maxbref);
             pthread_exit(NULL);
@@ -417,10 +417,10 @@ substitute(struct s_command *cp)
 	if (cp->u.s->wfile && !pd) {
 		if (cp->u.s->wfd == -1 && (cp->u.s->wfd = open(cp->u.s->wfile,
 		    O_WRONLY|O_APPEND|O_CREAT|O_TRUNC, DEFFILEMODE)) == -1)
-            fprintf(stderr, "sed: %s: %s\n", cp->u.s->wfile, strerror(errno)); // err(1, "%s", cp->u.s->wfile);
+            fprintf(thread_stderr, "sed: %s: %s\n", cp->u.s->wfile, strerror(errno)); // err(1, "%s", cp->u.s->wfile);
 		if (write(cp->u.s->wfd, ps, psl) != psl ||
 		    write(cp->u.s->wfd, "\n", 1) != 1)
-            fprintf(stderr, "sed: %s: %s\n", cp->u.s->wfile, strerror(errno)); // err(1, "%s", cp->u.s->wfile);
+            fprintf(thread_stderr, "sed: %s: %s\n", cp->u.s->wfile, strerror(errno)); // err(1, "%s", cp->u.s->wfile);
 	}
 	return (1);
 }
@@ -514,7 +514,7 @@ flush_appends(void)
 			break;
 		}
 	if (ferror(outfile))
-    { fprintf(stderr, "sed: %s: %s\n", outfname, strerror(errno ? errno : EIO));
+    { fprintf(thread_stderr, "sed: %s: %s\n", outfname, strerror(errno ? errno : EIO));
         pthread_exit(NULL);
     // errx(1, "%s: %s", outfname, strerror(errno ? errno : EIO));
     }
@@ -533,12 +533,12 @@ lputs(char *s, size_t len)
 	wchar_t wc;
 	mbstate_t mbs;
 
-	if (outfile != stdout)
+	if (outfile != thread_stdout)
 		termwidth = 60;
 	if (termwidth == -1) {
 		if ((p = getenv("COLUMNS")) && *p != '\0')
 			termwidth = atoi(p);
-		else if (ioctl(STDOUT_FILENO, TIOCGWINSZ, &win) == 0 &&
+		else if (ioctl(fileno(thread_stdout), TIOCGWINSZ, &win) == 0 &&
 		    win.ws_col > 0)
 			termwidth = win.ws_col;
 		else
@@ -596,7 +596,7 @@ lputs(char *s, size_t len)
 	(void)fputc('$', outfile);
 	(void)fputc('\n', outfile);
     if (ferror(outfile)) {
-        fprintf(stderr, "sed: %s: %s\n", outfname, strerror(errno ? errno : EIO));
+        fprintf(thread_stderr, "sed: %s: %s\n", outfname, strerror(errno ? errno : EIO));
         // errx(1, "%s: %s", outfname, strerror(errno ? errno : EIO));
         pthread_exit(NULL);
     }
@@ -610,7 +610,7 @@ regexec_e(regex_t *preg, const char *string, int eflags, int nomatch,
 
 	if (preg == NULL) {
 		if (defpreg == NULL)
-        { fprintf(stderr, "sed: first RE may not be empty\n");
+        { fprintf(thread_stderr, "sed: first RE may not be empty\n");
             // errx(1, "first RE may not be empty");
             pthread_exit(NULL);
         }
@@ -629,7 +629,7 @@ regexec_e(regex_t *preg, const char *string, int eflags, int nomatch,
 	case REG_NOMATCH:
 		return (0);
 	}
-    fprintf(stderr, "sed: RE error: %s\n", strregerror(eval, defpreg));
+    fprintf(thread_stderr, "sed: RE error: %s\n", strregerror(eval, defpreg));
     pthread_exit(NULL);
     // errx(1, "RE error: %s", strregerror(eval, defpreg));
 	/* NOTREACHED */
@@ -651,7 +651,7 @@ regsub(SPACE *sp, char *string, char *src)
 		sp->blen += (reqlen) + 1024;				\
 		if ((sp->space = sp->back = realloc(sp->back, sp->blen)) \
 		    == NULL)						\
-            fprintf(stderr, "sed: realloc: %s\n", strerror(errno)); \
+            fprintf(thread_stderr, "sed: realloc: %s\n", strerror(errno)); \
 		dst = sp->space + sp->len;				\
 	}
     // err(1, "realloc");
@@ -698,7 +698,7 @@ cspace(SPACE *sp, const char *p, size_t len, enum e_spflag spflag)
 		sp->blen = tlen + 1024;
 		if ((sp->space = sp->back = realloc(sp->back, sp->blen)) ==
 		    NULL)
-			        fprintf(stderr, "sed: realloc: %s\n", strerror(errno)); // err(1, "realloc");
+			        fprintf(thread_stderr, "sed: realloc: %s\n", strerror(errno)); // err(1, "realloc");
 	}
 
 	if (spflag == REPLACE)
@@ -720,12 +720,12 @@ cfclose(struct s_command *cp, struct s_command *end)
 		switch(cp->code) {
 		case 's':
 			if (cp->u.s->wfd != -1 && close(cp->u.s->wfd))
-                fprintf(stderr, "sed: %s: %s\n", cp->u.s->wfile, strerror(errno)); // err(1, "%s", cp->u.s->wfile);
+                fprintf(thread_stderr, "sed: %s: %s\n", cp->u.s->wfile, strerror(errno)); // err(1, "%s", cp->u.s->wfile);
 			cp->u.s->wfd = -1;
 			break;
 		case 'w':
 			if (cp->u.fd != -1 && close(cp->u.fd))
-                fprintf(stderr, "sed: %s: %s\n", cp->t, strerror(errno)); // err(1, "%s", cp->t);
+                fprintf(thread_stderr, "sed: %s: %s\n", cp->t, strerror(errno)); // err(1, "%s", cp->t);
 			cp->u.fd = -1;
 			break;
 		case '{':

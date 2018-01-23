@@ -165,7 +165,8 @@ rm_main(argc, argv)
 	checkdot(argv);
 
 	if (*argv) {
-		stdin_ok = isatty(STDIN_FILENO);
+//		stdin_ok = isatty(fileno(thread_stdin));
+        stdin_ok = (fileno(thread_stdin) == fileno(stdin));
 
 		if (rflag)
 			rm_tree(argv);
@@ -206,7 +207,7 @@ rm_tree(argv)
 	if (!(fts = fts_open(argv, flags, NULL))) {
 		if (fflag && errno == ENOENT)
 			return;
-        fprintf(stderr, "rm: %s\n", strerror(errno));
+        fprintf(thread_stderr, "rm: %s\n", strerror(errno));
         pthread_exit(NULL);
 		// err(1, NULL);
 	}
@@ -215,14 +216,14 @@ rm_tree(argv)
 		case FTS_DNR:
 			if (!fflag || p->fts_errno != ENOENT) {
                 // warnx("%s: %s",
-                fprintf(stderr, "rm: %s: %s\n",
+                fprintf(thread_stderr, "rm: %s: %s\n",
 				    p->fts_path, strerror(p->fts_errno));
 				eval = 1;
 			}
 			continue;
 		case FTS_ERR:
 			// errx(1, "%s: %s", p->fts_path, strerror(p->fts_errno));
-            fprintf(stderr, "rm: %s: %s\n", p->fts_path, strerror(p->fts_errno));
+            fprintf(thread_stderr, "rm: %s: %s\n", p->fts_path, strerror(p->fts_errno));
             pthread_exit(NULL);
 		case FTS_NS:
 			/*
@@ -233,7 +234,7 @@ rm_tree(argv)
 				break;
 			if (!fflag || p->fts_errno != ENOENT) {
 				// warnx("%s: %s",
-                fprintf(stderr, "rm: %s: %s\n",
+                fprintf(thread_stderr, "rm: %s: %s\n",
 				    p->fts_path, strerror(p->fts_errno));
 				eval = 1;
 			}
@@ -294,7 +295,7 @@ rm_tree(argv)
 				rval = rmdir(p->fts_accpath);
 				if (rval == 0 || (fflag && errno == ENOENT)) {
 					if (rval == 0 && vflag)
-						(void)printf("%s\n",
+						(void)fprintf(thread_stdout, "%s\n",
 						    p->fts_path);
 					continue;
 				}
@@ -304,7 +305,7 @@ rm_tree(argv)
 				rval = undelete(p->fts_accpath);
 				if (rval == 0 && (fflag && errno == ENOENT)) {
 					if (vflag)
-						(void)printf("%s\n",
+						(void)fprintf(thread_stdout, "%s\n",
 						    p->fts_path);
 					continue;
 				}
@@ -324,21 +325,21 @@ rm_tree(argv)
 #endif	/* __APPLE__ */
 				if (rval == 0 || (fflag && errno == ENOENT)) {
 					if (rval == 0 && vflag)
-						(void)printf("%s\n",
+						(void)fprintf(thread_stdout, "%s\n",
 						    p->fts_path);
 					continue;
 				}
 			}
 		}
 err:
-        fprintf(stderr, "rm: %s: %s\n", p->fts_path, strerror(errno));
+        fprintf(thread_stderr, "rm: %s: %s\n", p->fts_path, strerror(errno));
         // warn("%s", p->fts_path);
 		eval = 1;
 	}
     fts_close(fts);
     if (errno) {
 		// err(1, "fts_read");
-        fprintf(stderr, "rm: fts_read: %s\n", strerror(errno));
+        fprintf(thread_stderr, "rm: fts_read: %s\n", strerror(errno));
         pthread_exit(NULL);
     }
 }
@@ -362,21 +363,21 @@ rm_file(argv)
 				sb.st_mode = S_IFWHT|S_IWUSR|S_IRUSR;
 			} else {
 				if (!fflag || errno != ENOENT) {
-                    fprintf(stderr, "rm: %s: %s\n", f, strerror(errno));
+                    fprintf(thread_stderr, "rm: %s: %s\n", f, strerror(errno));
                     // warn("%s", f);
 					eval = 1;
 				}
 				continue;
 			}
 		} else if (Wflag) {
-			fprintf(stderr, "rm: %s: %s\n", f, strerror(EEXIST));
+			fprintf(thread_stderr, "rm: %s: %s\n", f, strerror(EEXIST));
             // warnx("%s: %s", f, strerror(EEXIST));
 			eval = 1;
 			continue;
 		}
 
 		if (S_ISDIR(sb.st_mode) && !dflag) {
-			fprintf(stderr, "rm: %s: is a directory\n", f);
+			fprintf(thread_stderr, "rm: %s: is a directory\n", f);
             //warnx("%s: is a directory", f);
 			eval = 1;
 			continue;
@@ -408,12 +409,12 @@ rm_file(argv)
 			}
 		}
 		if (rval && (!fflag || errno != ENOENT)) {
-            fprintf(stderr, "rm: %s: %s\n", f, strerror(errno));
+            fprintf(thread_stderr, "rm: %s: %s\n", f, strerror(errno));
             // warn("%s", f);
 			eval = 1;
 		}
 		if (vflag && rval == 0)
-			(void)printf("%s\n", f);
+			(void)fprintf(thread_stdout, "%s\n", f);
 	}
 }
 
@@ -453,7 +454,7 @@ rm_overwrite(file, sbp)
 	bsize = MAX(fsb.f_iosize, 1024);
     if ((buf = malloc(bsize)) == NULL) {
 		// err(1, "malloc");
-        fprintf(stderr, "rm: malloc: %s\n", strerror(errno));
+        fprintf(thread_stderr, "rm: malloc: %s\n", strerror(errno));
         pthread_exit(NULL);
     }
 
@@ -480,7 +481,7 @@ rm_overwrite(file, sbp)
 err:	eval = 1;
 	if (buf)
 		free(buf);
-        fprintf(stderr, "rm: %s: %s\n", file, strerror(errno));
+        fprintf(thread_stderr, "rm: %s: %s\n", file, strerror(errno));
     // warn("%s", file);
 }
 
@@ -488,7 +489,7 @@ int
 yes_or_no()
 {
 	int ch, first;
-	(void)fflush(stderr);
+	(void)fflush(thread_stderr);
 
 	first = ch = getchar();
 	while (ch != '\n' && ch != EOF)
@@ -502,7 +503,7 @@ checkdir(path)
 {
 	if(!iflag)
 		return 1;	//if not interactive, process directory's contents
-	(void)fprintf(stderr, "examine files in directory %s? ", path);
+	(void)fprintf(thread_stderr, "examine files in directory %s? ", path);
 	return yes_or_no();
 }
 
@@ -515,7 +516,7 @@ check(path, name, sp)
 
 	/* Check -i first. */
 	if (iflag)
-		(void)fprintf(stderr, "remove %s? ", path);
+		(void)fprintf(thread_stderr, "remove %s? ", path);
 	else {
 		/*
 		 * If it's not a symbolic link and it's unwritable and we're
@@ -530,11 +531,11 @@ check(path, name, sp)
 			return (1);
 		strmode(sp->st_mode, modep);
         if ((flagsp = fflagstostr(sp->st_flags)) == NULL) {
-            fprintf(stderr, "rm: %s\n", strerror(errno));
+            fprintf(thread_stderr, "rm: %s\n", strerror(errno));
             pthread_exit(NULL);
 			// err(1, NULL);
         }
-		(void)fprintf(stderr, "override %s%s%s/%s %s%sfor %s? ",
+		(void)fprintf(thread_stderr, "override %s%s%s/%s %s%sfor %s? ",
 		    modep + 1, modep[9] == ' ' ? "" : " ",
 		    user_from_uid(sp->st_uid, 0),
 		    group_from_gid(sp->st_gid, 0),
@@ -580,7 +581,7 @@ checkdot(argv)
 		}
 		if (ISDOT(p)) {
 			if (!complained++)
-                fprintf(stderr, "rm: \".\" and \"..\" may not be removed\n");
+                fprintf(thread_stderr, "rm: \".\" and \"..\" may not be removed\n");
 				// warnx("\".\" and \"..\" may not be removed");
 			eval = 1;
 			for (save = t; (t[0] = t[1]) != NULL; ++t)
@@ -595,7 +596,7 @@ void
 usage()
 {
 
-	(void)fprintf(stderr, "%s\n%s\n",
+	(void)fprintf(thread_stderr, "%s\n%s\n",
 	    "usage: rm [-f | -i] [-dPRrvW] file ...",
 	    "       unlink file");
 	exit(EX_USAGE);
