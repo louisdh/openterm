@@ -9,17 +9,27 @@
 import UIKit
 
 extension UserDefaults {
-    func set(color: UIColor?, forKey: String) {
+	
+    func set(_ color: UIColor?, forKey defaultName: String) {
         guard let value = color else {
-            set(nil, forKey: forKey)
+			set(Optional<Any>.none, forKey: defaultName)
             return
         }
-        set(NSKeyedArchiver.archivedData(withRootObject: value), forKey: forKey)
+		
+		let data = NSKeyedArchiver.archivedData(withRootObject: value)
+        set(data, forKey: defaultName)
     }
     
-    func colorForKey(forKey: String) -> UIColor? {
-        guard let data = data(forKey: forKey), let color = NSKeyedUnarchiver.unarchiveObject(with: data) as? UIColor
-        else { return nil }
+    func color(forKey defaultName: String) -> UIColor? {
+        guard let data = data(forKey: defaultName) else {
+			return nil
+		}
+		
+		guard let color = NSKeyedUnarchiver.unarchiveObject(with: data) as? UIColor else {
+			return nil
+		}
+		
         return color
     }
+	
 }

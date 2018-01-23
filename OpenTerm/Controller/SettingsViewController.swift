@@ -9,6 +9,12 @@
 import UIKit
 import MessageUI
 
+extension Notification.Name {
+	
+	static let appearanceDidChange = NSNotification.Name(rawValue: "appearanceDidChange")
+	
+}
+
 extension UIDevice {
 	
 	public var modelName: String {
@@ -58,31 +64,34 @@ class SettingsViewController: UITableViewController {
     
     func updateView() {
         
-        let fontSize = UserDefaults.standard.integer(forKey: "terminalFontSize")
+        let fontSize = UserDefaultsController.shared.terminalFontSize
         fontSizeStepper.value = Double(fontSize)
         fontSizeLabel.text = String(fontSize)
         fontSizeStepper.minimumValue = 8
         fontSizeStepper.maximumValue = 32
         
-        terminalTextColorView.backgroundColor = UserDefaults.standard.colorForKey(forKey: "terminalTextColor")
-        terminalBackgroundColorView.backgroundColor = UserDefaults.standard.colorForKey(forKey: "terminalBackgroundColor")
+        terminalTextColorView.backgroundColor = UserDefaultsController.shared.terminalTextColor
+        terminalBackgroundColorView.backgroundColor = UserDefaultsController.shared.terminalBackgroundColor
         
-        useDarkKeyboardSwitch.isOn = UserDefaults.standard.bool(forKey: "userDarkKeyboardInTerminal")
+        useDarkKeyboardSwitch.isOn = UserDefaultsController.shared.userDarkKeyboardInTerminal
         
     }
 
     @IBAction func fontSizeStepperDidChange(_ sender: UIStepper) {
-        
-        UserDefaults.standard.set(sender.value, forKey: "terminalFontSize")
-        fontSizeLabel.text = String(UserDefaults.standard.integer(forKey: "terminalFontSize"))
-        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "appearanceDidChange"), object: nil)
+		
+		let newFontSize = Int(sender.value)
+		
+		UserDefaultsController.shared.terminalFontSize = newFontSize
+        fontSizeLabel.text = String(newFontSize)
+        NotificationCenter.default.post(name: .appearanceDidChange, object: nil)
         
     }
     
     @IBAction func useDarkKeyboardSwitchDidChange(_ sender: UISwitch) {
-        
-        UserDefaults.standard.set(useDarkKeyboardSwitch.isOn, forKey: "userDarkKeyboardInTerminal")
-        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "appearanceDidChange"), object: nil)
+		
+		UserDefaultsController.shared.userDarkKeyboardInTerminal = useDarkKeyboardSwitch.isOn
+
+		NotificationCenter.default.post(name: .appearanceDidChange, object: nil)
         
     }
     
@@ -140,15 +149,28 @@ class SettingsViewController: UITableViewController {
             
             if indexPath.row == 1 {
                 
-                colorPickerViewController.delegate = UpdateTerminalTextColor()
+				colorPickerViewController.didSelectCallback = { color in
+					
+					UserDefaultsController.shared.terminalTextColor = color
+
+					NotificationCenter.default.post(name: .appearanceDidChange, object: nil)
+					
+				}
+				
                 navigationController?.pushViewController(colorPickerViewController, animated: true)
                 
             }
             
             if indexPath.row == 2 {
                 
-                colorPickerViewController.delegate = UpdateTerminalBackgroundColor()
-                navigationController?.pushViewController(colorPickerViewController, animated: true)
+				colorPickerViewController.didSelectCallback = { color in
+					
+					UserDefaultsController.shared.terminalBackgroundColor = color
+					
+					NotificationCenter.default.post(name: .appearanceDidChange, object: nil)
+					
+				}
+				navigationController?.pushViewController(colorPickerViewController, animated: true)
                 
             }
             
@@ -233,7 +255,7 @@ class SettingsViewController: UITableViewController {
 		let version = Bundle.main.version
 		let build = Bundle.main.build
 		
-		mailComposerVC.setSubject("Terminal \(version)")
+		mailComposerVC.setSubject("OpenTerm \(version)")
 		
 		let deviceModel = UIDevice.current.modelName
 		let systemName = UIDevice.current.systemName
@@ -243,7 +265,7 @@ class SettingsViewController: UITableViewController {
 		
 		
 		----------
-		App: Terminal \(version) (build \(build))
+		App: OpenTerm \(version) (build \(build))
 		Device: \(deviceModel) (\(systemName) \(systemVersion))
 		
 		"""

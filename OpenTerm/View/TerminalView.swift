@@ -95,28 +95,41 @@ class TerminalView: UIView {
         
         updateAppearanceFromSettings()
         
-        NotificationCenter.default.addObserver(self, selector: #selector(self.updateAppearanceFromSettings), name: NSNotification.Name(rawValue: "appearanceDidChange"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.updateAppearanceFromSettingsAnimated), name: .appearanceDidChange, object: nil)
 		
 	}
-    
-    @objc func updateAppearanceFromSettings() {
-        
-        let terminalFontSize = UserDefaults.standard.integer(forKey: "terminalFontSize")
-        textView.font = UIFont(name: "Menlo", size: CGFloat(terminalFontSize))
-        
-        let terminaltextColor = UserDefaults.standard.colorForKey(forKey: "terminalTextColor")
-        textView.textColor = terminaltextColor
-        textView.tintColor = terminaltextColor
-        
-        textView.backgroundColor = UserDefaults.standard.colorForKey(forKey: "terminalBackgroundColor")
-        
-        if UserDefaults.standard.bool(forKey: "userDarkKeyboardInTerminal") == true {
-            textView.keyboardAppearance = .dark
-        } else {
-            textView.keyboardAppearance = .light
-        }
+	
+    @objc
+	func updateAppearanceFromSettingsAnimated() {
+		
+		UIView.animate(withDuration: 0.35) {
+		
+			self.updateAppearanceFromSettings()
+			
+		}
         
     }
+	
+	func updateAppearanceFromSettings() {
+
+		let userDefaultsController = UserDefaultsController.shared
+		
+		let terminalFontSize = userDefaultsController.terminalFontSize
+		self.textView.font = UIFont(name: "Menlo", size: CGFloat(terminalFontSize))
+		
+		let terminaltextColor = userDefaultsController.terminalTextColor
+		self.textView.textColor = terminaltextColor
+		self.textView.tintColor = terminaltextColor
+		
+		self.textView.backgroundColor = userDefaultsController.terminalBackgroundColor
+		
+		if userDefaultsController.userDarkKeyboardInTerminal {
+			textView.keyboardAppearance = .dark
+		} else {
+			textView.keyboardAppearance = .light
+		}
+		
+	}
 	
 	func clearScreen() {
 		
@@ -228,15 +241,11 @@ extension TerminalView: UITextViewDelegate {
 			return false
 		}
 		
-		print(text)
-		
 		return true
 	}
 	
 	func textViewDidChange(_ textView: UITextView) {
-		
-		print(textView.text)
-		
+				
 	}
 	
 }

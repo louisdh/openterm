@@ -22,6 +22,10 @@ class DocumentManager {
 		
 		let baseURL = self.activeDocumentsFolderURL
 		
+		if !fileManager.fileExists(atPath: baseURL.path) {
+			try? fileManager.createDirectory(at: baseURL, withIntermediateDirectories: true, attributes: nil)
+		}
+		
 		fileManager.changeCurrentDirectoryPath(baseURL.path)
         ios_setMiniRoot(baseURL.path)
 		
