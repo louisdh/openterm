@@ -59,6 +59,7 @@ class ViewController: UIViewController {
 		NotificationCenter.default.addObserver(self, selector: #selector(applicationDidEnterBackground), name: .UIApplicationDidEnterBackground, object: nil)
 
         initializeEnvironment()
+        replaceCommand("x-callback-url", xCallbackUrl, true)
 	}
 	
 	override func viewWillAppear(_ animated: Bool) {
