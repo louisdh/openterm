@@ -172,8 +172,9 @@ static NSString* previousDirectory;
 void initializeEnvironment() {
     // setup a few useful environment variables
     // Initialize paths for application files, including history.txt and keys
-    NSString *docsPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
-    NSString *libPath = [NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES) lastObject];
+    NSString *docsPath;
+    if (miniRoot == nil) docsPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
+    else docsPath = miniRoot;
     previousDirectory = [[NSFileManager defaultManager] currentDirectoryPath];
     
     // Where the executables are stored: $PATH + ~/Library/bin + ~/Documents/bin
@@ -184,10 +185,6 @@ void initializeEnvironment() {
     if (! [fullCommandPath isEqualToString:checkingPath]) {
         fullCommandPath = checkingPath;
     }
-    if (![fullCommandPath containsString:@"Library/bin"]) {
-        NSString *binPath = [libPath stringByAppendingPathComponent:@"bin"];
-        fullCommandPath = [[binPath stringByAppendingString:@":"] stringByAppendingString:fullCommandPath];
-    }
     if (![fullCommandPath containsString:@"Documents/bin"]) {
         NSString *binPath = [docsPath stringByAppendingPathComponent:@"bin"];
         fullCommandPath = [[binPath stringByAppendingString:@":"] stringByAppendingString:fullCommandPath];
@@ -195,15 +192,20 @@ void initializeEnvironment() {
     setenv("APPDIR", [[NSBundle mainBundle] resourcePath].UTF8String, 1);
     setenv("PATH", fullCommandPath.UTF8String, 1); // 1 = override existing value
     setenv("TERM", "xterm", 1); // 1 = override existing value
+    setenv("TMPDIR", NSTemporaryDirectory().UTF8String, 0); // tmp directory
     directoriesInPath = [fullCommandPath componentsSeparatedByString:@":"];
     
     // We can't write in $HOME so we need to set the position of config files:
-    setenv("SSH_HOME", docsPath.UTF8String, 0);  // SSH keys in ~/Documents/.ssh/
-    setenv("CURL_HOME", docsPath.UTF8String, 0); // CURL config in ~/Documents/
-    setenv("TMPDIR", NSTemporaryDirectory().UTF8String, 0); // tmp directory
-    setenv("SSL_CERT_FILE", [docsPath stringByAppendingPathComponent:@"cacert.pem"].UTF8String, 0); // SLL cacert.pem in ~/Documents/cacert.pem
+    setenv("SSH_HOME", docsPath.UTF8String, 0);  // SSH keys in ~/Documents/.ssh/ or [Cloud Drive]/.ssh
+    setenv("CURL_HOME", docsPath.UTF8String, 0); // CURL config in ~/Documents/ or [Cloud Drive]/
+    setenv("SSL_CERT_FILE", [docsPath stringByAppendingPathComponent:@"cacert.pem"].UTF8String, 0); // SLL cacert.pem in ~/Documents/cacert.pem or [Cloud Drive]/cacert.pem
     // iOS already defines "HOME" as the home dir of the application
 #ifdef FEAT_PYTHON
+    NSString *libPath = [NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES) lastObject];
+    if (![fullCommandPath containsString:@"Library/bin"]) {
+        NSString *binPath = [libPath stringByAppendingPathComponent:@"bin"];
+        fullCommandPath = [[binPath stringByAppendingString:@":"] stringByAppendingString:fullCommandPath];
+    }
     // if we use Python, we define a few more environment variables:
     setenv("PYTHONHOME", libPath.UTF8String, 0);  // Python scripts in ~/Library/lib/python3.6/
     setenv("PYZMQ_BACKEND", "cffi", 0);
