@@ -46,30 +46,31 @@ __FBSDID("$FreeBSD: src/usr.bin/cksum/print.c,v 1.7 2003/03/13 23:32:28 robert E
 #include <stdint.h>
 
 #include "extern.h"
+#include "ios_error.h"
 
 void
 pcrc(char *fn, uint32_t val, off_t len)
 {
-	(void)printf("%lu %jd", (u_long)val, (intmax_t)len);
+	(void)fprintf(thread_stdout, "%lu %jd", (u_long)val, (intmax_t)len);
 	if (fn != NULL)
-		(void)printf(" %s", fn);
-	(void)printf("\n");
+		(void)fprintf(thread_stdout, " %s", fn);
+	(void)fprintf(thread_stdout, "\n");
 }
 
 void
 psum1(char *fn, uint32_t val, off_t len)
 {
-	(void)printf("%lu %jd", (u_long)val, (intmax_t)(len + 1023) / 1024);
+	(void)fprintf(thread_stdout, "%lu %jd", (u_long)val, (intmax_t)(len + 1023) / 1024);
 	if (fn != NULL)
-		(void)printf(" %s", fn);
-	(void)printf("\n");
+		(void)fprintf(thread_stdout, " %s", fn);
+	(void)fprintf(thread_stdout, "\n");
 }
 
 void
 psum2(char *fn, uint32_t val, off_t len)
 {
-	(void)printf("%lu %jd", (u_long)val, (intmax_t)(len + 511) / 512);
+	(void)fprintf(thread_stdout, "%lu %jd", (u_long)val, (intmax_t)(len + 511) / 512);
 	if (fn != NULL)
-		(void)printf(" %s", fn);
-	(void)printf("\n");
+		(void)fprintf(thread_stdout, " %s", fn);
+	(void)fprintf(thread_stdout, "\n");
 }

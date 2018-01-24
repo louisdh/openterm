@@ -29,6 +29,7 @@
 #include "tool_msgs.h"
 #include "tool_cb_dbg.h"
 #include "tool_util.h"
+#include "ios_error.h"
 
 #include "memdebug.h" /* keep this as LAST include */
 
@@ -74,7 +75,7 @@ int tool_debug_cb(CURL *handle, curl_infotype type,
   if(!config->trace_stream) {
     /* open for append */
     if(!strcmp("-", config->trace_dump))
-      config->trace_stream = stdout;
+      config->trace_stream = thread_stdout;
     else if(!strcmp("%", config->trace_dump))
       /* Ok, this is somewhat hackish but we do it undocumented for now */
       config->trace_stream = config->errors;  /* aka stderr */
@@ -142,7 +143,7 @@ int tool_debug_cb(CURL *handle, curl_infotype type,
            to stderr or stdout, we don't display the alert about the data not
            being shown as the data _is_ shown then just not via this
            function */
-        if(!config->isatty || ((output != stderr) && (output != stdout))) {
+        if(!config->isatty || ((output != thread_stderr) && (output != thread_stdout))) {
           if(!newl)
             fprintf(output, "%s%s ", timebuf, s_infotype[type]);
           fprintf(output, "[%zd bytes data]\n", size);

@@ -702,7 +702,7 @@ static void _ldap_trace(const char *fmt, ...)
     return;
 
   va_start(args, fmt);
-  vfprintf(stderr, fmt, args);
+  vfprintf(thread_stderr, fmt, args);
   va_end(args);
 }
 #endif

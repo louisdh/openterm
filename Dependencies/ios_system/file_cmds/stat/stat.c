@@ -259,7 +259,7 @@ stat_main(int argc, char *argv[])
 		case 'x':
             if (fmtchar != 0) {
 				// errx(1, "can't use format '%c' with '%c'",
-                fprintf(stderr, "stat: can't use format '%c' with '%c'\n",
+                fprintf(thread_stderr, "stat: can't use format '%c' with '%c'\n",
 				    fmtchar, ch);
                 pthread_exit(NULL);
             }
@@ -287,7 +287,7 @@ stat_main(int argc, char *argv[])
 
     if (lsF && fmtchar != 'l') {
 		// errx(1, "can't use format '%c' with -F", fmtchar);
-        fprintf(stderr, "stat: can't use format '%c' with -F\n", fmtchar);
+        fprintf(thread_stderr, "stat: can't use format '%c' with -F\n", fmtchar);
         pthread_exit(NULL);
     }
 
@@ -320,7 +320,7 @@ stat_main(int argc, char *argv[])
 	errs = 0;
 	do {
 		if (argc == 0)
-			rc = fstat(STDIN_FILENO, &st);
+			rc = fstat(fileno(thread_stdin), &st);
 		else if (usestat)
 			rc = stat(argv[0], &st);
 		else
@@ -331,7 +331,7 @@ stat_main(int argc, char *argv[])
 			linkfail = 1;
 			if (!quiet)
 				// warn("%s: stat",
-                fprintf(stderr, "stat: %s: stat: %s\n",
+                fprintf(thread_stderr, "stat: %s: stat: %s\n",
 				    argc == 0 ? "(stdin)" : argv[0], strerror(errno));
 		}
 		else
@@ -348,8 +348,8 @@ stat_main(int argc, char *argv[])
 void
 usage(const char *synopsis)
 {
-	// (void)fprintf(stderr, "usage: %s %s\n", getprogname(), synopsis);
-    (void)fprintf(stderr, "usage: %s %s\n", progname, synopsis);
+	// (void)fprintf(thread_stderr, "usage: %s %s\n", getprogname(), synopsis);
+    (void)fprintf(thread_stderr, "usage: %s %s\n", progname, synopsis);
 	exit(1);
 }
 
@@ -372,7 +372,7 @@ output(const struct stat *st, const char *file,
 		 * Non-format characters go straight out.
 		 */
 		if (*statfmt != FMT_MAGIC) {
-			addchar(stdout, *statfmt, &nl);
+			addchar(thread_stdout, *statfmt, &nl);
 			statfmt++;
 			continue;
 		}
@@ -389,15 +389,15 @@ output(const struct stat *st, const char *file,
 		 */
 		switch (*statfmt) {
 		case SIMPLE_NEWLINE:
-			addchar(stdout, '\n', &nl);
+			addchar(thread_stdout, '\n', &nl);
 			statfmt++;
 			continue;
 		case SIMPLE_TAB:
-			addchar(stdout, '\t', &nl);
+			addchar(thread_stdout, '\t', &nl);
 			statfmt++;
 			continue;
 		case SIMPLE_PERCENT:
-			addchar(stdout, '%', &nl);
+			addchar(thread_stdout, '%', &nl);
 			statfmt++;
 			continue;
 		case SIMPLE_NUMBER: {
@@ -405,7 +405,7 @@ output(const struct stat *st, const char *file,
 
 			snprintf(num, sizeof(num), "%d", fn);
 			for (p = &num[0]; *p; p++)
-				addchar(stdout, *p, &nl);
+				addchar(thread_stdout, *p, &nl);
 			statfmt++;
 			continue;
 		}
@@ -532,20 +532,20 @@ output(const struct stat *st, const char *file,
 		     flags, size, prec, ofmt, hilo, what);
 
 		for (i = 0; i < t && i < sizeof(buf); i++)
-			addchar(stdout, buf[i], &nl);
+			addchar(thread_stdout, buf[i], &nl);
 
 		continue;
 
 	badfmt:
         // errx(1, "%.*s: bad format",
-        fprintf(stderr, "stat: %.*s: bad format\n",
+        fprintf(thread_stderr, "stat: %.*s: bad format\n",
 		    (int)(statfmt - subfmt + 1), subfmt);
         pthread_exit(NULL);
 	}
 
 	if (!nl && !nonl)
-		(void)fputc('\n', stdout);
-	(void)fflush(stdout);
+		(void)fputc('\n', thread_stdout);
+	(void)fflush(thread_stdout);
 }
 
 /*
@@ -875,7 +875,7 @@ format1(const struct stat *st,
 		/*NOTREACHED*/
 	default:
 		// errx(1, "%.*s: bad format", (int)flen, fmt);
-        fprintf(stderr, "stat: %.*s: bad format\n", (int)flen, fmt);
+        fprintf(thread_stderr, "stat: %.*s: bad format\n", (int)flen, fmt);
         pthread_exit(NULL);
 	}
 
@@ -885,7 +885,7 @@ format1(const struct stat *st,
 	 */
     if (hilo != 0 || (ofmt & formats) == 0) {
 		// errx(1, "%.*s: bad format", (int)flen, fmt);
-        fprintf(stderr, "stat: %.*s: bad format\n", (int)flen, fmt);
+        fprintf(thread_stderr, "stat: %.*s: bad format\n", (int)flen, fmt);
         pthread_exit(NULL);
     }
 
@@ -992,7 +992,7 @@ format1(const struct stat *st,
 	if (ofmt == FMTF_STRING) {
         if (sdata == NULL) {
 			// errx(1, "%.*s: bad format", (int)flen, fmt);
-            fprintf(stderr, "stat: %.*s: bad format\n", (int)flen, fmt);
+            fprintf(thread_stderr, "stat: %.*s: bad format\n", (int)flen, fmt);
             pthread_exit(NULL);
         }
 		(void)strcat(lfmt, "s");

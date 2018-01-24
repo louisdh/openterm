@@ -106,7 +106,7 @@ cat_main(int argc, char *argv[])
 			tflag = vflag = 1;	/* -t implies -v */
 			break;
 		case 'u':
-			setbuf(stdout, NULL);
+			setbuf(thread_stdout, NULL);
 			break;
 		case 'v':
 			vflag = 1;
@@ -122,14 +122,15 @@ cat_main(int argc, char *argv[])
 		scanfiles(argv, 0);
 	// if (fclose(stdout)) err(1, "stdout");
     optarg = NULL; opterr = 0; optind = 0;
-	exit(rval);
+    return rval;
+	// exit(rval);
 	/* NOTREACHED */
 }
 
 static void
 usage(void)
 {
-	fprintf(stderr, "usage: cat [-benstuv] [file ...]\n");
+	fprintf(thread_stderr, "usage: cat [-benstuv] [file ...]\n");
 	exit(1);
 	/* NOTREACHED */
 }
@@ -146,7 +147,7 @@ scanfiles(char *argv[], int cooked)
 
 		if (path == NULL || strcmp(path, "-") == 0) {
 			filename = "stdin";
-			fd = STDIN_FILENO;
+			fd = fileno(thread_stdin);
 		} else {
 			filename = path;
 			fd = open(path, O_RDONLY);
@@ -156,12 +157,12 @@ scanfiles(char *argv[], int cooked)
 #endif
 		}
 		if (fd < 0) {
-            fprintf(stderr, "cat: %s: %s\n", path, strerror(errno));
+            fprintf(thread_stderr, "cat: %s: %s\n", path, strerror(errno));
             // warn("%s", path);
 			rval = 1;
 		} else if (cooked) {
-			if (fd == STDIN_FILENO)
-				cook_cat(stdin);
+			if (fd == fileno(thread_stdin))
+				cook_cat(thread_stdin);
 			else {
 				fp = fdopen(fd, "r");
 				cook_cat(fp);
@@ -169,7 +170,7 @@ scanfiles(char *argv[], int cooked)
 			}
 		} else {
 			raw_cat(fd);
-			if (fd != STDIN_FILENO)
+			if (fd != fileno(thread_stdin))
 				close(fd);
 		}
 		if (path == NULL)
@@ -184,8 +185,8 @@ cook_cat(FILE *fp)
 	int ch, gobble, line, prev;
 
 	/* Reset EOF condition on stdin. */
-	if (fp == stdin && feof(stdin))
-		clearerr(stdin);
+	if (fp == thread_stdin && feof(thread_stdin))
+		clearerr(thread_stdin);
 
 	line = gobble = 0;
 	for (prev = '\n'; (ch = getc(fp)) != EOF; prev = ch) {
@@ -199,8 +200,8 @@ cook_cat(FILE *fp)
 					gobble = 0;
 			}
 			if (nflag && (!bflag || ch != '\n')) {
-				(void)fprintf(stdout, "%6d\t", ++line);
-				if (ferror(stdout))
+				(void)fprintf(thread_stdout, "%6d\t", ++line);
+				if (ferror(thread_stdout))
 					break;
 			}
 		}
@@ -231,14 +232,14 @@ cook_cat(FILE *fp)
 			break;
 	}
 	if (ferror(fp)) {
-        fprintf(stderr, "cat: %s: %s\n", filename, strerror(errno));
+        fprintf(thread_stderr, "cat: %s: %s\n", filename, strerror(errno));
         // warn("%s", filename);
 		rval = 1;
 		clearerr(fp);
 	}
-    if (ferror(stdout)) {
+    if (ferror(thread_stdout)) {
 		// err(1, "stdout");
-        fprintf(stderr, "cat: stdout: %s\n", strerror(errno));
+        fprintf(thread_stderr, "cat: stdout: %s\n", strerror(errno));
         pthread_exit(NULL);
     }
 }
@@ -252,14 +253,14 @@ raw_cat(int rfd)
 	static char *buf = NULL;
 	// struct stat sbuf;
 
-	wfd = fileno(stdout);
+	wfd = fileno(thread_stdout);
 	if (buf == NULL) {
         // if (fstat(wfd, &sbuf))
 			// err(1, "%s", filename);
         bsize = 1024; // MAX(sbuf.st_blksize, 1024);
         if ((buf = malloc(bsize)) == NULL) {
             // err(1, "buffer");
-            fprintf(stderr, "cat: buffer: %s\n", strerror(errno));
+            fprintf(thread_stderr, "cat: buffer: %s\n", strerror(errno));
             pthread_exit(NULL);
         }
 	}
@@ -268,13 +269,13 @@ raw_cat(int rfd)
             // We can't write to the fd of stdout, so we write to stdout
             nw = 0; // number of bytes written
             for (int i = 0; i < nr; i++) {
-                fputc(*(buf+off+nw), stdout);
+                fputc(*(buf+off+nw), thread_stdout);
                 nw += 1;
             }
 			// if ((nw = write(wfd, buf + off, (size_t)nr)) < 0) err(1, "stdout");
         }
 	if (nr < 0) {
-        fprintf(stderr, "cat: %s: %s\n", filename, strerror(errno));
+        fprintf(thread_stderr, "cat: %s: %s\n", filename, strerror(errno));
         // warn("%s", filename);
 		rval = 1;
 	}
@@ -319,12 +320,12 @@ udom_open(const char *path, int flags)
 		switch(flags & O_ACCMODE) {
 		case O_RDONLY:
 			if (shutdown(fd, SHUT_WR) == -1)
-                fprintf(stderr, "cat: %s\n", strerror(errno));
+                fprintf(thread_stderr, "cat: %s\n", strerror(errno));
                 // warn(NULL);
 			break;
 		case O_WRONLY:
 			if (shutdown(fd, SHUT_RD) == -1)
-                fprintf(stderr, "cat: %s\n", strerror(errno));
+                fprintf(thread_stderr, "cat: %s\n", strerror(errno));
 				// warn(NULL);
 			break;
 		default:

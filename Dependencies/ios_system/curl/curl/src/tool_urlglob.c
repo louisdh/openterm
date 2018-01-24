@@ -28,6 +28,7 @@
 #include "tool_doswin.h"
 #include "tool_urlglob.h"
 #include "tool_vms.h"
+#include "ios_error.h"
 
 #include "memdebug.h" /* keep this as LAST include */
 
@@ -540,7 +541,7 @@ CURLcode glob_next_url(char **globbed, URLGlob *glob)
         }
         break;
       default:
-        printf("internal error: invalid pattern type (%d)\n", (int)pat->type);
+        fprintf(thread_stdout, "internal error: invalid pattern type (%d)\n", (int)pat->type);
         return CURLE_FAILED_INIT;
       }
     }
@@ -578,7 +579,7 @@ CURLcode glob_next_url(char **globbed, URLGlob *glob)
       buflen -= len;
       break;
     default:
-      printf("internal error: invalid pattern type (%d)\n", (int)pat->type);
+      fprintf(thread_stdout, "internal error: invalid pattern type (%d)\n", (int)pat->type);
       return CURLE_FAILED_INIT;
     }
   }
@@ -652,7 +653,7 @@ CURLcode glob_match_url(char **result, char *filename, URLGlob *glob)
           appendlen = strlen(numbuf);
           break;
         default:
-          fprintf(stderr, "internal error: invalid pattern type (%d)\n",
+          fprintf(thread_stderr, "internal error: invalid pattern type (%d)\n",
                   (int)pat->type);
           Curl_safefree(target);
           return CURLE_FAILED_INIT;

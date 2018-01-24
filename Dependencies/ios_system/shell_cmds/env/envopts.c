@@ -74,7 +74,7 @@ is_there(char *candidate)
             (getuid() != 0 ||
             (fin.st_mode & (S_IXUSR | S_IXGRP | S_IXOTH)) != 0)) {
                 if (env_verbosity > 1)
-			fprintf(stderr, "#env   matched:\t'%s'\n", candidate);
+			fprintf(thread_stderr, "#env   matched:\t'%s'\n", candidate);
                 return (1);
         }
         return (0);
@@ -107,8 +107,8 @@ search_paths(char *path, char **argv)
 		return;
 
 	if (env_verbosity > 1) {
-		fprintf(stderr, "#env Searching:\t'%s'\n", path);
-		fprintf(stderr, "#env  for file:\t'%s'\n", filename);
+		fprintf(thread_stderr, "#env Searching:\t'%s'\n", path);
+		fprintf(thread_stderr, "#env  for file:\t'%s'\n", filename);
 	}
 
 	fqname = NULL;
@@ -127,7 +127,7 @@ search_paths(char *path, char **argv)
 	if (fqname == NULL) {
 		errno = ENOENT;
 		// err(127, "%s", filename);
-        fprintf(stderr, "env: %s: %s\n", filename, strerror(errno));
+        fprintf(thread_stderr, "env: %s: %s\n", filename, strerror(errno));
         pthread_exit(NULL);
 	}
 	*argv = strdup(candidate);
@@ -290,7 +290,7 @@ split_spaces(const char *str, int *origind, int *origc, char ***origv)
 				 */
                 if (in_dq) {
                     // errx(1, "Sequence '\\%c' is not allowed"
-                    fprintf(stderr, "env: Sequence '\\%c' is not allowed"
+                    fprintf(thread_stderr, "env: Sequence '\\%c' is not allowed"
 					    " in quoted strings\n", *src);
                     pthread_exit(NULL);
                 }
@@ -315,7 +315,7 @@ split_spaces(const char *str, int *origind, int *origc, char ***origv)
 					copychar = *src;
                 else {
                     // errx(1, "Invalid sequence '\\%c' in -S",
-                    fprintf(stderr, "env: Invalid sequence '\\%c' in -S\n",
+                    fprintf(thread_stderr, "env: Invalid sequence '\\%c' in -S\n",
 					    *src);
                     pthread_exit(NULL);
                 }
@@ -365,16 +365,16 @@ str_done:
 	*nextarg = NULL;
 	if (in_dq || in_sq) {
         // errx(1, "No terminating quote for string: %.*s%s",
-        fprintf(stderr, "env: No terminating quote for string: %.*s%s\n",
+        fprintf(thread_stderr, "env: No terminating quote for string: %.*s%s\n",
 		    bq_destlen, *(nextarg - 1), bq_src);
         pthread_exit(NULL);
 	}
 	if (env_verbosity > 1) {
-		fprintf(stderr, "#env  split -S:\t'%s'\n", str);
+		fprintf(thread_stderr, "#env  split -S:\t'%s'\n", str);
 		oldarg = newargv + 1;
-		fprintf(stderr, "#env      into:\t'%s'\n", *oldarg);
+		fprintf(thread_stderr, "#env      into:\t'%s'\n", *oldarg);
 		for (oldarg++; *oldarg; oldarg++)
-			fprintf(stderr, "#env          &\t'%s'\n", *oldarg);
+			fprintf(thread_stderr, "#env          &\t'%s'\n", *oldarg);
 	}
 
 	/* Copy the unprocessed arg-pointers from the original array */
@@ -416,7 +416,7 @@ expand_vars(int in_thisarg, char **thisarg_p, char **dest_p, const char **src_p)
 		}
     if (bad_reference) {
         // errx(1, "Only ${VARNAME} expansion is supported, error at: %s",
-        fprintf(stderr, "env: Only ${VARNAME} expansion is supported, error at: %s\n",
+        fprintf(thread_stderr, "env: Only ${VARNAME} expansion is supported, error at: %s\n",
 		    *src_p);
         pthread_exit(NULL);
     }
@@ -434,7 +434,7 @@ expand_vars(int in_thisarg, char **thisarg_p, char **dest_p, const char **src_p)
 	vvalue = getenv(vname);
 	if (vvalue == NULL || *vvalue == '\0') {
 		if (env_verbosity > 2)
-			fprintf(stderr,
+			fprintf(thread_stderr,
 			    "#env  replacing ${%s} with null string\n",
 			    vname);
 		free(vname);
@@ -442,7 +442,7 @@ expand_vars(int in_thisarg, char **thisarg_p, char **dest_p, const char **src_p)
 	}
 
 	if (env_verbosity > 2)
-		fprintf(stderr, "#env  expanding ${%s} into '%s'\n", vname,
+		fprintf(thread_stderr, "#env  expanding ${%s} into '%s'\n", vname,
 		    vvalue);
 
 	/*

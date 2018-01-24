@@ -198,7 +198,7 @@ genclass(s)
 {
 
     if ((s->cclass = wctype(s->str)) == 0) {
-		fprintf(stderr, "tr: unknown class %s\n", s->str); // errx
+		fprintf(thread_stderr, "tr: unknown class %s\n", s->str); // errx
         pthread_exit(NULL);
     }
 	s->cnt = 0;
@@ -223,7 +223,7 @@ genequiv(s)
 	if (*s->str == '\\') {
 		s->equiv[0] = backslash(s, NULL);
         if (*s->str != '=') {
-			fprintf(stderr, "tr: misplaced equivalence equals sign\n"); // errx
+			fprintf(thread_stderr, "tr: misplaced equivalence equals sign\n"); // errx
             pthread_exit(NULL);
         }
 		s->str += 2;
@@ -233,7 +233,7 @@ genequiv(s)
 			errc(1, EILSEQ, NULL);
 		s->equiv[0] = wc;
         if (s->str[clen] != '=') {
-			fprintf(stderr, "tr: misplaced equivalence equals sign\n"); // errx
+			fprintf(thread_stderr, "tr: misplaced equivalence equals sign\n"); // errx
             pthread_exit(NULL);
         }
         s->str += clen + 2;
@@ -306,7 +306,7 @@ genrange(STR *s, int was_octal)
 	}
     if ((s->set = p = malloc((NCHARS_SB + 1) * sizeof(int))) == NULL) {
 		// err(1, "genrange() malloc");
-        fprintf(stderr, "tr: genrange() malloc: %s", strerror(errno));
+        fprintf(thread_stderr, "tr: genrange() malloc: %s", strerror(errno));
         pthread_exit(NULL);
     }
 	for (cnt = 0; cnt < NCHARS_SB; cnt++)
@@ -333,7 +333,7 @@ genseq(s)
 
 #ifndef __APPLE__
     if (s->which == STRING1) {
-		fprintf(stderr, "tr: sequences only valid in string2\n"); // errx
+		fprintf(thread_stderr, "tr: sequences only valid in string2\n"); // errx
         pthread_exit(NULL);
     }
         
@@ -349,7 +349,7 @@ genseq(s)
 		s->str += clen;
 	}
     if (*s->str != '*') {
-		fprintf(stderr, "tr: misplaced sequence asterisk\n"); // errx
+		fprintf(thread_stderr, "tr: misplaced sequence asterisk\n"); // errx
         pthread_exit(NULL);
     }
 
@@ -369,7 +369,7 @@ genseq(s)
 				break;
 			}
 		}
-		fprintf(stderr, "tr: illegal sequence count\n"); // errx
+		fprintf(thread_stderr, "tr: illegal sequence count\n"); // errx
         pthread_exit(NULL);
 		/* NOTREACHED */
 	}

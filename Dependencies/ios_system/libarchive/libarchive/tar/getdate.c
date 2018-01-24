@@ -1025,12 +1025,12 @@ main(int argc, char **argv)
     time_t	d;
 
     while (*++argv != NULL) {
-	    (void)printf("Input: %s\n", *argv);
+	    (void)fprintf(thread_stdout, "Input: %s\n", *argv);
 	    d = get_date(*argv);
 	    if (d == -1)
-		    (void)printf("Bad format - couldn't convert.\n");
+		    (void)fprintf(thread_stdout, "Bad format - couldn't convert.\n");
 	    else
-		    (void)printf("Output: %s\n", ctime(&d));
+		    (void)fprintf(thread_stdout, "Output: %s\n", ctime(&d));
     }
     exit(0);
     /* NOTREACHED */

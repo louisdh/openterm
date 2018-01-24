@@ -37,12 +37,12 @@ typedef struct {
 } PATH_T;
 
 extern PATH_T to;
-extern int cp_fflag, cp_iflag, cp_nflag, cp_pflag, cp_vflag;
+extern __thread int cp_fflag, cp_iflag, cp_nflag, cp_pflag, cp_vflag;
 #ifdef __APPLE__
-extern int Xflag;
+extern __thread int Xflag;
 #endif /* __APPLE__ */
-extern int cp_cflag;
-extern volatile sig_atomic_t info;
+extern __thread int cp_cflag;
+extern volatile __thread sig_atomic_t info;
 
 __BEGIN_DECLS
 int	copy_fifo(struct stat *, int);

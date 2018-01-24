@@ -44,6 +44,7 @@
 #include "tool_vms.h"
 #include "tool_main.h"
 #include "tool_libinfo.h"
+#include "ios_error.h"
 
 /*
  * This is low-level hard-hacking memory leak tracking and similar. Using
@@ -74,13 +75,13 @@ int vms_show = 0;
 static void main_checkfds(void)
 {
 #ifdef HAVE_PIPE
-  int fd[2] = { STDIN_FILENO, STDIN_FILENO };
-  while(fd[0] == STDIN_FILENO ||
-        fd[0] == STDOUT_FILENO ||
-        fd[0] == STDERR_FILENO ||
-        fd[1] == STDIN_FILENO ||
-        fd[1] == STDOUT_FILENO ||
-        fd[1] == STDERR_FILENO)
+  int fd[2] = { fileno(thread_stdin), fileno(thread_stdin) };
+  while(fd[0] == fileno(thread_stdin) ||
+        fd[0] == fileno(thread_stdout) ||
+        fd[0] == fileno(thread_stderr) ||
+        fd[1] == fileno(thread_stdin) ||
+        fd[1] == fileno(thread_stdout) ||
+        fd[1] == fileno(thread_stderr))
     if(pipe(fd) < 0)
       return;   /* Out of handles. This isn't really a big problem now, but
                    will be when we try to create a socket later. */
@@ -137,7 +138,7 @@ static CURLcode main_init(struct GlobalConfig *config)
 
   /* Initialise the global config */
   config->showerror = -1;             /* Will show errors */
-  config->errors = stderr;            /* Default errors to stderr */
+  config->errors = thread_stderr;            /* Default errors to stderr */
 
   /* Allocate the initial operate config */
   config->first = config->last = malloc(sizeof(struct OperationConfig));
@@ -158,23 +159,23 @@ static CURLcode main_init(struct GlobalConfig *config)
           config->first->global = config;
         }
         else {
-          helpf(stderr, "error initializing curl easy handle\n");
+          helpf(thread_stderr, "error initializing curl easy handle\n");
           result = CURLE_FAILED_INIT;
           free(config->first);
         }
       }
       else {
-        helpf(stderr, "error retrieving curl library information\n");
+        helpf(thread_stderr, "error retrieving curl library information\n");
         free(config->first);
       }
     }
     else {
-      helpf(stderr, "error initializing curl library\n");
+      helpf(thread_stderr, "error initializing curl library\n");
       free(config->first);
     }
   }
   else {
-    helpf(stderr, "error initializing curl\n");
+    helpf(thread_stderr, "error initializing curl\n");
     result = CURLE_FAILED_INIT;
   }
 
@@ -297,11 +298,17 @@ static int scp_convert(int argc, char* argv[]) {
         }
     }
     argv2[argc2] = NULL;
+    int returnValue = -1;
+    if (!(localFileName && distantFileName)) {
+        fprintf(thread_stderr, "Usage:\t%s [-q] [user@]host:distantFile localFile\n", protocol);
+        fprintf(thread_stderr, "\t%s [-q] localFile [user@]host:distantFile \n", protocol);
+    } else {
 #ifdef BLINKSHELL
-    int returnValue = curl_static_main(argc2, argv2);
+        returnValue = curl_static_main(argc2, argv2);
 #else
-    int returnValue = curl_main(argc2, argv2);
+        returnValue = curl_main(argc2, argv2);
 #endif
+    }
     for (int i = 0; i < argc2; i++) free(argv2[i]);
     free(argv2);
     return returnValue;

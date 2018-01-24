@@ -119,24 +119,24 @@ wc_main(int argc, char *argv[])
 		if (cnt((char *)NULL) != 0)
 			++errors;
 		else
-			(void)printf("\n");
+			(void)fprintf(thread_stdout, "\n");
 	}
 	else do {
 		if (cnt(*argv) != 0)
 			++errors;
 		else
-			(void)printf(" %s\n", *argv);
+			(void)fprintf(thread_stdout, " %s\n", *argv);
 		++total;
 	} while(*++argv);
 
 	if (total > 1) {
 		if (doline)
-			(void)printf(" %7ju", tlinect);
+			(void)fprintf(thread_stdout, " %7ju", tlinect);
 		if (doword)
-			(void)printf(" %7ju", twordct);
+			(void)fprintf(thread_stdout, " %7ju", twordct);
 		if (dochar || domulti)
-			(void)printf(" %7ju", tcharct);
-		(void)printf(" total\n");
+			(void)fprintf(thread_stdout, " %7ju", tcharct);
+		(void)fprintf(thread_stdout, " total\n");
 	}
     optarg = NULL; opterr = 0; optind = 0;
 	exit(errors == 0 ? 0 : 1);
@@ -162,10 +162,10 @@ cnt(const char *file)
 	linect = wordct = charct = 0;
 	if (file == NULL) {
 		file = "stdin";
-		fd = STDIN_FILENO;
+		fd = fileno(thread_stdin);
 	} else {
 		if ((fd = open(file, O_RDONLY, 0)) < 0) {
-            fprintf(stderr, "wc: %s: open: %s\n", file, strerror(errno));
+            fprintf(thread_stderr, "wc: %s: open: %s\n", file, strerror(errno));
 			// warn("%s: open", file);
 			return (1);
 		}
@@ -194,23 +194,23 @@ cnt(const char *file)
 	 * logic.
 	 */
 	if (doline) {
-		while ((len = read(fd, buf, buf_size))) {
+        while ((len = read(fd, buf, buf_size))) {
 			if (len == -1) {
-                fprintf(stderr, "wc: %s: read: %s\n", file, strerror(errno));
+                fprintf(thread_stderr, "wc: %s: read: %s\n", file, strerror(errno));
                 // warn("%s: read", file);
 				(void)close(fd);
 				return (1);
 			}
 			charct += len;
 			for (p = buf; len--; ++p)
-				if (*p == '\n')
+                if (*p == '\n')
 					++linect;
 		}
 		tlinect += linect;
-		(void)printf(" %7ju", linect);
+		(void)fprintf(thread_stdout, " %7ju", linect);
 		if (dochar) {
 			tcharct += charct;
-			(void)printf(" %7ju", charct);
+			(void)fprintf(thread_stdout, " %7ju", charct);
 		}
 		(void)close(fd);
 		return (0);
@@ -221,13 +221,13 @@ cnt(const char *file)
 	 */
 	if (dochar || domulti) {
 		if (fstat(fd, &sb)) {
-            fprintf(stderr, "wc: %s: fstat: %s\n", file, strerror(errno));
+            fprintf(thread_stderr, "wc: %s: fstat: %s\n", file, strerror(errno));
             // warn("%s: fstat", file);
 			(void)close(fd);
 			return (1);
 		}
 		if (S_ISREG(sb.st_mode)) {
-			(void)printf(" %7lld", (long long)sb.st_size);
+			(void)fprintf(thread_stdout, " %7lld", (long long)sb.st_size);
 			tcharct += sb.st_size;
 			(void)close(fd);
 			return (0);
@@ -240,7 +240,7 @@ word:	gotsp = 1;
 	memset(&mbs, 0, sizeof(mbs));
 	while ((len = read(fd, buf, buf_size)) != 0) {
 		if (len == -1) {
-            fprintf(stderr, "wc: %s: read: %s\n", file, strerror(errno));
+            fprintf(thread_stderr, "wc: %s: read: %s\n", file, strerror(errno));
             // warn("%s: read", file);
 			(void)close(fd);
 			return (1);
@@ -254,7 +254,7 @@ word:	gotsp = 1;
 			    (size_t)-1) {
 				if (!warned) {
 					errno = EILSEQ;
-                    fprintf(stderr, "wc: %s: %s\n", file, strerror(errno));
+                    fprintf(thread_stderr, "wc: %s: %s\n", file, strerror(errno));
                     // warn("%s", file);
 					warned = 1;
 				}
@@ -280,19 +280,19 @@ word:	gotsp = 1;
 	}
 	if (domulti && MB_CUR_MAX > 1)
 		if (mbrtowc(NULL, NULL, 0, &mbs) == (size_t)-1 && !warned)
-            fprintf(stderr, "wc: %s: %s\n", file, strerror(errno));
+            fprintf(thread_stderr, "wc: %s: %s\n", file, strerror(errno));
             // warn("%s", file);
 	if (doline) {
 		tlinect += linect;
-		(void)printf(" %7ju", linect);
+		(void)fprintf(thread_stdout, " %7ju", linect);
 	}
 	if (doword) {
 		twordct += wordct;
-		(void)printf(" %7ju", wordct);
+		(void)fprintf(thread_stdout, " %7ju", wordct);
 	}
 	if (dochar || domulti) {
 		tcharct += charct;
-		(void)printf(" %7ju", charct);
+		(void)fprintf(thread_stdout, " %7ju", charct);
 	}
 	(void)close(fd);
 	return (0);
@@ -301,6 +301,6 @@ word:	gotsp = 1;
 static void
 usage()
 {
-	(void)fprintf(stderr, "usage: wc [-clmw] [file ...]\n");
+	(void)fprintf(thread_stderr, "usage: wc [-clmw] [file ...]\n");
 	exit(1);
 }

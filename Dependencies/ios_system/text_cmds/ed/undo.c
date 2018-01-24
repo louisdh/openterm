@@ -29,6 +29,7 @@
 __FBSDID("$FreeBSD: src/bin/ed/undo.c,v 1.12 2002/06/30 05:13:53 obrien Exp $");
 
 #include "ed.h"
+#include "ios_error.h"
 
 
 #define USIZE 100				/* undo stack size */
@@ -45,7 +46,7 @@ push_undo_stack(int type, long from, long to)
 #if defined(sun) || defined(NO_REALLOC_NULL)
 	if (ustack == NULL &&
 	    (ustack = (undo_t *) malloc((usize = USIZE) * sizeof(undo_t))) == NULL) {
-		fprintf(stderr, "%s\n", strerror(errno));
+		fprintf(thread_stderr, "%s\n", strerror(errno));
 		errmsg = "out of memory";
 		return NULL;
 	}
@@ -60,7 +61,7 @@ push_undo_stack(int type, long from, long to)
 		return ustack + u_p++;
 	}
 	/* out of memory - release undo stack */
-	fprintf(stderr, "%s\n", strerror(errno));
+	fprintf(thread_stderr, "%s\n", strerror(errno));
 	errmsg = "out of memory";
 	clear_undo_stack();
 	free(ustack);
@@ -77,8 +78,8 @@ push_undo_stack(int type, long from, long to)
 }
 
 
-long u_current_addr = -1;	/* if >= 0, undo enabled */
-long u_addr_last = -1;		/* if >= 0, undo enabled */
+__thread long u_current_addr = -1;	/* if >= 0, undo enabled */
+__thread long u_addr_last = -1;		/* if >= 0, undo enabled */
 
 /* pop_undo_stack: undo last change to the editor buffer */
 int

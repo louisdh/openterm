@@ -77,7 +77,7 @@
 #ifdef GTLSDEBUG
 static void tls_log_func(int level, const char *str)
 {
-    fprintf(stderr, "|<%d>| %s", level, str);
+    fprintf(thread_stderr, "|<%d>| %s", level, str);
 }
 #endif
 static bool gtls_inited = FALSE;

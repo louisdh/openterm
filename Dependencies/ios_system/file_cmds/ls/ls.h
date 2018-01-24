@@ -39,32 +39,32 @@
 
 #define NO_PRINT	1
 
-extern long blocksize;		/* block size units */
+extern __thread long blocksize;		/* block size units */
 
-extern int f_accesstime;	/* use time of last access */
-extern int f_birthtime;		/* use time of file birth */
-extern int f_flags;		/* show flags associated with a file */
-extern int f_humanval;		/* show human-readable file sizes */
-extern int f_inode;		/* print inode */
-extern int f_longform;		/* long listing format */
-extern int f_octal;		/* print unprintables in octal */
-extern int f_octal_escape;	/* like f_octal but use C escapes if possible */
-extern int f_nonprint;		/* show unprintables as ? */
-extern int f_sectime;		/* print the real time for all files */
-extern int f_size;		/* list size in short listing */
-extern int f_slash;		/* append a '/' if the file is a directory */
-extern int f_sortacross;	/* sort across rows, not down columns */ 
-extern int f_statustime;	/* use time of last mode change */
-extern int f_notabs;		/* don't use tab-separated multi-col output */
-extern int f_type;		/* add type character for non-regular files */
-extern int f_acl;		/* print ACLs in long format */
-extern int f_xattr;		/* print extended attributes in long format  */
-extern int f_group;		/* list group without owner */
-extern int f_owner;		/* list owner without group */
+extern __thread int f_accesstime;	/* use time of last access */
+extern __thread int f_birthtime;		/* use time of file birth */
+extern __thread int f_flags;		/* show flags associated with a file */
+extern __thread int f_humanval;		/* show human-readable file sizes */
+extern __thread int f_inode;		/* print inode */
+extern __thread int f_longform;		/* long listing format */
+extern __thread int f_octal;		/* print unprintables in octal */
+extern __thread int f_octal_escape;	/* like f_octal but use C escapes if possible */
+extern __thread int f_nonprint;		/* show unprintables as ? */
+extern __thread int f_sectime;		/* print the real time for all files */
+extern __thread int f_size;		/* list size in short listing */
+extern __thread int f_slash;		/* append a '/' if the file is a directory */
+extern __thread int f_sortacross;	/* sort across rows, not down columns */
+extern __thread int f_statustime;	/* use time of last mode change */
+extern __thread int f_notabs;		/* don't use tab-separated multi-col output */
+extern __thread int f_type;		/* add type character for non-regular files */
+extern __thread int f_acl;		/* print ACLs in long format */
+extern __thread int f_xattr;		/* print extended attributes in long format  */
+extern __thread int f_group;		/* list group without owner */
+extern __thread int f_owner;		/* list owner without group */
 #ifdef COLORLS
-extern int f_color;		/* add type in color for non-regular files */
+extern __thread int f_color;		/* add type in color for non-regular files */
 #endif
-extern int f_numericonly;	/* don't convert uid/gid to name */
+extern __thread int f_numericonly;	/* don't convert uid/gid to name */
 
 #ifdef __APPLE__
 #include <sys/acl.h>

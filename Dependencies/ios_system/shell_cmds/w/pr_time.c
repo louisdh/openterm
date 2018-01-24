@@ -44,6 +44,7 @@ static const char sccsid[] = "@(#)pr_time.c	8.2 (Berkeley) 4/4/94";
 #include <string.h>
 
 #include "extern.h"
+#include "ios_error.h"
 
 /*
  * pr_attime --
@@ -80,7 +81,7 @@ pr_attime(time_t *started, time_t *now)
 	}
 
 	(void)strftime(buf, sizeof(buf), fmt, &tp);
-	(void)printf("%-7.7s", buf);
+	(void)fprintf(thread_stdout, "%-7.7s", buf);
 }
 
 /*
@@ -94,7 +95,7 @@ pr_idle(time_t idle)
 	/* If idle more than 36 hours, print as a number of days. */
 	if (idle >= 36 * 3600) {
 		int days = idle / 86400;
-		(void)printf(" %dday%s ", days, days > 1 ? "s" : " " );
+		(void)fprintf(thread_stdout, " %dday%s ", days, days > 1 ? "s" : " " );
 		if (days >= 100)
 			return (2);
 		if (days >= 10)
@@ -103,15 +104,15 @@ pr_idle(time_t idle)
 
 	/* If idle more than an hour, print as HH:MM. */
 	else if (idle >= 3600)
-		(void)printf(" %2d:%02d ",
+		(void)fprintf(thread_stdout, " %2d:%02d ",
 		    (int)(idle / 3600), (int)((idle % 3600) / 60));
 
 	else if (idle / 60 == 0)
-		(void)printf("     - ");
+		(void)fprintf(thread_stdout, "     - ");
 
 	/* Else print the minutes idle. */
 	else
-		(void)printf("    %2d ", (int)(idle / 60));
+		(void)fprintf(thread_stdout, "    %2d ", (int)(idle / 60));
 
 	return (0); /* not idle longer than 9 days */
 }

@@ -37,42 +37,42 @@ typedef	unsigned char uschar;
 #define	DEBUG
 #ifdef	DEBUG
 			/* uses have to be doubly parenthesized */
-#	define	dprintf(x)	if (dbg) printf x
+#	define	dprintf(x)	if (dbg) fprintf x
 #else
 #	define	dprintf(x)
 #endif
 
-extern int	compile_time;	/* 1 if compiling, 0 if running */
-extern int	safe;		/* 0 => unsafe, 1 => safe */
-extern int	Unix2003_compat;
+extern __thread int	compile_time;	/* 1 if compiling, 0 if running */
+extern __thread int	safe;		/* 0 => unsafe, 1 => safe */
+extern __thread int	Unix2003_compat;
 
 #define	RECSIZE	(8 * 1024)	/* sets limit on records, fields, etc., etc. */
-extern int	recsize;	/* size of current record, orig RECSIZE */
+extern __thread int	recsize;	/* size of current record, orig RECSIZE */
 
-extern char	**FS;
-extern char	**RS;
-extern char	**ORS;
-extern char	**OFS;
-extern char	**OFMT;
-extern Awkfloat *NR;
-extern Awkfloat *FNR;
-extern Awkfloat *NF;
-extern char	**FILENAME;
-extern char	**SUBSEP;
-extern Awkfloat *RSTART;
-extern Awkfloat *RLENGTH;
+extern __thread char	**FS;
+extern __thread char	**RS;
+extern __thread char	**ORS;
+extern __thread char	**OFS;
+extern __thread char	**OFMT;
+extern __thread Awkfloat *NR;
+extern __thread Awkfloat *FNR;
+extern __thread Awkfloat *NF;
+extern __thread char	**FILENAME;
+extern __thread char	**SUBSEP;
+extern __thread Awkfloat *RSTART;
+extern __thread Awkfloat *RLENGTH;
 
-extern char	*record;	/* points to $0 */
-extern int	lineno;		/* line number in awk program */
-extern int	errorflag;	/* 1 if error has occurred */
-extern int	donefld;	/* 1 if record broken into fields */
-extern int	donerec;	/* 1 if record is valid (no fld has changed */
-extern char	inputFS[];	/* FS at time of input, for field splitting */
+extern __thread char	*record;	/* points to $0 */
+extern __thread int	lineno;		/* line number in awk program */
+extern __thread int	errorflag;	/* 1 if error has occurred */
+extern __thread int	donefld;	/* 1 if record broken into fields */
+extern __thread int	donerec;	/* 1 if record is valid (no fld has changed */
+extern __thread char	inputFS[];	/* FS at time of input, for field splitting */
 
-extern int	dbg;
+extern __thread int	dbg;
 
-extern	char	*patbeg;	/* beginning of pattern matched */
-extern	int	patlen;		/* length of pattern matched.  set in b.c */
+extern	__thread char	*patbeg;	/* beginning of pattern matched */
+extern	__thread int	patlen;		/* length of pattern matched.  set in b.c */
 
 /* Cell:  all information about a variable or constant */
 
@@ -93,13 +93,13 @@ typedef struct Array {		/* symbol table array */
 } Array;
 
 #define	NSYMTAB	50	/* initial size of a symbol table */
-extern Array	*symtab;
+extern __thread Array	*symtab;
 
-extern Cell	*nrloc;		/* NR */
-extern Cell	*fnrloc;	/* FNR */
-extern Cell	*nfloc;		/* NF */
-extern Cell	*rstartloc;	/* RSTART */
-extern Cell	*rlengthloc;	/* RLENGTH */
+extern __thread Cell	*nrloc;		/* NR */
+extern __thread Cell	*fnrloc;	/* FNR */
+extern __thread Cell	*nfloc;		/* NF */
+extern __thread Cell	*rstartloc;	/* RSTART */
+extern __thread Cell	*rlengthloc;	/* RLENGTH */
 
 /* Cell.tval values: */
 #define	NUM	01	/* number value is valid */
@@ -141,9 +141,9 @@ typedef struct Node {
 
 #define	NIL	((Node *) 0)
 
-extern Node	*winner;
-extern Node	*nullstat;
-extern Node	*nullnode;
+extern __thread Node	*winner;
+extern __thread Node	*nullstat;
+extern __thread Node	*nullnode;
 
 /* ctypes */
 #define OCELL	1
@@ -178,7 +178,7 @@ extern Node	*nullnode;
 #define NEXPR	3
 
 
-extern	int	pairstack[], paircnt;
+extern	__thread int	pairstack[], paircnt;
 
 #define notlegal(n)	(n <= FIRSTTOKEN || n >= LASTTOKEN || proctab[n-FIRSTTOKEN] == nullproc)
 #define isvalue(n)	((n)->ntype == NVALUE)

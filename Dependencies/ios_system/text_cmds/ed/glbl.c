@@ -34,6 +34,7 @@ __FBSDID("$FreeBSD: src/bin/ed/glbl.c,v 1.13 2002/06/30 05:13:53 obrien Exp $");
 #include <sys/wait.h>
 
 #include "ed.h"
+#include "ios_error.h"
 
 
 /* build_active_list:  add line matching a pattern to the global-active list */
@@ -101,7 +102,7 @@ exec_global(int interact, int gflag)
 				return ERR;
 			while ((n = get_tty_line()) > 0 &&
 			    ibuf[n - 1] != '\n')
-				clearerr(stdin);
+				clearerr(thread_stdin);
 			if (n < 0)
 				return ERR;
 			else if (n == 0) {
@@ -154,7 +155,7 @@ set_active_node(line_t *lp)
 #endif
 			if ((ts = (line_t **) realloc(active_list,
 			    (ti += MINBUFSZ) * sizeof(line_t **))) == NULL) {
-				fprintf(stderr, "%s\n", strerror(errno));
+				fprintf(thread_stderr, "%s\n", strerror(errno));
 				errmsg = "out of memory";
 				SPL0();
 				return ERR;
@@ -163,7 +164,7 @@ set_active_node(line_t *lp)
 		} else {
 			if ((ts = (line_t **) malloc((ti += MINBUFSZ) *
 			    sizeof(line_t **))) == NULL) {
-				fprintf(stderr, "%s\n", strerror(errno));
+				fprintf(thread_stderr, "%s\n", strerror(errno));
 				errmsg = "out of memory";
 				SPL0();
 				return ERR;

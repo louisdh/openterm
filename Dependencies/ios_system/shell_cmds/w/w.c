@@ -103,28 +103,28 @@ static const char sccsid[] = "@(#)w.c	8.4 (Berkeley) 4/16/94";
 #include "extern.h"
 #include "ios_error.h"
 
-struct timeval	boottime;
+static struct timeval	boottime;
 #if !HAVE_UTMPX
-struct utmp	utmp;
+static struct utmp	utmp;
 #endif
-struct winsize	ws;
+static struct winsize	ws;
 #if HAVE_KVM
-kvm_t	       *kd;
+static kvm_t	       *kd;
 #endif
-time_t		now;		/* the current time of day */
-int		ttywidth;	/* width of tty */
-int		argwidth;	/* width of tty */
-int		header = 1;	/* true if -h flag: don't print heading */
+static time_t		now;		/* the current time of day */
+static int		ttywidth;	/* width of tty */
+static int		argwidth;	/* width of tty */
+static int		header = 1;	/* true if -h flag: don't print heading */
 #if !HAVE_UTMPX
-int		nflag;		/* true if -n flag: don't convert addrs */
+static int		nflag;		/* true if -n flag: don't convert addrs */
 #endif
 #ifndef __APPLE__
-int		dflag;		/* true if -d flag: output debug info */
+static int		dflag;		/* true if -d flag: output debug info */
 #endif
-int		sortidle;	/* sort by idle time */
-int		use_ampm;	/* use AM/PM time */
-int             use_comma;      /* use comma as floats separator */
-char	      **sel_users;	/* login array of particular users selected */
+static int		sortidle;	/* sort by idle time */
+__thread int		use_ampm;	/* use AM/PM time */
+static int             use_comma;      /* use comma as floats separator */
+static char	      **sel_users;	/* login array of particular users selected */
 
 /*
  * One of these per active utmp entry.
@@ -254,7 +254,7 @@ w_main(int argc, char *argv[])
 #endif
 #ifdef __APPLE__
 		case 'd':
-            fprintf(stderr, "w: [-MNdflnsuw] no longer supported\n");
+            fprintf(thread_stderr, "w: [-MNdflnsuw] no longer supported\n");
             // warnx("[-MNdflnsuw] no longer supported");
 #else
 			warnx("[-flsuw] no longer supported");
@@ -284,7 +284,7 @@ w_main(int argc, char *argv[])
 
     if ((kd = kvm_openfiles(nlistf, memf, NULL, O_RDONLY, errbuf)) == NULL) {
 		// errx(1, "%s", errbuf);
-        fprintf(stderr, "w: %s\n", errbuf);
+        fprintf(thread_stderr, "w: %s\n", errbuf);
         pthread_exit(NULL);
     }
 #endif
@@ -295,7 +295,7 @@ w_main(int argc, char *argv[])
 #else
     if ((ut = fopen(_PATH_UTMP, "r")) == NULL) {
 		// err(1, "%s", _PATH_UTMP);
-        fprintf(stderr, "w: %s: %s\n", _PATH_UTMP, strerror(errno));
+        fprintf(thread_stderr, "w: %s: %s\n", _PATH_UTMP, strerror(errno));
         pthread_exit(NULL);
     }
 #endif
@@ -336,7 +336,7 @@ w_main(int argc, char *argv[])
 		}
         if ((ep = calloc(1, sizeof(struct utmp_entry))) == NULL) {
 			// errx(1, "calloc");
-            fprintf(stderr, "w: calloc\n");
+            fprintf(thread_stderr, "w: calloc\n");
             pthread_exit(NULL);
         }
 		*nextp = ep;
@@ -399,7 +399,7 @@ w_main(int argc, char *argv[])
 #define HEADER_WHAT		"WHAT\n"
 #define WUSED  (UT_NAMESIZE + UT_LINESIZE + W_DISPHOSTSIZE + \
 		sizeof(HEADER_LOGIN_IDLE) + 3)	/* header width incl. spaces */ 
-		(void)printf("%-*.*s %-*.*s %-*.*s  %s", 
+		(void)fprintf(thread_stdout, "%-*.*s %-*.*s %-*.*s  %s", 
 				UT_NAMESIZE, UT_NAMESIZE, HEADER_USER,
 				UT_LINESIZE, UT_LINESIZE, HEADER_TTY,
 				W_DISPHOSTSIZE, W_DISPHOSTSIZE, HEADER_FROM,
@@ -409,7 +409,7 @@ w_main(int argc, char *argv[])
 #if HAVE_KVM
     if ((kp = kvm_getprocs(kd, KERN_PROC_ALL, 0, &nentries)) == NULL) {
 		// err(1, "%s", kvm_geterr(kd));
-        fprintf(stderr, "w: %s: %s\n", kvm_geterr(kd), strerror(errno));
+        fprintf(thread_stderr, "w: %s: %s\n", kvm_geterr(kd), strerror(errno));
         pthread_exit(NULL);
     }
 #else
@@ -480,9 +480,9 @@ w_main(int argc, char *argv[])
 			}
 		}
 	}
-	if ((ioctl(STDOUT_FILENO, TIOCGWINSZ, &ws) == -1 &&
-	     ioctl(STDERR_FILENO, TIOCGWINSZ, &ws) == -1 &&
-	     ioctl(STDIN_FILENO, TIOCGWINSZ, &ws) == -1) || ws.ws_col == 0)
+	if ((ioctl(fileno(thread_stdout), TIOCGWINSZ, &ws) == -1 &&
+	     ioctl(fileno(thread_stderr), TIOCGWINSZ, &ws) == -1 &&
+	     ioctl(fileno(thread_stdin), TIOCGWINSZ, &ws) == -1) || ws.ws_col == 0)
 	       ttywidth = 79;
         else
 	       ttywidth = ws.ws_col - 1;
@@ -501,7 +501,7 @@ w_main(int argc, char *argv[])
 		w_getargv();
 #endif /* HAVE_KVM */
         if (ep->args == NULL) {
-            fprintf(stderr, "w: %s\n", strerror(errno));
+            fprintf(thread_stderr, "w: %s\n", strerror(errno));
             pthread_exit(NULL);
 			// err(1, NULL);
         }
@@ -580,12 +580,12 @@ w_main(int argc, char *argv[])
 				    dkp->ki_comm, MAXCOMLEN);
 				if (ptr == NULL)
 					ptr = "-";
-				(void)printf("\t\t%-9d %s\n",
+				(void)fprintf(thread_stdout, "\t\t%-9d %s\n",
 				    dkp->ki_pid, ptr);
 			}
 		}
 #endif /* !__APPLE__ */
-		(void)printf("%-*.*s %-*.*s %-*.*s ",
+		(void)fprintf(thread_stdout, "%-*.*s %-*.*s %-*.*s ",
 #if HAVE_UTMPX
 		    UT_NAMESIZE, (int)sizeof(ep->utmp.ut_user), ep->utmp.ut_user,
 		    UT_LINESIZE, (int)sizeof(ep->utmp.ut_line),
@@ -604,7 +604,7 @@ w_main(int argc, char *argv[])
 		pr_attime(&t, &now);
 #endif
 		longidle = pr_idle(ep->idle);
-		(void)printf("%.*s\n", argwidth - longidle, ep->args);
+		(void)fprintf(thread_stdout, "%.*s\n", argwidth - longidle, ep->args);
 #ifdef __APPLE__
 		free(ep->args);
 #endif
@@ -632,7 +632,7 @@ pr_header(time_t *nowp, int nusers)
 	 */
 	if (strftime(buf, sizeof(buf),
 	    use_ampm ? "%l:%M%p" : "%k:%M", localtime(nowp)) != 0)
-		(void)printf("%s ", buf);
+		(void)fprintf(thread_stdout, "%s ", buf);
 	/*
 	 * Print how long system has been up.
 	 * (Found by looking getting "boottime" from the kernel)
@@ -651,35 +651,35 @@ pr_header(time_t *nowp, int nusers)
 		uptime %= 3600;
 		mins = uptime / 60;
 		secs = uptime % 60;
-		(void)printf(" up");
+		(void)fprintf(thread_stdout, " up");
 		if (days > 0)
-			(void)printf(" %d day%s,", days, days > 1 ? "s" : "");
+			(void)fprintf(thread_stdout, " %d day%s,", days, days > 1 ? "s" : "");
 		if (hrs > 0 && mins > 0)
-			(void)printf(" %2d:%02d,", hrs, mins);
+			(void)fprintf(thread_stdout, " %2d:%02d,", hrs, mins);
 		else if (hrs > 0)
-			(void)printf(" %d hr%s,", hrs, hrs > 1 ? "s" : "");
+			(void)fprintf(thread_stdout, " %d hr%s,", hrs, hrs > 1 ? "s" : "");
 		else if (mins > 0)
-			(void)printf(" %d min%s,", mins, mins > 1 ? "s" : "");
+			(void)fprintf(thread_stdout, " %d min%s,", mins, mins > 1 ? "s" : "");
 		else
-			(void)printf(" %d sec%s,", secs, secs > 1 ? "s" : "");
+			(void)fprintf(thread_stdout, " %d sec%s,", secs, secs > 1 ? "s" : "");
 	}
 
 	/* Print number of users logged in to system */
-	(void)printf(" %d user%s", nusers, nusers == 1 ? "" : "s");
+	(void)fprintf(thread_stdout, " %d user%s", nusers, nusers == 1 ? "" : "s");
 
 	/*
 	 * Print 1, 5, and 15 minute load averages.
 	 */
 	if (getloadavg(avenrun, sizeof(avenrun) / sizeof(avenrun[0])) == -1)
-		(void)printf(", no load average information available\n");
+		(void)fprintf(thread_stdout, ", no load average information available\n");
 	else {
-		(void)printf(", load averages:");
+		(void)fprintf(thread_stdout, ", load averages:");
 		for (i = 0; i < (int)(sizeof(avenrun) / sizeof(avenrun[0])); i++) {
 			if (use_comma && i > 0)
-				(void)printf(",");
-			(void)printf(" %.2f", avenrun[i]);
+				(void)fprintf(thread_stdout, ",");
+			(void)fprintf(thread_stdout, " %.2f", avenrun[i]);
 		}
-		(void)printf("\n");
+		(void)fprintf(thread_stdout, "\n");
 	}
 }
 
@@ -693,7 +693,7 @@ ttystat(char *line, int sz)
 	if (stat(ttybuf, &sb) == 0) {
 		return (&sb);
 	} else {
-        fprintf(stderr, "w: %s: %s\n", ttybuf, strerror(errno));
+        fprintf(thread_stderr, "w: %s: %s\n", ttybuf, strerror(errno));
         // warn("%s", ttybuf);
 		return (NULL);
 	}
@@ -703,10 +703,10 @@ static void
 usage(int wcmd)
 {
 	if (wcmd)
-		(void)fprintf(stderr,
+		(void)fprintf(thread_stderr,
 		    "usage: w [hi] [user ...]\n");
 	else
-		(void)fprintf(stderr, "usage: uptime\n");
+		(void)fprintf(thread_stderr, "usage: uptime\n");
 	exit(1);
 }
 

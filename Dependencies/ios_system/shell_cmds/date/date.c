@@ -76,7 +76,7 @@ __FBSDID("$FreeBSD$");
 #endif
 
 static time_t tval;
-int retval;
+__thread int retval;
 static int unix2003_std;	/* to determine legacy vs std mode */
 
 static void setthetime(const char *, const char *, int, int);
@@ -166,13 +166,13 @@ date_main(int argc, char *argv[])
 	 */
     if (set_timezone && settimeofday(NULL, &tz) != 0) {
 		// err(1, "settimeofday (timezone)");
-        fprintf(stderr, "date: settimeofday (timezone): %s\n", strerror(errno));
+        fprintf(thread_stderr, "date: settimeofday (timezone): %s\n", strerror(errno));
         pthread_exit(NULL);
     }
 
     if (!rflag && time(&tval) == -1) {
 		// err(1, "time");
-        fprintf(stderr, "date: time: %s\n", strerror(errno));
+        fprintf(thread_stderr, "date: time: %s\n", strerror(errno));
         pthread_exit(NULL);
     }
 
@@ -201,7 +201,7 @@ date_main(int argc, char *argv[])
 	struct tm *ltp = localtime(&tval);
 	if (ltp == NULL) {
 		// err(1, "localtime");
-        fprintf(stderr, "date: localtime: %s\n", strerror(errno));
+        fprintf(thread_stderr, "date: localtime: %s\n", strerror(errno));
         pthread_exit(NULL);
 	}
 	lt = *ltp;
@@ -210,7 +210,7 @@ date_main(int argc, char *argv[])
 #endif
 	badv = vary_apply(v, &lt);
 	if (badv) {
-		fprintf(stderr, "%s: Cannot apply date adjustment\n",
+		fprintf(thread_stderr, "%s: Cannot apply date adjustment\n",
 			badv->arg);
 		vary_destroy(v);
 		usage();
@@ -225,10 +225,10 @@ date_main(int argc, char *argv[])
 		setlocale(LC_TIME, "C");
 
 	(void)strftime(buf, sizeof(buf), format, &lt);
-	(void)printf("%s\n", buf);
-    if (fflush(stdout)) {
+	(void)fprintf(thread_stdout, "%s\n", buf);
+    if (fflush(thread_stdout)) {
 		// err(1, "stdout");
-        fprintf(stderr, "date: stdout: %s\n", strerror(errno));
+        fprintf(thread_stderr, "date: stdout: %s\n", strerror(errno));
         pthread_exit(NULL);
     }
 	/*
@@ -260,11 +260,11 @@ setthetime(const char *fmt, const char *p, int jflag, int nflag)
 	if (fmt != NULL) {
 		t = strptime(p, fmt, lt);
 		if (t == NULL) {
-			fprintf(stderr, "Failed conversion of ``%s''"
+			fprintf(thread_stderr, "Failed conversion of ``%s''"
 				" using format ``%s''\n", p, fmt);
 			badformat();
 		} else if (*t != '\0')
-			fprintf(stderr, "Warning: Ignoring %ld extraneous"
+			fprintf(thread_stderr, "Warning: Ignoring %ld extraneous"
 				" characters in date string (%s)\n",
 				(long) strlen(t), t);
 	} else {
@@ -335,7 +335,7 @@ setthetime(const char *fmt, const char *p, int jflag, int nflag)
 	/* convert broken-down time to GMT clock time */
     if ((tval = mktime(lt)) == -1) {
 		// errx(1, "nonexistent time");
-        fprintf(stderr, "date: nonexistent time\n");
+        fprintf(thread_stderr, "date: nonexistent time\n");
         pthread_exit(NULL);
     }
 
@@ -349,7 +349,7 @@ setthetime(const char *fmt, const char *p, int jflag, int nflag)
 			tv.tv_usec = 0;
             if (settimeofday(&tv, NULL) != 0) {
 				// err(1, "settimeofday (timeval)");
-                fprintf(stderr, "date: settimeofday (timeval): %s\n", strerror(errno));
+                fprintf(thread_stderr, "date: settimeofday (timeval): %s\n", strerror(errno));
                 pthread_exit(NULL);
             }
 			utx.ut_type = NEW_TIME;
@@ -366,7 +366,7 @@ setthetime(const char *fmt, const char *p, int jflag, int nflag)
 static void
 badformat(void)
 {
-    fprintf(stderr, "date: illegal time format\n");
+    fprintf(thread_stderr, "date: illegal time format\n");
     // warnx("illegal time format");
 	usage();
 }
@@ -374,7 +374,7 @@ badformat(void)
 static void
 usage(void)
 {
-	(void)fprintf(stderr, "%s\n%s\n",
+	(void)fprintf(thread_stderr, "%s\n%s\n",
 	    "usage: date [-jnRu] [-d dst] [-r seconds] [-t west] "
 	    "[-v[+|-]val[ymwdHMS]] ... ",
 	    unix2003_std ?

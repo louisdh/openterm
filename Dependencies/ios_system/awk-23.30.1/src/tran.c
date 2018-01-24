@@ -35,38 +35,38 @@ THIS SOFTWARE.
 #define	FULLTAB	2	/* rehash when table gets this x full */
 #define	GROWTAB 4	/* grow table by this factor */
 
-Array	*symtab;	/* main symbol table */
+__thread Array	*symtab;	/* main symbol table */
 
-char	**FS;		/* initial field sep */
-char	**RS;		/* initial record sep */
-char	**OFS;		/* output field sep */
-char	**ORS;		/* output record sep */
-char	**OFMT;		/* output format for numbers */
-char	**CONVFMT;	/* format for conversions in getsval */
-Awkfloat *NF;		/* number of fields in current record */
-Awkfloat *NR;		/* number of current record */
-Awkfloat *FNR;		/* number of current record in current file */
-char	**FILENAME;	/* current filename argument */
-Awkfloat *ARGC;		/* number of arguments from command line */
-char	**SUBSEP;	/* subscript separator for a[i,j,k]; default \034 */
-Awkfloat *RSTART;	/* start of re matched with ~; origin 1 (!) */
-Awkfloat *RLENGTH;	/* length of same */
+__thread char	**FS;		/* initial field sep */
+__thread char	**RS;		/* initial record sep */
+__thread char	**OFS;		/* output field sep */
+__thread char	**ORS;		/* output record sep */
+__thread char	**OFMT;		/* output format for numbers */
+static char	**CONVFMT;	/* format for conversions in getsval */
+__thread Awkfloat *NF;		/* number of fields in current record */
+__thread Awkfloat *NR;		/* number of current record */
+__thread Awkfloat *FNR;		/* number of current record in current file */
+__thread char	**FILENAME;	/* current filename argument */
+__thread Awkfloat *ARGC;		/* number of arguments from command line */
+__thread char	**SUBSEP;	/* subscript separator for a[i,j,k]; default \034 */
+__thread Awkfloat *RSTART;	/* start of re matched with ~; origin 1 (!) */
+__thread Awkfloat *RLENGTH;	/* length of same */
 
-Cell	*fsloc;		/* FS */
-Cell	*nrloc;		/* NR */
-Cell	*nfloc;		/* NF */
-Cell	*fnrloc;	/* FNR */
-Array	*ARGVtab;	/* symbol table containing ARGV[...] */
-Array	*ENVtab;	/* symbol table containing ENVIRON[...] */
-Cell	*rstartloc;	/* RSTART */
-Cell	*rlengthloc;	/* RLENGTH */
-Cell	*symtabloc;	/* SYMTAB */
+static Cell	*fsloc;		/* FS */
+__thread Cell	*nrloc;		/* NR */
+__thread Cell	*nfloc;		/* NF */
+__thread Cell	*fnrloc;	/* FNR */
+__thread Array	*ARGVtab;	/* symbol table containing ARGV[...] */
+static Array	*ENVtab;	/* symbol table containing ENVIRON[...] */
+__thread Cell	*rstartloc;	/* RSTART */
+__thread Cell	*rlengthloc;	/* RLENGTH */
+static Cell	*symtabloc;	/* SYMTAB */
 
-Cell	*nullloc;	/* a guaranteed empty cell */
-Node	*nullnode;	/* zero&null, converted into a node for comparisons */
-Cell	*literal0;
+static Cell	*nullloc;	/* a guaranteed empty cell */
+__thread Node	*nullnode;	/* zero&null, converted into a node for comparisons */
+__thread Cell	*literal0;
 
-extern Cell **fldtab;
+extern __thread Cell **fldtab;
 
 void syminit(void)	/* initialize symbol table with builtin vars */
 {
@@ -212,7 +212,7 @@ Cell *setsymtab(const char *n, const char *s, Awkfloat f, unsigned t, Array *tp)
 	Cell *p;
 
 	if (n != NULL && (p = lookup(n, tp)) != NULL) {
-		   dprintf( ("setsymtab found %p: n=%s s=\"%s\" f=%g t=%o\n",
+		   dprintf( (thread_stdout, "setsymtab found %p: n=%s s=\"%s\" f=%g t=%o\n",
 			p, NN(p->nval), NN(p->sval), p->fval, p->tval) );
 		return(p);
 	}
@@ -231,7 +231,7 @@ Cell *setsymtab(const char *n, const char *s, Awkfloat f, unsigned t, Array *tp)
 	h = hash(n, tp->size);
 	p->cnext = tp->tab[h];
 	tp->tab[h] = p;
-	   dprintf( ("setsymtab set %p: n=%s s=\"%s\" f=%g t=%o\n",
+	   dprintf( (thread_stdout, "setsymtab set %p: n=%s s=\"%s\" f=%g t=%o\n",
 		p, p->nval, p->sval, p->fval, p->tval) );
 	return(p);
 }
@@ -290,7 +290,7 @@ Awkfloat setfval(Cell *vp, Awkfloat f)	/* set float val of a Cell */
 		fldno = atoi(vp->nval);
 		if (fldno > *NF)
 			newfld(fldno);
-		   dprintf( ("setting field %d to %g\n", fldno, f) );
+		   dprintf( (thread_stdout, "setting field %d to %g\n", fldno, f) );
 	} else if (isrec(vp)) {
 		donefld = 0;	/* mark $1... invalid */
 		donerec = 1;
@@ -301,7 +301,7 @@ Awkfloat setfval(Cell *vp, Awkfloat f)	/* set float val of a Cell */
 	vp->tval |= NUM;	/* mark number ok */
 	if (f == -0)  /* who would have thought this possible? */
 		f = 0;
-	   dprintf( ("setfval %p: %s = %g, t=%o\n", vp, NN(vp->nval), f, vp->tval) );
+	   dprintf( (thread_stdout, "setfval %p: %s = %g, t=%o\n", vp, NN(vp->nval), f, vp->tval) );
 	return vp->fval = f;
 }
 
@@ -320,7 +320,7 @@ char *setsval(Cell *vp, const char *s)	/* set string val of a Cell */
 	char *t;
 	int fldno;
 
-	   dprintf( ("starting setsval %p: %s = \"%s\", t=%o, r,f=%d,%d\n", 
+	   dprintf( (thread_stdout, "starting setsval %p: %s = \"%s\", t=%o, r,f=%d,%d\n",
 		vp, NN(vp->nval), s, vp->tval, donerec, donefld) );
 	if ((vp->tval & (NUM | STR)) == 0)
 		funnyvar(vp, "assign to");
@@ -329,7 +329,7 @@ char *setsval(Cell *vp, const char *s)	/* set string val of a Cell */
 		fldno = atoi(vp->nval);
 		if (fldno > *NF)
 			newfld(fldno);
-		   dprintf( ("setting field %d to %s (%p)\n", fldno, s, s) );
+		   dprintf( (thread_stdout, "setting field %d to %s (%p)\n", fldno, s, s) );
 	} else if (isrec(vp)) {
 		donefld = 0;	/* mark $1... invalid */
 		donerec = 1;
@@ -340,7 +340,7 @@ char *setsval(Cell *vp, const char *s)	/* set string val of a Cell */
 	vp->tval &= ~NUM;
 	vp->tval |= STR;
 	vp->tval &= ~DONTFREE;
-	   dprintf( ("setsval %p: %s = \"%s (%p) \", t=%o r,f=%d,%d\n", 
+	   dprintf( (thread_stdout, "setsval %p: %s = \"%s (%p) \", t=%o r,f=%d,%d\n",
 		vp, NN(vp->nval), t,t, vp->tval, donerec, donefld) );
 	return(vp->sval = t);
 }
@@ -358,7 +358,7 @@ Awkfloat getfval(Cell *vp)	/* get float val of a Cell */
 		if (is_number(vp->sval) && !(vp->tval&CON))
 			vp->tval |= NUM;	/* make NUM only sparingly */
 	}
-	   dprintf( ("getfval %p: %s = %g, t=%o\n", vp, NN(vp->nval), vp->fval, vp->tval) );
+	   dprintf( (thread_stdout, "getfval %p: %s = %g, t=%o\n", vp, NN(vp->nval), vp->fval, vp->tval) );
 	return(vp->fval);
 }
 
@@ -392,7 +392,7 @@ static char *get_str_val(Cell *vp, char **fmt)        /* get string val of a Cel
 		vp->tval |= STR;
 #endif
 	}
-	   dprintf( ("getsval %p: %s = \"%s (%p)\", t=%o\n", vp, NN(vp->nval), vp->sval, vp->sval, vp->tval) );
+	   dprintf( (thread_stdout, "getsval %p: %s = \"%s (%p)\", t=%o\n", vp, NN(vp->nval), vp->sval, vp->sval, vp->tval) );
 	return(vp->sval);
 }
 

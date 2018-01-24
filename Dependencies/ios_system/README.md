@@ -64,6 +64,39 @@ The simplest way to integrate `ios_system` into your app is to just replace all 
 
 Sample use: `replaceCommand(@"ls", gnu_ls_main, true);`: Replaces all calls to `ls` to calls to `gnu_ls_main`. The last argument tells whether you want to replace only the function associated with `ls` (if `false`) or all the commands that used the function previously associated with `ls`(if true). For example, `compress` and `uncompress` are both done with the same function, `compress_main` (and the actual behaviour depends on `argv[0]`). Only you can know whether your replacement function handles both roles, or only one of them. 
 
+## Adding more commands:
+
+`ios_system` is OpenSource; you can extend it in any way you want. Keep in mind the intrinsic limitations: 
+- The binary of all commands reside in memory, all the time. The memory on any portable device is limited. The iPhone 6, for example, has 1GB of RAM. 
+- Inside terminals we have limited interaction. Apps that require user input are unlikely to get it, or with no visual feedback. That could be solved, but it is hard.
+- Sandbox and API limitations still apply. Commands that require root privilege (like `traceroute`) are impossible.
+
+To add a command:
+- create an issue: https://github.com/holzschu/ios_system/issues That will let others know you're working on it, and possibly join forces with you (that's the beauty of OpenSource). 
+- find the source code for the command, preferrably with BSD license. [Apple OpenSource](https://opensource.apple.com) is a good place to start. Compile it first for OSX, to see if it works, and go through configuration. 
+- make the following changes to the code: 
+    - include `ios_error.h` (it will replace all calls to `exit` by calls to `pthread_exit`)
+    - replace calls to `warn`, `err`, `errx` and `warnx` by calls to `fprintf`, plus `pthread_exit` if needed.
+    - replace all occurences of `stdin`, `stdout`, stderr by `thread_stdin`, `thread_stdout`, `thread_stderr` (different values for each thread so we can pipe commands).
+    - replace all calls to `printf`, `write`,... with explicit calls to `fprintf(thread_stdout, ...)` (`ios_error.h` takes care of some of these).
+    - replace `STDIN_FILENO` with `fileno(stdin)`. Replace `STDOUT_FILENO` by calls to `fprintf` or `fwrite`; `fileno(stdout)` does not always exist (it can be a stream with no files associated). Same with `stderr`. 
+    - make sure you initialize all variables at startup, and release all memory on exit.
+    - make all global variables thread-local with `__thread`, make sure local variables are marked with `static`. 
+    - make sure your code doesn't use commands that don't work in a sandbox: `fork`, `exec`, `system`, `popen`, `isExecutableFileAtPath`, `access`... (some of these fail at compile time, others fail silently at run time). 
+    - compile, edit `ios_system.m`, and run. That's it. Test a lot. Side effects appear after several launches.
+    - if your command has a large code base, work out the difference in your edits and make a patch, rather than commit the entire code. See `get_sources_for_patching.sh` for an example. 
+
+**Frequently asked commands:** here is a list of commands that are often requested, and my experience with them:
+- `ping`: easy, but remember there is no interaction, so limit the number of tests (9 is a good value).
+- `traceroute` and most network analysis tools: require root privilege, so impossible inside a sandbox.
+- `unzip`: use `tar -xz`. 
+- `nano`, `ed`: require user interaction, so currently impossible. [iVim](https://github.com/holzschu/iVim) can launch shell commands with `:!`. It's easier to make an editor start commands than to make a terminal run an editor.
+- `sh`, `bash`, `zsh`: shells are hard to compile, even without the sandbox/API limitations. They also tend to take a lot of memory, which is a limited asset.
+- `telnet`: both hard to compile and limited without interaction. 
+- `git`: [WorkingCopy](https://workingcopyapp.com) does it very well, and you can transfer directories to your app, then transfer back to WorkingCopy. Also difficult to compile. 
+- `ssh`: [BlinkShell](https://itunes.apple.com/us/app/blink-shell-mosh-ssh-terminal/id1156707581?mt=8&ign-mpt=uo%3D4) does it very well. There is a fork of [BlinkShell](https://github.com/holzschu/blink) with `ios_system` commands included. Also requires user interaction. `ssh + command` is on the [todo list](https://github.com/holzschu/ios_system/issues). 
+
+
 ### Licensing:
 
 As much as possible, I used the BSD version of the tools. More precisely:

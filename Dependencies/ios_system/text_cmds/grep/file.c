@@ -57,6 +57,7 @@ __FBSDID("$FreeBSD: src/usr.bin/grep/file.c,v 1.7 2011/10/11 22:27:23 gabor Exp 
 #endif
 
 #include "grep.h"
+#include "ios_error.h"
 
 #define	MAXBUFSIZ	(32 * 1024)
 #define	LNBUFBUMP	80
@@ -262,7 +263,7 @@ grep_open(const char *path)
 	if (path == NULL) {
 		/* Processing stdin implies --line-buffered. */
 		lbflag = true;
-		f->fd = STDIN_FILENO;
+		f->fd = fileno(thread_stdin);
 	} else if ((f->fd = open(path, O_RDONLY)) == -1)
 		goto error1;
 
@@ -284,6 +285,7 @@ grep_open(const char *path)
 			fsiz = st.st_size;
 			buffer = mmap(NULL, fsiz, PROT_READ, flags,
 			     f->fd, (off_t)0);
+            fprintf(thread_stderr, "Read buffer: %s\n", buffer);
 			if (buffer == MAP_FAILED)
 				filebehave = FILE_STDIO;
 			else {

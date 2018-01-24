@@ -248,7 +248,7 @@ la_GetFunctionKernel32(const char *name)
 		lib = LoadLibrary("kernel32.dll");
 	}
 	if (lib == NULL) {
-		fprintf(stderr, "Can't load kernel32.dll?!\n");
+		fprintf(thread_stderr, "Can't load kernel32.dll?!\n");
 		exit(1);
 	}
 	return (void *)GetProcAddress(lib, name);
@@ -1171,7 +1171,7 @@ la_dosmaperr(unsigned long e)
 		}
 	}
 
-	/* fprintf(stderr, "unrecognized win32 error code: %lu", e); */
+	/* fprintf(thread_stderr, "unrecognized win32 error code: %lu", e); */
 	errno = EINVAL;
 	return;
 }

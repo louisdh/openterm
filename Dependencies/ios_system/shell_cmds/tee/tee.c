@@ -57,29 +57,37 @@ __RCSID("$NetBSD: tee.c,v 1.6 1997/10/20 00:37:11 lukem Exp $");
 #include <string.h>
 #include <locale.h>
 #include <err.h>
+#include "ios_error.h"
 
 typedef struct _list {
 	struct _list *next;
-	int fd;
+    FILE* stream;
+	// int fd;
 	char *name;
 } LIST;
-LIST *head;
+static LIST *head;
 
-void	add __P((int, char *));
-int	main __P((int, char **));
+static void	add __P((FILE*, char *));
+int	tee_main __P((int, char **));
 
 int
-main(argc, argv)
+tee_main(argc, argv)
 	int argc;
 	char *argv[];
 {
 	LIST *p;
-	int n, fd, rval, wval;
+    int n, rval;
+    size_t wval;
+    FILE* fd;
 	char *bp;
 	int append, ch, exitval;
 	char *buf;
 #define	BSIZE (8 * 1024)
-
+    // iOS: initialize flags:
+    append = 0; exitval = 0;
+    rval = 0; wval = 0; fd = 0; n = 0; ch = 0;
+    
+    
 	setlocale(LC_ALL, "");
 
 	append = 0;
@@ -99,26 +107,30 @@ main(argc, argv)
 	argv += optind;
 	argc -= optind;
 
-	if ((buf = malloc((size_t)BSIZE)) == NULL)
-		err(1, "malloc");
+    if ((buf = malloc((size_t)BSIZE)) == NULL) {
+        fprintf(thread_stderr, "tee: malloc: %s\n", strerror(errno));
+        pthread_exit(NULL);
+        // err(1, "malloc");
+    }
 
-	add(STDOUT_FILENO, "stdout");
+	add(thread_stdout, "stdout");
 
 	for (exitval = 0; *argv; ++argv)
-		if ((fd = open(*argv, append ? O_WRONLY|O_CREAT|O_APPEND :
-		    O_WRONLY|O_CREAT|O_TRUNC, DEFFILEMODE)) < 0) {
-			warn("%s", *argv);
+        if ((fd = fopen(*argv, append ? "a" : "w")) < 0) {
+            fprintf(thread_stderr, "tee: %s: %s\n", *argv, strerror(errno));
+			// warn("%s", *argv);
 			exitval = 1;
 		} else
 			add(fd, *argv);
 
-	while ((rval = read(STDIN_FILENO, buf, BSIZE)) > 0)
+	while ((rval = read(fileno(thread_stdin), buf, BSIZE)) > 0)
 		for (p = head; p; p = p->next) {
 			n = rval;
 			bp = buf;
 			do {
-				if ((wval = write(p->fd, bp, n)) == -1) {
-					warn("%s", p->name);
+				if ((wval = fwrite(bp, 1, n, p->stream)) != n) {
+                    fprintf(thread_stderr, "tee: %s: %s\n", p->name, strerror(errno));
+					// warn("%s", p->name);
 					exitval = 1;
 					break;
 				}
@@ -126,30 +138,46 @@ main(argc, argv)
 			} while (n -= wval);
 		}
 	if (rval < 0) {
-		warn("read");
+        fprintf(thread_stderr, "tee: %s: %s\n", "read", strerror(errno));
+		// warn("read");
 		exitval = 1;
 	}
 
-	for (p = head; p; p = p->next) {
-		if (close(p->fd) == -1) {
-			warn("%s", p->name);
-			exitval = 1;
-		}
+    for (p = head; p; p = p->next) {
+        if (strcmp(p->name, "stdout") != 0) {
+            if (fclose(p->stream) == -1) {
+                fprintf(thread_stderr, "tee: %s: %s\n", p->name, strerror(errno));
+                // warn("%s", p->name);
+                exitval = 1;
+            }
+        }
 	}
 
-	exit(exitval);
+    free(buf);
+    LIST *pnext;
+    for (p = head; p; p = pnext) {
+        pnext = p->next;
+        free(p);
+        p = NULL;
+    }
+    head = NULL;
+    return exitval;
+	// exit(exitval);
 }
 
 void
-add(fd, name)
-	int fd;
+add(stream, name)
+	FILE* stream;
 	char *name;
 {
 	LIST *p;
 
-	if ((p = malloc((size_t)sizeof(LIST))) == NULL)
-		err(1, "malloc");
-	p->fd = fd;
+    if ((p = malloc((size_t)sizeof(LIST))) == NULL) {
+        fprintf(thread_stderr, "tee: malloc: %s\n", strerror(errno));
+        pthread_exit(NULL);
+		// err(1, "malloc");
+    }
+	p->stream = stream;
 	p->name = name;
 	p->next = head;
 	head = p;

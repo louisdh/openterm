@@ -34,6 +34,7 @@ __FBSDID("$FreeBSD$");
 
 #include "lafe_err.h"
 #include "line_reader.h"
+#include "ios_error.h"
 
 #if defined(_WIN32) && !defined(__CYGWIN__) && !defined(__BORLANDC__)
 #define strdup _strdup
@@ -68,7 +69,7 @@ lafe_line_reader(const char *pathname, int nullSeparator)
 	lr->pathname = strdup(pathname);
 
 	if (strcmp(pathname, "-") == 0)
-		lr->f = stdin;
+		lr->f = thread_stdin;
 	else
 		lr->f = fopen(pathname, "r");
 	if (lr->f == NULL)
@@ -155,7 +156,7 @@ lafe_line_reader_next(struct lafe_line_reader *lr)
 		if (ferror(lr->f))
 			lafe_errc(1, errno, "Can't read %s", lr->pathname);
 		if (feof(lr->f)) {
-			if (lr->f != stdin)
+			if (lr->f != thread_stdin)
 				fclose(lr->f);
 			lr->f = NULL;
 		}

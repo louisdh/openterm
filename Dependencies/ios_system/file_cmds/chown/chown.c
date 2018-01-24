@@ -134,14 +134,14 @@ chown_main(int argc, char **argv)
 	if (argc < 2)
 		usage();
 	if (!Rflag && (Hflag || Lflag || Pflag))
-        fprintf(stderr, "chown: options -H, -L, -P only useful with -R\n");
+        fprintf(thread_stderr, "chown: options -H, -L, -P only useful with -R\n");
         // warnx("options -H, -L, -P only useful with -R");
 
 	if (Rflag) {
 		fts_options = FTS_PHYSICAL;
         if (hflag && (Hflag || Lflag)) {
             // errx(1, "the -R%c and -h options may not be "
-			fprintf(stderr, "chown: the -R%c and -h options may not be "
+			fprintf(thread_stderr, "chown: the -R%c and -h options may not be "
 			    "specified together\n", Hflag ? 'H' : 'L');
             pthread_exit(NULL);
         }
@@ -164,7 +164,7 @@ chown_main(int argc, char **argv)
 		}
 #ifdef SUPPORT_DOT
 		else if ((cp = strchr(*argv, '.')) != NULL) {
-            fprintf(stderr, "chown: separation of user and group with a period is deprecated\n");
+            fprintf(thread_stderr, "chown: separation of user and group with a period is deprecated\n");
             // warnx("separation of user and group with a period is deprecated");
 			*cp++ = '\0';
 			a_gid(cp);
@@ -177,7 +177,7 @@ chown_main(int argc, char **argv)
 	}
 
     if ((ftsp = fts_open(++argv, fts_options, 0)) == NULL) {
-        fprintf(stderr, "chown: %s\n", strerror(errno));
+        fprintf(thread_stderr, "chown: %s\n", strerror(errno));
         pthread_exit(NULL);
         //err(1, NULL);
     }
@@ -190,14 +190,14 @@ chown_main(int argc, char **argv)
 				fts_set(ftsp, p, FTS_SKIP);
 			continue;
 		case FTS_DNR:			/* Warn, chown. */
-            fprintf(stderr, "chown: %s: %s\n", p->fts_path, strerror(p->fts_errno));
+            fprintf(thread_stderr, "chown: %s: %s\n", p->fts_path, strerror(p->fts_errno));
             //warnx("%s: %s", p->fts_path, strerror(p->fts_errno));
 			rval = 1;
 			break;
 		case FTS_ERR:			/* Warn, continue. */
 		case FTS_NS:
 			// warnx("%s: %s", p->fts_path, strerror(p->fts_errno));
-            fprintf(stderr, "chown: %s: %s\n", p->fts_path, strerror(p->fts_errno));
+            fprintf(thread_stderr, "chown: %s: %s\n", p->fts_path, strerror(p->fts_errno));
 			rval = 1;
 			continue;
 		case FTS_SL:
@@ -215,7 +215,7 @@ chown_main(int argc, char **argv)
 					if (Hflag || Lflag) {       /* -H or -L was specified */
 						if (p->fts_errno) {
 							// warnx("%s: %s", p->fts_name, strerror(p->fts_errno));
-                            fprintf(stderr, "chown: %s: %s\n", p->fts_name, strerror(p->fts_errno));
+                            fprintf(thread_stderr, "chown: %s: %s\n", p->fts_name, strerror(p->fts_errno));
 							rval = 1;
 							continue;
 						}
@@ -243,12 +243,12 @@ chown_main(int argc, char **argv)
 			}
 		} else {
 			if (vflag)
-				printf("%s\n", p->fts_path);
+				fprintf(thread_stdout, "%s\n", p->fts_path);
 		}
 	}
 	if (errno)
 		//err(1, "fts_read");
-        fprintf(stderr, "chown: fts_read: %s\n", strerror(errno));
+        fprintf(thread_stderr, "chown: fts_read: %s\n", strerror(errno));
 	exit(rval);
 }
 
@@ -283,7 +283,7 @@ id(const char *name, const char *type)
 	val = strtoul(name, &ep, 10);
     if (errno || *ep != '\0' || val > UID_MAX) {
 		// errx(1, "%s: illegal %s name", name, type);
-        fprintf(stderr, "chown: %s: illegal %s name\n", name, type);
+        fprintf(thread_stderr, "chown: %s: illegal %s name\n", name, type);
         pthread_exit(NULL);
     }
 	return (uid_t)val;
@@ -300,7 +300,7 @@ chownerr(const char *file)
 	if (errno != EPERM || (uid != (uid_t)-1 &&
 	    euid == (uid_t)-1 && (euid = geteuid()) != 0)) {
 		// warn("%s", file);
-        fprintf(stderr, "chown: %s: %s\n", file, strerror(errno));
+        fprintf(thread_stderr, "chown: %s: %s\n", file, strerror(errno));
 		return;
 	}
 
@@ -311,12 +311,12 @@ chownerr(const char *file)
 		while (--ngroups >= 0 && gid != groups[ngroups]);
 		if (ngroups < 0) {
 			// warnx("you are not a member of group %s", gname);
-            fprintf(stderr, "chown: you are not a member of group %s\n", gname);
+            fprintf(thread_stderr, "chown: you are not a member of group %s\n", gname);
 			return;
 		}
 	}
 	// warn("%s", file);
-    fprintf(stderr, "chown: %s: %s\n", file, strerror(errno));
+    fprintf(thread_stderr, "chown: %s: %s\n", file, strerror(errno));
 }
 
 void
@@ -324,12 +324,12 @@ usage(void)
 {
 
 	if (ischown)
-		(void)fprintf(stderr, "%s\n%s\n",
+		(void)fprintf(thread_stderr, "%s\n%s\n",
 		    "usage: chown [-fhv] [-R [-H | -L | -P]] owner[:group]"
 		    " file ...",
 		    "       chown [-fhv] [-R [-H | -L | -P]] :group file ...");
 	else
-		(void)fprintf(stderr, "%s\n",
+		(void)fprintf(thread_stderr, "%s\n",
 		    "usage: chgrp [-fhv] [-R [-H | -L | -P]] group file ...");
 	exit(1);
 }

@@ -29,9 +29,10 @@
 __FBSDID("$FreeBSD: src/bin/ed/io.c,v 1.14 2003/01/01 18:48:39 schweikh Exp $");
 
 #include "ed.h"
+#include "ios_error.h"
 
 
-extern int scripted;
+extern __thread int scripted;
 
 /* read_file: read a named file/pipe into the buffer; return line count */
 long
@@ -43,26 +44,26 @@ read_file(char *fn, long n)
 
 	fp = (*fn == '!') ? popen(fn + 1, "r") : fopen(strip_escapes(fn), "r");
 	if (fp == NULL) {
-		fprintf(stderr, "%s: %s\n", fn, strerror(errno));
+		fprintf(thread_stderr, "%s: %s\n", fn, strerror(errno));
 		errmsg = "cannot open input file";
 		return ERR;
 	} else if ((size = read_stream(fp, n)) < 0)
 		return ERR;
 	 else if (((*fn == '!') ?  pclose(fp) : fclose(fp)) < 0) {
-		fprintf(stderr, "%s: %s\n", fn, strerror(errno));
+		fprintf(thread_stderr, "%s: %s\n", fn, strerror(errno));
 		errmsg = "cannot close input file";
 		return ERR;
 	}
-	fprintf(stdout, !scripted ? "%lu\n" : "", size);
+	fprintf(thread_stdout, !scripted ? "%lu\n" : "", size);
 	return current_addr - n;
 }
 
 
-extern int des;
+extern __thread int des;
 
 char *sbuf;			/* file i/o buffer */
 int sbufsz;			/* file i/o buffer size */
-int newline_added;		/* if set, newline appended to input file */
+__thread int newline_added;		/* if set, newline appended to input file */
 
 /* read_stream: read a stream into the editor buffer; return status */
 long
@@ -98,9 +99,9 @@ read_stream(FILE *fp, long n)
 	if (len < 0)
 		return ERR;
 	if (appended && size && o_isbinary && o_newline_added)
-		fputs("newline inserted\n", stderr);
+		fputs("newline inserted\n", thread_stderr);
 	else if (newline_added && (!appended || (!isbinary && !o_isbinary)))
-		fputs("newline appended\n", stderr);
+		fputs("newline appended\n", thread_stderr);
 	if (isbinary && newline_added && !appended)
 	    	size += 1;
 	if (!size)
@@ -130,7 +131,7 @@ get_stream_line(FILE *fp)
 	if (c == '\n')
 		sbuf[i++] = c;
 	else if (ferror(fp)) {
-		fprintf(stderr, "%s\n", strerror(errno));
+		fprintf(thread_stderr, "%s\n", strerror(errno));
 		errmsg = "cannot read input file";
 		return ERR;
 	} else if (i) {
@@ -151,17 +152,17 @@ write_file(char *fn, const char *mode, long n, long m)
 
 	fp = (*fn == '!') ? popen(fn+1, "w") : fopen(strip_escapes(fn), mode);
 	if (fp == NULL) {
-		fprintf(stderr, "%s: %s\n", fn, strerror(errno));
+		fprintf(thread_stderr, "%s: %s\n", fn, strerror(errno));
 		errmsg = "cannot open output file";
 		return ERR;
 	} else if ((size = write_stream(fp, n, m)) < 0)
 		return ERR;
 	 else if (((*fn == '!') ?  pclose(fp) : fclose(fp)) < 0) {
-		fprintf(stderr, "%s: %s\n", fn, strerror(errno));
+		fprintf(thread_stderr, "%s: %s\n", fn, strerror(errno));
 		errmsg = "cannot close output file";
 		return ERR;
 	}
-	fprintf(stdout, !scripted ? "%lu\n" : "", size);
+	fprintf(thread_stdout, !scripted ? "%lu\n" : "", size);
 	return n ? m - n + 1 : 0;
 }
 
@@ -201,7 +202,7 @@ put_stream_line(FILE *fp, const char *s, int len)
 {
 	while (len--)
 		if ((des ? put_des_char(*s++, fp) : fputc(*s++, fp)) < 0) {
-			fprintf(stderr, "%s\n", strerror(errno));
+			fprintf(thread_stderr, "%s\n", strerror(errno));
 			errmsg = "cannot write file";
 			return ERR;
 		}
@@ -272,14 +273,14 @@ get_tty_line(void)
 			ibufp = ibuf;
 			return i;
 		case EOF:
-			if (ferror(stdin)) {
-				fprintf(stderr, "stdin: %s\n", strerror(errno));
+			if (ferror(thread_stdin)) {
+				fprintf(thread_stderr, "stdin: %s\n", strerror(errno));
 				errmsg = "cannot read stdin";
-				clearerr(stdin);
+				clearerr(thread_stdin);
 				ibufp = NULL;
 				return ERR;
 			} else {
-				clearerr(stdin);
+				clearerr(thread_stdin);
 				if (i != oi) {
 					oi = i;
 					continue;
@@ -296,8 +297,8 @@ get_tty_line(void)
 #define ESCAPES "\a\b\f\n\r\t\v\\"
 #define ESCCHARS "abfnrtv\\"
 
-extern int rows;
-extern int cols;
+extern __thread int rows;
+extern __thread int cols;
 
 /* put_tty_line: print text to stdout */
 int
@@ -307,12 +308,12 @@ put_tty_line(const char *s, int l, long n, int gflag)
 	char *cp;
 
 	if ((gflag & GNP) && !(gflag & GINT)) {
-		printf("%ld\t", n);
+		fprintf(thread_stdout, "%ld\t", n);
 		col = 8;
 	}
 	for (; l--; s++) {
 		if ((gflag & GLS) && ++col > cols) {
-			fputs("\\\n", stdout);
+			fputs("\\\n", thread_stdout);
 			col = 1;
 		}
 		if (gflag & GLS) {

@@ -32,6 +32,7 @@
 #include "tool_cfgable.h"
 #include "tool_easysrc.h"
 #include "tool_msgs.h"
+#include "ios_error.h"
 
 #include "memdebug.h" /* keep this as LAST include */
 
@@ -182,7 +183,7 @@ void dumpeasysrc(struct GlobalConfig *config)
     fopened = TRUE;
   }
   else
-    out = stdout;
+    out = thread_stdout;
   if(!out)
     warnf(config, "Failed to open %s to write libcurl code!\n", o);
   else {

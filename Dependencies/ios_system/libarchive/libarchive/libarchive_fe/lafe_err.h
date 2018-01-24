@@ -33,7 +33,7 @@
 #define __LA_DEAD
 #endif
 
-extern const char *lafe_progname;
+extern const __thread char *lafe_progname;
 
 void	lafe_warnc(int code, const char *fmt, ...);
 void	lafe_errc(int eval, int code, const char *fmt, ...) __LA_DEAD;

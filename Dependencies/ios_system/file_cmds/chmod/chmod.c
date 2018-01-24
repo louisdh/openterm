@@ -64,7 +64,7 @@ __RCSID("$FreeBSD: src/bin/chmod/chmod.c,v 1.27 2002/08/04 05:29:13 obrien Exp $
 
 #endif /*__APPLE__*/
 
-int chmod_fflag = 0;
+__thread int chmod_fflag = 0;
 
 int chmod_main(int, char *[]);
 void chmod_usage(void);
@@ -144,7 +144,7 @@ chmod_main(int argc, char *argv[])
 //			acloptflags |= ACL_FLAG | ACL_TO_STDOUT;
 //			ace_arg_not_required = 1;
 			// errx(1, "-A not implemented");
-            fprintf(stderr, "chmod: -A not implemented\n");
+            fprintf(thread_stderr, "chmod: -A not implemented\n");
             pthread_exit(NULL);
 			goto done;
 		case 'E':
@@ -173,7 +173,7 @@ chmod_main(int argc, char *argv[])
 //			acloptflags |= ACL_FLAG | ACL_INVOKE_EDITOR;
 //			ace_arg_not_required = 1;
 			// errx(1, "-V not implemented");
-            fprintf(stderr, "chmod: -V not implemented\n");
+            fprintf(thread_stderr, "chmod: -V not implemented\n");
             pthread_exit(NULL);
 			goto done;
 #endif /* __APPLE__ */
@@ -204,7 +204,7 @@ done:	argv += optind;
 	if (argc < ((acloptflags & ACL_FLAG) ? 1 : 2))
 		chmod_usage();
 	if (!Rflag && (Hflag || Lflag || Pflag))
-        fprintf(stderr, "chmod: options -H, -L, -P only useful with -R\n");
+        fprintf(thread_stderr, "chmod: options -H, -L, -P only useful with -R\n");
 		// warnx("options -H, -L, -P only useful with -R");
 #else  /* !__APPLE__ */
 	if (argc < 2)
@@ -251,7 +251,7 @@ done:	argv += optind;
 						errno = ERANGE;
                         if (errno || *ep) {
 						// errx(1, "Invalid ACL entry number: %ld", aclpos);
-                        fprintf(stderr, "chmod: Invalid ACL entry number: %ld\n", aclpos);
+                        fprintf(thread_stderr, "chmod: Invalid ACL entry number: %ld\n", aclpos);
                         pthread_exit(NULL);
                         }
 					if (acloptflags & ACL_DELETE_FLAG)
@@ -266,7 +266,7 @@ done:	argv += optind;
 					 */
 					inheritance_level++;
 					if (inheritance_level > 1)
-                        fprintf(stderr, "chmod: Inheritance across more than one generation is not currently supported\n");
+                        fprintf(thread_stderr, "chmod: Inheritance across more than one generation is not currently supported\n");
                         // warnx("Inheritance across more than one generation is not currently supported");
 					if (inheritance_level >= MAX_INHERITANCE_LEVEL)
 						goto apdone;
@@ -288,7 +288,7 @@ apnoacl:
 		fts_options = FTS_PHYSICAL;
         if (hflag) {
 			// errx(1,
-            fprintf(stderr,
+            fprintf(thread_stderr,
 		"chmod: the -R and -h options may not be specified together.\n");
             pthread_exit(NULL);
         }
@@ -314,19 +314,19 @@ apnoacl:
 		
         if (mode == NULL) {
 			// err(1, "Unable to allocate mode string");
-            fprintf(stderr, "chmod: Unable to allocate mode string: %s\n", strerror(errno));
+            fprintf(thread_stderr, "chmod: Unable to allocate mode string: %s\n", strerror(errno));
             pthread_exit(NULL);
         }
 		/* Read the ACEs from STDIN */
 		do {
 			readtotal += readval;
-			readval = read(STDIN_FILENO, mode + readtotal, 
+			readval = read(fileno(thread_stdin), mode + readtotal, 
 				       MAX_ACL_TEXT_SIZE);
 		} while ((readval > 0) && (readtotal <= MAX_ACL_TEXT_SIZE));
 			
         if (0 == readtotal) {
 			// errx(1, "-E specified, but read from STDIN failed");
-            fprintf(stderr, "chmod: -E specified, but read from STDIN failed\n");
+            fprintf(thread_stderr, "chmod: -E specified, but read from STDIN failed\n");
             pthread_exit(NULL);
         }
 		else
@@ -353,7 +353,7 @@ apnoacl:
 			acl_input = parse_acl_entries(mode);
 			if (acl_input == NULL) {
 				//errx(1, "Invalid ACL specification: %s", mode);
-                fprintf(stderr, "chmod: Invalid ACL specification: %s\n", mode);
+                fprintf(thread_stderr, "chmod: Invalid ACL specification: %s\n", mode);
                 pthread_exit(NULL);
 			}
 		}
@@ -367,12 +367,12 @@ apnoacl:
 				errno = ERANGE;
             if (errno) {
 				// err(1, "Invalid file mode: %s", mode);
-                fprintf(stderr, "chmod: Invalid file mode: %s: %s\n", mode, strerror(errno));
+                fprintf(thread_stderr, "chmod: Invalid file mode: %s: %s\n", mode, strerror(errno));
                 pthread_exit(NULL);
             }
             if (*ep) {
 				// errx(1, "Invalid file mode: %s", mode);
-                fprintf(stderr, "chmod: Invalid file mode: %s\n", mode);
+                fprintf(thread_stderr, "chmod: Invalid file mode: %s\n", mode);
                 pthread_exit(NULL);
             }
 			omode = (mode_t)val;
@@ -380,7 +380,7 @@ apnoacl:
 		} else {
             if ((set = setmode(mode)) == NULL) {
 				// errx(1, "Invalid file mode: %s", mode);
-                fprintf(stderr, "chmod: Invalid file mode: %s\n", mode);
+                fprintf(thread_stderr, "chmod: Invalid file mode: %s\n", mode);
                 pthread_exit(NULL);
             }
 			oct = 0;
@@ -390,7 +390,7 @@ apnoacl:
 #endif /* __APPLE__*/
     if ((ftsp = fts_open(++argv, fts_options, 0)) == NULL) {
 		// err(1, "fts_open");
-        fprintf(stderr, "chmod: fts_open: %s\n", strerror(errno));
+        fprintf(thread_stderr, "chmod: fts_open: %s\n", strerror(errno));
         pthread_exit(NULL);
     }
 	for (rval = 0; (p = fts_read(ftsp)) != NULL;) {
@@ -401,7 +401,7 @@ apnoacl:
 			break;
 		case FTS_DNR:			/* Warn, chmod, continue. */
 			// warnx("%s: %s", p->fts_path, strerror(p->fts_errno));
-            fprintf(stderr, "chmod: %s: %s\n", p->fts_path, strerror(p->fts_errno));
+            fprintf(thread_stderr, "chmod: %s: %s\n", p->fts_path, strerror(p->fts_errno));
 			rval = 1;
 			break;
 		case FTS_DP:			/* Already changed at FTS_D. */
@@ -411,7 +411,7 @@ apnoacl:
 				break;
 		case FTS_ERR:			/* Warn, continue. */
 			// warnx("%s: %s", p->fts_path, strerror(p->fts_errno));
-            fprintf(stderr, "chmod: %s: %s\n", p->fts_path, strerror(p->fts_errno));
+            fprintf(thread_stderr, "chmod: %s: %s\n", p->fts_path, strerror(p->fts_errno));
 			rval = 1;
 			continue;
 		case FTS_SL:			/* Ignore. */
@@ -440,12 +440,12 @@ apnoacl:
 			if ((newmode & ALLPERMS) == (p->fts_statp->st_mode & ALLPERMS))
 				continue;
 			if ((*change_mode)(p->fts_accpath, newmode) && !chmod_fflag) {
-                fprintf(stderr, "chmod: Unable to change file mode on %s: %s\n", p->fts_path, strerror(errno));
+                fprintf(thread_stderr, "chmod: Unable to change file mode on %s: %s\n", p->fts_path, strerror(errno));
                 // warn("Unable to change file mode on %s", p->fts_path);
 				rval = 1;
 			} else {
 				if (vflag) {
-					(void)printf("%s", p->fts_accpath);
+					(void)fprintf(thread_stdout, "%s", p->fts_accpath);
 
 					if (vflag > 1) {
 						char m1[12], m2[12];
@@ -454,12 +454,12 @@ apnoacl:
 						strmode((p->fts_statp->st_mode &
 							 S_IFMT) | newmode, m2);
 						
-						(void)printf(": 0%o [%s] -> 0%o [%s]",
+						(void)fprintf(thread_stdout, ": 0%o [%s] -> 0%o [%s]",
 							     p->fts_statp->st_mode, m1,
 					    (p->fts_statp->st_mode & S_IFMT) |
 							     newmode, m2);
 					}
-					(void)printf("\n");
+					(void)fprintf(thread_stdout, "\n");
 				}
 				
 			}
@@ -469,7 +469,7 @@ apnoacl:
 	}
     if (errno) {
 		// err(1, "fts_read");
-        fprintf(stderr, "chmod: fts_read: %s\n", strerror(errno));
+        fprintf(thread_stderr, "chmod: fts_read: %s\n", strerror(errno));
         pthread_exit(NULL);
     }
 #ifdef __APPLE__
@@ -488,11 +488,11 @@ void
 chmod_usage(void)
 {
 #ifdef __APPLE__
-	(void)fprintf(stderr,
+	(void)fprintf(thread_stderr,
 		      "usage:\tchmod [-fhv] [-R [-H | -L | -P]] [-a | +a | =a  [i][# [ n]]] mode|entry file ...\n"
 		      "\tchmod [-fhv] [-R [-H | -L | -P]] [-E | -C | -N | -i | -I] file ...\n"); /* add -A and -V when implemented */
 #else
-	(void)fprintf(stderr,
+	(void)fprintf(thread_stderr,
 	    "usage: chmod [-fhv] [-R [-H | -L | -P]] mode file ...\n");
 #endif /* __APPLE__ */
 	exit(1);

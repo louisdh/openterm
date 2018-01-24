@@ -34,16 +34,16 @@
  * $FreeBSD: src/usr.bin/sed/extern.h,v 1.13 2004/08/09 15:29:41 dds Exp $
  */
 
-extern struct s_command *prog;
-extern struct s_appends *appends;
-extern regmatch_t *match;
-extern size_t maxnsub;
-extern u_long linenum;
-extern int appendnum;
-extern int aflag, eflag, sed_nflag;
-extern const char *fname, *outfname;
-extern FILE *infile, *outfile;
-extern int rflags;	/* regex flags to use */
+extern __thread struct s_command *prog;
+extern __thread struct s_appends *appends;
+extern __thread regmatch_t *match;
+extern __thread size_t maxnsub;
+extern __thread u_long linenum;
+extern __thread int appendnum;
+extern __thread int aflag, eflag, sed_nflag;
+extern __thread const char *fname, *outfname;
+extern __thread FILE *infile, *outfile;
+extern __thread int rflags;	/* regex flags to use */
 
 void	 cfclose(struct s_command *, struct s_command *);
 void	 compile(void);

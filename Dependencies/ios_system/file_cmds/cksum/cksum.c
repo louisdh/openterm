@@ -108,7 +108,7 @@ chksum_main(int argc, char **argv)
 					cfncn = chksum_crc32;
 					pfncn = pcrc;
 				} else {
-                    fprintf(stderr, "chksum: illegal argument to -o option\n");
+                    fprintf(thread_stderr, "chksum: illegal argument to -o option\n");
                     // warnx("illegal argument to -o option");
 					usage();
 				}
@@ -121,21 +121,21 @@ chksum_main(int argc, char **argv)
 		argv += optind;
 	}
 
-	fd = STDIN_FILENO;
+	fd = fileno(thread_stdin);
 	fn = NULL;
 	rval = 0;
 	do {
 		if (*argv) {
 			fn = *argv++;
 			if ((fd = open(fn, O_RDONLY, 0)) < 0) {
-                fprintf(stderr, "chksum: %s: %s\n", fn, strerror(errno));
+                fprintf(thread_stderr, "chksum: %s: %s\n", fn, strerror(errno));
                 // warn("%s", fn);
 				rval = 1;
 				continue;
 			}
 		}
 		if (cfncn(fd, &val, &len)) {
-            fprintf(stderr, "chksum: %s: %s\n", fn ? fn : "stdin", strerror(errno));
+            fprintf(thread_stderr, "chksum: %s: %s\n", fn ? fn : "stdin", strerror(errno));
             // warn("%s", fn ? fn : "stdin");
 			rval = 1;
 		} else
@@ -148,7 +148,7 @@ chksum_main(int argc, char **argv)
 static void
 usage(void)
 {
-	(void)fprintf(stderr, "usage: cksum [-o 1 | 2 | 3] [file ...]\n");
-	(void)fprintf(stderr, "       sum [file ...]\n");
+	(void)fprintf(thread_stderr, "usage: cksum [-o 1 | 2 | 3] [file ...]\n");
+	(void)fprintf(thread_stderr, "       sum [file ...]\n");
 	exit(1);
 }

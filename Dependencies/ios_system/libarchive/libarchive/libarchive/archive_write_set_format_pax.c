@@ -944,8 +944,9 @@ archive_write_pax_header(struct archive_write *a,
 		if (r != 0) {
 			const char *msg = "archive_write_pax_header: "
 			    "'x' header failed?!  This can't happen.\n";
-			size_t u = write(2, msg, strlen(msg));
-			(void)u; /* UNUSED */
+            fprintf(thread_stderr, "%s", msg);
+			// size_t u = write(2, msg, strlen(msg));
+			// (void)u; /* UNUSED */
 			exit(1);
 		}
 		r = (a->compressor.write)(a, paxbuff, 512);

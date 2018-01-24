@@ -41,16 +41,16 @@ __FBSDID("$FreeBSD$");
 #include "lafe_err.h"   
 #include "ios_error.h"  // remaps exit() to pthread_exit(NULL)
 
-const char *lafe_progname;
+const __thread char *lafe_progname;
 
 static void
 lafe_vwarnc(int code, const char *fmt, va_list ap)
 {
-	fprintf(stderr, "%s: ", lafe_progname);
-	vfprintf(stderr, fmt, ap);
+	fprintf(thread_stderr, "%s: ", lafe_progname);
+	vfprintf(thread_stderr, fmt, ap);
 	if (code != 0)
-		fprintf(stderr, ": %s", strerror(code));
-	fprintf(stderr, "\n");
+		fprintf(thread_stderr, ": %s", strerror(code));
+	fprintf(thread_stderr, "\n");
 }
 
 void

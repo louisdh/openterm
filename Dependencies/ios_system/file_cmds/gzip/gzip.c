@@ -389,7 +389,7 @@ gzip_main(int argc, char **argv)
 			/* NOTREACHED */
 #ifndef SMALL
 		case 'a':
-			fprintf(stderr, "%s: option --ascii ignored on this system\n", progname);
+			fprintf(thread_stderr, "%s: option --ascii ignored on this system\n", progname);
 			break;
 		case 'f':
 			fflag = 1;
@@ -419,7 +419,7 @@ gzip_main(int argc, char **argv)
 			if (len != 0) {
                 if (len > SUFFIX_MAXLEN) {
 					// errx(1, "incorrect suffix: '%s': too long", optarg);
-                    fprintf(stderr, "incorrect suffix: '%s': too long", optarg);
+                    fprintf(thread_stderr, "incorrect suffix: '%s': too long", optarg);
                     pthread_exit(NULL);
                 }
 				suffixes[0].zipped = optarg;
@@ -1200,14 +1200,15 @@ check_outfile(const char *outfile)
 	if (lflag == 0 && stat(outfile, &sb) == 0) {
 		if (fflag)
 			unlink(outfile);
-		else if (isatty(fileno(stdin))) {
+//		else if (isatty(fileno(thread_stdin))) {
+        else if (fileno(thread_stdin) == fileno(stdin)) {
 			char ans[10] = { 'n', '\0' };	/* default */
 
-			fprintf(stderr, "%s already exists -- do you wish to "
+			fprintf(thread_stderr, "%s already exists -- do you wish to "
 					"overwrite (y or n)? " , outfile);
-			(void)fgets(ans, sizeof(ans) - 1, stdin);
+			(void)fgets(ans, sizeof(ans) - 1, thread_stdin);
 			if (ans[0] != 'y' && ans[0] != 'Y') {
-				fprintf(stderr, "\tnot overwriting\n");
+				fprintf(thread_stderr, "\tnot overwriting\n");
 				ok = 0;
 			} else
 				unlink(outfile);
@@ -1355,14 +1356,14 @@ file_compress(char *file, char *outfile, size_t outsize)
 		out = open(outfile, O_WRONLY | O_CREAT | O_EXCL, 0600);
 		if (out == -1) {
 			maybe_warn("could not create output: %s", outfile);
-			fclose(stdin);
+			fclose(thread_stdin);
 			return (-1);
 		}
 #ifndef SMALL
 		remove_file = outfile;
 #endif
 	} else
-		out = fileno(stdout);
+		out = fileno(thread_stdout);
 
 	insize = gz_compress(in, out, &size, basename(file), (uint32_t)isb.st_mtime);
 
@@ -1539,10 +1540,10 @@ file_uncompress(char *file, char *outfile, size_t outsize)
 
 	if (cflag == 0 && lflag == 0) {
 		zfd = open(outfile, O_WRONLY|O_CREAT|O_EXCL, 0600);
-		if (zfd == fileno(stdout)) {
+		if (zfd == fileno(thread_stdout)) {
 			/* We won't close STDOUT_FILENO later... */
 			zfd = dup(zfd);
-			close(fileno(stdout));
+			close(fileno(thread_stdout));
 		}
 		if (zfd == -1) {
 			maybe_warn("can't open %s", outfile);
@@ -1552,7 +1553,7 @@ file_uncompress(char *file, char *outfile, size_t outsize)
 		remove_file = outfile;
 #endif
 	} else
-		zfd = fileno(stdout);
+		zfd = fileno(thread_stdout);
 
 	switch (method) {
 #ifndef NO_BZIP2_SUPPORT
@@ -1649,7 +1650,7 @@ file_uncompress(char *file, char *outfile, size_t outsize)
 
 	if (close(fd) != 0)
 		maybe_warn("couldn't close input");
-	if (zfd != fileno(stdout) && close(zfd) != 0)
+	if (zfd != fileno(thread_stdout) && close(zfd) != 0)
 		maybe_warn("couldn't close output");
 
 	if (size == -1) {
@@ -1707,7 +1708,7 @@ file_uncompress(char *file, char *outfile, size_t outsize)
     lose:
 	if (fd != -1)
 		close(fd);
-	if (zfd != -1 && zfd != fileno(stdout))
+	if (zfd != -1 && zfd != fileno(thread_stdout))
 		close(fd);
 	return -1;
 }
@@ -1721,8 +1722,9 @@ cat_fd(unsigned char * prepend, size_t count, off_t *gsizep, int fd)
 	ssize_t w;
 
 	in_tot = count;
-	w = write(fileno(stdout), prepend, count);
-	if (w == -1 || (size_t)w != count) {
+	// w = write(fileno(thread_stdout), prepend, count);
+    w = fwrite(prepend, 1, count, thread_stdout);
+    if (w == -1 || (size_t)w != count) {
 		maybe_warn("write to stdout");
 		return -1;
 	}
@@ -1737,7 +1739,8 @@ cat_fd(unsigned char * prepend, size_t count, off_t *gsizep, int fd)
 			break;
 		}
 
-		if (write(fileno(stdout), buf, rv) != rv) {
+//		if (write(fileno(thread_stdout), buf, rv) != rv) {
+        if (fwrite(buf, 1, rv, thread_stdout) != rv) {
 			maybe_warn("write to stdout");
 			break;
 		}
@@ -1762,7 +1765,8 @@ handle_stdin(void)
 #endif
 
 #ifndef SMALL
-	if (fflag == 0 && lflag == 0 && isatty(fileno(stdin))) {
+//    if (fflag == 0 && lflag == 0 && isatty(fileno(thread_stdin))) {
+	if (fflag == 0 && lflag == 0 && (fileno(thread_stdin) == fileno(stdin))) {
 		maybe_warnx("standard input is a terminal -- ignoring");
 		return;
 	}
@@ -1772,15 +1776,15 @@ handle_stdin(void)
 		struct stat isb;
 
 		/* XXX could read the whole file, etc. */
-		if (fstat(fileno(stdin), &isb) < 0) {
+		if (fstat(fileno(thread_stdin), &isb) < 0) {
 			maybe_warn("fstat");
 			return;
 		}
-		print_list(fileno(stdin), isb.st_size, "stdout", isb.st_mtime);
+		print_list(fileno(thread_stdin), isb.st_size, "stdout", isb.st_mtime);
 		return;
 	}
 
-	bytes_read = read_retry(fileno(stdin), header1, sizeof header1);
+	bytes_read = read_retry(fileno(thread_stdin), header1, sizeof header1);
 	if (bytes_read == -1) {
 		maybe_warn("can't read stdin");
 		return;
@@ -1797,40 +1801,40 @@ handle_stdin(void)
 			maybe_warnx("unknown compression format");
 			return;
 		}
-		usize = cat_fd(header1, sizeof header1, &gsize, fileno(stdin));
+		usize = cat_fd(header1, sizeof header1, &gsize, fileno(thread_stdin));
 		break;
 #endif
 	case FT_GZIP:
-		usize = gz_uncompress(fileno(stdin), fileno(stdout),
+		usize = gz_uncompress(fileno(thread_stdin), fileno(thread_stdout),
 			      (char *)header1, sizeof header1, &gsize, "(stdin)");
 		break;
 #ifndef NO_BZIP2_SUPPORT
 	case FT_BZIP2:
-		usize = unbzip2(fileno(stdin), fileno(stdout),
+		usize = unbzip2(fileno(thread_stdin), fileno(thread_stdout),
 				(char *)header1, sizeof header1, &gsize);
 		break;
 #endif
 #ifndef NO_COMPRESS_SUPPORT
 	case FT_Z:
-		if ((in = zdopen(fileno(stdin))) == NULL) {
+		if ((in = zdopen(fileno(thread_stdin))) == NULL) {
 			maybe_warnx("zopen of stdin");
 			return;
 		}
 
-		usize = zuncompress(in, stdout, (char *)header1,
+		usize = zuncompress(in, thread_stdout, (char *)header1,
 		    sizeof header1, &gsize);
 		fclose(in);
 		break;
 #endif
 #ifndef NO_PACK_SUPPORT
 	case FT_PACK:
-		usize = unpack(fileno(stdin), fileno(stdout),
+		usize = unpack(fileno(thread_stdin), fileno(thread_stdout),
 			       (char *)header1, sizeof header1, &gsize);
 		break;
 #endif
 #ifndef NO_XZ_SUPPORT
 	case FT_XZ:
-		usize = unxz(fileno(stdin), fileno(stdout),
+		usize = unxz(fileno(thread_stdin), fileno(thread_stdout),
 			     (char *)header1, sizeof header1, &gsize);
 		break;
 #endif
@@ -1855,13 +1859,14 @@ handle_stdout(void)
 	int ret;
 
 #ifndef SMALL
-	if (fflag == 0 && isatty(fileno(stdout))) {
+//	if (fflag == 0 && isatty(fileno(thread_stdout))) {
+    if (fflag == 0 && (fileno(thread_stdout) == fileno(stdout))) {
 		maybe_warnx("standard output is a terminal -- ignoring");
 		return;
 	}
 #endif
 	/* If stdin is a file use its mtime, otherwise use current time */
-	ret = fstat(fileno(stdin), &sb);
+	ret = fstat(fileno(thread_stdin), &sb);
 
 #ifndef SMALL
 	if (ret < 0) {
@@ -1883,7 +1888,7 @@ handle_stdout(void)
 		mtime = (uint32_t)systime;
 	}
 	 		
-	usize = gz_compress(fileno(stdin), fileno(stdout), &gsize, "", mtime);
+	usize = gz_compress(fileno(thread_stdin), fileno(thread_stdout), &gsize, "", mtime);
 #ifndef SMALL
         if (vflag && !tflag && usize != -1 && gsize != -1)
 		print_verbage(NULL, NULL, usize, gsize);
@@ -2011,7 +2016,7 @@ handle_dir(char *dir)
 	fts = fts_open(path_argv, FTS_PHYSICAL | FTS_NOCHDIR, NULL);
 	if (fts == NULL) {
 		// warn("couldn't fts_open %s", dir);
-        fprintf(stderr, "gzip: couldn't fts_open %s: %s\n", dir, strerror(errno));
+        fprintf(thread_stderr, "gzip: couldn't fts_open %s: %s\n", dir, strerror(errno));
 		return;
 	}
 
@@ -2078,13 +2083,13 @@ static void
 print_verbage(const char *file, const char *nfile, off_t usize, off_t gsize)
 {
 	if (file)
-		fprintf(stderr, "%s:%s  ", file,
+		fprintf(thread_stderr, "%s:%s  ", file,
 		    strlen(file) < 7 ? "\t\t" : "\t");
-	print_ratio(usize, gsize, stderr);
+	print_ratio(usize, gsize, thread_stderr);
 	if (nfile)
-		fprintf(stderr, " -- replaced with %s", nfile);
-	fprintf(stderr, "\n");
-	fflush(stderr);
+		fprintf(thread_stderr, " -- replaced with %s", nfile);
+	fprintf(thread_stderr, "\n");
+	fflush(thread_stderr);
 }
 
 /* print test results */
@@ -2094,9 +2099,9 @@ print_test(const char *file, int ok)
 
 	if (exit_value == 0 && ok == 0)
 		exit_value = 1;
-	fprintf(stderr, "%s:%s  %s\n", file,
+	fprintf(thread_stderr, "%s:%s  %s\n", file,
 	    strlen(file) < 7 ? "\t\t" : "\t", ok ? "OK" : "NOT OK");
-	fflush(stderr);
+	fflush(thread_stderr);
 }
 #endif
 
@@ -2118,10 +2123,10 @@ print_list(int fd, off_t out, const char *outfile, time_t ts)
 	if (first) {
 #ifndef SMALL
 		if (vflag)
-			printf("method  crc     date  time  ");
+			fprintf(thread_stdout, "method  crc     date  time  ");
 #endif
 		if (qflag == 0)
-			printf("  compressed uncompressed  "
+			fprintf(thread_stdout, "  compressed uncompressed  "
 			       "ratio uncompressed_name\n");
 	}
 	first = 0;
@@ -2160,23 +2165,23 @@ print_list(int fd, off_t out, const char *outfile, time_t ts)
 
 #ifndef SMALL
 	if (vflag && fd == -1)
-		printf("                            ");
+		fprintf(thread_stdout, "                            ");
 	else if (vflag) {
 		char *date = ctime(&ts);
 
 		/* skip the day, 1/100th second, and year */
 		date += 4;
 		date[12] = 0;
-		printf("%5s %08x %11s ", "defla"/*XXX*/, crc, date);
+		fprintf(thread_stdout, "%5s %08x %11s ", "defla"/*XXX*/, crc, date);
 	}
 	in_tot += in;
 	out_tot += out;
 #else
 	(void)&ts;	/* XXX */
 #endif
-	printf("%12llu %12llu ", (unsigned long long)out, (unsigned long long)in);
-	print_ratio(in, out, stdout);
-	printf(" %s\n", outfile);
+	fprintf(thread_stdout, "%12llu %12llu ", (unsigned long long)out, (unsigned long long)in);
+	print_ratio(in, out, thread_stdout);
+	fprintf(thread_stdout, " %s\n", outfile);
 }
 
 /* display the usage of NetBSD gzip */
@@ -2184,8 +2189,8 @@ static void
 usage(void)
 {
 
-	fprintf(stderr, "%s\n", gzip_version);
-	fprintf(stderr,
+	fprintf(thread_stderr, "%s\n", gzip_version);
+	fprintf(thread_stderr,
 #ifdef SMALL
     "usage: %s [-" OPT_LIST "] [<file> [<file> ...]]\n",
 #else
@@ -2222,11 +2227,11 @@ display_license(void)
 {
 
 #ifdef __APPLE__
-	fprintf(stderr, "%s (based on FreeBSD gzip 20150113)\n", gzip_version);
+	fprintf(thread_stderr, "%s (based on FreeBSD gzip 20150113)\n", gzip_version);
 #else
-	fprintf(stderr, "%s (based on NetBSD gzip 20150113)\n", gzip_version);
+	fprintf(thread_stderr, "%s (based on NetBSD gzip 20150113)\n", gzip_version);
 #endif
-	fprintf(stderr, "%s\n", gzip_copyright);
+	fprintf(thread_stderr, "%s\n", gzip_copyright);
 	exit(0);
 }
 #endif
@@ -2236,7 +2241,7 @@ static void
 display_version(void)
 {
 
-	fprintf(stderr, "%s\n", gzip_version);
+	fprintf(thread_stderr, "%s\n", gzip_version);
 	exit(0);
 }
 

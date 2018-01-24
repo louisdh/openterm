@@ -171,7 +171,7 @@ du_main(int argc, char *argv[])
 				errno = 0;
 				depth = atoi(optarg);
 				if (errno == ERANGE || depth < 0) {
-                    fprintf(stderr, "du: invalid argument to option d: %s\n", optarg);
+                    fprintf(thread_stderr, "du: invalid argument to option d: %s\n", optarg);
                     // warnx("invalid argument to option d: %s", optarg);
 					usage();
 				}
@@ -262,7 +262,7 @@ du_main(int argc, char *argv[])
 
     if ((fts = fts_open(argv, ftsoptions, NULL)) == NULL) {
 		// err(1, "fts_open");
-        fprintf(stderr, "du: fts_open: %s\n", strerror(errno));
+        fprintf(thread_stderr, "du: fts_open: %s\n", strerror(errno));
         pthread_exit(NULL);
     }
 
@@ -287,9 +287,9 @@ du_main(int argc, char *argv[])
 				if (p->fts_level <= depth) {
 					if (hflag) {
 						(void) prthumanval(howmany(*ftsnum, blocksize));
-						(void) printf("\t%s\n", p->fts_path);
+						(void) fprintf(thread_stdout, "\t%s\n", p->fts_path);
 					} else {
-					(void) printf("%jd\t%s\n",
+					(void) fprintf(thread_stdout, "%jd\t%s\n",
 					    (intmax_t)howmany(*ftsnum, blocksize),
 					    p->fts_path);
 					}
@@ -298,14 +298,14 @@ du_main(int argc, char *argv[])
 			case FTS_DC:			/* Ignore. */
 				if (COMPAT_MODE("bin/du", "unix2003")) {
 					// errx(1, "Can't follow symlink cycle from %s to %s", p->fts_path, p->fts_cycle->fts_path);
-                    fprintf(stderr, "du: Can't follow symlink cycle from %s to %s\n", p->fts_path, p->fts_cycle->fts_path);
+                    fprintf(thread_stderr, "du: Can't follow symlink cycle from %s to %s\n", p->fts_path, p->fts_cycle->fts_path);
                     pthread_exit(NULL);
 				}
 				break;
 			case FTS_DNR:			/* Warn, continue. */
 			case FTS_ERR:
 			case FTS_NS:
-                fprintf(stderr, "du: %s: %s\n", p->fts_path, strerror(p->fts_errno));
+                fprintf(thread_stderr, "du: %s: %s\n", p->fts_path, strerror(p->fts_errno));
                 // warnx("%s: %s", p->fts_path, strerror(p->fts_errno));
 				rval = 1;
 				break;
@@ -315,7 +315,7 @@ du_main(int argc, char *argv[])
 					int rc = stat(p->fts_path, &sb);
 					if (rc < 0 && errno == ELOOP) {
 						// errx(1, "Too many symlinks at %s", p->fts_path);
-                        fprintf(stderr, "du: Too many symlinks at %s\n", p->fts_path);
+                        fprintf(thread_stderr, "du: Too many symlinks at %s\n", p->fts_path);
                         pthread_exit(NULL);
 					}
 				}
@@ -335,14 +335,14 @@ du_main(int argc, char *argv[])
 						(void) prthumanval(howmany(howmany(p->fts_statp->st_size, 512LL),
 							blocksize));
 					    }
-						(void) printf("\t%s\n", p->fts_path);
+						(void) fprintf(thread_stdout, "\t%s\n", p->fts_path);
 					} else {
 					    if (p->fts_statp->st_size < TWO_TB) {
-						(void) printf("%jd\t%s\n",
+						(void) fprintf(thread_stdout, "%jd\t%s\n",
 							(intmax_t)howmany(p->fts_statp->st_blocks, blocksize),
 							p->fts_path);
 					    } else {
-						(void) printf("%jd\t%s\n",
+						(void) fprintf(thread_stdout, "%jd\t%s\n",
 							(intmax_t)howmany(howmany(p->fts_statp->st_size, 512LL), blocksize),
 							p->fts_path);
 					    }
@@ -361,16 +361,16 @@ du_main(int argc, char *argv[])
 
     if (errno) {
 		// err(1, "fts_read");
-        fprintf(stderr, "du: fts_read: %s\n", strerror(errno));
+        fprintf(thread_stderr, "du: fts_read: %s\n", strerror(errno));
         pthread_exit(NULL);
     }
 
 	if (cflag) {
 		if (hflag) {
 			(void) prthumanval(howmany(savednumber, blocksize));
-			(void) printf("\ttotal\n");
+			(void) fprintf(thread_stdout, "\ttotal\n");
 		} else {
-			(void) printf("%jd\ttotal\n", (intmax_t)howmany(savednumber, blocksize));
+			(void) fprintf(thread_stdout, "%jd\ttotal\n", (intmax_t)howmany(savednumber, blocksize));
 		}
 	}
 
@@ -407,7 +407,7 @@ linkchk(FTSENT *p)
 		buckets = malloc(number_buckets * sizeof(buckets[0]));
         if (buckets == NULL) {
 			// errx(1, "No memory for hardlink detection");
-            fprintf(stderr, "du: No memory for hardlink detection\n");
+            fprintf(thread_stderr, "du: No memory for hardlink detection\n");
             pthread_exit(NULL);
         }
 		for (i = 0; i < number_buckets; i++)
@@ -431,7 +431,7 @@ linkchk(FTSENT *p)
 
 		if (new_buckets == NULL) {
 			stop_allocating = 1;
-            fprintf(stderr, "du: No more memory for tracking hard links\n");
+            fprintf(thread_stderr, "du: No more memory for tracking hard links\n");
             // warnx("No more memory for tracking hard links");
 		} else {
 			memset(new_buckets, 0,
@@ -500,7 +500,7 @@ linkchk(FTSENT *p)
 		le = malloc(sizeof(struct links_entry));
 	if (le == NULL) {
 		stop_allocating = 1;
-        fprintf(stderr, "du: No more memory for tracking hard links\n");
+        fprintf(thread_stderr, "du: No more memory for tracking hard links\n");
 		// warnx("No more memory for tracking hard links");
 		return (0);
 	}
@@ -557,7 +557,7 @@ dirlinkchk(FTSENT *p)
 		buckets = malloc(number_buckets * sizeof(buckets[0]));
         if (buckets == NULL) {
 			// errx(1, "No memory for directory hardlink detection");
-            fprintf(stderr, "du: No memory for directory hardlink detection\n");
+            fprintf(thread_stderr, "du: No memory for directory hardlink detection\n");
             pthread_exit(NULL);
         }
 		for (i = 0; i < number_buckets; i++)
@@ -581,7 +581,7 @@ dirlinkchk(FTSENT *p)
 
 		if (new_buckets == NULL) {
 			stop_allocating = 1;
-            fprintf(stderr, "du: No more memory for tracking directory hard links\n");
+            fprintf(thread_stderr, "du: No more memory for tracking directory hard links\n");
 			// warnx("No more memory for tracking directory hard links");
 		} else {
 			memset(new_buckets, 0,
@@ -649,7 +649,7 @@ dirlinkchk(FTSENT *p)
 		le = malloc(sizeof(struct links_entry));
 	if (le == NULL) {
 		stop_allocating = 1;
-        fprintf(stderr, "du: No more memory for tracking hard links\n");
+        fprintf(thread_stderr, "du: No more memory for tracking hard links\n");
 		// warnx("No more memory for tracking hard links");
 		return (0);
 	}
@@ -701,17 +701,17 @@ prthumanval(double bytes)
 	unit = unit_adjust(&bytes);
 
 	if (bytes == 0)
-		(void)printf("  0B");
+		(void)fprintf(thread_stdout, "  0B");
 	else if (bytes > 10)
-		(void)printf("%3.0f%c", bytes, "BKMGTPE"[unit]);
+		(void)fprintf(thread_stdout, "%3.0f%c", bytes, "BKMGTPE"[unit]);
 	else
-		(void)printf("%3.1f%c", bytes, "BKMGTPE"[unit]);
+		(void)fprintf(thread_stdout, "%3.1f%c", bytes, "BKMGTPE"[unit]);
 }
 
 static void
 usage(void)
 {
-	(void)fprintf(stderr,
+	(void)fprintf(thread_stderr,
 		"usage: du [-H | -L | -P] [-a | -s | -d depth] [-c] [-h | -k | -m | -g] [-x] [-I mask] [file ...]\n");
 	exit(EX_USAGE);
 }
@@ -724,13 +724,13 @@ ignoreadd(const char *mask)
 	ign = calloc(1, sizeof(*ign));
     if (ign == NULL) {
 		// errx(1, "cannot allocate memory");
-        fprintf(stderr, "du: cannot allocate memory\n");
+        fprintf(thread_stderr, "du: cannot allocate memory\n");
         pthread_exit(NULL);
     }
 	ign->mask = strdup(mask);
     if (ign->mask == NULL) {
 		// errx(1, "cannot allocate memory");
-        fprintf(stderr, "du: cannot allocate memory\n");
+        fprintf(thread_stderr, "du: cannot allocate memory\n");
         pthread_exit(NULL);
     }
 	SLIST_INSERT_HEAD(&ignores, ign, next);

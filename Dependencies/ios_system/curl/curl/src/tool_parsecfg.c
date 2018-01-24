@@ -31,6 +31,7 @@
 #include "tool_homedir.h"
 #include "tool_msgs.h"
 #include "tool_parsecfg.h"
+#include "ios_error.h"
 
 #include "memdebug.h" /* keep this as LAST include */
 
@@ -117,7 +118,7 @@ int parseconfig(const char *filename, struct GlobalConfig *global)
   if(strcmp(filename, "-"))
     file = fopen(filename, FOPEN_READTEXT);
   else
-    file = stdin;
+    file = thread_stdin;
 
   if(file) {
     char *line;
@@ -162,7 +163,7 @@ int parseconfig(const char *filename, struct GlobalConfig *global)
         *line++ = '\0'; /* zero terminate, we have a local copy of the data */
 
 #ifdef DEBUG_CONFIG
-      fprintf(stderr, "GOT: %s\n", option);
+      fprintf(thread_stderr, "GOT: %s\n", option);
 #endif
 
       /* pass spaces and separator(s) */
@@ -216,7 +217,7 @@ int parseconfig(const char *filename, struct GlobalConfig *global)
       }
 
 #ifdef DEBUG_CONFIG
-      fprintf(stderr, "PARAM: \"%s\"\n",(param ? param : "(null)"));
+      fprintf(thread_stderr, "PARAM: \"%s\"\n",(param ? param : "(null)"));
 #endif
       res = getparameter(option, param, &usedarg, global, operation);
 
@@ -270,7 +271,7 @@ int parseconfig(const char *filename, struct GlobalConfig *global)
 
       Curl_safefree(aline);
     }
-    if(file != stdin)
+    if(file != thread_stdin)
       fclose(file);
   }
   else

@@ -31,7 +31,7 @@
  */
 
 
-extern	int use_ampm;
+extern	__thread int use_ampm;
 
 struct kinfo_proc;
 

@@ -6,15 +6,19 @@
 //
 
 #import <Foundation/Foundation.h>
+#include "ios_system.h"
 
 // ios_system(cmd): Executes the command in "cmd". The goal is to be a drop-in replacement for system(), as much as possible.
 // We assume cmd is the command. If vim has prepared '/bin/sh -c "(command -arguments) < inputfile > outputfile",
 // it is easier to remove the "/bin/sh -c" part before calling ios_system than inside ios_system.
-// See example in os_unix.c
+// See example in (iVim) os_unix.c
 //
 // ios_executable(cmd): returns true if the command is one of the commands defined in ios_system, and can be executed.
 // This is because mch_can_exe (called by executable()) checks for the existence of binaries with the same name in the
-// path. Our commands don't exist in the path. 
+// path. Our commands don't exist in the path.
+//
+// ios_popen(cmd, type): returns a FILE*, executes cmd, and thread_output into input of cmd (if type=="r") or
+// the reverse (if type == "w").
 
 #include <pthread.h>
 #include <sys/stat.h>
@@ -76,10 +80,10 @@ extern int curl_main(int argc, char **argv);
 extern int date_main(int argc, char *argv[]);
 extern int echo_main(int argc, char *argv[]);
 extern int env_main(int argc, char *argv[]);     // does the same as printenv
-extern int hostname_main(int argc, char *argv[]);
 extern int id_main(int argc, char *argv[]); // also groups, whoami
 extern int printenv_main(int argc, char *argv[]);
 extern int pwd_main(int argc, char *argv[]);
+extern int tee_main(int argc, char *argv[]);
 extern int uname_main(int argc, char *argv[]);
 extern int w_main(int argc, char *argv[]); // also uptime
 #endif
@@ -108,33 +112,53 @@ extern int dllpdftexmain(int argc, char *argv[]);
 static int setenv_main(int argc, char *argv[]);
 static int unsetenv_main(int argc, char *argv[]);
 static int cd_main(int argc, char *argv[]);
+extern int ssh_main(int argc, char *argv[]);
 
-extern int    __db_getopt_reset;
+extern __thread int    __db_getopt_reset;
+__thread FILE* thread_stdin;
+__thread FILE* thread_stdout;
+__thread FILE* thread_stderr;
+
 typedef struct _functionParameters {
     int argc;
     char** argv;
+    char** argv_ref;
     int (*function)(int ac, char** av);
+    FILE *stdin, *stdout, *stderr;
+    int fd_close;
 } functionParameters;
 
+static void cleanup_function(void* parameters) {
+    // This function is called when pthread_exit() is called
+    functionParameters *p = (functionParameters *) parameters;
+    fflush(thread_stdout);
+    fflush(thread_stderr);
+    // release parameters:
+    for (int i = 0; i < p->argc; i++) free(p->argv_ref[i]);
+    free(p->argv_ref);
+    free(p->argv);
+    if (p->fd_close > 0) close(p->fd_close);
+    free(parameters); // This was malloc'ed in ios_system
+}
+
 static void* run_function(void* parameters) {
-    static bool isMainThread = true;
     // re-initialize for getopt:
+    // TODO: move to __thread variable for optind too
+    
     optind = 1;
     opterr = 1;
     optreset = 1;
     __db_getopt_reset = 1;
     functionParameters *p = (functionParameters *) parameters;
-    // Send a signal to the system that we're going to change the current directory:
-    if (isMainThread) {
-        NSString* currentPath = [[NSFileManager defaultManager] currentDirectoryPath];
-        NSURL* currentURL = [NSURL fileURLWithPath:currentPath];
-        NSFileCoordinator *fileCoordinator =  [[NSFileCoordinator alloc] initWithFilePresenter:nil];
-        [fileCoordinator coordinateWritingItemAtURL:currentURL options:0 error:NULL byAccessor:^(NSURL *currentURL) {
-            isMainThread = false;
-            p->function(p->argc, p->argv);
-            isMainThread = true;
-        }];
-    } else p->function(p->argc, p->argv); // but don't do it if a command starts another command (would be overkill)
+    thread_stdin  = p->stdin;
+    thread_stdout = p->stdout;
+    thread_stderr = p->stderr;
+    // Because some commands change argv, keep a local copy for release.
+    p->argv_ref = (char **)malloc(sizeof(char*) * (p->argc + 1));
+    for (int i = 0; i < p->argc; i++) p->argv_ref[i] = p->argv[i];
+    pthread_cleanup_push(cleanup_function, parameters);
+    p->function(p->argc, p->argv);
+    pthread_cleanup_pop(1);
     return NULL;
 }
 
@@ -148,8 +172,9 @@ static NSString* previousDirectory;
 void initializeEnvironment() {
     // setup a few useful environment variables
     // Initialize paths for application files, including history.txt and keys
-    NSString *docsPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
-    NSString *libPath = [NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES) lastObject];
+    NSString *docsPath;
+    if (miniRoot == nil) docsPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
+    else docsPath = miniRoot;
     previousDirectory = [[NSFileManager defaultManager] currentDirectoryPath];
     
     // Where the executables are stored: $PATH + ~/Library/bin + ~/Documents/bin
@@ -160,10 +185,6 @@ void initializeEnvironment() {
     if (! [fullCommandPath isEqualToString:checkingPath]) {
         fullCommandPath = checkingPath;
     }
-    if (![fullCommandPath containsString:@"Library/bin"]) {
-        NSString *binPath = [libPath stringByAppendingPathComponent:@"bin"];
-        fullCommandPath = [[binPath stringByAppendingString:@":"] stringByAppendingString:fullCommandPath];
-    }
     if (![fullCommandPath containsString:@"Documents/bin"]) {
         NSString *binPath = [docsPath stringByAppendingPathComponent:@"bin"];
         fullCommandPath = [[binPath stringByAppendingString:@":"] stringByAppendingString:fullCommandPath];
@@ -171,15 +192,20 @@ void initializeEnvironment() {
     setenv("APPDIR", [[NSBundle mainBundle] resourcePath].UTF8String, 1);
     setenv("PATH", fullCommandPath.UTF8String, 1); // 1 = override existing value
     setenv("TERM", "xterm", 1); // 1 = override existing value
+    setenv("TMPDIR", NSTemporaryDirectory().UTF8String, 0); // tmp directory
     directoriesInPath = [fullCommandPath componentsSeparatedByString:@":"];
     
     // We can't write in $HOME so we need to set the position of config files:
-    setenv("SSH_HOME", docsPath.UTF8String, 0);  // SSH keys in ~/Documents/.ssh/
-    setenv("CURL_HOME", docsPath.UTF8String, 0); // CURL config in ~/Documents/
-    setenv("TMPDIR", NSTemporaryDirectory().UTF8String, 0); // tmp directory
-    setenv("SSL_CERT_FILE", [docsPath stringByAppendingPathComponent:@"cacert.pem"].UTF8String, 0); // SLL cacert.pem in ~/Documents/cacert.pem
+    setenv("SSH_HOME", docsPath.UTF8String, 0);  // SSH keys in ~/Documents/.ssh/ or [Cloud Drive]/.ssh
+    setenv("CURL_HOME", docsPath.UTF8String, 0); // CURL config in ~/Documents/ or [Cloud Drive]/
+    setenv("SSL_CERT_FILE", [docsPath stringByAppendingPathComponent:@"cacert.pem"].UTF8String, 0); // SLL cacert.pem in ~/Documents/cacert.pem or [Cloud Drive]/cacert.pem
     // iOS already defines "HOME" as the home dir of the application
 #ifdef FEAT_PYTHON
+    NSString *libPath = [NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES) lastObject];
+    if (![fullCommandPath containsString:@"Library/bin"]) {
+        NSString *binPath = [libPath stringByAppendingPathComponent:@"bin"];
+        fullCommandPath = [[binPath stringByAppendingString:@":"] stringByAppendingString:fullCommandPath];
+    }
     // if we use Python, we define a few more environment variables:
     setenv("PYTHONHOME", libPath.UTF8String, 0);  // Python scripts in ~/Library/lib/python3.6/
     setenv("PYZMQ_BACKEND", "cffi", 0);
@@ -301,9 +327,10 @@ static void initializeCommandList()
 #endif
 #ifdef SHELL_UTILITIES
                     // Commands from Apple shell_cmds:
-                    @"echo" : [NSValue valueWithPointer: echo_main], 
+                    @"echo" : [NSValue valueWithPointer: echo_main],
                     @"printenv": [NSValue valueWithPointer: printenv_main],
                     @"pwd"    : [NSValue valueWithPointer: pwd_main],
+                    @"tee"    : [NSValue valueWithPointer: tee_main],
                     @"uname"  : [NSValue valueWithPointer: uname_main],
                     @"date"   : [NSValue valueWithPointer: date_main],
                     @"env"    : [NSValue valueWithPointer: env_main],
@@ -391,13 +418,14 @@ static void initializeCommandList()
                     @"setenv"     : [NSValue valueWithPointer: setenv_main],
                     @"unsetenv"     : [NSValue valueWithPointer: unsetenv_main],
                     @"cd"     : [NSValue valueWithPointer: cd_main],
+                    @"ssh"     : [NSValue valueWithPointer: ssh_main],
                     };
 }
 
 static int setenv_main(int argc, char** argv) {
     if (argc <= 1) return env_main(argc, argv);
     if (argc > 3) {
-        fprintf(stderr, "setenv: Too many arguments\n"); fflush(stderr);
+        fprintf(thread_stderr, "setenv: Too many arguments\n"); fflush(thread_stderr);
         return 0;
     }
     // setenv VARIABLE value
@@ -408,7 +436,7 @@ static int setenv_main(int argc, char** argv) {
 
 static int unsetenv_main(int argc, char** argv) {
     if (argc <= 1) {
-        fprintf(stderr, "unsetenv: Too few arguments\n"); fflush(stderr);
+        fprintf(thread_stderr, "unsetenv: Too few arguments\n"); fflush(thread_stderr);
         return 0;
     }
     // unsetenv acts on all parameters
@@ -452,16 +480,16 @@ static int cd_main(int argc, char** argv) {
                     // Was that allowed?
                     NSString* resultDir = [[NSFileManager defaultManager] currentDirectoryPath];
                     if ((miniRoot != nil) && (![resultDir hasPrefix:miniRoot])) {
-                        fprintf(stderr, "cd: %s: permission denied\n", [newDir UTF8String]);
+                        fprintf(thread_stderr, "cd: %s: permission denied\n", [newDir UTF8String]);
                         [[NSFileManager defaultManager] changeCurrentDirectoryPath:miniRoot];
                         currentDir = miniRoot;
                     }
                     previousDirectory = currentDir;
-                } else fprintf(stderr, "cd: %s: permission denied\n", [newDir UTF8String]);
+                } else fprintf(thread_stderr, "cd: %s: permission denied\n", [newDir UTF8String]);
             }
-            else  fprintf(stderr, "cd: %s: not a directory\n", [newDir UTF8String]);
+            else  fprintf(thread_stderr, "cd: %s: not a directory\n", [newDir UTF8String]);
         } else {
-            fprintf(stderr, "cd: %s: no such file or directory\n", [newDir UTF8String]);
+            fprintf(thread_stderr, "cd: %s: no such file or directory\n", [newDir UTF8String]);
         }
     } else { // [cd] Help, I'm lost, bring me back home
         previousDirectory = [[NSFileManager defaultManager] currentDirectoryPath];
@@ -475,8 +503,8 @@ static int cd_main(int argc, char** argv) {
     return 0;
 }
 
-int ios_executable(char* inputCmd) {
- // returns 1 if this is one of the commands we define in ios_system, 0 otherwise
+int ios_executable(const char* inputCmd) {
+    // returns 1 if this is one of the commands we define in ios_system, 0 otherwise
     int (*function)(int ac, char** av) = NULL;
     if (commandList == nil) initializeCommandList();
     NSString* commandName = [NSString stringWithCString:inputCmd encoding:NSASCIIStringEncoding];
@@ -484,6 +512,125 @@ int ios_executable(char* inputCmd) {
     if (function) return 1;
     else return 0;
 }
+
+FILE* ios_popen(const char* inputCmd, const char* type) {
+    // Save existing streams:
+    int fd[2] = {0};
+    FILE* push_stdin = thread_stdin;
+    FILE* push_stdout = thread_stdout;
+    const char* command = inputCmd;
+    // skip past all spaces
+    while ((command[0] == ' ') && strlen(command) > 0) command++;
+    // TODO: skip past "/bin/sh -c" and "sh -c"
+    if (pipe(fd) < 0) { return NULL; } // Nothing we can do if pipe fails
+    // NOTES: fd[0] is set up for reading, fd[1] is set up for writing
+    // fpout = fdopen(fd[1], "w");
+    // fpin = fdopen(fd[0], "r");
+    if (type[0] == 'r') {
+        // open pipe for reading
+        thread_stdin = fdopen(fd[0], "r");
+        // launch command:
+        ios_system(command);
+        // Restore streams:
+        thread_stdin = push_stdin;
+        return fdopen(fd[1], "w");
+    } else if (type[0] == 'w') {
+        // open pipe for writing
+        // set up streams for thread
+        thread_stdout = fdopen(fd[1], "w");
+        // launch command:
+        ios_system(command);
+        // restore streams
+        thread_stdout = push_stdout;
+        return fdopen(fd[0], "r");
+    }
+    return NULL;
+}
+
+static __thread FILE* child_stdin;
+static __thread FILE* child_stdout;
+static __thread FILE* child_stderr;
+int ios_execv(const char *path, char* const argv[]) {
+    // path and argv[0] are the same (not in theory, but in practice, since Python wrote the command)
+    int argc = 0;
+    int cmdLength = 0;
+    // concatenate all arguments into a big command.
+    // We need this because some programs call execv() with a single string: "ssh hg@bitbucket.org 'hg -R ... --stdio'"
+    // So we rely on ios_system to break them into chunks.
+    while(argv[argc] != NULL) { cmdLength += strlen(argv[argc]) + 1; argc++;}
+    char* cmd = malloc(cmdLength * sizeof(char));
+    strcpy(cmd, argv[0]);
+    argc = 1;
+    while (argv[argc] != NULL) {
+        strcat(cmd, " ");
+        strcat(cmd, argv[argc]);
+        argc++;
+    }
+    // push existing streams:
+    FILE* push_stdin = thread_stdin;
+    FILE* push_stdout = thread_stdout;
+    FILE* push_stderr = thread_stdout;
+    // place streams from dup2:
+    if (child_stdin) thread_stdin = child_stdin;
+    if (child_stdout) thread_stdout = child_stdout;
+    if (child_stderr) thread_stderr = child_stderr;
+    // start "child" with the child streams:
+    ios_system(cmd);
+    // pop streams for parent:
+    thread_stdin = push_stdin;
+    thread_stdout = push_stdout;
+    thread_stderr = push_stderr;
+    // erase child streams to avoid re-using them
+    // child process is responsible for closing them, we can't do this.
+    child_stdin = NULL;
+    child_stdin = NULL;
+    child_stdout = NULL;
+    free(cmd);
+    return 0;
+}
+
+int ios_execve(const char *path, char* const argv[], char *const envp[]) {
+    // TODO: save the environment (HOW?) and current dir
+    // TODO: replace environment with envp. envp looks a lot like current environment, though.
+    execv(path, argv);
+    // TODO: restore the environment (HOW?)
+    return 0;
+}
+
+/*
+ * Public domain dup2() lookalike
+ * by Curtis Jackson @ AT&T Technologies, Burlington, NC
+ * electronic address:  burl!rcj
+ * Edited for iOS by N. Holzschuch.
+ * The idea is that dup2(fd, [012]) is usually called between fork and exec.
+ *
+ * dup2 performs the following functions:
+ *
+ * Check to make sure that fd1 is a valid open file descriptor.
+ * Check to see if fd2 is already open; if so, close it.
+ * Duplicate fd1 onto fd2; checking to make sure fd2 is a valid fd.
+ * Return fd2 if all went well; return BADEXIT otherwise.
+ */
+
+int ios_dup2(int fd1, int fd2)
+{
+    // iOS specifics: trying to access stdin/stdout/stderr?
+    // fprintf(stderr, "Accessing dup2: fd1 = %d fd2 = %d\n", fd1, fd2); fflush(stderr);
+    if (fd2 == 0) { child_stdin = fdopen(fd1, "rb"); }
+    else if (fd2 == 1) { child_stdout = fdopen(fd1, "wb"); }
+    else if (fd2 == 2) { child_stderr = fdopen(fd1, "wb"); }
+    else if (fd1 != fd2) {
+        if (fcntl(fd1, F_GETFL) < 0)
+            return -1;
+        if (fcntl(fd2, F_GETFL) >= 0)
+            close(fd2);
+        if (fcntl(fd1, F_DUPFD, fd2) < 0)
+            return -1;
+    }
+    return fd2;
+}
+
+
 
 // For customization:
 // replaces a function pointer (e.g. ls_main) with another one, provided by the user (ls_mine_main)
@@ -512,14 +659,14 @@ void replaceCommand(NSString* commandName, int (*newFunction)(int argc, char *ar
 }
 
 NSString* commandsAsString() {
-
-	if (commandList == nil) initializeCommandList();
-
-	NSError * err;
-	NSData * jsonData = [NSJSONSerialization  dataWithJSONObject:commandList.allKeys options:0 error:&err];
-	NSString * myString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-
-	return myString;
+    
+    if (commandList == nil) initializeCommandList();
+    
+    NSError * err;
+    NSData * jsonData = [NSJSONSerialization  dataWithJSONObject:commandList.allKeys options:0 error:&err];
+    NSString * myString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+    
+    return myString;
 }
 
 NSArray* commandsAsArray() {
@@ -527,7 +674,7 @@ NSArray* commandsAsArray() {
     return commandList.allKeys;
 }
 
-int ios_system(char* inputCmd) {
+int ios_system(const char* inputCmd) {
     char* command;
     // The names of the files for stdin, stdout, stderr
     char* inputFileName = 0;
@@ -540,11 +687,18 @@ int ios_system(char* inputCmd) {
     char* errorFileMarker = 0;
     char* scriptName = 0; // interpreted commands
     bool  sharedErrorOutput = false;
+    static bool isMainThread = true;
+    static pthread_t lastThreadId = 0; // last command on the command line (with pipes)
+    
+    // initialize:
+    if (thread_stdin == 0) thread_stdin = stdin;
+    if (thread_stdout == 0) thread_stdout = stdout;
+    if (thread_stderr == 0) thread_stderr = stderr;
     
     char* cmd = strdup(inputCmd);
     char* maxPointer = cmd + strlen(cmd);
     char* originalCommand = cmd;
-    // fprintf(stderr, "Command sent: %s \n", cmd); fflush(stderr);
+    // fprintf(thread_stderr, "Command sent: %s \n", cmd); fflush(stderr);
     if (cmd[0] == '"') {
         // Command was enclosed in quotes (almost always with Vim)
         char* endCmd = strstr(cmd + 1, "\""); // find closing quote
@@ -565,7 +719,7 @@ int ios_system(char* inputCmd) {
             inputFileMarker = endCmd + 1;
         }
     } else command = cmd;
-    // fprintf(stderr, "Command sent: %s \n", command);
+    // fprintf(thread_stderr, "Command sent: %s \n", command);
     // Search for input, output and error redirection
     // They can be in any order, although the usual are:
     // command < input > output 2> error, command < input > output 2>&1 or command < input >& output
@@ -573,7 +727,9 @@ int ios_system(char* inputCmd) {
     // Search for input file "< " and output file " >"
     if (!inputFileMarker) inputFileMarker = command;
     outputFileMarker = inputFileMarker;
-    // scan until first "<"
+    functionParameters *params = (functionParameters*) malloc(sizeof(functionParameters));
+    params->stdin = params->stdout = params->stderr = 0;
+    // scan until first "<" (input file)
     inputFileMarker = strstr(inputFileMarker, "<");
     // scan until first non-space character:
     if (inputFileMarker) {
@@ -581,23 +737,53 @@ int ios_system(char* inputCmd) {
         // skip past all spaces
         while ((inputFileName[0] == ' ') && strlen(inputFileName) > 0) inputFileName++;
     }
+    // is there a pipe ("|", "&|" or "|&")
+    // We assume here a logical command order: < before pipe, pipe before >.
+    // TODO: check what happens for unlogical commands. Refuse them, but gently.
+    // TODO: implement tee, because that has been removed
+    char* pipeMarker = strstr (outputFileMarker,"&|");
+    if (!pipeMarker) pipeMarker = strstr (outputFileMarker,"|&"); // both seem to work
+    if (pipeMarker) {
+        bool pushMainThread = isMainThread;
+        isMainThread = false;
+        params->stdout = ios_popen(pipeMarker+2, "r");
+        params->fd_close = fileno(params->stdout);
+        isMainThread = pushMainThread;
+        pipeMarker[0] = 0x0;
+        sharedErrorOutput = true;
+    } else {
+        pipeMarker = strstr (outputFileMarker,"|");
+        if (pipeMarker) {
+            bool pushMainThread = isMainThread;
+            isMainThread = false;
+            params->stdout = ios_popen(pipeMarker+1, "r");
+            params->fd_close = fileno(params->stdout);
+            isMainThread = pushMainThread;
+            pipeMarker[0] = 0x0;
+        }
+    }
+    // We have removed the pipe part. Still need to parse the rest of the command
     // Must scan in strstr by reverse order of inclusion. So "2>&1" before "2>" before ">"
-    errorFileMarker = strstr (outputFileMarker,"&>"); // both stderr/stdout sent to same file
-    // output file name will be after "&>"
-    if (errorFileMarker) { outputFileName = errorFileMarker + 2; outputFileMarker = errorFileMarker; }
-    else {
-        errorFileMarker = strstr (outputFileMarker,"2>&1| tee "); // Same, but expressed differently
-        if (errorFileMarker) { outputFileName = errorFileMarker + 10; outputFileMarker = errorFileMarker; }
-        else {
-            errorFileMarker = strstr (outputFileMarker,"2>&1"); // Same, but output file name will be after ">"
-            if (errorFileMarker) {
+    if (params->stdout == 0) {
+        errorFileMarker = strstr (outputFileMarker,"&>"); // both stderr/stdout sent to same file
+        // output file name will be after "&>"
+        if (errorFileMarker) { outputFileName = errorFileMarker + 2; outputFileMarker = errorFileMarker; }
+    }
+    if (!errorFileMarker && (params->stderr == 0)) {
+        // TODO: 2>&1 before > means redirect stderr to (current) stdout, then redirects stdout
+        // ...except with a pipe.
+        // Currently, we don't check for that.
+        errorFileMarker = strstr (outputFileMarker,"2>&1"); // both stderr/stdout sent to same file
+        if (errorFileMarker) {
+            if (params->stdout) params->stderr = params->stdout;
+            else {
                 outputFileMarker = strstr(outputFileMarker, ">");
                 if (outputFileMarker) outputFileName = outputFileMarker + 1; // skip past '>'
             }
         }
     }
     if (errorFileMarker) { sharedErrorOutput = true; }
-    else {
+    else if (params->stderr == 0) {
         // specific name for error file?
         errorFileMarker = strstr(outputFileMarker,"2>");
         if (errorFileMarker) {
@@ -607,7 +793,7 @@ int ios_system(char* inputCmd) {
         }
     }
     // scan until first ">"
-    if (!sharedErrorOutput) {
+    if (!sharedErrorOutput && (params->stdout == 0)) {
         outputFileMarker = strstr(outputFileMarker, ">");
         if (outputFileMarker) outputFileName = outputFileMarker + 1; // skip past '>'
     }
@@ -641,24 +827,20 @@ int ios_system(char* inputCmd) {
     // insert chain termination elements at the beginning of each filename.
     // Must be done after the parsing
     if (inputFileMarker) inputFileMarker[0] = 0x0;
-    if (outputFileMarker) outputFileMarker[0] = 0x0;
+    if (outputFileMarker && (params->stdout == NULL)) outputFileMarker[0] = 0x0;
     if (errorFileMarker) errorFileMarker[0] = 0x0;
-    // Store previous values of stdin, stdout, stderr:
-    // fprintf(stdout, "before, stderr = %x\n", (void*)stderr);
     // strip filenames of quotes, if any:
     if (outputFileName && (outputFileName[0] == '\'')) { outputFileName = outputFileName + 1; outputFileName[strlen(outputFileName) - 1] = 0x0; }
     if (inputFileName && (inputFileName[0] == '\'')) { inputFileName = inputFileName + 1; inputFileName[strlen(inputFileName) - 1] = 0x0; }
     if (errorFileName && (errorFileName[0] == '\'')) { errorFileName = errorFileName + 1; errorFileName[strlen(errorFileName) - 1] = 0x0; }
-    FILE* push_stdin = stdin;
-    FILE* push_stdout = stdout;
-    FILE* push_stderr = stderr;
-    if (inputFileName) stdin = fopen(inputFileName, "r");
-    if (stdin == NULL) stdin = push_stdin; // open did not work
-    if (outputFileName) stdout = fopen(outputFileName, "w");
-    if (stdout == NULL) stdout = push_stdout; // open did not work
-    if (sharedErrorOutput && outputFileName) stderr = stdout;
-    else if (errorFileName) stderr = fopen(errorFileName, "w");
-    if (stderr == NULL) stderr = push_stderr; // open did not work
+    //
+    if (inputFileName) params->stdin = fopen(inputFileName, "r");
+    if (params->stdin == NULL) params->stdin = thread_stdin; // open did not work
+    if (outputFileName) params->stdout = fopen(outputFileName, "w");
+    if (params->stdout == NULL) params->stdout = thread_stdout; // open did not work
+    if (sharedErrorOutput) params->stderr = params->stdout;
+    else if (errorFileName) params->stderr = fopen(errorFileName, "w");
+    if (params->stderr == NULL) params->stderr = thread_stderr; // open did not work
     int argc = 0;
     size_t numSpaces = 0;
     // the number of arguments is *at most* the number of spaces plus one
@@ -679,6 +861,7 @@ int ios_system(char* inputCmd) {
             if (!end) break;
             end[0] = 0x0;
             str = end + 1;
+            dontExpand[argc-1] = true; // don't expand arguments in quotes
         } else if (str[0] == '\"') { // argument begins with a double quote.
             // everything until next double quote is part of the argument
             argv[argc-1] = str + 1;
@@ -709,7 +892,7 @@ int ios_system(char* inputCmd) {
         argv = argv_copy;
         // We have the arguments. Parse them for environment variables, ~, etc.
         for (int i = 1; i < argc; i++) if (!dontExpand[i]) argv[i] = parseArgument(argv[i], argv[0]);
-        free(dontExpand); 
+        free(dontExpand);
         // Now call the actual command:
         // - is argv[0] a command that refers to a file? (either absolute path, or in $PATH)
         //   if so, does it exist, does it have +x bit set, does it have #! python or #! lua on the first line?
@@ -801,12 +984,9 @@ int ios_system(char* inputCmd) {
                 if (cmdIsAFile) break; // else keep going through the path elements.
             }
         }
-        // Because some commands change argv, keep a local copy for release.
-        char** argv_ref = (char **)malloc(sizeof(char*) * (argc + 1));
-        for (int i = 0; i < argc; i++) argv_ref[i] = argv[i];
-        // fprintf(stderr, "Command after parsing: ");
+        // fprintf(thread_stderr, "Command after parsing: ");
         // for (int i = 0; i < argc; i++)
-        //    fprintf(stderr, "[%s] ", argv[i]);
+        //    fprintf(thread_stderr, "[%s] ", argv[i]);
         // We've reached this point: either the command is a file, from a script we support,
         // and we have inserted the name of the script at the beginning, or it is a builtin command
         int (*function)(int ac, char** av) = NULL;
@@ -820,31 +1000,41 @@ int ios_system(char* inputCmd) {
             // Commands call pthread_exit instead of exit
             // thread is attached, could also be un-attached
             pthread_t _tid;
-            functionParameters params;
-            params.argc = argc;
-            params.argv = argv;
-            params.function = function;
-            pthread_create(&_tid, NULL, run_function, &params);
-            pthread_join(_tid, NULL);
+            params->argc = argc;
+            params->argv = argv;
+            params->function = function;
+            if (isMainThread) {
+                // Send a signal to the system that we're going to change the current directory:
+                NSString* currentPath = [[NSFileManager defaultManager] currentDirectoryPath];
+                NSURL* currentURL = [NSURL fileURLWithPath:currentPath];
+                NSFileCoordinator *fileCoordinator =  [[NSFileCoordinator alloc] initWithFilePresenter:nil];
+                [fileCoordinator coordinateWritingItemAtURL:currentURL options:0 error:NULL byAccessor:^(NSURL *currentURL) {
+                    isMainThread = false;
+                    pthread_create(&_tid, NULL, run_function, params);
+                    // Wait for this process to finish:
+                    pthread_join(_tid, NULL);
+                    // If there are auxiliary process, also wait for them:
+                    if (lastThreadId > 0) pthread_join(lastThreadId, NULL);
+                    lastThreadId = 0;
+                    isMainThread = true;
+                }];
+            } else {
+                // Don't send signal if not in main thread. Also, don't join threads.
+                pthread_create(&_tid, NULL, run_function, params);
+                // The last command on the command line (with multiple pipes) will be created first
+                if (lastThreadId == 0) lastThreadId = _tid;
+            }
         } else {
             // TODO: this should also raise an exception, for python scripts
-            fprintf(stderr, "%s: command not found\n", argv[0]);
+            fprintf(thread_stderr, "%s: command not found\n", argv[0]);
         } // if (function)
-        for (int i = 0; i < argc; i++) free(argv_ref[i]);
-        free(argv_ref);
-    } // argc != 0
-    free(argv);
-    free(originalCommand); // releases cmd
+    } else { // argc != 0
+        free(argv); // argv is otherwise freed in cleanup_function
+    }
+    free(originalCommand); // releases cmd, which was a strdup of inputCommand
     // Did we write anything?
     long numCharWritten = 0;
-    if (errorFileName) numCharWritten = ftell(stderr);
-    else if (sharedErrorOutput && outputFileName) numCharWritten = ftell(stdout);
-    // restore previous values of stdin, stdout, stderr:
-    if (inputFileName) fclose(stdin);
-    if (outputFileName) fclose(stdout);
-    if (!sharedErrorOutput && errorFileName) fclose(stderr);
-    stdin = push_stdin;
-    stdout = push_stdout;
-    stderr = push_stderr;
+    if (errorFileName) numCharWritten = ftell(thread_stderr);
+    else if (sharedErrorOutput && outputFileName) numCharWritten = ftell(thread_stdout);
     return (numCharWritten); // 0 = success, not 0 = failure
 }

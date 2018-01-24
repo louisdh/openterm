@@ -30,6 +30,7 @@
 __FBSDID("$FreeBSD: src/bin/ed/sub.c,v 1.15 2002/06/30 05:13:53 obrien Exp $");
 
 #include "ed.h"
+#include "ios_error.h"
 
 
 char *rhbuf;			/* rhs substitution buffer */
@@ -94,7 +95,7 @@ extract_subst_template(void)
 		else if (!isglobal) {
 			while ((n = get_tty_line()) == 0 ||
 			    (n > 0 && ibuf[n - 1] != '\n'))
-				clearerr(stdin);
+				clearerr(thread_stdin);
 			if (n < 0)
 				return NULL;
 		}

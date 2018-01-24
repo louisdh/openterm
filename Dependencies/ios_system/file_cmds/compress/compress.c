@@ -94,7 +94,7 @@ compress_main(int argc, char *argv[])
 		style = DECOMPRESS;
     } else {
 		// errx(1, "unknown program name");
-        fprintf(stderr, "unknown program name: %s\n", p);
+        fprintf(thread_stderr, "unknown program name: %s\n", p);
         pthread_exit(NULL);
     }
 
@@ -105,7 +105,7 @@ compress_main(int argc, char *argv[])
 			bits = strtol(optarg, &p, 10);
             if (*p) {
 				// errx(1, "illegal bit count -- %s", optarg);
-                fprintf(stderr, "compress: illegal bit count -- %s\n", optarg);
+                fprintf(thread_stderr, "compress: illegal bit count -- %s\n", optarg);
                 pthread_exit(NULL);
             }
 			break;
@@ -143,7 +143,7 @@ compress_main(int argc, char *argv[])
 
     if (cat == 1 && argc > 1) {
 		// errx(1, "the -c option permits only a single file argument");
-        fprintf(stderr, "compress: the -c option permits only a single file argument\n");
+        fprintf(thread_stderr, "compress: the -c option permits only a single file argument\n");
         pthread_exit(NULL);
     }
 
@@ -266,7 +266,7 @@ compress(const char *in, const char *out, int bits)
 
 		if (!force && sb.st_size >= isb.st_size) {
 			if (verbose)
-		(void)fprintf(stderr, "compress: %s: file would grow; left unmodified\n",
+		(void)fprintf(thread_stderr, "compress: %s: file would grow; left unmodified\n",
 		    in);
 			eval = 2;
 			if (unlink(out))
@@ -280,12 +280,12 @@ compress(const char *in, const char *out, int bits)
 			cwarn("%s", in);
 
 		if (verbose) {
-			(void)fprintf(stderr, "%s: ", out);
+			(void)fprintf(thread_stderr, "%s: ", out);
 			if (isb.st_size > sb.st_size)
-				(void)fprintf(stderr, "%.0f%% compression\n",
+				(void)fprintf(thread_stderr, "%.0f%% compression\n",
 				    ((float)sb.st_size / isb.st_size) * 100.0);
 			else
-				(void)fprintf(stderr, "%.0f%% expansion\n",
+				(void)fprintf(thread_stderr, "%.0f%% expansion\n",
 				    ((float)isb.st_size / sb.st_size) * 100.0);
 		}
 	}
@@ -369,12 +369,12 @@ decompress(const char *in, const char *out, int bits)
 		if (verbose) {
 			struct stat isb = sb;
 			stat(out, &sb);
-			(void)fprintf(stderr, "%s: ", out);
+			(void)fprintf(thread_stderr, "%s: ", out);
 			if (isb.st_size > sb.st_size)
-				(void)fprintf(stderr, "%.0f%% compression\n",
+				(void)fprintf(thread_stderr, "%.0f%% compression\n",
 				    ((float)sb.st_size / isb.st_size) * 100.0);
 			else
-				(void)fprintf(stderr, "%.0f%% expansion\n",
+				(void)fprintf(thread_stderr, "%.0f%% expansion\n",
 				    ((float)isb.st_size / sb.st_size) * 100.0);
 		}
 	}
@@ -424,9 +424,10 @@ permission(const char *fname)
 {
 	int ch, first;
 
-	if (!isatty(fileno(stderr)))
+//	if (!isatty(fileno(thread_stderr)))
+    if (!(fileno(thread_stderr) == fileno(stderr)))
 		return (0);
-	(void)fprintf(stderr, "overwrite %s? ", fname);
+	(void)fprintf(thread_stderr, "overwrite %s? ", fname);
 	first = ch = getchar();
 	while (ch != '\n' && ch != EOF)
 		ch = getchar();
@@ -437,10 +438,10 @@ void
 usage(int iscompress)
 {
 	if (iscompress)
-		(void)fprintf(stderr,
+		(void)fprintf(thread_stderr,
 		    "usage: compress [-cfv] [-b bits] [file ...]\n");
 	else
-		(void)fprintf(stderr,
+		(void)fprintf(thread_stderr,
 		    "usage: uncompress [-cfv] [-b bits] [file ...]\n");
 	exit(1);
 }

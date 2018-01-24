@@ -110,7 +110,7 @@ chflags_main(int argc, char *argv[])
 	if (Rflag) {
 		fts_options = FTS_PHYSICAL;
         if (hflag) {
-            fprintf(stderr, "chflags: the -R and -h options may not be specified together\n");
+            fprintf(thread_stderr, "chflags: the -R and -h options may not be specified together\n");
             pthread_exit(NULL);
             //errx(1, "the -R and -h options "
             //        "may not be specified together");
@@ -137,12 +137,12 @@ chflags_main(int argc, char *argv[])
 			errno = ERANGE;
         if (errno) {
             // err(1, "invalid flags: %s", flags);
-            fprintf(stderr, "chflags: %s: invalid flags: %s\n", flags, strerror(errno));
+            fprintf(thread_stderr, "chflags: %s: invalid flags: %s\n", flags, strerror(errno));
             pthread_exit(NULL);
         }
         if (*ep) {
             // errx(1, "invalid flags: %s", flags);
-            fprintf(stderr, "chflags: invalid flags: %s\n", flags);
+            fprintf(thread_stderr, "chflags: invalid flags: %s\n", flags);
             pthread_exit(NULL);
         }
 		set = val;
@@ -150,7 +150,7 @@ chflags_main(int argc, char *argv[])
 	} else {
         if (strtofflags(&flags, &set, &clear)) {
                         // errx(1, "invalid flag: %s", flags);
-            fprintf(stderr, "chflags: invalid flag: %s\n", flags);
+            fprintf(thread_stderr, "chflags: invalid flag: %s\n", flags);
             pthread_exit(NULL); 
         }
 		clear = ~clear;
@@ -159,7 +159,7 @@ chflags_main(int argc, char *argv[])
 
     if ((ftsp = fts_open(++argv, fts_options , 0)) == NULL) {
 		// err(1, NULL);
-        fprintf(stderr, "chflags: %s\n", strerror(errno));
+        fprintf(thread_stderr, "chflags: %s\n", strerror(errno));
         pthread_exit(NULL);
     }
 
@@ -171,13 +171,13 @@ chflags_main(int argc, char *argv[])
 			continue;
 		case FTS_DNR:			/* Warn, chflag, continue. */
 			// warnx("%s: %s", p->fts_path, strerror(p->fts_errno));
-            fprintf(stderr, "chflags: %s: %s\n", p->fts_path, strerror(p->fts_errno));
+            fprintf(thread_stderr, "chflags: %s: %s\n", p->fts_path, strerror(p->fts_errno));
 			rval = 1;
 			break;
 		case FTS_ERR:			/* Warn, continue. */
 		case FTS_NS:
 			// warnx("%s: %s", p->fts_path, strerror(p->fts_errno));
-            fprintf(stderr, "chflags: %s: %s\n", p->fts_path, strerror(p->fts_errno));
+            fprintf(thread_stderr, "chflags: %s: %s\n", p->fts_path, strerror(p->fts_errno));
 			rval = 1;
 			continue;
 		case FTS_SL:			/* Ignore. */
@@ -201,20 +201,20 @@ chflags_main(int argc, char *argv[])
 			continue;
 		if ((*change_flags)(p->fts_accpath, (u_int)newflags) && !fflag) {
 			// warn("%s", p->fts_path);
-            fprintf(stderr,"chflags: %s: %s\n", p->fts_path, strerror(errno));
+            fprintf(thread_stderr,"chflags: %s: %s\n", p->fts_path, strerror(errno));
 			rval = 1;
 		} else if (vflag) {
-			(void)printf("%s", p->fts_path);
+			(void)fprintf(thread_stdout, "%s", p->fts_path);
 			if (vflag > 1)
-				(void)printf(": 0%lo -> 0%lo",
+				(void)fprintf(thread_stdout, ": 0%lo -> 0%lo",
 				    (u_long)p->fts_statp->st_flags,
 				    newflags);
-			(void)printf("\n");
+			(void)fprintf(thread_stdout, "\n");
 		}
 	}
     if (errno) {
 		// err(1, "fts_read");
-        fprintf(stderr, "chflags: fts_read: %s\n", strerror(errno));
+        fprintf(thread_stderr, "chflags: fts_read: %s\n", strerror(errno));
         pthread_exit(NULL);
     }
 	exit(rval);
@@ -223,7 +223,7 @@ chflags_main(int argc, char *argv[])
 static void
 usage(void)
 {
-	(void)fprintf(stderr,
+	(void)fprintf(thread_stderr,
 	    "usage: chflags [-fhv] [-R [-H | -L | -P]] flags file ...\n");
 	exit(1);
 }

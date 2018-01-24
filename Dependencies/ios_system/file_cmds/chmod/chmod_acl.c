@@ -106,7 +106,7 @@ name_to_uuid(char *tok, int nametype) {
 
 	if ((entryg = (uuid_t *) calloc(1, sizeof(uuid_t))) == NULL) {
 		// errx(1, "Unable to allocate a uuid");
-        fprintf(stderr, "chmod: Unable to allocate a uuid\n");
+        fprintf(thread_stderr, "chmod: Unable to allocate a uuid\n");
         pthread_exit(NULL);
 	}
 
@@ -119,7 +119,7 @@ name_to_uuid(char *tok, int nametype) {
 	}
 	
     free(entryg);
-    fprintf(stderr, "chmod: Unable to translate '%s' to a UUID\n", tok);
+    fprintf(thread_stderr, "chmod: Unable to translate '%s' to a UUID\n", tok);
     pthread_exit(NULL);
 	// errx(1, "Unable to translate '%s' to a UUID", tok);
     return NULL; // never reached
@@ -159,7 +159,7 @@ parse_entry(char *entrybuf, acl_entry_t newent) {
 	
 	if ((tok == NULL) || *tok == '\0') {
 		// errx(1, "Invalid entry format -- expected user or group name");
-        fprintf(stderr, "chmod: Invalid entry format -- expected user or group name\n");
+        fprintf(thread_stderr, "chmod: Invalid entry format -- expected user or group name\n");
         pthread_exit(NULL);
 	}
 
@@ -169,7 +169,7 @@ parse_entry(char *entrybuf, acl_entry_t newent) {
 	tok = strsep(&pebuf, ": "); /* Stick with delimiter? */
 	if ((tok == NULL) || *tok == '\0') {
 		// errx(1, "Invalid entry format -- expected allow or deny");
-        fprintf(stderr, "chmod: Invalid entry format -- expected allow or deny\n");
+        fprintf(thread_stderr, "chmod: Invalid entry format -- expected allow or deny\n");
         pthread_exit(NULL);
 	}
 
@@ -180,7 +180,7 @@ parse_entry(char *entrybuf, acl_entry_t newent) {
 		tag = ACL_EXTENDED_DENY;
 	} else {
 		// errx(1, "Unknown tag type '%s'", tok);
-        fprintf(stderr, "chmod: Unknown tag type '%s'\n", tok);
+        fprintf(thread_stderr, "chmod: Unknown tag type '%s'\n", tok);
         pthread_exit(NULL);
 	}
 
@@ -206,7 +206,7 @@ parse_entry(char *entrybuf, acl_entry_t newent) {
 				}
 			}
 			// errx(1,"Invalid permission type '%s'", tok);
-            fprintf(stderr,"chmod: Invalid permission type '%s'\n", tok);
+            fprintf(thread_stderr,"chmod: Invalid permission type '%s'\n", tok);
             pthread_exit(NULL);
 		found:
 			continue;
@@ -214,7 +214,7 @@ parse_entry(char *entrybuf, acl_entry_t newent) {
 	}
 	if (0 == permcount) {
 		// errx(1, "No permissions specified");
-        fprintf(stderr, "chmod: No permissions specified\n");
+        fprintf(thread_stderr, "chmod: No permissions specified\n");
         pthread_exit(NULL);
 	}
 	acl_set_tag_type(newent, tag);
@@ -248,7 +248,7 @@ parse_acl_entries(const char *input) {
 	
     if (inbuf == NULL) {
 		// err(1, "malloc() failed");
-        fprintf(stderr, "chmod: malloc() failed: %s\n", strerror(errno));
+        fprintf(thread_stderr, "chmod: malloc() failed: %s\n", strerror(errno));
         pthread_exit(NULL);
     }
 	strncpy(inbuf, input, MAX_ACL_TEXT_SIZE);
@@ -256,7 +256,7 @@ parse_acl_entries(const char *input) {
 
     if ((acl_input = acl_init(1)) == NULL) {
 		// err(1, "acl_init() failed");
-        fprintf(stderr, "chmod: acl_init() failed: %s\n", strerror(errno));
+        fprintf(thread_stderr, "chmod: acl_init() failed: %s\n", strerror(errno));
         pthread_exit(NULL);
     }
 
@@ -266,17 +266,17 @@ parse_acl_entries(const char *input) {
 		if (**bufp != '\0') {
             if (0 != acl_create_entry(&acl_input, &newent)) {
 				// err(1, "acl_create_entry() failed");
-                fprintf(stderr, "chmod: acl_create_entry() failed: %s\n", strerror(errno));
+                fprintf(thread_stderr, "chmod: acl_create_entry() failed: %s\n", strerror(errno));
                 pthread_exit(NULL);
             }
 			if (0 != parse_entry(*bufp, newent)) {
                 // errx(1, "Failed parsing entry '%s'", *bufp);
-				fprintf(stderr, "chmod: Failed parsing entry '%s'\n", *bufp);
+				fprintf(thread_stderr, "chmod: Failed parsing entry '%s'\n", *bufp);
                 pthread_exit(NULL);
 			}
 			if (++bufp >= &entryv[ACL_MAX_ENTRIES - 1]) {
 				// errx(1, "Too many entries");
-                fprintf(stderr, "chmod: Too many entries\n");
+                fprintf(thread_stderr, "chmod: Too many entries\n");
                 pthread_exit(NULL);
 			}
 		}
@@ -312,17 +312,17 @@ score_acl_entry(acl_entry_t entry) {
 
 	if (acl_get_tag_type(entry, &tag) != 0) {
 		// err(1, "Malformed ACL entry, no tag present");
-        fprintf(stderr, "chmod: Malformed ACL entry, no tag present: %s\n", strerror(errno));
+        fprintf(thread_stderr, "chmod: Malformed ACL entry, no tag present: %s\n", strerror(errno));
         pthread_exit(NULL);
 	}
 	if (acl_get_flagset_np(entry, &flags) != 0){
 		// err(1, "Unable to obtain flagset");
-        fprintf(stderr, "chmod: Unable to obtain flagset: %s\n", strerror(errno));
+        fprintf(thread_stderr, "chmod: Unable to obtain flagset: %s\n", strerror(errno));
         pthread_exit(NULL);
 	}
     if (acl_get_permset(entry, &perms) != 0) {
 		// err(1, "Malformed ACL entry, no permt present");
-        fprintf(stderr, "chmod: Malformed ACL entry, no permt present: %s\n", strerror(errno));
+        fprintf(thread_stderr, "chmod: Malformed ACL entry, no permt present: %s\n", strerror(errno));
         pthread_exit(NULL);
     }
 	
@@ -334,7 +334,7 @@ score_acl_entry(acl_entry_t entry) {
 		break;
 	default:
 		// errx(1, "Unknown tag type %d present in ACL entry", tag);
-        fprintf(stderr, "chmod: Unknown tag type %d present in ACL entry\n", tag);
+        fprintf(thread_stderr, "chmod: Unknown tag type %d present in ACL entry\n", tag);
         pthread_exit(NULL);
 	        /* NOTREACHED */
 	}
@@ -407,12 +407,12 @@ compare_acl_entries(acl_entry_t a, acl_entry_t b)
 
     if (0 != acl_get_tag_type(a, &atag)) {
 		// err(1, "No tag type present in entry");
-        fprintf(stderr, "chmod: No tag type present in entry: %s\n", strerror(errno));
+        fprintf(thread_stderr, "chmod: No tag type present in entry: %s\n", strerror(errno));
         pthread_exit(NULL);
     }
     if (0!= acl_get_tag_type(b, &btag)) {
 		// err(1, "No tag type present in entry");
-        fprintf(stderr, "chmod: No tag type present in entry: %s\n", strerror(errno));
+        fprintf(thread_stderr, "chmod: No tag type present in entry: %s\n", strerror(errno));
         pthread_exit(NULL);
     }
 
@@ -424,7 +424,7 @@ compare_acl_entries(acl_entry_t a, acl_entry_t b)
 	    (acl_get_permset(b, &bperms) != 0) ||
         (acl_get_flagset_np(b, &bflags) != 0)) {
 		// err(1, "error fetching permissions");
-        fprintf(stderr, "chmod: error fetching permissions: %s\n", strerror(errno));
+        fprintf(thread_stderr, "chmod: error fetching permissions: %s\n", strerror(errno));
         pthread_exit(NULL);
     }
 
@@ -527,13 +527,13 @@ find_matching_entry (acl_t acl, acl_entry_t modifier, acl_entry_t *rentryp,
 
                 if (0 != acl_get_flagset_np(modifier, &mflags)) {
 					// err(1, "Unable to get flagset");
-                    fprintf(stderr, "chmod: Unable to get flagset: %s\n", strerror(errno));
+                    fprintf(thread_stderr, "chmod: Unable to get flagset: %s\n", strerror(errno));
                     pthread_exit(NULL);
                 }
 				
                 if (0 != acl_get_flagset_np(entry, &eflags)) {
 					// err(1, "Unable to get flagset");
-                    fprintf(stderr, "chmod: Unable to get flagset: %s\n", strerror(errno));
+                    fprintf(thread_stderr, "chmod: Unable to get flagset: %s\n", strerror(errno));
                     pthread_exit(NULL);
                 }
 					
@@ -568,7 +568,7 @@ subtract_from_entry(acl_entry_t rentry, acl_entry_t  modifier, int* valid_perms)
 	    (acl_get_permset(modifier, &mperms) != 0) ||
         (acl_get_flagset_np(modifier, &mflags) != 0)) {
 		// err(1, "error computing ACL modification");
-        fprintf(stderr, "chmod: error computing ACL modification: %s\n", strerror(errno));
+        fprintf(thread_stderr, "chmod: error computing ACL modification: %s\n", strerror(errno));
         pthread_exit(NULL);
     }
 
@@ -599,7 +599,7 @@ merge_entry_perms(acl_entry_t rentry, acl_entry_t  modifier)
 	    (acl_get_permset(modifier, &mperms) != 0) ||
         (acl_get_flagset_np(modifier, &mflags) != 0)) {
 		// err(1, "error computing ACL modification");
-        fprintf(stderr, "chmod: error computing ACL modification: %s\n", strerror(errno));
+        fprintf(thread_stderr, "chmod: error computing ACL modification: %s\n", strerror(errno));
         pthread_exit(NULL);
     }
 
@@ -641,7 +641,7 @@ modify_acl(acl_t *oaclp, acl_entry_t modifier, unsigned int optflags,
 		if (position != -1) {
             if (0 != acl_create_entry_np(&oacl, &newent, position)) {
 				// err(1, "acl_create_entry() failed");
-                fprintf(stderr, "chmod: acl_create_entry() failed: %s\n", strerror(errno));
+                fprintf(thread_stderr, "chmod: acl_create_entry() failed: %s\n", strerror(errno));
                 pthread_exit(NULL);
             }
 			acl_copy_entry(newent, modifier);
@@ -667,19 +667,19 @@ modify_acl(acl_t *oaclp, acl_entry_t modifier, unsigned int optflags,
 			cpos = find_canonical_position(oacl, modifier);
             if (0!= acl_create_entry_np(&oacl, &newent, cpos)) {
 				// err(1, "acl_create_entry() failed");
-                fprintf(stderr, "chmod: acl_create_entry() failed: %s\n", strerror(errno));
+                fprintf(thread_stderr, "chmod: acl_create_entry() failed: %s\n", strerror(errno));
                 pthread_exit(NULL);
             }
 			acl_copy_entry(newent, modifier);
 		}
 	} else if (optflags & ACL_DELETE_FLAG) {
 		if (flag_new_acl) {
-            fprintf(stderr, "chmod: No ACL present '%s'\n", path);
+            fprintf(thread_stderr, "chmod: No ACL present '%s'\n", path);
             // warnx("No ACL present '%s'", path);
 			retval = 1;
 		} else if (position != -1 ) {
 			if (0 != acl_get_entry(oacl, position, &rentry)) {
-                fprintf(stderr, "chmod: Invalid entry number '%s'\n", path);
+                fprintf(thread_stderr, "chmod: Invalid entry number '%s'\n", path);
                 // warnx("Invalid entry number '%s'", path);
 				retval = 1;
 			} else {
@@ -711,7 +711,7 @@ modify_acl(acl_t *oaclp, acl_entry_t modifier, unsigned int optflags,
 				}
 			}
 			if (0 == match_found) {
-                fprintf(stderr, "chmod: Entry not found when attempting delete '%s'\n",path);
+                fprintf(thread_stderr, "chmod: Entry not found when attempting delete '%s'\n",path);
                 // warnx("Entry not found when attempting delete '%s'",path);
 				retval = 1;
 			}
@@ -726,19 +726,19 @@ modify_acl(acl_t *oaclp, acl_entry_t modifier, unsigned int optflags,
 			if (0 != acl_get_entry(oacl, position,
                             &rentry)) {
 				// err(1, "Invalid entry number '%s'", path);
-                fprintf(stderr, "chmod: Invalid entry number '%s': %s\n", path, strerror(errno));
+                fprintf(thread_stderr, "chmod: Invalid entry number '%s': %s\n", path, strerror(errno));
                 pthread_exit(NULL);
             }
 			
             if (0 != acl_delete_entry(oacl, rentry)) {
 				// err(1, "Unable to delete entry '%s'", path);
-                fprintf(stderr, "chmod: Unable to delete entry '%s': %s\n", path, strerror(errno));
+                fprintf(thread_stderr, "chmod: Unable to delete entry '%s': %s\n", path, strerror(errno));
                 pthread_exit(NULL);
             }
 		}
         if (0!= acl_create_entry_np(&oacl, &newent, position)) {
 			// err(1, "acl_create_entry() failed");
-            fprintf(stderr, "chmod: acl_create_entry() failed: %s\n", strerror(errno));
+            fprintf(thread_stderr, "chmod: acl_create_entry() failed: %s\n", strerror(errno));
             pthread_exit(NULL);
         }
 		acl_copy_entry(newent, modifier);
@@ -757,7 +757,7 @@ modify_file_acl(unsigned int optflags, const char *path, acl_t modifier, int pos
 	acl_entry_t entry = NULL;
 	unsigned retval = 0;
 
-	extern int chmod_fflag;
+	extern __thread int chmod_fflag;
 
 /* XXX acl_get_file() returns a zero entry ACL if an ACL was previously
  * associated with the file, and has had its entries removed.
@@ -780,19 +780,19 @@ modify_file_acl(unsigned int optflags, const char *path, acl_t modifier, int pos
 		filesec_t fsec = filesec_init();
 		if (fsec == NULL) {
 			// err(1, "filesec_init() failed");
-            fprintf(stderr, "chmod: filesec_init() failed: %s\n", strerror(errno));
+            fprintf(thread_stderr, "chmod: filesec_init() failed: %s\n", strerror(errno));
             pthread_exit(NULL);
 		}
 		if (filesec_set_property(fsec, FILESEC_ACL, _FILESEC_REMOVE_ACL) != 0) {
             // err(1, "filesec_set_property() failed");
-            fprintf(stderr, "chmod: filesec_set_property() failed: %s\n", strerror(errno));
+            fprintf(thread_stderr, "chmod: filesec_set_property() failed: %s\n", strerror(errno));
             pthread_exit(NULL);
                 }
 		if (follow) {
 			if (chmodx_np(path, fsec) != 0) {
                 if (!chmod_fflag) {
 					// warn("Failed to clear ACL on file %s", path);
-                    fprintf(stderr, "chmod: Failed to clear ACL on file %s: %s\n", path, strerror(errno));
+                    fprintf(thread_stderr, "chmod: Failed to clear ACL on file %s: %s\n", path, strerror(errno));
 				}
 				retval = 1;
 			}
@@ -801,7 +801,7 @@ modify_file_acl(unsigned int optflags, const char *path, acl_t modifier, int pos
 			if (fd != -1) {
 				if (fchmodx_np(fd, fsec) != 0) {
 					if (!chmod_fflag) {
-                        fprintf(stderr, "chmod: Failed to clear ACL on file %s: %s\n", path, strerror(errno));
+                        fprintf(thread_stderr, "chmod: Failed to clear ACL on file %s: %s\n", path, strerror(errno));
                         // warn("Failed to clear ACL on file %s", path);
 					}
 					retval = 1;
@@ -810,7 +810,7 @@ modify_file_acl(unsigned int optflags, const char *path, acl_t modifier, int pos
 			} else {
 				if (!chmod_fflag) {
 					// warn("Failed to open file %s", path);
-                    fprintf(stderr, "chmod: Failed to open file %s: %s\n", path, strerror(errno));
+                    fprintf(thread_stderr, "chmod: Failed to open file %s: %s\n", path, strerror(errno));
 				}
 				retval = 1;
 			}
@@ -835,7 +835,7 @@ modify_file_acl(unsigned int optflags, const char *path, acl_t modifier, int pos
 		    (acl_get_entry(oacl,ACL_FIRST_ENTRY, &newent) != 0)) {
             if ((oacl = acl_init(1)) == NULL) {
 				// err(1, "acl_init() failed");
-                fprintf(stderr, "chmod: acl_init() failed: %s\n", strerror(errno));
+                fprintf(thread_stderr, "chmod: acl_init() failed: %s\n", strerror(errno));
                 pthread_exit(NULL);
             }
 			flag_new_acl = 1;
@@ -847,7 +847,7 @@ modify_file_acl(unsigned int optflags, const char *path, acl_t modifier, int pos
 			acl_t facl = NULL;
             if ((facl = acl_init(1)) == NULL) {
 				//err(1, "acl_init() failed");
-                fprintf(stderr, "chmod: acl_init() failed: %s\n", strerror(errno));
+                fprintf(thread_stderr, "chmod: acl_init() failed: %s\n", strerror(errno));
                 pthread_exit(NULL);
             }
 			for (aindex = 0; 
@@ -858,7 +858,7 @@ modify_file_acl(unsigned int optflags, const char *path, acl_t modifier, int pos
 				acl_flagset_t eflags;
 				acl_entry_t fent = NULL;
 				if (acl_get_flagset_np(entry, &eflags) != 0) {
-                    fprintf(stderr,  "chmod: Unable to obtain flagset: %s\n", strerror(errno));
+                    fprintf(thread_stderr,  "chmod: Unable to obtain flagset: %s\n", strerror(errno));
                     pthread_exit(NULL);
                     // err(1, "Unable to obtain flagset");
 				}
@@ -887,13 +887,13 @@ modify_file_acl(unsigned int optflags, const char *path, acl_t modifier, int pos
 		} else if (optflags & ACL_CHECK_CANONICITY) {
 			if (flag_new_acl) {
 				// warnx("No ACL currently associated with file '%s'", path);
-                fprintf(stderr, "chmod: No ACL currently associated with file '%s'\n", path);
+                fprintf(thread_stderr, "chmod: No ACL currently associated with file '%s'\n", path);
 			}
 			retval = is_canonical(oacl);
 		} else if ((optflags & ACL_SET_FLAG) && (position == -1) && 
 		    (!is_canonical(oacl))) {
 			// warnx("The specified file '%s' does not have an ACL in canonical order, please specify a position with +a# ", path);
-            fprintf(stderr, "chmod: The specified file '%s' does not have an ACL in canonical order, please specify a position with +a# \n", path);
+            fprintf(thread_stderr, "chmod: The specified file '%s' does not have an ACL in canonical order, please specify a position with +a# \n", path);
 			retval = 1;
 		} else if (((optflags & ACL_DELETE_FLAG) && (position != -1))
 		    || (optflags & ACL_CHECK_CANONICITY)) {
@@ -901,12 +901,12 @@ modify_file_acl(unsigned int optflags, const char *path, acl_t modifier, int pos
 					    inheritance_level, flag_new_acl, path);
 		} else if ((optflags & (ACL_REMOVE_INHERIT_FLAG|ACL_REMOVE_INHERITED_ENTRIES)) && flag_new_acl) {
 			// warnx("No ACL currently associated with file '%s'", path);
-            fprintf(stderr, "chmod: No ACL currently associated with file '%s'\n", path);
+            fprintf(thread_stderr, "chmod: No ACL currently associated with file '%s'\n", path);
 			retval = 1;
 		} else {
 			if (!modifier) { /* avoid bus error in acl_get_entry */
 				// errx(1, "Internal error: modifier should not be NULL");
-                fprintf(stderr, "Internal error: modifier should not be NULL\n");
+                fprintf(thread_stderr, "Internal error: modifier should not be NULL\n");
                 pthread_exit(NULL);
 			}
 			for (aindex = 0; 
@@ -944,7 +944,7 @@ modify_file_acl(unsigned int optflags, const char *path, acl_t modifier, int pos
 		}
 		if (status != 0) {
 			if (!chmod_fflag)
-                fprintf(stderr, "chmod: Failed to set ACL on file '%s': %s\n", path, strerror(errno));
+                fprintf(thread_stderr, "chmod: Failed to set ACL on file '%s': %s\n", path, strerror(errno));
             // warn("Failed to set ACL on file '%s'", path);
 			retval = 1;
 		}

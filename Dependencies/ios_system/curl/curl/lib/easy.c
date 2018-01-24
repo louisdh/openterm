@@ -216,31 +216,31 @@ static CURLcode global_init(long flags, bool memoryfuncs)
 
   if(flags & CURL_GLOBAL_SSL)
     if(!Curl_ssl_init()) {
-      DEBUGF(fprintf(stderr, "Error: Curl_ssl_init failed\n"));
+      DEBUGF(fprintf(thread_stderr, "Error: Curl_ssl_init failed\n"));
       return CURLE_FAILED_INIT;
     }
 
   if(flags & CURL_GLOBAL_WIN32)
     if(win32_init()) {
-      DEBUGF(fprintf(stderr, "Error: win32_init failed\n"));
+      DEBUGF(fprintf(thread_stderr, "Error: win32_init failed\n"));
       return CURLE_FAILED_INIT;
     }
 
 #ifdef __AMIGA__
   if(!Curl_amiga_init()) {
-    DEBUGF(fprintf(stderr, "Error: Curl_amiga_init failed\n"));
+    DEBUGF(fprintf(thread_stderr, "Error: Curl_amiga_init failed\n"));
     return CURLE_FAILED_INIT;
   }
 #endif
 
 #ifdef NETWARE
   if(netware_init()) {
-    DEBUGF(fprintf(stderr, "Warning: LONG namespace not available\n"));
+    DEBUGF(fprintf(thread_stderr, "Warning: LONG namespace not available\n"));
   }
 #endif
 
   if(Curl_resolver_global_init()) {
-    DEBUGF(fprintf(stderr, "Error: resolver_global_init failed\n"));
+    DEBUGF(fprintf(thread_stderr, "Error: resolver_global_init failed\n"));
     return CURLE_FAILED_INIT;
   }
 
@@ -248,7 +248,7 @@ static CURLcode global_init(long flags, bool memoryfuncs)
 
 #if defined(USE_LIBSSH2) && defined(HAVE_LIBSSH2_INIT)
   if(libssh2_init(0)) {
-    DEBUGF(fprintf(stderr, "Error: libssh2_init failed\n"));
+    DEBUGF(fprintf(thread_stderr, "Error: libssh2_init failed\n"));
     return CURLE_FAILED_INIT;
   }
 #endif
@@ -350,7 +350,7 @@ struct Curl_easy *curl_easy_init(void)
     result = curl_global_init(CURL_GLOBAL_DEFAULT);
     if(result) {
       /* something in the global init failed, return nothing */
-      DEBUGF(fprintf(stderr, "Error: curl_global_init failed\n"));
+      DEBUGF(fprintf(thread_stderr, "Error: curl_global_init failed\n"));
       return NULL;
     }
   }
@@ -358,7 +358,7 @@ struct Curl_easy *curl_easy_init(void)
   /* We use curl_open() with undefined URL so far */
   result = Curl_open(&data);
   if(result) {
-    DEBUGF(fprintf(stderr, "Error: Curl_open failed\n"));
+    DEBUGF(fprintf(thread_stderr, "Error: Curl_open failed\n"));
     return NULL;
   }
 
@@ -511,7 +511,7 @@ static int events_socket(struct Curl_easy *easy,      /* easy handle */
   if(!m) {
     if(what == CURL_POLL_REMOVE) {
       /* this happens a bit too often, libcurl fix perhaps? */
-      /* fprintf(stderr,
+      /* fprintf(thread_stderr,
          "%s: socket %d asked to be REMOVED but not present!\n",
                  __func__, s); */
     }
@@ -580,7 +580,7 @@ static CURLcode wait_or_timeout(struct Curl_multi *multi, struct events *ev)
       f->fd = m->socket.fd;
       f->events = m->socket.events;
       f->revents = 0;
-      /* fprintf(stderr, "poll() %d check socket %d\n", numfds, f->fd); */
+      /* fprintf(thread_stderr, "poll() %d check socket %d\n", numfds, f->fd); */
       f++;
       numfds++;
     }
@@ -598,7 +598,7 @@ static CURLcode wait_or_timeout(struct Curl_multi *multi, struct events *ev)
     if(0 == pollrc) {
       /* timeout! */
       ev->ms = 0;
-      /* fprintf(stderr, "call curl_multi_socket_action(TIMEOUT)\n"); */
+      /* fprintf(thread_stderr, "call curl_multi_socket_action(TIMEOUT)\n"); */
       mcode = curl_multi_socket_action(multi, CURL_SOCKET_TIMEOUT, 0,
                                        &ev->running_handles);
     }

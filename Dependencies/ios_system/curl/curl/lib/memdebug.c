@@ -116,7 +116,7 @@ void curl_memdebug(const char *logname)
     if(logname && *logname)
       logfile = fopen(logname, FOPEN_WRITETEXT);
     else
-      logfile = stderr;
+      logfile = thread_stderr;
 #ifdef MEMDEBUG_LOG_SYNC
     /* Flush the log file after every line so the log isn't lost in a crash */
     setbuf(logfile, (char *)NULL);
@@ -146,7 +146,7 @@ static bool countcheck(const char *func, int line, const char *source)
         curl_memlog("LIMIT %s:%d %s reached memlimit\n",
                     source, line, func);
         /* log to stderr also */
-        fprintf(stderr, "LIMIT %s:%d %s reached memlimit\n",
+        fprintf(thread_stderr, "LIMIT %s:%d %s reached memlimit\n",
                 source, line, func);
         fflush(logfile); /* because it might crash now */
       }
