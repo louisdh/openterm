@@ -50,7 +50,7 @@ public func xCallbackUrlOpen(_ url: URL) -> Bool {
     }
 }
 
-public func xCallbackUrl(argc: Int32, argv: UnsafeMutablePointer<UnsafeMutablePointer<Int8>?>?) -> Int32 {
+public func openUrl(argc: Int32, argv: UnsafeMutablePointer<UnsafeMutablePointer<Int8>?>?) -> Int32 {
     var url: URL? = nil
     if argc == 2 {
         let urlString = String(cString: argv![1]!)
@@ -59,8 +59,10 @@ public func xCallbackUrl(argc: Int32, argv: UnsafeMutablePointer<UnsafeMutablePo
     
     guard url != nil else {
         fputs("""
-usage: x-callback-url scheme://x-callback-url/command
+usage: open-url scheme://x-callback-url/command
 where standard input is url encoded and appended to url.
+
+For x-callback-url's the command does not terminate until either x-success or x-error has been called and these parameters are automatically appended to the url parameter.
 """, stderr)
         return 1
     }
@@ -81,6 +83,8 @@ where standard input is url encoded and appended to url.
     if let string = String(data: data, encoding: .utf8) {
         urlString.append(escape(string))
     }
+    
+    let waitForCallback = url!.host == "x-callback-url"
     
     // we use a semaphore to wait for completion
     var resultOkMessage: String?
@@ -103,23 +107,30 @@ where standard input is url encoded and appended to url.
     }
     
     // add x-success and x-error callbacks
-    if !urlString.contains("?") {
-        urlString.append("?")
-    } else if(!urlString.hasSuffix("&")) {
-        urlString.append("&")
+    if waitForCallback {
+        if !urlString.contains("?") {
+            urlString.append("?")
+        } else if(!urlString.hasSuffix("&")) {
+            urlString.append("&")
+        }
+        urlString.append("x-source=OpenTerm&")
+        urlString.append("x-success=\(escape("openterm://callback-success/\(uuid)/?"))&")
+        urlString.append("x-error=\(escape("openterm://callback-error/\(uuid)/?"))&")
     }
-    urlString.append("x-source=OpenTerm&")
-    urlString.append("x-success=\(escape("openterm://callback-success/\(uuid)/?"))&")
-    urlString.append("x-error=\(escape("openterm://callback-error/\(uuid)/?"))&")
 
     url = URL(string: urlString)
     
     DispatchQueue.main.async {
         UIApplication.shared.open(url!, options: [:], completionHandler: { ok in
-            if !ok {
+            let callbackNow = !ok || !waitForCallback
+            if callbackNow {
                 if let callback = xCallbacks[uuid] {
-                    let message = "Unable to open: \(url!.absoluteString)"
-                    callback(nil, 1, message)
+                    if ok {
+                        callback("", nil, nil)
+                    } else {
+                        let message = "Unable to open: \(url!.absoluteString)"
+                        callback(nil, 1, message)
+                    }
                 }
             }
         })
