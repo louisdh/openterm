@@ -326,6 +326,10 @@ static int ssh_timeout_connect(int _sock, const struct sockaddr *addr, socklen_t
     }
 }
 
+static void ssh_usage() {
+    fprintf(thread_stderr, "usage: ssh [-q] user@host command\n");
+    pthread_exit(NULL);
+}
 
 int ssh_main(int argc, char** argv) {
     // TODO: extract options
@@ -337,11 +341,20 @@ int ssh_main(int argc, char** argv) {
     char* user;
     char* host;
     char* commandLine;
+    int verboseFlag = 0;
+    if (argc < 3) ssh_usage();
     // Assume several arguments, making sense
+    if (strcmp(argv[1], "-q") == 0) {
+        verboseFlag = 0; // quiet
+        argv++;
+    }
     // argv[0] = ssh
     // argv[1] = user@host
     user = argv[1];
     host = strchr(user, '@') + 1;
+    if ((host == NULL) || (argv[2] == NULL)) {
+        ssh_usage();
+    }
     *(host - 1) = 0x00; // null-terminate host
     // Concatenate all remaining options to form the command string:
     int bufferLength = 0;
@@ -493,7 +506,7 @@ int ssh_main(int argc, char** argv) {
                                                                 strlen(user),
                                                                 publickeypath,
                                                                 privatekeypath, passphrase))  == LIBSSH2_ERROR_EAGAIN);
-            if (rc != 0) { fprintf(thread_stderr, "Authentification failure with passphrase.\n"); continue; } // try another key
+            if (rc != 0) { if (verboseFlag) fprintf(thread_stderr, "Authentification failure with passphrase.\n"); continue; } // try another key
             // We are connected
             rc = 0;
             char *errmsg;
