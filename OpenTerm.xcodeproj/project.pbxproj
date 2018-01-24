@@ -11,12 +11,12 @@
 		BE000C081FEC4F6C00D06B91 /* ios_system.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BE3768EE1FEC4DCE00D5A2D1 /* ios_system.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		BE000C091FEC4F6F00D06B91 /* ios_system.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BE3768EE1FEC4DCE00D5A2D1 /* ios_system.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		BE000C0A1FEC4F6F00D06B91 /* ios_system.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = BE3768EE1FEC4DCE00D5A2D1 /* ios_system.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		BE165408201909040067EC92 /* xCallBackUrl.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE165407201909030067EC92 /* xCallBackUrl.swift */; };
 		BE3808561FD9BFB600393EB8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE3808551FD9BFB600393EB8 /* AppDelegate.swift */; };
 		BE3808581FD9BFB600393EB8 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE3808571FD9BFB600393EB8 /* ViewController.swift */; };
 		BE38085B1FD9BFB600393EB8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BE3808591FD9BFB600393EB8 /* Main.storyboard */; };
 		BE38085D1FD9BFB600393EB8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BE38085C1FD9BFB600393EB8 /* Assets.xcassets */; };
 		BE3808601FD9BFB600393EB8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BE38085E1FD9BFB600393EB8 /* LaunchScreen.storyboard */; };
-		BE71D9CD20188C6400FDB1D5 /* xCallBackUrl.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE71D9CC20188C6400FDB1D5 /* xCallBackUrl.swift */; };
 		BE9275062013961D00BD2761 /* UserDefaultsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE9275052013961D00BD2761 /* UserDefaultsController.swift */; };
 		BEA499261FD9C4D7001B9B9D /* DocumentManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEA499251FD9C4D7001B9B9D /* DocumentManager.swift */; };
 		BEA4992C1FDC0918001B9B9D /* icon-320.png in Resources */ = {isa = PBXBuildFile; fileRef = BEA4992B1FDC0918001B9B9D /* icon-320.png */; };
@@ -45,9 +45,10 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-        24F6A88F715402F565B82F26 /* Pods-Terminal.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Terminal.release.xcconfig"; path = "Pods/Target Support Files/Pods-Terminal/Pods-Terminal.release.xcconfig"; sourceTree = "<group>"; };
+		24F6A88F715402F565B82F26 /* Pods-Terminal.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Terminal.release.xcconfig"; path = "Pods/Target Support Files/Pods-Terminal/Pods-Terminal.release.xcconfig"; sourceTree = "<group>"; };
 		448CC7691FD84EB5D2C24705 /* Pods-OpenTerm.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenTerm.debug.xcconfig"; path = "Pods/Target Support Files/Pods-OpenTerm/Pods-OpenTerm.debug.xcconfig"; sourceTree = "<group>"; };
 		83138AA9A57F46310B4DFF53 /* Pods_Terminal.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Terminal.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		BE165407201909030067EC92 /* xCallBackUrl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = xCallBackUrl.swift; sourceTree = "<group>"; };
 		BE3768EE1FEC4DCE00D5A2D1 /* ios_system.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = ios_system.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		BE3808521FD9BFB600393EB8 /* OpenTerm.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OpenTerm.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BE3808551FD9BFB600393EB8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -56,7 +57,6 @@
 		BE38085C1FD9BFB600393EB8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		BE38085F1FD9BFB600393EB8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		BE3808611FD9BFB600393EB8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		BE71D9CC20188C6400FDB1D5 /* xCallBackUrl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = xCallBackUrl.swift; sourceTree = "<group>"; };
 		BE9275052013961D00BD2761 /* UserDefaultsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsController.swift; sourceTree = "<group>"; };
 		BEA499241FD9C46C001B9B9D /* OpenTerm.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = OpenTerm.entitlements; sourceTree = "<group>"; };
 		BEA499251FD9C4D7001B9B9D /* DocumentManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentManager.swift; sourceTree = "<group>"; };
@@ -67,7 +67,7 @@
 		BEECFF091FFC1DC0009608B3 /* HistoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryViewController.swift; sourceTree = "<group>"; };
 		BEECFF381FFEC187009608B3 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		D4433523D5E174B363623AD4 /* Pods-OpenTerm.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenTerm.release.xcconfig"; path = "Pods/Target Support Files/Pods-OpenTerm/Pods-OpenTerm.release.xcconfig"; sourceTree = "<group>"; };
-        D73213876015994510AC49C0 /* Pods-Terminal.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Terminal.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Terminal/Pods-Terminal.debug.xcconfig"; sourceTree = "<group>"; };
+		D73213876015994510AC49C0 /* Pods-Terminal.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Terminal.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Terminal/Pods-Terminal.debug.xcconfig"; sourceTree = "<group>"; };
 		F456629D200B9BC500C574AA /* ColorDisplayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorDisplayView.swift; sourceTree = "<group>"; };
 		F4602B40200A08D0009D0547 /* ColorPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorPickerViewController.swift; sourceTree = "<group>"; };
 		F4602B48200A63FC009D0547 /* UserDefaults+UIColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserDefaults+UIColor.swift"; sourceTree = "<group>"; };
@@ -161,7 +161,7 @@
 				BEA4992D1FDC305B001B9B9D /* KeyboardObserver.swift */,
 				BEA499251FD9C4D7001B9B9D /* DocumentManager.swift */,
 				BE9275052013961D00BD2761 /* UserDefaultsController.swift */,
-				BE71D9CC20188C6400FDB1D5 /* xCallBackUrl.swift */,
+				BE165407201909030067EC92 /* xCallBackUrl.swift */,
 			);
 			path = Util;
 			sourceTree = "<group>";
@@ -169,6 +169,8 @@
 		EDE154E4BB3A66786AACAA5C /* Pods */ = {
 			isa = PBXGroup;
 			children = (
+				D73213876015994510AC49C0 /* Pods-Terminal.debug.xcconfig */,
+				24F6A88F715402F565B82F26 /* Pods-Terminal.release.xcconfig */,
 				448CC7691FD84EB5D2C24705 /* Pods-OpenTerm.debug.xcconfig */,
 				D4433523D5E174B363623AD4 /* Pods-OpenTerm.release.xcconfig */,
 			);
@@ -320,7 +322,7 @@
 				BE3808581FD9BFB600393EB8 /* ViewController.swift in Sources */,
 				BEECFF391FFEC187009608B3 /* SettingsViewController.swift in Sources */,
 				F456629E200B9BC500C574AA /* ColorDisplayView.swift in Sources */,
-				BE71D9CD20188C6400FDB1D5 /* xCallBackUrl.swift in Sources */,
+				BE165408201909040067EC92 /* xCallBackUrl.swift in Sources */,
 				BEA499261FD9C4D7001B9B9D /* DocumentManager.swift in Sources */,
 				BEECFF0A1FFC1DC0009608B3 /* HistoryViewController.swift in Sources */,
 				BEA4992E1FDC305B001B9B9D /* KeyboardObserver.swift in Sources */,
@@ -467,12 +469,12 @@
 				CODE_SIGN_ENTITLEMENTS = OpenTerm/OpenTerm.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 6G5LMQ72D8;
+                DEVELOPMENT_TEAM = 6G5LMQ72D8;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = "$(SRCROOT)/OpenTerm/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.silverfox.Terminal;
+                PRODUCT_BUNDLE_IDENTIFIER = com.silverfox.Terminal;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 4.0;
