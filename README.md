@@ -25,19 +25,17 @@ This is a sandboxed command line interface for iOS.
 
 Commands included:
 
-|            |            |            |            |
-| ---------- | ---------- | ---------- | ---------- |
-| awk        | cat        | cd         | chflags    |
-| chksum     | clear      | compress   | cp         |
-| curl       | date       | du         | echo       |
-| egrep      | env        | fgrep      | grep       |
-| gunzip     | gzip       | help       | link       |
-| ln         | ls         | mkdir      | mv         |
-| printenv   | pwd        | readlink   | rm         |
-| rmdir      | scp        | sed        | setenv     |
-| sftp       | stat       | sum        | tar        |
-| touch      | tr         | uname      | uncompress |
-| unsetenv   | uptime     | wc         | whoami     |
+|            |            |            |            |            |
+| ---------- | ---------- | ---------- | ---------- | ---------- |
+| awk        | cat        | cd         | chflags    | chksum     |
+| clear      | compress   | cp         | curl       | date       |
+| du         | echo       | egrep      | env        | fgrep      |
+| grep       | gunzip     | gzip       | help       | link       |
+| ln         | ls         | mkdir      | mv         | open-url   |
+| printenv   | pwd        | readlink   | rm         | rmdir      |
+| scp        | sed        | setenv     | sftp       | stat       |
+| sum        | tar        | touch      | tr         | uname      |
+| uncompress | unsetenv   | uptime     | wc         | whoami     |
 
 ## Dependencies
 This project uses a modified version of [ios_system](https://github.com/holzschu/ios_system), which requires OpenSSL. For convenience both of these are included in the `Dependencies` folder.
