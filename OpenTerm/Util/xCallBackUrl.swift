@@ -68,20 +68,17 @@ where standard input is url encoded and appended to url.
     // shorthand to URL escape parameters
     let escape: (String) -> String = { str in str.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)! }
     
-    // read everything from stdin and put this on url, but this should not be done
-    // on a byte-by-byte basis as this makes it really hard to support Unicode
-    var urlString = url!.absoluteString
-    var ch: Int8 = 0;
+    // read everything from stdin and put this on url
+    var bytes = [Int8]()
     while true {
-        let count = read(fileno(stdin), &ch, 1)
-        guard count == 1 else {
-            //fputs("Unable to read STDIN: \(errno)", stderr)
-            break
-        }
-        
-        let u = UnicodeScalar(Int(ch))!
-        let char = Character(u)
-        let string = String(char)
+        var byte: Int8 = 0
+        let count = read(fileno(stdin), &byte, 1)
+        guard count == 1 else { break }
+        bytes.append(byte)
+    }
+    var urlString = url!.absoluteString
+    let data = Data(bytes: bytes, count: bytes.count);
+    if let string = String(data: data, encoding: .utf8) {
         urlString.append(escape(string))
     }
     
