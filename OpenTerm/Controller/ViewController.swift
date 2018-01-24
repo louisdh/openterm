@@ -386,7 +386,7 @@ extension ViewController: TerminalProcessor {
         setStdErr()
 
         DispatchQueue.global(qos: .default).async {
-            ios_system(command.utf8CString)
+            let returnCode = ios_system(command.utf8CString)
             
             DispatchQueue.main.async {
                 self.updateTitle()
@@ -394,24 +394,23 @@ extension ViewController: TerminalProcessor {
                 self.readFile(stdout)
                 self.readFile(stderr)
                 
+                // when there are both stdout and stderr results we prefer stdout when return code
+                // indicates no error (zero)
                 let errFilePath = NSTemporaryDirectory().appending("err.txt")
+                let stdFilePath = NSTemporaryDirectory().appending("out.txt")
+                let paths = returnCode == 0 ? [stdFilePath, errFilePath] : [errFilePath, stdFilePath]
                 
-                if let data = fileManager.contents(atPath: errFilePath) {
-                    if let errStr = String(data: data, encoding: .utf8) {
-                        if !errStr.isEmpty {
-                            completion(errStr)
-                            return
+                for path in paths {
+                    if let data = fileManager.contents(atPath: path) {
+                        if let str = String(data: data, encoding: .utf8) {
+                            if !str.isEmpty {
+                                completion(str)
+                                return
+                            }
                         }
                     }
                 }
-                
-                let filePath = NSTemporaryDirectory().appending("out.txt")
-                
-                if let data = fileManager.contents(atPath: filePath) {
-                    completion(String(data: data, encoding: .utf8) ?? "")
-                    return
-                }
-                
+                                
                 completion("")
             }
         }

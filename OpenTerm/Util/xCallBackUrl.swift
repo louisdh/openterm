@@ -116,7 +116,6 @@ where standard input is url encoded and appended to url.
     urlString.append("x-error=\(escape("openterm://callback-error/\(uuid)/?"))&")
 
     url = URL(string: urlString)
-    puts("\(url!.absoluteString)")
     
     DispatchQueue.main.async {
         UIApplication.shared.open(url!, options: [:], completionHandler: { ok in
@@ -147,19 +146,6 @@ where standard input is url encoded and appended to url.
     write(outputFile, "\n", 1)
 
     return returnCode
-    
-    // echo Hello World > hello
-    // x-callback-url mailto:?body= < hello
-    
-    // run Workflow app that supports real callbacks
-    //    x-callback-url workflow://run-workflow?name=upper&input=hello
-    
-    // test redirection:
-    //   grep e < hello
-    
-    // echo Hello World | x-callback-url mailto:?body=
-    
-    // puts("\(url!.absoluteString)")
 }
 
 
