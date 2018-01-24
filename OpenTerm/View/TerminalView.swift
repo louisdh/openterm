@@ -34,6 +34,8 @@ class TerminalView: UIView {
 	
 	weak var delegate: TerminalViewDelegate?
 	
+	private var isWaitingForCommand = false
+	
 	init() {
 		super.init(frame: .zero)
 		
@@ -200,6 +202,10 @@ extension TerminalView: UITextViewDelegate {
 	
 	func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
 		
+		guard !isWaitingForCommand else {
+			return false
+		}
+		
 		let i = textView.text.distance(from: textView.text.startIndex, to: currentCommandStartIndex)
 		
 		if range.location < i {
@@ -223,12 +229,12 @@ extension TerminalView: UITextViewDelegate {
 					return false
 					
 				} else {
-					// disable editing while we are waiting for process
-                    textView.isEditable = false
+
+					self.isWaitingForCommand = true
                     
                     processor.process(command: String(input), completion: { output in
-                        // enable editing again
-                        textView.isEditable = true
+
+						self.isWaitingForCommand = false
 
                         let outputParsed = output.replacingOccurrences(of: DocumentManager.shared.activeDocumentsFolderURL.path, with: "~")
                         // Sometimes, fileManager adds /private in front of the directory
