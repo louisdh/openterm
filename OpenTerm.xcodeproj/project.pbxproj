@@ -45,7 +45,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		24F6A88F715402F565B82F26 /* Pods-Terminal.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Terminal.release.xcconfig"; path = "Pods/Target Support Files/Pods-Terminal/Pods-Terminal.release.xcconfig"; sourceTree = "<group>"; };
 		448CC7691FD84EB5D2C24705 /* Pods-OpenTerm.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenTerm.debug.xcconfig"; path = "Pods/Target Support Files/Pods-OpenTerm/Pods-OpenTerm.debug.xcconfig"; sourceTree = "<group>"; };
 		83138AA9A57F46310B4DFF53 /* Pods_Terminal.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Terminal.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		BE3768EE1FEC4DCE00D5A2D1 /* ios_system.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = ios_system.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -67,7 +66,6 @@
 		BEECFF091FFC1DC0009608B3 /* HistoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryViewController.swift; sourceTree = "<group>"; };
 		BEECFF381FFEC187009608B3 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		D4433523D5E174B363623AD4 /* Pods-OpenTerm.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenTerm.release.xcconfig"; path = "Pods/Target Support Files/Pods-OpenTerm/Pods-OpenTerm.release.xcconfig"; sourceTree = "<group>"; };
-		D73213876015994510AC49C0 /* Pods-Terminal.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Terminal.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Terminal/Pods-Terminal.debug.xcconfig"; sourceTree = "<group>"; };
 		F456629D200B9BC500C574AA /* ColorDisplayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorDisplayView.swift; sourceTree = "<group>"; };
 		F4602B40200A08D0009D0547 /* ColorPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorPickerViewController.swift; sourceTree = "<group>"; };
 		F4602B48200A63FC009D0547 /* UserDefaults+UIColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserDefaults+UIColor.swift"; sourceTree = "<group>"; };
@@ -169,8 +167,6 @@
 		EDE154E4BB3A66786AACAA5C /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				D73213876015994510AC49C0 /* Pods-Terminal.debug.xcconfig */,
-				24F6A88F715402F565B82F26 /* Pods-Terminal.release.xcconfig */,
 				448CC7691FD84EB5D2C24705 /* Pods-OpenTerm.debug.xcconfig */,
 				D4433523D5E174B363623AD4 /* Pods-OpenTerm.release.xcconfig */,
 			);

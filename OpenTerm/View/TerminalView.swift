@@ -10,7 +10,7 @@ import UIKit
 
 protocol TerminalProcessor: class {
 	
-	func process(command: String) -> String
+    func process(command: String, completion: @escaping (String) -> ())
 	
 }
 
@@ -223,15 +223,25 @@ extension TerminalView: UITextViewDelegate {
 					return false
 					
 				} else {
-					
-					let output = processor.process(command: String(input))
-                    let outputParsed = output.replacingOccurrences(of: DocumentManager.shared.activeDocumentsFolderURL.path, with: "~")
-                    // Sometimes, fileManager adds /private in front of the directory
-                    let outputParsed2 = outputParsed.replacingOccurrences(of: "/private", with: "")
-					if !outputParsed2.isEmpty {
-						textView.text = textView.text + "\n\(outputParsed2)"
-					}
-					
+					// disable editing while we are waiting for process
+                    textView.isEditable = false
+                    
+                    processor.process(command: String(input), completion: { output in
+                        // enable editing again
+                        textView.isEditable = true
+
+                        let outputParsed = output.replacingOccurrences(of: DocumentManager.shared.activeDocumentsFolderURL.path, with: "~")
+                        // Sometimes, fileManager adds /private in front of the directory
+                        let outputParsed2 = outputParsed.replacingOccurrences(of: "/private", with: "")
+                        if !outputParsed2.isEmpty {
+                            textView.text = textView.text + "\n\(outputParsed2)"
+                        }
+                        
+                        textView.text = textView.text + "\n\(self.deviceName): "
+                        self.currentCommandStartIndex = textView.text.endIndex
+
+                    })
+					return false
 				}
 				
 			}

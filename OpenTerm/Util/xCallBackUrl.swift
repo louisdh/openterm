@@ -17,8 +17,11 @@ public func xCallbackUrlOpen(_ url: URL) -> Bool {
     // make sure the scheme is correct
     guard url.scheme == "openterm" else { return false }
     
+    // uuid identifying this callback is the path except for a leading slash
+    guard url.path.hasPrefix("/") else { return false }
+    let uuid = String(url.path.suffix(url.path.count - 1))
+
     // we ignore callbacks where uuid is unknown
-    let uuid = url.path
     guard let callback = xCallbacks[uuid] else { return false }
     
     // parse parameters
@@ -129,16 +132,21 @@ where standard input is url encoded and appended to url.
     // wait for callback to be made
     semaphore.wait()
     
-    // clean up callback
+    // clean up callback and semaphore
     xCallbacks.removeValue(forKey: uuid)
+    semaphore.signal()
+
+    // determine result of operation
+    let returnCode = Int32(resultErrorCode ?? 0)
+    let outputFile = resultErrorCode == nil ? fileno(stdout) : fileno(stderr)
+    let returnText = (resultErrorCode == nil ? resultOkMessage : resultErrorMessage) ?? ""
     
-    if let errorCode = resultErrorCode {
-        fputs(resultErrorMessage ?? "", stderr)
-        return Int32(errorCode)
-    }
-    
-    fputs(resultOkMessage ?? "", stdout)
-    return 0
+    // output results
+    let c_string = returnText.utf8CString
+    write(outputFile, c_string, strlen(c_string))
+    write(outputFile, "\n", 1)
+
+    return returnCode
     
     // echo Hello World > hello
     // x-callback-url mailto:?body= < hello

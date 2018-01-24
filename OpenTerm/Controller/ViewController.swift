@@ -373,41 +373,47 @@ extension ViewController {
 
 extension ViewController: TerminalProcessor {
 	
-	@discardableResult
-	func process(command: String) -> String {
+    func process(command: String, completion: @escaping (String) -> ()) {
 
 		let fileManager = DocumentManager.shared.fileManager
 
 		if command == "help" || command == "?" {
-			return availableCommands().joined(separator: ", ")
+            completion(availableCommands().joined(separator: ", "))
+			return
 		}
-		
-		setStdOut()
-		setStdErr()
 
-		ios_system(command.utf8CString)
+        setStdOut()
+        setStdErr()
 
-        updateTitle()
-		readFile(stdout)
-		readFile(stderr)
-
-		let errFilePath = NSTemporaryDirectory().appending("err.txt")
-
-		if let data = fileManager.contents(atPath: errFilePath) {
-			if let errStr = String(data: data, encoding: .utf8) {
-                if !errStr.isEmpty {
-                    return errStr
+        DispatchQueue.global(qos: .default).async {
+            ios_system(command.utf8CString)
+            
+            DispatchQueue.main.async {
+                self.updateTitle()
+                
+                self.readFile(stdout)
+                self.readFile(stderr)
+                
+                let errFilePath = NSTemporaryDirectory().appending("err.txt")
+                
+                if let data = fileManager.contents(atPath: errFilePath) {
+                    if let errStr = String(data: data, encoding: .utf8) {
+                        if !errStr.isEmpty {
+                            completion(errStr)
+                            return
+                        }
+                    }
                 }
-			}
-		}
-		
-		let filePath = NSTemporaryDirectory().appending("out.txt")
-
-		if let data = fileManager.contents(atPath: filePath) {
-			return String(data: data, encoding: .utf8) ?? ""
-		}
-		
-		return ""
+                
+                let filePath = NSTemporaryDirectory().appending("out.txt")
+                
+                if let data = fileManager.contents(atPath: filePath) {
+                    completion(String(data: data, encoding: .utf8) ?? "")
+                    return
+                }
+                
+                completion("")
+            }
+        }
 	}
-	
 }
