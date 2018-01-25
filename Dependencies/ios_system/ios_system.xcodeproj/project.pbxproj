@@ -554,6 +554,7 @@
 		BE3767C91FEC42DD00D5A2D1 /* libssh2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BE3767C81FEC42DD00D5A2D1 /* libssh2.a */; settings = {ATTRIBUTES = (Required, ); }; };
 		BE3768E01FEC438F00D5A2D1 /* libssl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BE3768DE1FEC438F00D5A2D1 /* libssl.a */; };
 		BE3768E31FEC460100D5A2D1 /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BE3768E21FEC460000D5A2D1 /* libcrypto.a */; };
+		BED67073201A296700D04AD5 /* libresolv.9.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 22EB965920065366009E39D0 /* libresolv.9.tbd */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -1377,6 +1378,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BED67073201A296700D04AD5 /* libresolv.9.tbd in Frameworks */,
 				BE3768E31FEC460100D5A2D1 /* libcrypto.a in Frameworks */,
 				BE3768E01FEC438F00D5A2D1 /* libssl.a in Frameworks */,
 				BE3767C91FEC42DD00D5A2D1 /* libssh2.a in Frameworks */,
@@ -3473,7 +3475,7 @@
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
-                DEVELOPMENT_TEAM = 6G5LMQ72D8;
+				DEVELOPMENT_TEAM = 6G5LMQ72D8;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
@@ -3510,7 +3512,7 @@
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
-                DEVELOPMENT_TEAM = 6G5LMQ72D8;
+				DEVELOPMENT_TEAM = 6G5LMQ72D8;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
