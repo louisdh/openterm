@@ -50,6 +50,8 @@ class ViewController: UIViewController {
 		terminalView.processor = self
 		terminalView.delegate = self
 		
+        Command.textView = terminalView.textView
+        
 		updateTitle()
 		setStdOut()
 		setStdErr()
@@ -381,6 +383,19 @@ extension ViewController: TerminalProcessor {
             completion(availableCommands().joined(separator: ", "))
 			return
 		}
+        
+        // Builtin command
+        let executable = command.components(separatedBy: " ")[0]
+        if Command.allAppCommands.keys.contains(executable) {
+            
+            var arguments = command.components(separatedBy: " ")
+            arguments.remove(at: 0)
+            
+            _ = Command.allAppCommands[executable]?.execute(withArguments: arguments)
+            
+            completion("")
+            return
+        }
 
         setStdOut()
         setStdErr()

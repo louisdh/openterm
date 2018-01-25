@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3A9AABCA201A351B00B14D75 /* Command.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A9AABC8201A351A00B14D75 /* Command.swift */; };
+		3A9AABCB201A351B00B14D75 /* HelloWorld.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A9AABC9201A351B00B14D75 /* HelloWorld.swift */; };
 		5A38CC73C499E1A878353871 /* Pods_OpenTerm.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC01604DAC695ABD64544260 /* Pods_OpenTerm.framework */; };
 		BE000C081FEC4F6C00D06B91 /* ios_system.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BE3768EE1FEC4DCE00D5A2D1 /* ios_system.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		BE000C091FEC4F6F00D06B91 /* ios_system.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BE3768EE1FEC4DCE00D5A2D1 /* ios_system.framework */; settings = {ATTRIBUTES = (Required, ); }; };
@@ -46,6 +48,8 @@
 
 /* Begin PBXFileReference section */
 		24F6A88F715402F565B82F26 /* Pods-Terminal.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Terminal.release.xcconfig"; path = "Pods/Target Support Files/Pods-Terminal/Pods-Terminal.release.xcconfig"; sourceTree = "<group>"; };
+		3A9AABC8201A351A00B14D75 /* Command.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Command.swift; sourceTree = "<group>"; };
+		3A9AABC9201A351B00B14D75 /* HelloWorld.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HelloWorld.swift; sourceTree = "<group>"; };
 		448CC7691FD84EB5D2C24705 /* Pods-OpenTerm.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenTerm.debug.xcconfig"; path = "Pods/Target Support Files/Pods-OpenTerm/Pods-OpenTerm.debug.xcconfig"; sourceTree = "<group>"; };
 		83138AA9A57F46310B4DFF53 /* Pods_Terminal.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Terminal.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		BE165407201909030067EC92 /* xCallBackUrl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = xCallBackUrl.swift; sourceTree = "<group>"; };
@@ -88,6 +92,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		3A9AABC7201A34F700B14D75 /* Commands */ = {
+			isa = PBXGroup;
+			children = (
+				3A9AABC8201A351A00B14D75 /* Command.swift */,
+				3A9AABC9201A351B00B14D75 /* HelloWorld.swift */,
+			);
+			path = Commands;
+			sourceTree = "<group>";
+		};
 		BE3768EC1FEC4DCE00D5A2D1 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -119,6 +132,7 @@
 		BE3808541FD9BFB600393EB8 /* OpenTerm */ = {
 			isa = PBXGroup;
 			children = (
+				3A9AABC7201A34F700B14D75 /* Commands */,
 				BEA8E28F2001346D00002475 /* Util */,
 				BEA8E28E2001345700002475 /* View */,
 				BEA8E28D2001344400002475 /* Controller */,
@@ -326,7 +340,9 @@
 				BEA499261FD9C4D7001B9B9D /* DocumentManager.swift in Sources */,
 				BEECFF0A1FFC1DC0009608B3 /* HistoryViewController.swift in Sources */,
 				BEA4992E1FDC305B001B9B9D /* KeyboardObserver.swift in Sources */,
+				3A9AABCB201A351B00B14D75 /* HelloWorld.swift in Sources */,
 				F4602B41200A08D0009D0547 /* ColorPickerViewController.swift in Sources */,
+				3A9AABCA201A351B00B14D75 /* Command.swift in Sources */,
 				BE9275062013961D00BD2761 /* UserDefaultsController.swift in Sources */,
 				BE3808561FD9BFB600393EB8 /* AppDelegate.swift in Sources */,
 			);
@@ -469,12 +485,12 @@
 				CODE_SIGN_ENTITLEMENTS = OpenTerm/OpenTerm.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-                DEVELOPMENT_TEAM = 6G5LMQ72D8;
+				DEVELOPMENT_TEAM = 6G5LMQ72D8;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = "$(SRCROOT)/OpenTerm/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-                PRODUCT_BUNDLE_IDENTIFIER = com.silverfox.Terminal;
+				PRODUCT_BUNDLE_IDENTIFIER = com.silverfox.Terminal;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 4.0;
@@ -490,12 +506,12 @@
 				CODE_SIGN_ENTITLEMENTS = OpenTerm/OpenTerm.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-                DEVELOPMENT_TEAM = 6G5LMQ72D8;
+				DEVELOPMENT_TEAM = 6G5LMQ72D8;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = "$(SRCROOT)/OpenTerm/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-                PRODUCT_BUNDLE_IDENTIFIER = com.silverfox.Terminal;
+				PRODUCT_BUNDLE_IDENTIFIER = com.silverfox.Terminal;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 4.0;
