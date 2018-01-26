@@ -10,7 +10,7 @@ import UIKit
 
 protocol TerminalProcessor: class {
 	
-	func process(command: String) -> String
+    func process(command: String, completion: @escaping (String) -> ())
 	
 }
 
@@ -33,6 +33,8 @@ class TerminalView: UIView {
 	weak var processor: TerminalProcessor?
 	
 	weak var delegate: TerminalViewDelegate?
+	
+	private var isWaitingForCommand = false
 	
 	init() {
 		super.init(frame: .zero)
@@ -200,6 +202,10 @@ extension TerminalView: UITextViewDelegate {
 	
 	func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
 		
+		guard !isWaitingForCommand else {
+			return false
+		}
+		
 		let i = textView.text.distance(from: textView.text.startIndex, to: currentCommandStartIndex)
 		
 		if range.location < i {
@@ -223,15 +229,25 @@ extension TerminalView: UITextViewDelegate {
 					return false
 					
 				} else {
-					
-					let output = processor.process(command: String(input))
-                    let outputParsed = output.replacingOccurrences(of: DocumentManager.shared.activeDocumentsFolderURL.path, with: "~")
-                    // Sometimes, fileManager adds /private in front of the directory
-                    let outputParsed2 = outputParsed.replacingOccurrences(of: "/private", with: "")
-					if !outputParsed2.isEmpty {
-						textView.text = textView.text + "\n\(outputParsed2)"
-					}
-					
+
+					self.isWaitingForCommand = true
+                    
+                    processor.process(command: String(input), completion: { output in
+
+						self.isWaitingForCommand = false
+
+                        let outputParsed = output.replacingOccurrences(of: DocumentManager.shared.activeDocumentsFolderURL.path, with: "~")
+                        // Sometimes, fileManager adds /private in front of the directory
+                        let outputParsed2 = outputParsed.replacingOccurrences(of: "/private", with: "")
+                        if !outputParsed2.isEmpty {
+                            textView.text = textView.text + "\n\(outputParsed2)"
+                        }
+                        
+                        textView.text = textView.text + "\n\(self.deviceName): "
+                        self.currentCommandStartIndex = textView.text.endIndex
+
+                    })
+					return false
 				}
 				
 			}
