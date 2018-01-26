@@ -15,6 +15,11 @@ FOUNDATION_EXPORT double ios_systemVersionNumber;
 //! Project version string for ios_system.
 FOUNDATION_EXPORT const unsigned char ios_systemVersionString[];
 
+// Thread-local input and output streams
+extern __thread FILE* thread_stdin;
+extern __thread FILE* thread_stdout;
+extern __thread FILE* thread_stderr;
+
 // In this header, you should import all the public headers of your framework using statements like #import <ios_system/PublicHeader.h>
 
 int ios_executable(const char* inputCmd); // does this command exist? (executable file or builtin command)
