@@ -63,7 +63,7 @@ usage: open-url scheme://x-callback-url/command
 where standard input is url encoded and appended to url.
 
 For x-callback-url's the command does not terminate until either x-success or x-error has been called and these parameters are automatically appended to the url parameter.
-""", stderr)
+""", thread_stderr)
         return 1
     }
     
@@ -74,7 +74,7 @@ For x-callback-url's the command does not terminate until either x-success or x-
     var bytes = [Int8]()
     while true {
         var byte: Int8 = 0
-        let count = read(fileno(stdin), &byte, 1)
+        let count = read(fileno(thread_stdin), &byte, 1)
         guard count == 1 else { break }
         bytes.append(byte)
     }
@@ -145,7 +145,7 @@ For x-callback-url's the command does not terminate until either x-success or x-
 
     // determine result of operation
     let returnCode = Int32(resultErrorCode ?? 0)
-    let outputFile = resultErrorCode == nil ? fileno(stdout) : fileno(stderr)
+    let outputFile = resultErrorCode == nil ? fileno(thread_stdout) : fileno(thread_stderr)
     let returnText = (resultErrorCode == nil ? resultOkMessage : resultErrorMessage) ?? ""
     
     // output results
