@@ -59,11 +59,13 @@ public func openUrl(argc: Int32, argv: UnsafeMutablePointer<UnsafeMutablePointer
     
     guard url != nil else {
         fputs("""
-usage: open-url scheme://x-callback-url/command
+usage: open-url app://x-callback-url/cmd
+
 where standard input is url encoded and appended to url.
 
-For x-callback-url's the command does not terminate until either x-success or x-error has been called and these parameters are automatically appended to the url parameter.
-""", thread_stderr)
+For x-callback-url's the command does not terminate until either x-success or x-error has been called and these parameters are automatically appended to the url.
+
+""", stderr)
         return 1
     }
     
