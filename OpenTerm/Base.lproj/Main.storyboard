@@ -8,6 +8,7 @@
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="Navigation items with more than one left or right bar item" minToolsVersion="7.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -52,11 +53,18 @@
                                 <segue destination="dAz-aa-qtT" kind="presentation" modalPresentationStyle="formSheet" id="R0L-2q-dLN"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" title="Item" image="clock" id="u0V-tr-ngf">
-                            <connections>
-                                <action selector="showHistory:" destination="BYZ-38-t0r" id="1tS-n5-l85"/>
-                            </connections>
-                        </barButtonItem>
+                        <rightBarButtonItems>
+                            <barButtonItem title="Item" image="clock" id="u0V-tr-ngf">
+                                <connections>
+                                    <action selector="showHistory:" destination="BYZ-38-t0r" id="1tS-n5-l85"/>
+                                </connections>
+                            </barButtonItem>
+                            <barButtonItem image="folder" id="SEg-Dh-OWT">
+                                <connections>
+                                    <action selector="openFolder:" destination="BYZ-38-t0r" id="zGA-4q-tGD"/>
+                                </connections>
+                            </barButtonItem>
+                        </rightBarButtonItems>
                     </navigationItem>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" barStyle="black" prompted="NO"/>
                     <connections>
@@ -517,6 +525,7 @@ This project uses the open source ios_system project by Nicolas Holzschuch. This
     </scenes>
     <resources>
         <image name="clock" width="32" height="32"/>
+        <image name="folder" width="32" height="32"/>
         <image name="gear" width="20" height="20"/>
         <namedColor name="Main Tint Color">
             <color red="0.0" green="0.85882352941176465" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

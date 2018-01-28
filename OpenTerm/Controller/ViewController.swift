@@ -13,6 +13,7 @@ import UIKit
 import ios_system
 import PanelKit
 import StoreKit
+import MobileCoreServices
 
 extension String {
 	func toCString() -> UnsafePointer<Int8>? {
@@ -60,6 +61,7 @@ class ViewController: UIViewController {
 
         initializeEnvironment()
         replaceCommand("open-url", openUrl, true)
+		
 	}
 	
 	override func viewWillAppear(_ animated: Bool) {
@@ -122,6 +124,18 @@ class ViewController: UIViewController {
 
 		savePanelStates()
 		
+	}
+	
+	@IBAction func openFolder(_ sender: UIBarButtonItem) {
+	
+		terminalView.resignFirstResponder()
+		
+		let picker = UIDocumentPickerViewController(documentTypes: [kUTTypeFolder as String], in: .open)
+		picker.allowsMultipleSelection = true
+		picker.delegate = self
+		
+		self.present(picker, animated: true, completion: nil)
+	
 	}
 	
 	@IBAction func showHistory(_ sender: UIBarButtonItem) {
@@ -278,6 +292,24 @@ class ViewController: UIViewController {
 //			homeCmd,
 			endCmd
 		]
+	}
+	
+}
+
+extension ViewController: UIDocumentPickerDelegate {
+	
+	func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
+
+		guard let firstFolder = urls.first else {
+			return
+		}
+		
+		let _ = firstFolder.startAccessingSecurityScopedResource()
+		
+		DocumentManager.shared.fileManager.changeCurrentDirectoryPath(firstFolder.path)
+		
+		self.updateTitle()
+
 	}
 	
 }
