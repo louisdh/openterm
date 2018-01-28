@@ -61,7 +61,9 @@ class ViewController: UIViewController {
 
         initializeEnvironment()
         replaceCommand("open-url", openUrl, true)
-		
+        replaceCommand("share", shareFile, true)
+        shareFileViewController = self // shareFile needs to know which view controller to present share sheet from
+
 	}
 	
 	override func viewWillAppear(_ animated: Bool) {

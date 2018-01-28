@@ -17,6 +17,7 @@
 		BE38085B1FD9BFB600393EB8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BE3808591FD9BFB600393EB8 /* Main.storyboard */; };
 		BE38085D1FD9BFB600393EB8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BE38085C1FD9BFB600393EB8 /* Assets.xcassets */; };
 		BE3808601FD9BFB600393EB8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BE38085E1FD9BFB600393EB8 /* LaunchScreen.storyboard */; };
+		BE505066201E5ED900CDFC60 /* Share.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE505065201E5ED900CDFC60 /* Share.swift */; };
 		BE9275062013961D00BD2761 /* UserDefaultsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE9275052013961D00BD2761 /* UserDefaultsController.swift */; };
 		BEA499261FD9C4D7001B9B9D /* DocumentManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEA499251FD9C4D7001B9B9D /* DocumentManager.swift */; };
 		BEA4992C1FDC0918001B9B9D /* icon-320.png in Resources */ = {isa = PBXBuildFile; fileRef = BEA4992B1FDC0918001B9B9D /* icon-320.png */; };
@@ -57,6 +58,7 @@
 		BE38085C1FD9BFB600393EB8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		BE38085F1FD9BFB600393EB8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		BE3808611FD9BFB600393EB8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		BE505065201E5ED900CDFC60 /* Share.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Share.swift; sourceTree = "<group>"; };
 		BE9275052013961D00BD2761 /* UserDefaultsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsController.swift; sourceTree = "<group>"; };
 		BEA499241FD9C46C001B9B9D /* OpenTerm.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = OpenTerm.entitlements; sourceTree = "<group>"; };
 		BEA499251FD9C4D7001B9B9D /* DocumentManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentManager.swift; sourceTree = "<group>"; };
@@ -160,6 +162,7 @@
 				F4602B48200A63FC009D0547 /* UserDefaults+UIColor.swift */,
 				BEA4992D1FDC305B001B9B9D /* KeyboardObserver.swift */,
 				BEA499251FD9C4D7001B9B9D /* DocumentManager.swift */,
+				BE505065201E5ED900CDFC60 /* Share.swift */,
 				BE9275052013961D00BD2761 /* UserDefaultsController.swift */,
 				BE165407201909030067EC92 /* xCallBackUrl.swift */,
 			);
@@ -324,6 +327,7 @@
 				F456629E200B9BC500C574AA /* ColorDisplayView.swift in Sources */,
 				BE165408201909040067EC92 /* xCallBackUrl.swift in Sources */,
 				BEA499261FD9C4D7001B9B9D /* DocumentManager.swift in Sources */,
+				BE505066201E5ED900CDFC60 /* Share.swift in Sources */,
 				BEECFF0A1FFC1DC0009608B3 /* HistoryViewController.swift in Sources */,
 				BEA4992E1FDC305B001B9B9D /* KeyboardObserver.swift in Sources */,
 				F4602B41200A08D0009D0547 /* ColorPickerViewController.swift in Sources */,
