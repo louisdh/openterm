@@ -17,6 +17,7 @@
 <a href="https://travis-ci.org/louisdh/terminal"><img src="https://travis-ci.org/louisdh/terminal.svg?branch=master" alt="Build Status"/></a>
 <br>
 <a href="http://twitter.com/LouisDhauwe"><img src="https://img.shields.io/badge/Twitter-@LouisDhauwe-blue.svg?style=flat" alt="Twitter"/></a>
+<a href="https://paypal.me/louisdhauwe"><img src="https://img.shields.io/badge/Donate-PayPal-green.svg?style=flat" alt="Donate via PayPal"/></a>
 </p>
 
 ## About
