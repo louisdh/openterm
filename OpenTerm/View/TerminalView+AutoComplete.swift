@@ -44,6 +44,7 @@ extension TerminalView {
         self.inputAssistantView.delegate = self
         self.inputAssistantView.dataSource = self
         self.textView.inputAccessoryView = self.inputAssistantView
+		self.inputAssistantView.tintColor = .lightGray
         
         inputAssistantView.trailingActions = [
             InputAssistantAction(image: TerminalView.downArrow, target: self, action: #selector(downTapped))
