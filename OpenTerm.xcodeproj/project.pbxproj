@@ -7,19 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		22237A982013916700F841DD /* (null) in Embed Frameworks */ = {isa = PBXBuildFile; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		22237A99201391B600F841DD /* libbibtex.dylib in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 22D56F8C200269700090C1F6 /* libbibtex.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		22237A9A201391B600F841DD /* libkpathsea.6.dylib in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 22D56F90200269710090C1F6 /* libkpathsea.6.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		22237A9B201391B600F841DD /* libluatex.dylib in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 22D56F8D200269700090C1F6 /* libluatex.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		22237A9C201391B600F841DD /* libpdftex.dylib in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 22D56F8F200269710090C1F6 /* libpdftex.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		22237A9D201391B600F841DD /* libtexlua52.5.dylib in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 22D56F8E200269700090C1F6 /* libtexlua52.5.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		2237CFA42017E03300A5B391 /* ios_system.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2237CFA32017E03300A5B391 /* ios_system.framework */; };
-		2237CFA52017E03300A5B391 /* ios_system.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2237CFA32017E03300A5B391 /* ios_system.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		22D56F8520025BB00090C1F6 /* PanelKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 22D56F8420025BB00090C1F6 /* PanelKit.framework */; };
-		22D56F8720025C4A0090C1F6 /* Pods_Terminal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 22D56F8620025C4A0090C1F6 /* Pods_Terminal.framework */; };
-		22D56F8A200268E90090C1F6 /* Pods_Terminal.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 22D56F88200268E90090C1F6 /* Pods_Terminal.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		22D56F8B200268E90090C1F6 /* PanelKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 22D56F89200268E90090C1F6 /* PanelKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		BE000C0A1FEC4F6F00D06B91 /* (null) in Embed Frameworks */ = {isa = PBXBuildFile; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		5A38CC73C499E1A878353871 /* Pods_OpenTerm.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC01604DAC695ABD64544260 /* Pods_OpenTerm.framework */; };
+		BE000C081FEC4F6C00D06B91 /* ios_system.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BE3768EE1FEC4DCE00D5A2D1 /* ios_system.framework */; settings = {ATTRIBUTES = (Required, ); }; };
+		BE000C091FEC4F6F00D06B91 /* ios_system.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BE3768EE1FEC4DCE00D5A2D1 /* ios_system.framework */; settings = {ATTRIBUTES = (Required, ); }; };
+		BE000C0A1FEC4F6F00D06B91 /* ios_system.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = BE3768EE1FEC4DCE00D5A2D1 /* ios_system.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		BE165408201909040067EC92 /* xCallBackUrl.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE165407201909030067EC92 /* xCallBackUrl.swift */; };
 		BE3808561FD9BFB600393EB8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE3808551FD9BFB600393EB8 /* AppDelegate.swift */; };
 		BE3808581FD9BFB600393EB8 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE3808571FD9BFB600393EB8 /* ViewController.swift */; };
@@ -47,16 +38,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				22237A9B201391B600F841DD /* libluatex.dylib in Embed Frameworks */,
-				22D56F8A200268E90090C1F6 /* Pods_Terminal.framework in Embed Frameworks */,
-				22237A9A201391B600F841DD /* libkpathsea.6.dylib in Embed Frameworks */,
-				22237A9C201391B600F841DD /* libpdftex.dylib in Embed Frameworks */,
-				22D56F8B200268E90090C1F6 /* PanelKit.framework in Embed Frameworks */,
-				22237A99201391B600F841DD /* libbibtex.dylib in Embed Frameworks */,
-				BE000C0A1FEC4F6F00D06B91 /* (null) in Embed Frameworks */,
-				2237CFA52017E03300A5B391 /* ios_system.framework in Embed Frameworks */,
-				22237A9D201391B600F841DD /* libtexlua52.5.dylib in Embed Frameworks */,
-				22237A982013916700F841DD /* (null) in Embed Frameworks */,
+				BE000C0A1FEC4F6F00D06B91 /* ios_system.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -64,17 +46,11 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		2237CFA32017E03300A5B391 /* ios_system.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ios_system.framework; path = Dependencies/ios_system.framework; sourceTree = "<group>"; };
-		22D56F8420025BB00090C1F6 /* PanelKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PanelKit.framework; path = Dependencies/PanelKit.framework; sourceTree = "<group>"; };
-		22D56F8620025C4A0090C1F6 /* Pods_Terminal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Pods_Terminal.framework; path = "build/Debug-iphoneos/Pods_Terminal.framework"; sourceTree = "<group>"; };
-		22D56F88200268E90090C1F6 /* Pods_Terminal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Pods_Terminal.framework; path = Dependencies/Pods_Terminal.framework; sourceTree = "<group>"; };
-		22D56F89200268E90090C1F6 /* PanelKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PanelKit.framework; path = Dependencies/PanelKit.framework; sourceTree = "<group>"; };
-		22D56F8C200269700090C1F6 /* libbibtex.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libbibtex.dylib; path = ../blink/Frameworks/libbibtex.dylib; sourceTree = "<group>"; };
-		22D56F8D200269700090C1F6 /* libluatex.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libluatex.dylib; path = ../blink/Frameworks/libluatex.dylib; sourceTree = "<group>"; };
-		22D56F8E200269700090C1F6 /* libtexlua52.5.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libtexlua52.5.dylib; path = ../blink/Frameworks/libtexlua52.5.dylib; sourceTree = "<group>"; };
-		22D56F8F200269710090C1F6 /* libpdftex.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpdftex.dylib; path = ../blink/Frameworks/libpdftex.dylib; sourceTree = "<group>"; };
-		22D56F90200269710090C1F6 /* libkpathsea.6.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libkpathsea.6.dylib; path = ../blink/Frameworks/libkpathsea.6.dylib; sourceTree = "<group>"; };
+		24F6A88F715402F565B82F26 /* Pods-Terminal.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Terminal.release.xcconfig"; path = "Pods/Target Support Files/Pods-Terminal/Pods-Terminal.release.xcconfig"; sourceTree = "<group>"; };
+		448CC7691FD84EB5D2C24705 /* Pods-OpenTerm.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenTerm.debug.xcconfig"; path = "Pods/Target Support Files/Pods-OpenTerm/Pods-OpenTerm.debug.xcconfig"; sourceTree = "<group>"; };
+		83138AA9A57F46310B4DFF53 /* Pods_Terminal.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Terminal.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		BE165407201909030067EC92 /* xCallBackUrl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = xCallBackUrl.swift; sourceTree = "<group>"; };
+		BE3768EE1FEC4DCE00D5A2D1 /* ios_system.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = ios_system.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		BE3808521FD9BFB600393EB8 /* OpenTerm.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OpenTerm.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BE3808551FD9BFB600393EB8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		BE3808571FD9BFB600393EB8 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -92,10 +68,12 @@
 		BEA8E2902001348C00002475 /* UIColor+AssetCatalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+AssetCatalog.swift"; sourceTree = "<group>"; };
 		BEECFF091FFC1DC0009608B3 /* HistoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryViewController.swift; sourceTree = "<group>"; };
 		BEECFF381FFEC187009608B3 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
+		D4433523D5E174B363623AD4 /* Pods-OpenTerm.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenTerm.release.xcconfig"; path = "Pods/Target Support Files/Pods-OpenTerm/Pods-OpenTerm.release.xcconfig"; sourceTree = "<group>"; };
 		D73213876015994510AC49C0 /* Pods-Terminal.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Terminal.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Terminal/Pods-Terminal.debug.xcconfig"; sourceTree = "<group>"; };
 		F456629D200B9BC500C574AA /* ColorDisplayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorDisplayView.swift; sourceTree = "<group>"; };
 		F4602B40200A08D0009D0547 /* ColorPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorPickerViewController.swift; sourceTree = "<group>"; };
 		F4602B48200A63FC009D0547 /* UserDefaults+UIColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserDefaults+UIColor.swift"; sourceTree = "<group>"; };
+		FC01604DAC695ABD64544260 /* Pods_OpenTerm.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_OpenTerm.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -103,9 +81,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				22D56F8520025BB00090C1F6 /* PanelKit.framework in Frameworks */,
-				22D56F8720025C4A0090C1F6 /* Pods_Terminal.framework in Frameworks */,
-				2237CFA42017E03300A5B391 /* ios_system.framework in Frameworks */,
+				BE000C081FEC4F6C00D06B91 /* ios_system.framework in Frameworks */,
+				BE000C091FEC4F6F00D06B91 /* ios_system.framework in Frameworks */,
+				5A38CC73C499E1A878353871 /* Pods_OpenTerm.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -115,8 +93,9 @@
 		BE3768EC1FEC4DCE00D5A2D1 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				22D56F8420025BB00090C1F6 /* PanelKit.framework */,
-				22D56F8620025C4A0090C1F6 /* Pods_Terminal.framework */,
+				BE3768EE1FEC4DCE00D5A2D1 /* ios_system.framework */,
+				83138AA9A57F46310B4DFF53 /* Pods_Terminal.framework */,
+				FC01604DAC695ABD64544260 /* Pods_OpenTerm.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -124,15 +103,7 @@
 		BE3808491FD9BFB600393EB8 = {
 			isa = PBXGroup;
 			children = (
-				2237CFA32017E03300A5B391 /* ios_system.framework */,
 				BE3808541FD9BFB600393EB8 /* OpenTerm */,
-				22D56F8C200269700090C1F6 /* libbibtex.dylib */,
-				22D56F90200269710090C1F6 /* libkpathsea.6.dylib */,
-				22D56F8D200269700090C1F6 /* libluatex.dylib */,
-				22D56F8F200269710090C1F6 /* libpdftex.dylib */,
-				22D56F8E200269700090C1F6 /* libtexlua52.5.dylib */,
-				22D56F89200268E90090C1F6 /* PanelKit.framework */,
-				22D56F88200268E90090C1F6 /* Pods_Terminal.framework */,
 				BE3808531FD9BFB600393EB8 /* Products */,
 				BE3768EC1FEC4DCE00D5A2D1 /* Frameworks */,
 				EDE154E4BB3A66786AACAA5C /* Pods */,
@@ -202,6 +173,9 @@
 			isa = PBXGroup;
 			children = (
 				D73213876015994510AC49C0 /* Pods-Terminal.debug.xcconfig */,
+				24F6A88F715402F565B82F26 /* Pods-Terminal.release.xcconfig */,
+				448CC7691FD84EB5D2C24705 /* Pods-OpenTerm.debug.xcconfig */,
+				D4433523D5E174B363623AD4 /* Pods-OpenTerm.release.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -213,10 +187,13 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = BE3808641FD9BFB600393EB8 /* Build configuration list for PBXNativeTarget "OpenTerm" */;
 			buildPhases = (
+				4B5DFD929D217199A76A3C45 /* [CP] Check Pods Manifest.lock */,
 				BE38084E1FD9BFB600393EB8 /* Sources */,
 				BE38084F1FD9BFB600393EB8 /* Frameworks */,
 				BE3808501FD9BFB600393EB8 /* Resources */,
 				BE000C0B1FEC4F7000D06B91 /* Embed Frameworks */,
+				7E594A5DD24920828A657E90 /* [CP] Embed Pods Frameworks */,
+				0817298A6DFC720C403FB709 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -282,6 +259,60 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		0817298A6DFC720C403FB709 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-OpenTerm/Pods-OpenTerm-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		4B5DFD929D217199A76A3C45 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-OpenTerm-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		7E594A5DD24920828A657E90 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-OpenTerm/Pods-OpenTerm-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/PanelKit/PanelKit.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/PanelKit.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-OpenTerm/Pods-OpenTerm-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		BE38084E1FD9BFB600393EB8 /* Sources */ = {
@@ -436,28 +467,18 @@
 		};
 		BE3808651FD9BFB600393EB8 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 448CC7691FD84EB5D2C24705 /* Pods-OpenTerm.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = OpenTerm/OpenTerm.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = VG8Z23C8YL;
+				DEVELOPMENT_TEAM = 6G5LMQ72D8;
 				ENABLE_BITCODE = NO;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Dependencies",
-					"$(PROJECT_DIR)/build/Debug-iphoneos",
-				);
-				INFOPLIST_FILE = OpenTerm/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/OpenTerm/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					"-framework",
-					"\"PanelKit\"",
-				);
-				OTHER_LIBTOOLFLAGS = "";
-				PRODUCT_BUNDLE_IDENTIFIER = "Nicolas-Holzschuch-OpenTerm";
+				PRODUCT_BUNDLE_IDENTIFIER = com.silverfox.Terminal;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 4.0;
@@ -467,28 +488,18 @@
 		};
 		BE3808661FD9BFB600393EB8 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = D4433523D5E174B363623AD4 /* Pods-OpenTerm.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = OpenTerm/OpenTerm.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = VG8Z23C8YL;
+				DEVELOPMENT_TEAM = 6G5LMQ72D8;
 				ENABLE_BITCODE = NO;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Dependencies",
-					"$(PROJECT_DIR)/build/Debug-iphoneos",
-				);
-				INFOPLIST_FILE = OpenTerm/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/OpenTerm/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					"-framework",
-					"\"PanelKit\"",
-				);
-				OTHER_LIBTOOLFLAGS = "";
-				PRODUCT_BUNDLE_IDENTIFIER = "Nicolas-Holzschuch-OpenTerm";
+				PRODUCT_BUNDLE_IDENTIFIER = com.silverfox.Terminal;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 4.0;
