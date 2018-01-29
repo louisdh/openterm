@@ -34,6 +34,7 @@
 		2248DB4B20062EC000F2944C /* re.c in Sources */ = {isa = PBXBuildFile; fileRef = 2248DB072004A5F900F2944C /* re.c */; };
 		2248DB4C20062EC000F2944C /* sub.c in Sources */ = {isa = PBXBuildFile; fileRef = 2248DB042004A5F900F2944C /* sub.c */; };
 		2248DB4D20062EC000F2944C /* undo.c in Sources */ = {isa = PBXBuildFile; fileRef = 2248DB032004A5F900F2944C /* undo.c */; };
+		2253BA1F201942F30019CB39 /* libresolv.9.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 22EB965920065366009E39D0 /* libresolv.9.tbd */; };
 		22577E481FDB47A90050F312 /* err.c in Sources */ = {isa = PBXBuildFile; fileRef = 22577D451FDB47A90050F312 /* err.c */; settings = {COMPILER_FLAGS = "-DHAVE_CONFIG_H "; }; };
 		22577E491FDB47A90050F312 /* lafe_err.h in Headers */ = {isa = PBXBuildFile; fileRef = 22577D461FDB47A90050F312 /* lafe_err.h */; };
 		22577E4A1FDB47A90050F312 /* lafe_platform.h in Headers */ = {isa = PBXBuildFile; fileRef = 22577D471FDB47A90050F312 /* lafe_platform.h */; };
