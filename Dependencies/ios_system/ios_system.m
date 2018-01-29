@@ -22,6 +22,7 @@
 
 #include <pthread.h>
 #include <sys/stat.h>
+#include <libgen.h> // for basename()
 #define S_ISXXX(m) ((m) & (S_IXUSR | S_IXGRP | S_IXOTH)) // is executable, looking at "x" bit. Other methods fails on iOS
 
 // Note: we could use dlsym() to make this code simpler, but it would also make it harder
@@ -125,7 +126,7 @@ typedef struct _functionParameters {
     char** argv_ref;
     int (*function)(int ac, char** av);
     FILE *stdin, *stdout, *stderr;
-    int fd_close;
+    bool isPipe;
 } functionParameters;
 
 static void cleanup_function(void* parameters) {
@@ -137,7 +138,14 @@ static void cleanup_function(void* parameters) {
     for (int i = 0; i < p->argc; i++) free(p->argv_ref[i]);
     free(p->argv_ref);
     free(p->argv);
-    if (p->fd_close > 0) close(p->fd_close);
+    if (p->isPipe) {
+        // Close stdout if it won't be closed by another thread
+        // (i.e. if it's different from the parent thread stdout)
+        // There is currently no way to pipe stderr without piping stdout.
+        // So close it only once.
+        fclose(thread_stdout);
+        thread_stdout = NULL;
+    }
     free(parameters); // This was malloc'ed in ios_system
 }
 
@@ -190,10 +198,8 @@ void initializeEnvironment() {
         fullCommandPath = [[binPath stringByAppendingString:@":"] stringByAppendingString:fullCommandPath];
     }
     setenv("APPDIR", [[NSBundle mainBundle] resourcePath].UTF8String, 1);
-    setenv("PATH", fullCommandPath.UTF8String, 1); // 1 = override existing value
     setenv("TERM", "xterm", 1); // 1 = override existing value
     setenv("TMPDIR", NSTemporaryDirectory().UTF8String, 0); // tmp directory
-    directoriesInPath = [fullCommandPath componentsSeparatedByString:@":"];
     
     // We can't write in $HOME so we need to set the position of config files:
     setenv("SSH_HOME", docsPath.UTF8String, 0);  // SSH keys in ~/Documents/.ssh/ or [Cloud Drive]/.ssh
@@ -213,6 +219,8 @@ void initializeEnvironment() {
     // hg config file in ~/Documents/.hgrc
     setenv("HGRCPATH", [docsPath stringByAppendingPathComponent:@".hgrc"].UTF8String, 0);
 #endif
+    directoriesInPath = [fullCommandPath componentsSeparatedByString:@":"];
+    setenv("PATH", fullCommandPath.UTF8String, 1); // 1 = override existing value
 }
 
 static char* parseArgument(char* argument, char* command) {
@@ -513,11 +521,14 @@ int ios_executable(const char* inputCmd) {
     else return 0;
 }
 
+// Where to direct input/output of the next thread:
+static __thread FILE* child_stdin;
+static __thread FILE* child_stdout;
+static __thread FILE* child_stderr;
+
 FILE* ios_popen(const char* inputCmd, const char* type) {
     // Save existing streams:
     int fd[2] = {0};
-    FILE* push_stdin = thread_stdin;
-    FILE* push_stdout = thread_stdout;
     const char* command = inputCmd;
     // skip past all spaces
     while ((command[0] == ' ') && strlen(command) > 0) command++;
@@ -526,30 +537,23 @@ FILE* ios_popen(const char* inputCmd, const char* type) {
     // NOTES: fd[0] is set up for reading, fd[1] is set up for writing
     // fpout = fdopen(fd[1], "w");
     // fpin = fdopen(fd[0], "r");
-    if (type[0] == 'r') {
+    if (type[0] == 'w') {
         // open pipe for reading
-        thread_stdin = fdopen(fd[0], "r");
+        child_stdin = fdopen(fd[0], "r");
         // launch command:
         ios_system(command);
-        // Restore streams:
-        thread_stdin = push_stdin;
         return fdopen(fd[1], "w");
-    } else if (type[0] == 'w') {
+    } else if (type[0] == 'r') {
         // open pipe for writing
         // set up streams for thread
-        thread_stdout = fdopen(fd[1], "w");
+        child_stdout = fdopen(fd[1], "w");
         // launch command:
         ios_system(command);
-        // restore streams
-        thread_stdout = push_stdout;
         return fdopen(fd[0], "r");
     }
     return NULL;
 }
 
-static __thread FILE* child_stdin;
-static __thread FILE* child_stdout;
-static __thread FILE* child_stderr;
 int ios_execv(const char *path, char* const argv[]) {
     // path and argv[0] are the same (not in theory, but in practice, since Python wrote the command)
     int argc = 0;
@@ -558,33 +562,36 @@ int ios_execv(const char *path, char* const argv[]) {
     // We need this because some programs call execv() with a single string: "ssh hg@bitbucket.org 'hg -R ... --stdio'"
     // So we rely on ios_system to break them into chunks.
     while(argv[argc] != NULL) { cmdLength += strlen(argv[argc]) + 1; argc++;}
-    char* cmd = malloc(cmdLength * sizeof(char));
+    char* cmd = malloc((cmdLength  + 2 * argc) * sizeof(char)); // space for quotes
     strcpy(cmd, argv[0]);
     argc = 1;
     while (argv[argc] != NULL) {
+        if (strstr(argv[argc], " ")) {
+            // argument contains spaces. Enclose it into quotes:
+            if (strstr(argv[argc], "\"") == NULL) {
+                // argument does not contain ". Enclose with "
+                strcat(cmd, " \"");
+                strcat(cmd, argv[argc]);
+                strcat(cmd, "\"");
+                argc++;
+                continue;
+            }
+            if (strstr(argv[argc], "'") == NULL) {
+                // Enclose with '
+                strcat(cmd, " '");
+                strcat(cmd, argv[argc]);
+                strcat(cmd, "'");
+                argc++;
+                continue;
+            }
+            fprintf(thread_stderr, "Don't know what to do with this argument, sorry: %s\n", argv[argc]);
+        }
         strcat(cmd, " ");
         strcat(cmd, argv[argc]);
         argc++;
     }
-    // push existing streams:
-    FILE* push_stdin = thread_stdin;
-    FILE* push_stdout = thread_stdout;
-    FILE* push_stderr = thread_stdout;
-    // place streams from dup2:
-    if (child_stdin) thread_stdin = child_stdin;
-    if (child_stdout) thread_stdout = child_stdout;
-    if (child_stderr) thread_stderr = child_stderr;
     // start "child" with the child streams:
     ios_system(cmd);
-    // pop streams for parent:
-    thread_stdin = push_stdin;
-    thread_stdout = push_stdout;
-    thread_stderr = push_stderr;
-    // erase child streams to avoid re-using them
-    // child process is responsible for closing them, we can't do this.
-    child_stdin = NULL;
-    child_stdin = NULL;
-    child_stdout = NULL;
     free(cmd);
     return 0;
 }
@@ -592,7 +599,7 @@ int ios_execv(const char *path, char* const argv[]) {
 int ios_execve(const char *path, char* const argv[], char *const envp[]) {
     // TODO: save the environment (HOW?) and current dir
     // TODO: replace environment with envp. envp looks a lot like current environment, though.
-    execv(path, argv);
+    ios_execv(path, argv);
     // TODO: restore the environment (HOW?)
     return 0;
 }
@@ -728,7 +735,13 @@ int ios_system(const char* inputCmd) {
     if (!inputFileMarker) inputFileMarker = command;
     outputFileMarker = inputFileMarker;
     functionParameters *params = (functionParameters*) malloc(sizeof(functionParameters));
-    params->stdin = params->stdout = params->stderr = 0;
+    // If child_streams have been defined (in dup2 or popen), the new thread takes them.
+    params->stdin = child_stdin;
+    params->stdout = child_stdout;
+    params->stderr = child_stderr;
+    child_stdin = child_stdout = child_stderr = NULL;
+    params->argc = 0; params->argv = 0; params->argv_ref = 0;
+    params->function = NULL; params->isPipe = false;
     // scan until first "<" (input file)
     inputFileMarker = strstr(inputFileMarker, "<");
     // scan until first non-space character:
@@ -746,8 +759,7 @@ int ios_system(const char* inputCmd) {
     if (pipeMarker) {
         bool pushMainThread = isMainThread;
         isMainThread = false;
-        params->stdout = ios_popen(pipeMarker+2, "r");
-        params->fd_close = fileno(params->stdout);
+        params->stdout = ios_popen(pipeMarker+2, "w");
         isMainThread = pushMainThread;
         pipeMarker[0] = 0x0;
         sharedErrorOutput = true;
@@ -756,8 +768,7 @@ int ios_system(const char* inputCmd) {
         if (pipeMarker) {
             bool pushMainThread = isMainThread;
             isMainThread = false;
-            params->stdout = ios_popen(pipeMarker+1, "r");
-            params->fd_close = fileno(params->stdout);
+            params->stdout = ios_popen(pipeMarker+1, "w");
             isMainThread = pushMainThread;
             pipeMarker[0] = 0x0;
         }
@@ -807,7 +818,7 @@ int ios_system(const char* inputCmd) {
         if (outputFileMarker) {
             outputFileName = outputFileMarker + 1; // skip past '>'
             while ((outputFileName[0] == ' ') && strlen(outputFileName) > 0) outputFileName++;
-        }
+        } else outputFileName = NULL; // Only "2>", but no ">". It happens.
     }
     if (outputFileName) {
         char* endFile = strstr(outputFileName, " ");
@@ -877,6 +888,13 @@ int ios_system(const char* inputCmd) {
             end[0] = 0x0;
             str = end + 1;
         }
+        if ((argc == 1) && (argv[0][0] == '/') && (access(argv[0], R_OK) == -1)) {
+            // argv[0] is a file that doesn't exist. Probably one of our commands.
+            // Replace with its name:
+            char* newName = basename(argv[0]);
+            argv[0] = realloc(argv[0], strlen(newName));
+            strcpy(argv[0], newName);
+        }
         assert(argc < numSpaces + 2);
         while (str && (str[0] == ' ')) str++; // skip multiple spaces
     }
@@ -903,7 +921,8 @@ int ios_system(const char* inputCmd) {
             // The executable file has precedence, unless the user has specified they want the original
             // version, by prefixing it with \. So "\ls" == always "our" ls. "ls" == maybe ~/Library/bin/ls
             // (if it exists).
-            argv[0] = argv[0] + 1;
+            size_t len_with_terminator = strlen(argv[0] + 1) + 1;
+            memmove(argv[0], argv[0] + 1, len_with_terminator);
         } else  {
             NSString* commandName = [NSString stringWithCString:argv[0]];
             BOOL isDir = false;
@@ -916,15 +935,6 @@ int ios_system(const char* inputCmd) {
                     // File exists, is executable, not a directory.
                     cmdIsAFile = true;
                 }
-            }
-            if ((!cmdIsAFile) && [commandName hasPrefix:@"/"]) {
-                // cmd starts with "/" --> path to a command (that doesn't exist). Remove all directories at beginning:
-                // This is a point where we are different from actual shells.
-                // There is one version of each command, and we always assume it is the one you want.
-                // /usr/sbin/ls and /usr/local/bin/ls will be the same.
-                commandName = [commandName lastPathComponent];
-                argv[0] = realloc(argv[0], strlen(commandName.UTF8String));
-                strcpy(argv[0], commandName.UTF8String);
             }
             // We go through the path, because that command may be a file in the path
             // i.e. user called /usr/local/bin/hg and it's ~/Library/bin/hg
@@ -1003,6 +1013,7 @@ int ios_system(const char* inputCmd) {
             params->argc = argc;
             params->argv = argv;
             params->function = function;
+            params->isPipe = (params->stdout != thread_stdout);
             if (isMainThread) {
                 // Send a signal to the system that we're going to change the current directory:
                 NSString* currentPath = [[NSFileManager defaultManager] currentDirectoryPath];

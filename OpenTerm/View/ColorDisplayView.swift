@@ -10,11 +10,11 @@ import UIKit
 
 class ColorDisplayView: UIView {
 
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        
-        layer.borderWidth = 1
-        layer.borderColor = UIColor.white.cgColor
-    }
+	override func awakeFromNib() {
+		super.awakeFromNib()
+
+		layer.borderWidth = 1
+		layer.borderColor = UIColor.white.cgColor
+	}
 
 }
