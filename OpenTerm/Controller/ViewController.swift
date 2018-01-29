@@ -64,6 +64,7 @@ class ViewController: UIViewController {
         replaceCommand("share", shareFile, true)
         shareFileViewController = self // shareFile needs to know which view controller to present share sheet from
 
+		setSSLCertIfNeeded()
 	}
 
 	override func viewWillAppear(_ animated: Bool) {
@@ -105,6 +106,47 @@ class ViewController: UIViewController {
 
 	}
 
+	func setSSLCertIfNeeded() {
+		
+		guard let cString = getenv("SSL_CERT_FILE") else {
+			return
+		}
+			
+		guard let str = NSString(cString: cString, encoding: String.Encoding.utf8.rawValue) as String? else {
+			return
+		}
+	
+		let fileManager = DocumentManager.shared.fileManager
+		
+		if !fileManager.fileExists(atPath: str) {
+			
+			guard let url = Bundle.main.url(forResource: "cacert", withExtension: "pem") else {
+				return
+			}
+			
+			guard let data = try? Data(contentsOf: url) else {
+				return
+			}
+			
+			let certsFolderURL = DocumentManager.shared.activeDocumentsFolderURL.appendingPathComponent(".certs")
+			
+			let newURL = certsFolderURL.appendingPathComponent("cacert.pem")
+			
+			do {
+				
+				try fileManager.createDirectory(at: certsFolderURL, withIntermediateDirectories: true, attributes: nil)
+				
+				try data.write(to: newURL)
+				setenv("SSL_CERT_FILE", newURL.path.toCString(), 1)
+
+			} catch {
+				print(error)
+			}
+
+		}
+		
+	}
+	
 	var didRequestReview = false
 
 	@objc
