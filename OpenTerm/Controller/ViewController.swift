@@ -409,6 +409,8 @@ extension ViewController: TerminalProcessor {
 
     func process(command: String, completion: @escaping (String) -> Void) {
 
+		let command = command.trimmingCharacters(in: .whitespacesAndNewlines)
+		
 		let fileManager = DocumentManager.shared.fileManager
 
 		if command == "help" || command == "?" {

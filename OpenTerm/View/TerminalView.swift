@@ -228,7 +228,7 @@ extension TerminalView: UITextViewDelegate {
 					delegate?.didEnterCommand(String(input))
 				}
 
-				if input == "clear" {
+				if input.trimmingCharacters(in: .whitespacesAndNewlines) == "clear" {
 
 					clearScreen()
 
