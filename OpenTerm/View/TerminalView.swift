@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import InputAssistant
 
 protocol TerminalProcessor: class {
 	
@@ -25,10 +26,14 @@ class TerminalView: UIView {
 	
 	let deviceName = UIDevice.current.name
 	let textView = UITextView()
+    let inputAssistantView = InputAssistantView()
+    let autoCompleteManager = AutoCompleteManager()
 	
 	let keyboardObserver = KeyboardObserver()
 	
-	var currentCommandStartIndex: String.Index!
+    var currentCommandStartIndex: String.Index! {
+        didSet { self.updateAutoComplete() }
+    }
 	
 	weak var processor: TerminalProcessor?
 	
@@ -81,6 +86,8 @@ class TerminalView: UIView {
 		
 		textView.textDragDelegate = self
 		textView.textDropDelegate = self
+        
+        self.setupAutoComplete()
         
 		keyboardObserver.observe { (state) in
 			
@@ -261,7 +268,7 @@ extension TerminalView: UITextViewDelegate {
 	}
 	
 	func textViewDidChange(_ textView: UITextView) {
-				
+        updateAutoComplete()
 	}
 	
 }
