@@ -23,17 +23,17 @@ protocol AutoCompleteManagerDataSource: class {
 /// Class that takes the current command and parses it into various states of auto completion,
 /// each state with various commands that can be run.
 class AutoCompleteManager {
-    
+
     /// Various states that an auto complete manager can be in
     enum State {
-        
+
         /// The user has not entered a command yet. All commands are displayed.
         case empty(commands: [String])
-        
+
         /// The user has entered a command. A series of options are displayed.
         case command(command: String, options: [String])
     }
-    
+
     /// The current state, based on the current command.
     var state: State {
         didSet {
@@ -41,12 +41,12 @@ class AutoCompleteManager {
             delegate?.autoCompleteManagerDidChangeState()
         }
     }
-    
+
     /// The current command text entered by the user.
     var currentCommand: String = "" {
         didSet {
             guard let dataSource = self.dataSource else { return }
-            
+
             // Change the state if needed.
             let components = currentCommand.components(separatedBy: .whitespaces)
             switch self.state {
@@ -60,32 +60,32 @@ class AutoCompleteManager {
                     self.state = .empty(commands: dataSource.allCommandsForAutoCompletion())
                 }
             }
-            
+
             // Update the completions list, since the text changed.
             self.updateCompletions()
         }
     }
-    
+
     /// A set of completions to be displayed to the user. Updated when the `currentCommand` changes.
     private(set) var completions: [String] = [] {
         didSet { self.delegate?.autoCompleteManagerDidChangeCompletions() }
     }
-    
+
     /// Set this to receive notifications when state changes.
     weak var delegate: AutoCompleteManagerDelegate?
-    
+
     /// Set this to provide completions.
     weak var dataSource: AutoCompleteManagerDataSource? {
         didSet {
             self.reloadData()
         }
     }
-    
+
     /// Create a new auto complete manager. Starts in an empty state.
     init() {
         self.state = .empty(commands: [])
     }
-    
+
     /// Reload state & completions from the data source.
     private func reloadData() {
         // Update state based on information from data source.
@@ -99,10 +99,10 @@ class AutoCompleteManager {
         } else {
             self.state = .empty(commands: [])
         }
-        
+
         self.updateCompletions()
     }
-    
+
     /// Update the value of the `completions` property, based on the current command and state.
     private func updateCompletions() {
         let lastComponent = currentCommand.components(separatedBy: .whitespaces).last ?? ""
