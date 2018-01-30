@@ -27,7 +27,7 @@ extension AutoCompleteManager: InputAssistantViewDataSource {
     }
 
     func inputAssistantView(_ inputAssistantView: InputAssistantView, nameForSuggestionAtIndex index: Int) -> String {
-        return self.completions[index]
+        return self.completions[index].name
     }
 }
 

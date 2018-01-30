@@ -81,7 +81,7 @@ extension ScriptEditViewController: AutoCompleteManagerDataSource {
         return ["+ new argument"] + self.script.argumentNames
     }
 
-    func optionsForCommand(_ command: String) -> [String] {
+    func completionsForCommand(_ command: String) -> [AutoCompleteManager.Completion] {
         return []
     }
 }
@@ -90,10 +90,10 @@ extension ScriptEditViewController: InputAssistantViewDelegate {
     func inputAssistantView(_ inputAssistantView: InputAssistantView, didSelectSuggestionAtIndex index: Int) {
         let suggestion = autoCompleteManager.completions[index]
 
-        if suggestion == "+ new argument" {
+        if suggestion.name == "+ new argument" {
             textView.insertText("$<<argument>>")
         } else {
-            textView.insertText("$<<\(suggestion)>>")
+            textView.insertText("$<<\(suggestion.name)>>")
         }
     }
 }
