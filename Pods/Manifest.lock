@@ -1,12 +1,15 @@
 PODS:
+  - InputAssistant (1.0.0)
   - PanelKit (2.0.1)
 
 DEPENDENCIES:
+  - InputAssistant
   - PanelKit
 
 SPEC CHECKSUMS:
+  InputAssistant: 6815faedd20bbb76beb34a2f3b9ed5b233cf2ff9
   PanelKit: d05cecac1ab39af375b56ff21c7b5a9915a3eb5b
 
-PODFILE CHECKSUM: b93b52a6d8b843275c695a82f7b55899482e58ae
+PODFILE CHECKSUM: 75740c821181a8e3071f22b50ffa8a5f525b3092
 
 COCOAPODS: 1.4.0

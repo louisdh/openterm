@@ -9,19 +9,19 @@
 import UIKit
 
 extension UIColor {
-	
+
 	static var defaultMainTintColor: UIColor {
 		guard let defaultMainTintColor = UIColor(named: "Main Tint Color") else {
 			fatalError("Expected color, check asset catalog")
 		}
 		return defaultMainTintColor
 	}
-    
+
     static var panelBackgroundColor: UIColor {
         guard let panelBackgroundColor = UIColor(named: "Panel Background Color") else {
             fatalError("Expected color, check asset catalog")
         }
         return panelBackgroundColor
     }
-	
+
 }

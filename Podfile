@@ -7,6 +7,6 @@ target 'OpenTerm' do
   use_frameworks!
 
   pod 'PanelKit'
-
+  pod 'InputAssistant'
 end
 
