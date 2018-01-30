@@ -38,11 +38,11 @@ extension TerminalView {
 
         // Set up auto complete manager
         self.autoCompleteManager.dataSource = self
-        self.autoCompleteManager.delegate = self
+        self.autoCompleteManager.delegate = self.inputAssistantView
 
         // Set up input assistant and text view for auto completion
         self.inputAssistantView.delegate = self
-        self.inputAssistantView.dataSource = self
+        self.inputAssistantView.dataSource = self.autoCompleteManager
         self.textView.inputAccessoryView = self.inputAssistantView
 		self.inputAssistantView.tintColor = .lightGray
 
@@ -94,23 +94,19 @@ extension TerminalView {
     }
 }
 
-extension TerminalView: AutoCompleteManagerDelegate {
-    func autoCompleteManagerDidChangeState() {
-    }
-    func autoCompleteManagerDidChangeCompletions() {
-        // Completions were updated, so display them.
-        inputAssistantView.reloadData()
-    }
-}
-
 extension TerminalView: AutoCompleteManagerDataSource {
 
     func allCommandsForAutoCompletion() -> [String] {
         let allCommands = (commandsAsArray() as? [String] ?? []).sorted()
-        return allCommands + ["help", "clear"]
+        return Script.allNames + allCommands + ["help", "clear"]
     }
 
     func optionsForCommand(_ command: String) -> [String] {
+        // If command is a script, return the argument names in options form, for that script.
+        if Script.allNames.contains(command), let script = try? Script.named(command) {
+            return script.argumentNames.map { "--\($0)=" }
+        }
+        
         var options: [String] = []
 
         // Find types of command, and add files/folders in directory
@@ -176,19 +172,5 @@ extension TerminalView: InputAssistantViewDelegate {
 
         // Insert whitespace at end
         textView.insertText(" ")
-    }
-}
-
-extension TerminalView: InputAssistantViewDataSource {
-    func textForEmptySuggestionsInInputAssistantView() -> String? {
-        return nil
-    }
-
-    func numberOfSuggestionsInInputAssistantView() -> Int {
-        return autoCompleteManager.completions.count
-    }
-
-    func inputAssistantView(_ inputAssistantView: InputAssistantView, nameForSuggestionAtIndex index: Int) -> String {
-        return autoCompleteManager.completions[index]
     }
 }

@@ -35,9 +35,8 @@ class AutoCompleteManager {
     }
 
     /// The current state, based on the current command.
-    var state: State {
+    private(set) var state: State {
         didSet {
-            print("State: \(state)")
             delegate?.autoCompleteManagerDidChangeState()
         }
     }
@@ -87,7 +86,7 @@ class AutoCompleteManager {
     }
 
     /// Reload state & completions from the data source.
-    private func reloadData() {
+    func reloadData() {
         // Update state based on information from data source.
         if let dataSource = dataSource {
             switch self.state {
