@@ -60,8 +60,8 @@ class ViewController: UIViewController {
 		NotificationCenter.default.addObserver(self, selector: #selector(applicationDidEnterBackground), name: .UIApplicationDidEnterBackground, object: nil)
 
         initializeEnvironment()
-        replaceCommand("open-url", openUrl, true)
-        replaceCommand("share", shareFile, true)
+        replaceCommand("open-url", "openUrl", true)
+        replaceCommand("share", "shareFile", true)
         shareFileViewController = self // shareFile needs to know which view controller to present share sheet from
 
 	}
