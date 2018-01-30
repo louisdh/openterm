@@ -371,12 +371,6 @@ extension ViewController: TerminalViewDelegate {
         // Trim leading/trailing space
         let command = command.trimmingCharacters(in: .whitespacesAndNewlines)
 
-        // Separate in to command and arguments
-        let components = command.components(separatedBy: .whitespaces)
-        guard components.count > 0 else { return }
-        let program = components[0]
-        let args = Array(components[1..<components.endIndex])
-
         // Special case for clear
         if command == "clear" {
             terminalView.clearScreen()
@@ -391,21 +385,8 @@ extension ViewController: TerminalViewDelegate {
             terminalView.writePrompt()
             return
         }
-
-        // Special case for scripts
-        if Script.allNames.contains(program), let script = try? Script.named(program) {
-            // A script resolves to an array of commands to run. Dispatch each of those.
-            do {
-                let commands = try script.runnableCommands(withArgs: args)
-                executor.dispatch(commands)
-            } catch {
-                terminalView.writeOutput(error.localizedDescription)
-                terminalView.writePrompt()
-            }
-            return
-        }
-
-        // Default case: Dispatch the command to the executor
+        
+        // Dispatch the command to the executor
         executor.dispatch(command)
     }
 
