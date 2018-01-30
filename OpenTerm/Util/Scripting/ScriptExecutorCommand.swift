@@ -13,8 +13,9 @@ class ScriptExecutorCommand: CommandExecutorCommand {
 
     let script: Script
     let arguments: [String]
-    init(script: Script, arguments: [String]) {
-        self.script = script; self.arguments = arguments
+    let context: CommandExecutionContext
+    init(script: Script, arguments: [String], context: CommandExecutionContext) {
+        self.script = script; self.arguments = arguments; self.context = context
     }
 
     func run() throws -> ReturnCode {
@@ -22,7 +23,7 @@ class ScriptExecutorCommand: CommandExecutorCommand {
 
         var returnCode: Int32 = 0
         for command in commands {
-            let executor = CommandExecutor.executorCommand(forCommand: command)
+            let executor = CommandExecutor.executorCommand(forCommand: command, inContext: self.context)
             returnCode = try executor.run()
             if returnCode != 0 {
                 break

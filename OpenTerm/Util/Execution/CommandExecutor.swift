@@ -38,6 +38,9 @@ class CommandExecutor {
     fileprivate static let stdout_file = fdopen(CommandExecutor.stdout.fileHandleForWriting.fileDescriptor, "w")
     fileprivate static let stderr_file = fdopen(CommandExecutor.stderr.fileHandleForWriting.fileDescriptor, "w")
 
+    /// Context from commands run by this executor
+    private var context = CommandExecutionContext()
+
     init() {
         // Call the following functions when data is written to stdout/stderr.
         CommandExecutor.stdout.fileHandleForReading.readabilityHandler = self.onStdout
@@ -49,7 +52,7 @@ class CommandExecutor {
         queue.async {
             let returnCode: ReturnCode
             do {
-                let executorCommand = CommandExecutor.executorCommand(forCommand: command)
+                let executorCommand = CommandExecutor.executorCommand(forCommand: command, inContext: self.context)
                 returnCode = try executorCommand.run()
             } catch {
                 returnCode = 1
@@ -58,6 +61,9 @@ class CommandExecutor {
                     self.delegate?.commandExecutor(self, receivedStderr: error.localizedDescription)
                 }
             }
+
+            /// Save return code into the context
+            self.context[.status] = "\(returnCode)"
 
             // Wait a bit to allow final stdout/stderr to get read.
             // TODO: This should not be needed, but it seems without it, output comes in after ios_system returns.
@@ -68,7 +74,10 @@ class CommandExecutor {
     }
 
     /// Take user-entered command, decide what to do with it, then return an executor command that will do the work.
-    static func executorCommand(forCommand command: String) -> CommandExecutorCommand {
+    static func executorCommand(forCommand command: String, inContext context: CommandExecutionContext) -> CommandExecutorCommand {
+        // Apply context to the given command
+        let command = context.apply(toCommand: command)
+
         // Separate in to command and arguments
         let components = command.components(separatedBy: .whitespaces)
         guard components.count > 0 else { return EmptyExecutorCommand() }
@@ -77,7 +86,7 @@ class CommandExecutor {
 
         // Special case for scripts
         if Script.allNames.contains(program), let script = try? Script.named(program) {
-            return ScriptExecutorCommand(script: script, arguments: args)
+            return ScriptExecutorCommand(script: script, arguments: args, context: context)
         }
 
         // Default case: Just execute the string itself
