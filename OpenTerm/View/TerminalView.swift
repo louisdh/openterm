@@ -105,7 +105,7 @@ class TerminalView: UIView {
 
     // Moves the cursor to a new line, if it's not already
     func newLine() {
-        if !textView.text.hasSuffix("\n") {
+        if !textView.text.hasSuffix("\n") && !textView.text.isEmpty {
             textView.text = textView.text + "\n"
         }
         currentCommandStartIndex = textView.text.endIndex
