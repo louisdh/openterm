@@ -51,6 +51,8 @@
 	<false/>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Save photos (e.g. via the share command)</string>
 	<key>NSUbiquitousContainers</key>
 	<dict>
 		<key>iCloud.com.silverfox.Terminal</key>
