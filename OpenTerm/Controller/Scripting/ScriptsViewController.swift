@@ -30,17 +30,21 @@ class ScriptsViewController: UITableViewController {
 
 		reload()
 	}
+    
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
 
 	@objc
 	fileprivate func addScript() {
-		let alertController = UIAlertController(title: "New Script", message: "Enter the name of your new script. Must be unique.", preferredStyle: .alert)
+		let alertController = UIAlertController(title: "New Script", message: "Enter a unique name for your new script.", preferredStyle: .alert)
         alertController.addTextField { textField in
             textField.placeholder = "script_name"
             textField.autocapitalizationType = .none
             textField.autocorrectionType = .no
         }
-        alertController.addAction(UIAlertAction.init(title: "Cancel", style: .cancel, handler: nil))
-        alertController.addAction(UIAlertAction.init(title: "Create", style: .default, handler: { [unowned self] _ in
+        alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        alertController.addAction(UIAlertAction(title: "Create", style: .default, handler: { [unowned self] _ in
             guard let name = alertController.textFields?.first?.text else { return }
             Script.create(name)
             self.reload()
@@ -81,7 +85,7 @@ extension ScriptsViewController {
 extension ScriptsViewController: PanelContentDelegate {
 
 	var rightBarButtonItems: [UIBarButtonItem] {
-		return [UIBarButtonItem.init(barButtonSystemItem: .add, target: self, action: #selector(addScript))]
+		return [UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addScript))]
 	}
 
 	var preferredPanelContentSize: CGSize {

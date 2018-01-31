@@ -30,7 +30,7 @@ class CommandExecutor {
     weak var delegate: CommandExecutorDelegate?
 
     /// Dispatch queue to serially run commands on.
-    private let queue = DispatchQueue.init(label: "CommandExecutor", qos: .userInteractive)
+    private let queue = DispatchQueue(label: "CommandExecutor", qos: .userInteractive)
 
     // Create new pipes for our own stdout/stderr
     private let stdout = Pipe()
@@ -99,7 +99,7 @@ class CommandExecutor {
 
     // Called when the stdout file handle is written to
     private func onStdout(_ stdout: FileHandle) {
-        guard let str = String.init(data: stdout.availableData, encoding: .utf8), !str.isEmpty else { return }
+        guard let str = String(data: stdout.availableData, encoding: .utf8), !str.isEmpty else { return }
         DispatchQueue.main.async {
             self.delegate?.commandExecutor(self, receivedStdout: str)
         }
@@ -107,7 +107,7 @@ class CommandExecutor {
 
     // Called when the stderr file handle is written to
     private func onStderr(_ stderr: FileHandle) {
-        guard let str = String.init(data: stderr.availableData, encoding: .utf8), !str.isEmpty else { return }
+        guard let str = String(data: stderr.availableData, encoding: .utf8), !str.isEmpty else { return }
         DispatchQueue.main.async {
             self.delegate?.commandExecutor(self, receivedStderr: str)
         }

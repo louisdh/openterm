@@ -39,7 +39,7 @@ class Script {
 	/// Replace argument templates with argument values
 	func runnableCommands(withArgs args: [String]) throws -> [String] {
         // Step 1: Parse arguments from "--argname=value" to dictionary ["argname": "value"]
-        let argDict: [String: String] = Dictionary.init(uniqueKeysWithValues: args.flatMap({ arg in
+        let argDict: [String: String] = Dictionary(uniqueKeysWithValues: args.flatMap({ arg in
             let components = arg.components(separatedBy: "=")
             guard let name = components.first, let value = components.last else { return nil }
             return (name.replacingOccurrences(of: "--", with: ""), value)
@@ -65,10 +65,10 @@ class Script {
 
 	/// The names of the arguments, unique, and sorted by name
 	var argumentNames: [String] {
-		let matches = Script.argumentRegex.matches(in: value, options: [], range: NSRange.init(location: 0, length: value.count))
+		let matches = Script.argumentRegex.matches(in: value, options: [], range: NSRange(location: 0, length: value.count))
 		return Set(matches.flatMap { result in
 			let match = result.range(at: 1)
-			if let range = Range.init(match, in: value) {
+			if let range = Range(match, in: value) {
 				return String(value[range])
 			}
 			return nil
@@ -88,12 +88,12 @@ class Script {
 		}
 	}
 
-	static let argumentRegex = try! NSRegularExpression.init(pattern: "\\$<<(\\w+)>>", options: [])
+	static let argumentRegex = try! NSRegularExpression(pattern: "\\$<<(\\w+)>>", options: [])
 
 	/// Load the script with the given name from disk.
 	static func named(_ name: String) throws -> Script {
 		let scriptFile = scriptsDir.appendingPathComponent(name)
-		let value = try String.init(contentsOf: scriptFile)
+		let value = try String(contentsOf: scriptFile)
 		return Script(name: name, value: value)
 	}
 
