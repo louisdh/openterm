@@ -142,91 +142,56 @@ class SettingsViewController: UITableViewController {
 
 		tableView.deselectRow(at: indexPath, animated: true)
 
-        if indexPath.section == 1 {
+		switch indexPath.section {
+		case 1:
+			// Section 1: Appearance
+			let storyboard = UIStoryboard(name: "Main", bundle: nil)
+			let colorPickerViewController = storyboard.instantiateViewController(withIdentifier: "ColorPickerViewController") as! ColorPickerViewController
 
-            let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            let colorPickerViewController = storyboard.instantiateViewController(withIdentifier: "ColorPickerViewController") as! ColorPickerViewController
+			let setColor: (UIColor) -> Void
+			switch indexPath.row {
+			case 1: setColor = { UserDefaultsController.shared.terminalTextColor = $0 }
+			case 2: setColor = { UserDefaultsController.shared.terminalBackgroundColor = $0 }
+			default: return
+			}
 
-            if indexPath.row == 1 {
+			colorPickerViewController.didSelectCallback = { color in
 
-				colorPickerViewController.didSelectCallback = { color in
+				setColor(color)
 
-					UserDefaultsController.shared.terminalTextColor = color
-
-					NotificationCenter.default.post(name: .appearanceDidChange, object: nil)
-
-				}
-
-                navigationController?.pushViewController(colorPickerViewController, animated: true)
-
-            }
-
-            if indexPath.row == 2 {
-
-				colorPickerViewController.didSelectCallback = { color in
-
-					UserDefaultsController.shared.terminalBackgroundColor = color
-
-					NotificationCenter.default.post(name: .appearanceDidChange, object: nil)
-
-				}
-				navigationController?.pushViewController(colorPickerViewController, animated: true)
-
-            }
-
-        }
-
-		if indexPath.section == 2 {
-
-			if indexPath.row == 0 {
-
-				if let url = URL(string: "https://github.com/louisdh/terminal") {
-					UIApplication.shared.open((url), options: [:], completionHandler: nil)
-				}
+				NotificationCenter.default.post(name: .appearanceDidChange, object: nil)
 
 			}
 
-			if indexPath.row == 1 {
-
-				if let url = URL(string: "https://github.com/holzschu/ios_system") {
-					UIApplication.shared.open((url), options: [:], completionHandler: nil)
-				}
-
+			navigationController?.pushViewController(colorPickerViewController, animated: true)
+		case 2:
+			// Section 2: Open source
+			let url: String
+			switch indexPath.row {
+			case 0: url = "https://github.com/louisdh/terminal"
+			case 1: url = "https://github.com/holzschu/ios_system"
+			case 2: url = "https://github.com/louisdh/panelkit"
+			case 3: url = "https://github.com/IMcD23/InputAssistant"
+			default: return
 			}
 
-			if indexPath.row == 2 {
-
-				if let url = URL(string: "https://github.com/louisdh/panelkit") {
-					UIApplication.shared.open((url), options: [:], completionHandler: nil)
-				}
-
+			if let url = URL(string: url) {
+				UIApplication.shared.open((url), options: [:], completionHandler: nil)
 			}
-
-		}
-
-		if indexPath.section == 3 {
-
-			if indexPath.row == 0 {
-
+		case 3:
+			// Section 3: Links
+			let url: String?
+			switch indexPath.row {
+			case 0:
+				// Review on App Store
 				let appId = "1323205755"
-
-				let urlString = "itms-apps://itunes.apple.com/us/app/terminal/id\(appId)?action=write-review"
-
-				if let url = URL(string: urlString) {
-					UIApplication.shared.open((url), options: [:], completionHandler: nil)
-				}
-
-			}
-
-			if indexPath.row == 1 {
-
-				if let url = URL(string: "https://twitter.com/LouisDhauwe") {
-					UIApplication.shared.open((url), options: [:], completionHandler: nil)
-				}
-
-			}
-
-			if indexPath.row == 2 {
+				url = "itms-apps://itunes.apple.com/us/app/terminal/id\(appId)?action=write-review"
+			case 1:
+				// Twitter
+				url = "https://twitter.com/LouisDhauwe"
+			case 2:
+				// Contact Us
+				url = nil
 
 				if MFMailComposeViewController.canSendMail() {
 
@@ -238,9 +203,13 @@ class SettingsViewController: UITableViewController {
 					self.showSendMailErrorAlert()
 
 				}
-
+			default: return
 			}
-
+			
+			if let urlString = url, let url = URL(string: urlString) {
+				UIApplication.shared.open((url), options: [:], completionHandler: nil)
+			}
+		default: return
 		}
 
 	}
@@ -280,7 +249,7 @@ class SettingsViewController: UITableViewController {
 		if let e = error?.localizedDescription {
 			errorMsg = e
 		} else {
-			errorMsg = "Email could not be send. Please check your email configuration and try again."
+			errorMsg = "Email could not be sent. Please check your email configuration and try again."
 		}
 
 		let alert = UIAlertController(title: "Could not send email", message: errorMsg, preferredStyle: .alert)

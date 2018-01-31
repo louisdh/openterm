@@ -9,12 +9,6 @@
 import UIKit
 import InputAssistant
 
-protocol TerminalProcessor: class {
-
-    func process(command: String, completion: @escaping (String) -> Void)
-
-}
-
 protocol TerminalViewDelegate: class {
 
 	func didEnterCommand(_ command: String)
@@ -25,7 +19,7 @@ protocol TerminalViewDelegate: class {
 class TerminalView: UIView {
 
 	let deviceName = UIDevice.current.name
-	let textView = UITextView()
+	let textView = TerminalTextView()
     let inputAssistantView = InputAssistantView()
     let autoCompleteManager = AutoCompleteManager()
 
@@ -34,8 +28,6 @@ class TerminalView: UIView {
     var currentCommandStartIndex: String.Index! {
         didSet { self.updateAutoComplete() }
     }
-
-	weak var processor: TerminalProcessor?
 
 	weak var delegate: TerminalViewDelegate?
 
@@ -72,22 +64,12 @@ class TerminalView: UIView {
 
 		textView.delegate = self
 
-		textView.text = "\(deviceName): "
-
-		currentCommandStartIndex = textView.text.endIndex
-
-		textView.autocorrectionType = .no
-		textView.smartDashesType = .no
-		textView.smartQuotesType = .no
-		textView.autocapitalizationType = .none
-		textView.spellCheckingType = .no
-
-		textView.indicatorStyle = .white
+		self.writePrompt()
 
 		textView.textDragDelegate = self
 		textView.textDropDelegate = self
 
-        self.setupAutoComplete()
+		self.setupAutoComplete()
 
 		keyboardObserver.observe { (state) in
 
@@ -102,50 +84,37 @@ class TerminalView: UIView {
 
 		}
 
-        updateAppearanceFromSettings()
-
-        NotificationCenter.default.addObserver(self, selector: #selector(self.updateAppearanceFromSettingsAnimated), name: .appearanceDidChange, object: nil)
-
 	}
 
-    @objc
-	func updateAppearanceFromSettingsAnimated() {
-
-		UIView.animate(withDuration: 0.35) {
-
-			self.updateAppearanceFromSettings()
-
-		}
-
+    // Display a prompt at the beginning of the line.
+    func writePrompt() {
+        newLine()
+        textView.text = textView.text + "\(deviceName): "
+        currentCommandStartIndex = textView.text.endIndex
     }
 
-	func updateAppearanceFromSettings() {
+    // Appends the given string to the output, and updates the command start index.
+    func writeOutput(_ string: String) {
+        var string = string
+        if !string.hasSuffix("\n") {
+            string += "\n"
+        }
+        textView.text = textView.text + string
+        currentCommandStartIndex = textView.text.endIndex
+    }
 
-		let userDefaultsController = UserDefaultsController.shared
+    // Moves the cursor to a new line, if it's not already
+    func newLine() {
+        if !textView.text.hasSuffix("\n") && !textView.text.isEmpty {
+            textView.text = textView.text + "\n"
+        }
+        currentCommandStartIndex = textView.text.endIndex
+    }
 
-		let terminalFontSize = userDefaultsController.terminalFontSize
-		self.textView.font = UIFont(name: "Menlo", size: CGFloat(terminalFontSize))
-
-		let terminaltextColor = userDefaultsController.terminalTextColor
-		self.textView.textColor = terminaltextColor
-		self.textView.tintColor = terminaltextColor
-
-		self.textView.backgroundColor = userDefaultsController.terminalBackgroundColor
-
-		if userDefaultsController.userDarkKeyboardInTerminal {
-			textView.keyboardAppearance = .dark
-		} else {
-			textView.keyboardAppearance = .light
-		}
-
-	}
-
+    // Clears the contents of the screen, resetting the terminal.
 	func clearScreen() {
-
 		currentCommandStartIndex = nil
-		textView.text = "\(deviceName): "
-		currentCommandStartIndex = textView.text.endIndex
-
+		textView.text = ""
 	}
 
 	@discardableResult
@@ -156,7 +125,7 @@ class TerminalView: UIView {
 	var currentCommand: String {
 		get {
 
-			guard let currentCommandStartIndex = currentCommandStartIndex else {
+			guard let currentCommandStartIndex = currentCommandStartIndex, currentCommandStartIndex <= textView.text.endIndex else {
 				return ""
 			}
 
@@ -166,7 +135,7 @@ class TerminalView: UIView {
 		}
 		set {
 
-			if let currentCommandStartIndex = currentCommandStartIndex {
+			if let currentCommandStartIndex = currentCommandStartIndex, currentCommandStartIndex <= textView.text.endIndex {
 				let currentCmdRange = currentCommandStartIndex..<textView.text.endIndex
 				textView.text.replaceSubrange(currentCmdRange, with: "")
 			}
@@ -220,46 +189,14 @@ extension TerminalView: UITextViewDelegate {
 
 		if text == "\n" {
 
-			if let processor = processor {
-
-				let input = textView.text[currentCommandStartIndex..<textView.text.endIndex]
-
-				if !input.isEmpty {
-					delegate?.didEnterCommand(String(input))
-				}
-
-				if input.trimmingCharacters(in: .whitespacesAndNewlines) == "clear" {
-
-					clearScreen()
-
-					return false
-
-				} else {
-
-					self.isWaitingForCommand = true
-
-                    processor.process(command: String(input), completion: { output in
-
-						self.isWaitingForCommand = false
-
-                        let outputParsed = output.replacingOccurrences(of: DocumentManager.shared.activeDocumentsFolderURL.path, with: "~")
-                        // Sometimes, fileManager adds /private in front of the directory
-                        let outputParsed2 = outputParsed.replacingOccurrences(of: "/private", with: "")
-                        if !outputParsed2.isEmpty {
-                            textView.text = textView.text + "\n\(outputParsed2)"
-                        }
-
-                        textView.text = textView.text + "\n\(self.deviceName): "
-                        self.currentCommandStartIndex = textView.text.endIndex
-
-                    })
-					return false
-				}
-
-			}
-
-			textView.text = textView.text + "\n\(deviceName): "
-			currentCommandStartIndex = textView.text.endIndex
+            let input = textView.text[currentCommandStartIndex..<textView.text.endIndex]
+            
+            if input.isEmpty {
+                writePrompt()
+            } else {
+                newLine()
+                delegate?.didEnterCommand(String(input))
+            }
 			return false
 		}
 
@@ -270,12 +207,4 @@ extension TerminalView: UITextViewDelegate {
         updateAutoComplete()
 	}
 
-}
-
-extension TerminalView {
-    func clearBuffer() {
-        currentCommandStartIndex = nil
-        textView.text = "\(deviceName): "
-        currentCommandStartIndex = textView.text.endIndex
-    }
 }

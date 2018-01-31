@@ -28,6 +28,9 @@ class HistoryViewController: UIViewController {
 		self.view.tintColor = .defaultMainTintColor
 		self.navigationController?.navigationBar.barStyle = .blackTranslucent
 
+		// Remove separators beyond content
+		self.tableView.tableFooterView = UIView()
+
 		tableView.dataSource = self
 		tableView.delegate = self
 
