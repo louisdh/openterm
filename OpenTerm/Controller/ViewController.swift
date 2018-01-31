@@ -69,6 +69,8 @@ class ViewController: UIViewController {
         initializeEnvironment()
         replaceCommand("open-url", openUrl, true)
         replaceCommand("share", shareFile, true)
+        replaceCommand("pbcopy", pbcopy, true)
+        replaceCommand("pbpaste", pbpaste, true)
         shareFileViewController = self // shareFile needs to know which view controller to present share sheet from
 
 		setSSLCertIfNeeded()
