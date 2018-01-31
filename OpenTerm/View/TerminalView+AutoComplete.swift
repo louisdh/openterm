@@ -56,6 +56,8 @@ extension TerminalView {
 
         // Disable built-in autocomplete
         textView.autocorrectionType = .no
+
+        NotificationCenter.default.addObserver(self, selector: #selector(historyDidChange), name: .historyDidChange, object: nil)
     }
 
     /// Updates auto complete when current command changes
@@ -66,6 +68,10 @@ extension TerminalView {
     /// Dismiss the keyboard when the down arrow is tapped
     @objc private func downTapped() {
         textView.resignFirstResponder()
+    }
+
+    @objc private func historyDidChange() {
+        autoCompleteManager.reloadData()
     }
 
     /// Construct an image for the down arrow.
@@ -107,7 +113,8 @@ extension TerminalView: AutoCompleteManagerDataSource {
 
     func allCommandsForAutoCompletion() -> [String] {
         let allCommands = (commandsAsArray() as? [String] ?? []).sorted()
-        return allCommands + ["help", "clear"]
+        let recentHistory = uniqueItemsInRecentHistory()
+        return recentHistory + allCommands + ["help", "clear"]
     }
 
     func optionsForCommand(_ command: String) -> [String] {
@@ -132,13 +139,25 @@ extension TerminalView: AutoCompleteManagerDataSource {
         return options
     }
 
+    private func uniqueItemsInRecentHistory() -> [String] {
+        let recents = Array(HistoryManager.history.prefix(4))
+        var seen = Set<String>()
+        return recents.filter { recent in
+            if seen.contains(recent) {
+                return false
+            }
+            seen.insert(recent)
+            return true
+        }
+    }
+
     // Get the names of files/folders in the current working directory.
     private func itemsInCurrentDirectory(showFolders: Bool, showFiles: Bool) -> [String] {
         if !showFolders && !showFiles { return [] }
 
         let fileManager = DocumentManager.shared.fileManager
         do {
-            let contents = try fileManager.contentsOfDirectory(at: URL(fileURLWithPath: fileManager.currentDirectoryPath), includingPropertiesForKeys: [.isDirectoryKey], options: [])
+            let contents = try fileManager.contentsOfDirectory(at: URL(fileURLWithPath: fileManager.currentDirectoryPath), includingPropertiesForKeys: [.isDirectoryKey], options: .skipsHiddenFiles)
             let files = try contents.filter { url in
                 let resourceValues = try url.resourceValues(forKeys: [.isDirectoryKey])
                 let isDirectory = resourceValues.isDirectory ?? false
