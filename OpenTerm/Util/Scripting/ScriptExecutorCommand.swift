@@ -18,13 +18,13 @@ class ScriptExecutorCommand: CommandExecutorCommand {
         self.script = script; self.arguments = arguments; self.context = context
     }
 
-    func run() throws -> ReturnCode {
+    func run(forExecutor executor: CommandExecutor) throws -> ReturnCode {
         let commands = try script.runnableCommands(withArgs: self.arguments)
 
         var returnCode: Int32 = 0
         for command in commands {
-            let executor = CommandExecutor.executorCommand(forCommand: command, inContext: self.context)
-            returnCode = try executor.run()
+            // Run the executor command
+            returnCode = try executor.executorCommand(forCommand: command, inContext: self.context).run(forExecutor: executor)
             if returnCode != 0 {
                 break
             }

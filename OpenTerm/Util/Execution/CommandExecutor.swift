@@ -20,7 +20,7 @@ typealias ReturnCode = Int32
 
 protocol CommandExecutorCommand {
     // Run the command
-    func run() throws -> ReturnCode
+    func run(forExecutor executor: CommandExecutor) throws -> ReturnCode
 }
 
 /// Utility that executes commands serially to ios_system.
@@ -33,18 +33,22 @@ class CommandExecutor {
     private let queue = DispatchQueue.init(label: "CommandExecutor", qos: .userInteractive)
 
     // Create new pipes for our own stdout/stderr
-    private static let stdout = Pipe()
-    private static let stderr = Pipe()
-    fileprivate static let stdout_file = fdopen(CommandExecutor.stdout.fileHandleForWriting.fileDescriptor, "w")
-    fileprivate static let stderr_file = fdopen(CommandExecutor.stderr.fileHandleForWriting.fileDescriptor, "w")
+    private let stdout = Pipe()
+    private let stderr = Pipe()
+    fileprivate let stdout_file: UnsafeMutablePointer<FILE>?
+    fileprivate let stderr_file: UnsafeMutablePointer<FILE>?
 
     /// Context from commands run by this executor
     private var context = CommandExecutionContext()
 
     init() {
+        // Get file for stdout/stderr that can be written to
+        stdout_file = fdopen(stdout.fileHandleForWriting.fileDescriptor, "w")
+        stderr_file = fdopen(stderr.fileHandleForWriting.fileDescriptor, "w")
+
         // Call the following functions when data is written to stdout/stderr.
-        CommandExecutor.stdout.fileHandleForReading.readabilityHandler = self.onStdout
-        CommandExecutor.stderr.fileHandleForReading.readabilityHandler = self.onStderr
+        stdout.fileHandleForReading.readabilityHandler = self.onStdout
+        stderr.fileHandleForReading.readabilityHandler = self.onStderr
     }
 
     // Dispatch a new text-based command to execute.
@@ -52,8 +56,8 @@ class CommandExecutor {
         queue.async {
             let returnCode: ReturnCode
             do {
-                let executorCommand = CommandExecutor.executorCommand(forCommand: command, inContext: self.context)
-                returnCode = try executorCommand.run()
+                let executorCommand = self.executorCommand(forCommand: command, inContext: self.context)
+                returnCode = try executorCommand.run(forExecutor: self)
             } catch {
                 returnCode = 1
                 // If an error was thrown while running, send it to the stderr
@@ -74,7 +78,7 @@ class CommandExecutor {
     }
 
     /// Take user-entered command, decide what to do with it, then return an executor command that will do the work.
-    static func executorCommand(forCommand command: String, inContext context: CommandExecutionContext) -> CommandExecutorCommand {
+    func executorCommand(forCommand command: String, inContext context: CommandExecutionContext) -> CommandExecutorCommand {
         // Apply context to the given command
         let command = context.apply(toCommand: command)
 
@@ -115,23 +119,25 @@ struct SystemExecutorCommand: CommandExecutorCommand {
 
     let command: String
 
-    func run() throws -> ReturnCode {
+    func run(forExecutor executor: CommandExecutor) throws -> ReturnCode {
         // Set the stdout/stderr of the thread to the custom stdout/stderr.
-        thread_stdout = CommandExecutor.stdout_file
-        thread_stderr = CommandExecutor.stderr_file
+        thread_stdout = executor.stdout_file
+        thread_stderr = executor.stderr_file
 
         // Pass the value of the string to system, return its exit code.
         let returnCode = ios_system(command.utf8CString)
+        
         // Flush stdout and stderr before returning, so all output is finished before marking command as complete.
-        fflush(CommandExecutor.stdout_file)
-        fflush(CommandExecutor.stderr_file)
+        fflush(executor.stdout_file)
+        fflush(executor.stderr_file)
+
         return returnCode
     }
 }
 
 /// No-op command to run.
 struct EmptyExecutorCommand: CommandExecutorCommand {
-    func run() throws -> ReturnCode {
+    func run(forExecutor executor: CommandExecutor) throws -> ReturnCode {
         return 0
     }
 }
