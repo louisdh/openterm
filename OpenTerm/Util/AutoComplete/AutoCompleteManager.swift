@@ -17,12 +17,27 @@ protocol AutoCompleteManagerDelegate: class {
 /// Provide commands to the completion manager
 protocol AutoCompleteManagerDataSource: class {
     func allCommandsForAutoCompletion() -> [String]
-    func optionsForCommand(_ command: String) -> [String]
+    func completionsForCommand(_ command: String) -> [AutoCompleteManager.Completion]
 }
 
 /// Class that takes the current command and parses it into various states of auto completion,
 /// each state with various commands that can be run.
 class AutoCompleteManager {
+
+    struct Completion {
+        /// Display name for the completion
+        let name: String
+
+        /// If standalone, a whitespace character will be inserted after the completion.
+        let isStandalone: Bool
+
+        init(_ name: String) {
+            self.init(name, isStandalone: true)
+        }
+        init(_ name: String, isStandalone: Bool) {
+            self.name = name; self.isStandalone = isStandalone;
+        }
+    }
 
     /// Various states that an auto complete manager can be in
     enum State {
@@ -31,13 +46,12 @@ class AutoCompleteManager {
         case empty(commands: [String])
 
         /// The user has entered a command. A series of options are displayed.
-        case command(command: String, options: [String])
+        case command(command: String, completions: [Completion])
     }
 
     /// The current state, based on the current command.
-    var state: State {
+    private(set) var state: State {
         didSet {
-            print("State: \(state)")
             delegate?.autoCompleteManagerDidChangeState()
         }
     }
@@ -53,7 +67,7 @@ class AutoCompleteManager {
             case .empty:
                 // If we're currently in an empty state, and find that a command + " " has been entered, enter the command state.
                 if let command = components.first, components.count > 1 {
-                    self.state = .command(command: command, options: dataSource.optionsForCommand(command))
+                    self.state = .command(command: command, completions: dataSource.completionsForCommand(command))
                 }
             case .command:
                 if components.count <= 1 {
@@ -67,7 +81,7 @@ class AutoCompleteManager {
     }
 
     /// A set of completions to be displayed to the user. Updated when the `currentCommand` changes.
-    private(set) var completions: [String] = [] {
+    private(set) var completions: [Completion] = [] {
         didSet { self.delegate?.autoCompleteManagerDidChangeCompletions() }
     }
 
@@ -87,14 +101,14 @@ class AutoCompleteManager {
     }
 
     /// Reload state & completions from the data source.
-    private func reloadData() {
+    func reloadData() {
         // Update state based on information from data source.
         if let dataSource = dataSource {
             switch self.state {
             case .empty:
                 self.state = .empty(commands: dataSource.allCommandsForAutoCompletion())
             case .command(let command, _):
-                self.state = .command(command: command, options: dataSource.optionsForCommand(command))
+                self.state = .command(command: command, completions: dataSource.completionsForCommand(command))
             }
         } else {
             self.state = .empty(commands: [])
@@ -108,9 +122,9 @@ class AutoCompleteManager {
         let lastComponent = currentCommand.components(separatedBy: .whitespaces).last ?? ""
         switch state {
         case .empty(let commands):
-            self.completions = commands.filter { $0.hasPrefix(lastComponent) }
+            self.completions = commands.filter { $0 != lastComponent && $0.hasPrefix(lastComponent) }.map { Completion($0) }
         case .command(_, let options):
-            self.completions = options.filter { $0.hasPrefix(lastComponent) }
+            self.completions = options.filter { $0.name != lastComponent && $0.name.hasPrefix(lastComponent) }
         }
     }
 }

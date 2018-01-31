@@ -39,6 +39,11 @@ class ViewController: UIViewController {
 	var historyViewController: HistoryViewController!
 	var historyPanelViewController: PanelViewController!
 
+	var scriptsViewController: ScriptsViewController!
+	var scriptsPanelViewController: PanelViewController!
+
+    let executor = CommandExecutor()
+
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
@@ -48,12 +53,14 @@ class ViewController: UIViewController {
 
 		historyPanelViewController = PanelViewController(with: historyViewController, in: self)
 
-		terminalView.processor = self
+		scriptsViewController = storyboard.instantiateViewController(withIdentifier: "ScriptsViewController") as! ScriptsViewController
+		scriptsPanelViewController = PanelViewController(with: scriptsViewController, in: self)
+
+        executor.delegate = self
+
 		terminalView.delegate = self
 
 		updateTitle()
-		setStdOut()
-		setStdErr()
 
 		NotificationCenter.default.addObserver(self, selector: #selector(didDismissKeyboard), name: .UIKeyboardDidHide, object: nil)
 
@@ -192,6 +199,16 @@ class ViewController: UIViewController {
 
 	}
 
+	@IBAction func showScripts(_ sender: UIBarButtonItem) {
+
+		scriptsPanelViewController.modalPresentationStyle = .popover
+		scriptsPanelViewController.popoverPresentationController?.barButtonItem = sender
+
+		scriptsPanelViewController.popoverPresentationController?.backgroundColor = scriptsViewController.view.backgroundColor
+		present(scriptsPanelViewController, animated: true, completion: nil)
+
+	}
+
 	func availableCommands() -> [String] {
 
         let commands = String(commandsAsString())
@@ -221,49 +238,6 @@ class ViewController: UIViewController {
 
 		print(availableCommands().joined(separator: "\n"))
 
-	}
-
-	func setStdOut() {
-
-		let fileManager = DocumentManager.shared.fileManager
-		let filePath = NSTemporaryDirectory().appending("out.txt")
-
-		try? fileManager.removeItem(atPath: filePath)
-
-		if !fileManager.fileExists(atPath: filePath) {
-			fileManager.createFile(atPath: filePath, contents: nil, attributes: nil)
-		}
-
-		freopen(filePath.toCString(), "a+", stdout)
-
-	}
-
-	func setStdErr() {
-
-		let fileManager = DocumentManager.shared.fileManager
-		let filePath = NSTemporaryDirectory().appending("err.txt")
-
-		try? fileManager.removeItem(atPath: filePath)
-
-		if !fileManager.fileExists(atPath: filePath) {
-			fileManager.createFile(atPath: filePath, contents: nil, attributes: nil)
-		}
-
-		freopen(filePath.toCString(), "a+", stderr)
-
-	}
-
-	func readFile(_ file: UnsafeMutablePointer<FILE>) {
-		let bufsize = 4096
-		let buffer = [CChar](repeating: 0, count: bufsize)
-
-		let buf = UnsafeMutablePointer(mutating: buffer)
-
-		while (fgets(buf, Int32(bufsize-1), file) != nil) {
-			let out = String(cString: buf)
-			print(out)
-		}
-		buf.deinitialize()
 	}
 
 	func updateTitle() {
@@ -304,7 +278,8 @@ class ViewController: UIViewController {
 	}
 
     @objc func clearBufferCommand() {
-        terminalView.clearBuffer()
+        terminalView.clearScreen()
+        terminalView.writePrompt()
     }
 
 //    @objc func selectCommandHome() {
@@ -358,6 +333,29 @@ extension ViewController: UIDocumentPickerDelegate {
 
 }
 
+extension ViewController: CommandExecutorDelegate {
+
+    func commandExecutor(_ commandExecutor: CommandExecutor, receivedStdout stdout: String) {
+        terminalView.writeOutput(sanitizeOutput(stdout))
+    }
+    func commandExecutor(_ commandExecutor: CommandExecutor, receivedStderr stderr: String) {
+        terminalView.writeOutput(sanitizeOutput(stderr))
+    }
+    func commandExecutor(_ commandExecutor: CommandExecutor, didFinishDispatchWithExitCode exitCode: Int32) {
+        terminalView.writePrompt()
+        updateTitle()
+    }
+
+    private func sanitizeOutput(_ output: String) -> String {
+        var output = output
+        // Replace $HOME with "~"
+        output = output.replacingOccurrences(of: DocumentManager.shared.activeDocumentsFolderURL.path, with: "~")
+        // Sometimes, fileManager adds /private in front of the directory
+        output = output.replacingOccurrences(of: "/private", with: "")
+        return output
+    }
+}
+
 extension ViewController: TerminalViewDelegate {
 
 	func didEnterCommand(_ command: String) {
@@ -365,7 +363,32 @@ extension ViewController: TerminalViewDelegate {
 		historyViewController.addCommand(command)
 		commandIndex = 0
 
+        processCommand(command)
 	}
+
+    private func processCommand(_ command: String) {
+
+        // Trim leading/trailing space
+        let command = command.trimmingCharacters(in: .whitespacesAndNewlines)
+
+        // Special case for clear
+        if command == "clear" {
+            terminalView.clearScreen()
+            terminalView.writePrompt()
+            return
+        }
+
+        // Special case for help
+        if command == "help" || command == "?" {
+            let commands = availableCommands().joined(separator: ", ")
+            terminalView.writeOutput(commands)
+            terminalView.writePrompt()
+            return
+        }
+        
+        // Dispatch the command to the executor
+        executor.dispatch(command)
+    }
 
 }
 
@@ -382,7 +405,7 @@ extension ViewController: HistoryViewControllerDelegate {
 extension ViewController: PanelManager {
 
 	var panels: [PanelViewController] {
-		return [historyPanelViewController]
+		return [historyPanelViewController, scriptsPanelViewController]
 	}
 
 	var panelContentWrapperView: UIView {
@@ -445,52 +468,4 @@ extension ViewController {
 
 	}
 
-}
-
-extension ViewController: TerminalProcessor {
-
-    func process(command: String, completion: @escaping (String) -> Void) {
-
-		let command = command.trimmingCharacters(in: .whitespacesAndNewlines)
-		
-		let fileManager = DocumentManager.shared.fileManager
-
-		if command == "help" || command == "?" {
-            completion(availableCommands().joined(separator: ", "))
-			return
-		}
-
-        setStdOut()
-        setStdErr()
-
-        DispatchQueue.global(qos: .default).async {
-            let returnCode = ios_system(command.utf8CString)
-
-            DispatchQueue.main.async {
-                self.updateTitle()
-
-                self.readFile(stdout)
-                self.readFile(stderr)
-
-                // when there are both stdout and stderr results we prefer stdout when return code
-                // indicates no error (zero)
-                let errFilePath = NSTemporaryDirectory().appending("err.txt")
-                let stdFilePath = NSTemporaryDirectory().appending("out.txt")
-                let paths = returnCode == 0 ? [stdFilePath, errFilePath] : [errFilePath, stdFilePath]
-
-                for path in paths {
-                    if let data = fileManager.contents(atPath: path) {
-                        if let str = String(data: data, encoding: .utf8) {
-                            if !str.isEmpty {
-                                completion(str)
-                                return
-                            }
-                        }
-                    }
-                }
-
-                completion("")
-            }
-        }
-	}
 }

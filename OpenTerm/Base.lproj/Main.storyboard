@@ -64,6 +64,11 @@
                                     <action selector="openFolder:" destination="BYZ-38-t0r" id="zGA-4q-tGD"/>
                                 </connections>
                             </barButtonItem>
+                            <barButtonItem systemItem="compose" id="8oj-SI-eX7">
+                                <connections>
+                                    <action selector="showScripts:" destination="BYZ-38-t0r" id="ui6-0d-Vo6"/>
+                                </connections>
+                            </barButtonItem>
                         </rightBarButtonItems>
                     </navigationItem>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" barStyle="black" prompted="NO"/>
@@ -539,6 +544,47 @@ This project uses the open source ios_system project by Nicolas Holzschuch. This
                 <placeholder placeholderIdentifier="IBFirstResponder" id="0lK-jA-c4A" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="479" y="909"/>
+        </scene>
+        <!--Scripts-->
+        <scene sceneID="Lu9-3r-2Ro">
+            <objects>
+                <tableViewController storyboardIdentifier="ScriptsViewController" id="9AK-0c-p31" customClass="ScriptsViewController" customModule="OpenTerm" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="bin-oB-viz">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" name="Panel Background Color"/>
+                        <color key="separatorColor" white="0.16213727680000001" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="ScriptCell" textLabel="3Fb-vg-hd2" style="IBUITableViewCellStyleDefault" id="lCg-Nk-zL3">
+                                <rect key="frame" x="0.0" y="28" width="375" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="lCg-Nk-zL3" id="eek-jL-6Hu">
+                                    <rect key="frame" x="0.0" y="0.0" width="341" height="43.5"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="3Fb-vg-hd2">
+                                            <rect key="frame" x="16" y="0.0" width="324" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                </tableViewCellContentView>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="9AK-0c-p31" id="tPJ-22-kKT"/>
+                            <outlet property="delegate" destination="9AK-0c-p31" id="mXk-8q-jlF"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="Scripts" id="qUx-6l-a2N"/>
+                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" barStyle="black" prompted="NO"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Xoy-Rx-17A" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2337" y="134"/>
         </scene>
     </scenes>
     <resources>
