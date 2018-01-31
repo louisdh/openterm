@@ -65,7 +65,7 @@ where standard input is url encoded and appended to url.
 
 For x-callback-url's the command does not terminate until either x-success or x-error has been called and these parameters are automatically appended to the url.
 
-""", stderr)
+""", thread_stderr)
         return 1
     }
 
