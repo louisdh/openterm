@@ -60,6 +60,7 @@ class ViewController: UIViewController {
 		NotificationCenter.default.addObserver(self, selector: #selector(applicationDidEnterBackground), name: .UIApplicationDidEnterBackground, object: nil)
 
         initializeEnvironment()
+        // mangled names for dlsym(), use swift-demangle to check, nm to get.
         replaceCommand("open-url", "_T08OpenTerm7openUrls5Int32VAD4argc_SpySpys4Int8VGSgGSg4argvtF", true)
         replaceCommand("share", "_T08OpenTerm9shareFiles5Int32VAD4argc_SpySpys4Int8VGSgGSg4argvtF", true)
         shareFileViewController = self // shareFile needs to know which view controller to present share sheet from
