@@ -8,7 +8,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <errno.h>
-#include "libssh2.h"
+#include <libssh2/libssh2.h>
 #include <sys/fcntl.h>
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -65,7 +65,7 @@ static int ssh_verify_host(char* addr, LIBSSH2_SESSION* _session, char* hostname
     if (getenv("SSH_HOME")) strcpy(path, getenv("SSH_HOME"));
     else sprintf(path, "%s/Documents/", getenv("HOME"));
     char khFilePath[PATH_MAX];
-    // known_hosts is shared with Blink
+    // known_hosts: same location as Blink, for compatibility
     sprintf(khFilePath, "%s/known_hosts", path);
     libssh2_knownhost_readfile(kh, khFilePath, LIBSSH2_KNOWNHOST_FILE_OPENSSH);
     

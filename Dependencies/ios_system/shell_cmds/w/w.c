@@ -76,7 +76,7 @@ static const char sccsid[] = "@(#)w.c	8.4 (Berkeley) 4/16/94";
 #include <kvm.h>
 #endif
 #include <langinfo.h>
-#include <libutil.h>
+#include "libutil.h"
 #include <limits.h>
 #include <locale.h>
 #include <netdb.h>
