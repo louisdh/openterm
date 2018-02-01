@@ -786,9 +786,9 @@
 		22C728C620237C2000889A27 /* libresolv.9.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libresolv.9.tbd; path = usr/lib/libresolv.9.tbd; sourceTree = SDKROOT; };
 		22C728C820237C6F00889A27 /* libxml2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.tbd; path = usr/lib/libxml2.tbd; sourceTree = SDKROOT; };
 		22C728CB20237CD800889A27 /* libssh2.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libssh2.a; path = "../libssh2-for-iOS/bin/iPhoneOS11.2-arm64.sdk/lib/libssh2.a"; sourceTree = "<group>"; };
-		22C728CE20237DC700889A27 /* libssh2.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libssh2.a; path = "../libssh2-for-iOS/libssh2.a"; sourceTree = "<group>"; };
-		22C728D020237EDC00889A27 /* libssl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libssl.a; path = "../libssh2-for-iOS/libssl.a"; sourceTree = "<group>"; };
-		22C728D220237EE700889A27 /* libcrypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcrypto.a; path = "../libssh2-for-iOS/libcrypto.a"; sourceTree = "<group>"; };
+		22C728CE20237DC700889A27 /* libssh2.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libssh2.a; path = "../libssh2-for-iOS/bin/iPhoneOS11.2-arm64.sdk/lib/libssh2.a"; sourceTree = "<group>"; };
+		22C728D020237EDC00889A27 /* libssl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libssl.a; path = "../libssh2-for-iOS/bin/iPhoneOS11.2-arm64.sdk/lib/libssl.a"; sourceTree = "<group>"; };
+		22C728D220237EE700889A27 /* libcrypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcrypto.a; path = "../libssh2-for-iOS/bin/iPhoneOS11.2-arm64.sdk/lib/libcrypto.a"; sourceTree = "<group>"; };
 		22C728D72023810600889A27 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		22CF27601FDB3FDA0087DDAD /* libutil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = libutil.h; path = libutil/libutil.h; sourceTree = SOURCE_ROOT; };
 		22CF27661FDB3FDA0087DDAD /* ios_error.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ios_error.h; sourceTree = SOURCE_ROOT; };
@@ -2607,7 +2607,7 @@
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-L",
-					"../libssh2-for-iOS/",
+					"../libssh2-for-iOS/bin/iPhoneOS11.2-arm64.sdk/lib/",
 					"-F",
 					"../libssh2-for-iOS/",
 				);
@@ -2632,7 +2632,7 @@
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-L",
-					"../libssh2-for-iOS/",
+					"../libssh2-for-iOS/bin/iPhoneOS11.2-arm64.sdk/lib/",
 					"-F",
 					"../libssh2-for-iOS/",
 				);
@@ -2703,7 +2703,7 @@
 					"-F",
 					"../libssh2-for-iOS/",
 					"-L",
-					"../libssh2-for-iOS/",
+					"../libssh2-for-iOS/bin/iPhoneOS11.2-arm64.sdk/lib/",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -2728,7 +2728,7 @@
 					"-F",
 					"../libssh2-for-iOS/",
 					"-L",
-					"../libssh2-for-iOS/",
+					"../libssh2-for-iOS/bin/iPhoneOS11.2-arm64.sdk/lib/",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
