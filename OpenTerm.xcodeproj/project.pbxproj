@@ -18,7 +18,6 @@
 		22F5682B2020CA2E009850FD /* libssh_cmd.dylib in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 22F568252020CA2E009850FD /* libssh_cmd.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		22F5682C2020CA2E009850FD /* libawk.dylib in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 22F568272020CA2E009850FD /* libawk.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		22F5682E2020CA67009850FD /* libtext.dylib in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 22F5682D2020CA66009850FD /* libtext.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		22F568372020DA41009850FD /* InputAssistant.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 22F568352020DA40009850FD /* InputAssistant.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		3C2E4374201EF67C00E4254A /* TerminalView+AutoComplete.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C2E4373201EF67C00E4254A /* TerminalView+AutoComplete.swift */; };
 		3C2E4385201EFF4700E4254A /* AutoCompleteManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C2E4384201EFF4700E4254A /* AutoCompleteManager.swift */; };
 		3C406E1A20207CE7005F97C4 /* CommandExecutor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C406E1920207CE7005F97C4 /* CommandExecutor.swift */; };
@@ -61,7 +60,6 @@
 				22F5682E2020CA67009850FD /* libtext.dylib in Embed Frameworks */,
 				22F5682A2020CA2E009850FD /* libshell.dylib in Embed Frameworks */,
 				22F5682B2020CA2E009850FD /* libssh_cmd.dylib in Embed Frameworks */,
-				22F568372020DA41009850FD /* InputAssistant.framework in Embed Frameworks */,
 				22854240201FC4E700B93589 /* libtar.dylib in Embed Frameworks */,
 				22F5682C2020CA2E009850FD /* libawk.dylib in Embed Frameworks */,
 				22AC09DC202056D6006F7D8B /* libcurl.dylib in Embed Frameworks */,
@@ -89,7 +87,6 @@
 		22F568282020CA2E009850FD /* libcurl.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcurl.dylib; path = libcurl.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		22F568292020CA2E009850FD /* libfiles.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libfiles.dylib; path = libfiles.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		22F5682D2020CA66009850FD /* libtext.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libtext.dylib; path = libtext.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
-		22F568352020DA40009850FD /* InputAssistant.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = InputAssistant.framework; path = InputAssistant.framework; sourceTree = "<group>"; };
 		3C2E4373201EF67C00E4254A /* TerminalView+AutoComplete.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TerminalView+AutoComplete.swift"; sourceTree = "<group>"; };
 		3C2E4384201EFF4700E4254A /* AutoCompleteManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoCompleteManager.swift; sourceTree = "<group>"; };
 		3C406E1920207CE7005F97C4 /* CommandExecutor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommandExecutor.swift; sourceTree = "<group>"; };
@@ -215,7 +212,6 @@
 		BE3808491FD9BFB600393EB8 = {
 			isa = PBXGroup;
 			children = (
-				22F568352020DA40009850FD /* InputAssistant.framework */,
 				22F5682D2020CA66009850FD /* libtext.dylib */,
 				22F568272020CA2E009850FD /* libawk.dylib */,
 				22F568282020CA2E009850FD /* libcurl.dylib */,
