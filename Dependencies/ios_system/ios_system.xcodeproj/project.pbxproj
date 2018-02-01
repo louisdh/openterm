@@ -2470,9 +2470,9 @@
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = (
 					"-L",
-					"../libssh2-for-iOS/lib/",
+					Frameworks,
 					"-F",
-					"../libssh2-for-iOS/",
+					Frameworks,
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "Acube.ios-system";
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
@@ -2507,9 +2507,9 @@
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = (
 					"-L",
-					"../libssh2-for-iOS/lib/",
+					Frameworks,
 					"-F",
-					"../libssh2-for-iOS/",
+					Frameworks,
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "Acube.ios-system";
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
@@ -2607,9 +2607,9 @@
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-L",
-					"../libssh2-for-iOS/lib/",
+					Frameworks/,
 					"-F",
-					"../libssh2-for-iOS/",
+					Frameworks/,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -2632,9 +2632,9 @@
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-L",
-					"../libssh2-for-iOS/lib/",
+					Frameworks/,
 					"-F",
-					"../libssh2-for-iOS/",
+					Frameworks/,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -2701,9 +2701,9 @@
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-F",
-					"../libssh2-for-iOS/",
+					Frameworks/,
 					"-L",
-					"../libssh2-for-iOS/lib/",
+					Frameworks,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -2726,9 +2726,9 @@
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-F",
-					"../libssh2-for-iOS/",
+					Frameworks/,
 					"-L",
-					"../libssh2-for-iOS/lib/",
+					Frameworks,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
