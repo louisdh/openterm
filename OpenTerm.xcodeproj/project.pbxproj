@@ -77,19 +77,19 @@
 
 /* Begin PBXFileReference section */
 		1C81BE5620225C3800D07301 /* Clipboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Clipboard.swift; sourceTree = "<group>"; };
-		228541D7201FB62C00B93589 /* libfiles.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libfiles.dylib; path = Dependencies/libfiles.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
-		228541DC201FB78200B93589 /* ios_system.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ios_system.framework; path = Dependencies/ios_system.framework; sourceTree = "<group>"; };
-		2285423F201FC4E700B93589 /* libtar.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libtar.dylib; path = Dependencies/libtar.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
-		22AC09DB202056D6006F7D8B /* libcurl.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcurl.dylib; path = Dependencies/libcurl.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
-		22D56F88200268E90090C1F6 /* Pods_OpenTerm.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Pods_OpenTerm.framework; path = Dependencies/Pods_OpenTerm.framework; sourceTree = "<group>"; };
-		22F568242020CA2E009850FD /* libshell.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libshell.dylib; path = Dependencies/libshell.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
-		22F568252020CA2E009850FD /* libssh_cmd.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libssh_cmd.dylib; path = Dependencies/libssh_cmd.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
-		22F568262020CA2E009850FD /* libtar.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libtar.dylib; path = Dependencies/libtar.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
-		22F568272020CA2E009850FD /* libawk.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libawk.dylib; path = Dependencies/libawk.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
-		22F568282020CA2E009850FD /* libcurl.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcurl.dylib; path = Dependencies/libcurl.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
-		22F568292020CA2E009850FD /* libfiles.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libfiles.dylib; path = Dependencies/libfiles.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
-		22F5682D2020CA66009850FD /* libtext.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libtext.dylib; path = Dependencies/libtext.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
-		22F568352020DA40009850FD /* InputAssistant.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = InputAssistant.framework; path = Dependencies/InputAssistant.framework; sourceTree = "<group>"; };
+		228541D7201FB62C00B93589 /* libfiles.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libfiles.dylib; path = libfiles.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		228541DC201FB78200B93589 /* ios_system.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ios_system.framework; path = ios_system.framework; sourceTree = "<group>"; };
+		2285423F201FC4E700B93589 /* libtar.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libtar.dylib; path = libtar.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		22AC09DB202056D6006F7D8B /* libcurl.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcurl.dylib; path = libcurl.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		22D56F88200268E90090C1F6 /* Pods_OpenTerm.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Pods_OpenTerm.framework; path = Pods_OpenTerm.framework; sourceTree = "<group>"; };
+		22F568242020CA2E009850FD /* libshell.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libshell.dylib; path = libshell.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		22F568252020CA2E009850FD /* libssh_cmd.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libssh_cmd.dylib; path = libssh_cmd.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		22F568262020CA2E009850FD /* libtar.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libtar.dylib; path = libtar.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		22F568272020CA2E009850FD /* libawk.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libawk.dylib; path = libawk.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		22F568282020CA2E009850FD /* libcurl.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcurl.dylib; path = libcurl.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		22F568292020CA2E009850FD /* libfiles.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libfiles.dylib; path = libfiles.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		22F5682D2020CA66009850FD /* libtext.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libtext.dylib; path = libtext.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		22F568352020DA40009850FD /* InputAssistant.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = InputAssistant.framework; path = InputAssistant.framework; sourceTree = "<group>"; };
 		3C2E4373201EF67C00E4254A /* TerminalView+AutoComplete.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TerminalView+AutoComplete.swift"; sourceTree = "<group>"; };
 		3C2E4384201EFF4700E4254A /* AutoCompleteManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoCompleteManager.swift; sourceTree = "<group>"; };
 		3C406E1920207CE7005F97C4 /* CommandExecutor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommandExecutor.swift; sourceTree = "<group>"; };
