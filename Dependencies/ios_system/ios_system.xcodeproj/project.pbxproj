@@ -2470,7 +2470,7 @@
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = (
 					"-L",
-					"../libssh2-for-iOS/",
+					"../libssh2-for-iOS/lib/",
 					"-F",
 					"../libssh2-for-iOS/",
 				);
@@ -2507,7 +2507,7 @@
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = (
 					"-L",
-					"../libssh2-for-iOS/",
+					"../libssh2-for-iOS/lib/",
 					"-F",
 					"../libssh2-for-iOS/",
 				);
@@ -2607,7 +2607,7 @@
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-L",
-					"../libssh2-for-iOS/bin/iPhoneOS11.2-arm64.sdk/lib/",
+					"../libssh2-for-iOS/lib/",
 					"-F",
 					"../libssh2-for-iOS/",
 				);
@@ -2632,7 +2632,7 @@
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-L",
-					"../libssh2-for-iOS/bin/iPhoneOS11.2-arm64.sdk/lib/",
+					"../libssh2-for-iOS/lib/",
 					"-F",
 					"../libssh2-for-iOS/",
 				);
@@ -2703,7 +2703,7 @@
 					"-F",
 					"../libssh2-for-iOS/",
 					"-L",
-					"../libssh2-for-iOS/bin/iPhoneOS11.2-arm64.sdk/lib/",
+					"../libssh2-for-iOS/lib/",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -2728,7 +2728,7 @@
 					"-F",
 					"../libssh2-for-iOS/",
 					"-L",
-					"../libssh2-for-iOS/bin/iPhoneOS11.2-arm64.sdk/lib/",
+					"../libssh2-for-iOS/lib/",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
