@@ -29,7 +29,7 @@
 // Sideloading: when you compile yourself, as opposed to uploading on the app store
 // If defined, all functions are enabled. If undefined, you get a smaller set, but
 // more compliance with AppStore rules.
-#define SIDELOADING
+// #define SIDELOADING
 
 extern __thread int    __db_getopt_reset;
 __thread FILE* thread_stdin;
