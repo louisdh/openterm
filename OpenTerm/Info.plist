@@ -33,7 +33,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.3</string>
+	<string>1.4</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
@@ -46,9 +46,13 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>15</string>
+	<string>16</string>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Save photos (e.g. via the share command)</string>
 	<key>NSUbiquitousContainers</key>
 	<dict>
 		<key>iCloud.com.silverfox.Terminal</key>

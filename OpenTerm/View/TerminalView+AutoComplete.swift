@@ -38,13 +38,13 @@ extension TerminalView {
 
         // Set up auto complete manager
         self.autoCompleteManager.dataSource = self
-        self.autoCompleteManager.delegate = self
+        self.autoCompleteManager.delegate = self.inputAssistantView
 
         // Set up input assistant and text view for auto completion
         self.inputAssistantView.delegate = self
-        self.inputAssistantView.dataSource = self
+        self.inputAssistantView.dataSource = self.autoCompleteManager
         self.textView.inputAccessoryView = self.inputAssistantView
-		self.inputAssistantView.tintColor = .lightGray
+        self.inputAssistantView.tintColor = .lightGray
 
         inputAssistantView.trailingActions = [
             InputAssistantAction(image: TerminalView.downArrow, target: self, action: #selector(downTapped))
@@ -94,23 +94,19 @@ extension TerminalView {
     }
 }
 
-extension TerminalView: AutoCompleteManagerDelegate {
-    func autoCompleteManagerDidChangeState() {
-    }
-    func autoCompleteManagerDidChangeCompletions() {
-        // Completions were updated, so display them.
-        inputAssistantView.reloadData()
-    }
-}
-
 extension TerminalView: AutoCompleteManagerDataSource {
 
     func allCommandsForAutoCompletion() -> [String] {
         let allCommands = (commandsAsArray() as? [String] ?? []).sorted()
-        return allCommands + ["help", "clear"]
+        return Script.allNames + allCommands + ["help", "clear"]
     }
 
-    func optionsForCommand(_ command: String) -> [String] {
+    func completionsForCommand(_ command: String) -> [AutoCompleteManager.Completion] {
+        // If command is a script, return the argument names in options form, for that script. Without ones that are already entered.
+        if Script.allNames.contains(command), let script = try? Script.named(command) {
+            return script.argumentNames.map { "--\($0)=" }.map { AutoCompleteManager.Completion($0, isStandalone: false) }
+        }
+
         var options: [String] = []
 
         // Find types of command, and add files/folders in directory
@@ -129,7 +125,7 @@ extension TerminalView: AutoCompleteManagerDataSource {
         default:
             break
         }
-        return options
+        return options.map { AutoCompleteManager.Completion($0) }
     }
 
     // Get the names of files/folders in the current working directory.
@@ -163,32 +159,20 @@ extension TerminalView: InputAssistantViewDelegate {
 
         let currentCommand = self.currentCommand
         if currentCommand.hasSuffix(" ") {
-            textView.insertText(completion)
+            textView.insertText(completion.name)
         } else {
             var components = currentCommand.components(separatedBy: .whitespaces)
             if let lastComponent = components.popLast() {
-                let commonPrefix = lastComponent.commonPrefix(with: completion)
-                let completedComponent = lastComponent + completion.replacingOccurrences(of: commonPrefix, with: "")
+                let commonPrefix = lastComponent.commonPrefix(with: completion.name)
+                let completedComponent = lastComponent + completion.name.replacingOccurrences(of: commonPrefix, with: "")
                 components.append(completedComponent)
             }
             self.currentCommand = components.joined(separator: " ")
         }
 
         // Insert whitespace at end
-        textView.insertText(" ")
-    }
-}
-
-extension TerminalView: InputAssistantViewDataSource {
-    func textForEmptySuggestionsInInputAssistantView() -> String? {
-        return nil
-    }
-
-    func numberOfSuggestionsInInputAssistantView() -> Int {
-        return autoCompleteManager.completions.count
-    }
-
-    func inputAssistantView(_ inputAssistantView: InputAssistantView, nameForSuggestionAtIndex index: Int) -> String {
-        return autoCompleteManager.completions[index]
+        if completion.isStandalone {
+            textView.insertText(" ")
+        }
     }
 }
