@@ -71,6 +71,10 @@ class ViewController: UIViewController {
         replaceCommand("share", shareFile, true)
         replaceCommand("pbcopy", pbcopy, true)
         replaceCommand("pbpaste", pbpaste, true)
+
+        // Call reloadData for the added commands.
+        terminalView.autoCompleteManager.reloadData()
+        
         shareFileViewController = self // shareFile needs to know which view controller to present share sheet from
 
 		setSSLCertIfNeeded()
