@@ -163,6 +163,8 @@
 				3CE5764920226D8900760E43 /* String+ANSIFormatting.swift */,
 			);
 			path = "ANSI Formatting";
+			sourceTree = "<group>";
+		};
 		3CE5764120225E1B00760E43 /* History */ = {
 			isa = PBXGroup;
 			children = (
