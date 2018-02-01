@@ -27,7 +27,10 @@
 		3CA3210920211D5600974B5F /* ScriptExecutorCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CA3210820211D5600974B5F /* ScriptExecutorCommand.swift */; };
 		3CA3210B20212D4200974B5F /* CommandExecutionContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CA3210A20212D4200974B5F /* CommandExecutionContext.swift */; };
 		3CE5764320225E1B00760E43 /* HistoryManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CE5764220225E1B00760E43 /* HistoryManager.swift */; };
-		228541DD201FB78200B93589 /* ios_system.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 228541DC201FB78200B93589 /* ios_system.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		5A38CC73C499E1A878353871 /* Pods_OpenTerm.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC01604DAC695ABD64544260 /* Pods_OpenTerm.framework */; };
+		BE000C081FEC4F6C00D06B91 /* ios_system.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BE3768EE1FEC4DCE00D5A2D1 /* ios_system.framework */; settings = {ATTRIBUTES = (Required, ); }; };
+		BE000C091FEC4F6F00D06B91 /* ios_system.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BE3768EE1FEC4DCE00D5A2D1 /* ios_system.framework */; settings = {ATTRIBUTES = (Required, ); }; };
+		BE000C0A1FEC4F6F00D06B91 /* ios_system.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = BE3768EE1FEC4DCE00D5A2D1 /* ios_system.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		BE165408201909040067EC92 /* xCallBackUrl.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE165407201909030067EC92 /* xCallBackUrl.swift */; };
 		BE244DC8201FBB6000A7EA4E /* cacert.pem in Resources */ = {isa = PBXBuildFile; fileRef = BE244DC7201FBB6000A7EA4E /* cacert.pem */; };
 		BE3808561FD9BFB600393EB8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE3808551FD9BFB600393EB8 /* AppDelegate.swift */; };
@@ -73,6 +76,7 @@
 
 /* Begin PBXFileReference section */
 		1C81BE5620225C3800D07301 /* Clipboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Clipboard.swift; sourceTree = "<group>"; };
+		24F6A88F715402F565B82F26 /* Pods-Terminal.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Terminal.release.xcconfig"; path = "Pods/Target Support Files/Pods-Terminal/Pods-Terminal.release.xcconfig"; sourceTree = "<group>"; };
 		228541D7201FB62C00B93589 /* libfiles.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libfiles.dylib; path = libfiles.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		228541DC201FB78200B93589 /* ios_system.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ios_system.framework; path = ios_system.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2285423F201FC4E700B93589 /* libtar.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libtar.dylib; path = libtar.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -221,7 +225,6 @@
 				BE3808531FD9BFB600393EB8 /* Products */,
 				BE3768EC1FEC4DCE00D5A2D1 /* Frameworks */,
 				EDE154E4BB3A66786AACAA5C /* Pods */,
-				22C728DA2023C16000889A27 /* Recovered References */,
 			);
 			sourceTree = "<group>";
 			usesTabs = 0;
@@ -298,6 +301,7 @@
 			isa = PBXGroup;
 			children = (
 				D73213876015994510AC49C0 /* Pods-Terminal.debug.xcconfig */,
+				24F6A88F715402F565B82F26 /* Pods-Terminal.release.xcconfig */,
 				448CC7691FD84EB5D2C24705 /* Pods-OpenTerm.debug.xcconfig */,
 				D4433523D5E174B363623AD4 /* Pods-OpenTerm.release.xcconfig */,
 			);
@@ -612,12 +616,12 @@
 				CODE_SIGN_ENTITLEMENTS = OpenTerm/OpenTerm.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 6G5LMQ72D8;
+                DEVELOPMENT_TEAM = 6G5LMQ72D8;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = "$(SRCROOT)/OpenTerm/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.silverfox.Terminal;
+                PRODUCT_BUNDLE_IDENTIFIER = com.silverfox.Terminal;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 4.0;
@@ -633,12 +637,12 @@
 				CODE_SIGN_ENTITLEMENTS = OpenTerm/OpenTerm.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 6G5LMQ72D8;
+                DEVELOPMENT_TEAM = 6G5LMQ72D8;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = "$(SRCROOT)/OpenTerm/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.silverfox.Terminal;
+                PRODUCT_BUNDLE_IDENTIFIER = com.silverfox.Terminal;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 4.0;
