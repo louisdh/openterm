@@ -8,7 +8,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <errno.h>
-#include "libssh2/libssh2.h"
+#include "libssh2.h"
 #include <sys/fcntl.h>
 #include <sys/types.h>
 #include <sys/socket.h>
