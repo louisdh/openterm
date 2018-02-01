@@ -17,14 +17,12 @@ protocol HistoryViewControllerDelegate: class {
 
 class HistoryViewController: UIViewController {
 
-	var commands = [String]()
-
 	weak var delegate: HistoryViewControllerDelegate?
 
 	@IBOutlet weak var tableView: UITableView!
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
+	override func viewDidLoad() {
+		super.viewDidLoad()
 
 		self.title = "History"
 		self.view.tintColor = .defaultMainTintColor
@@ -36,18 +34,9 @@ class HistoryViewController: UIViewController {
 		tableView.dataSource = self
 		tableView.delegate = self
 
-    }
-
-	func addCommand(_ command: String) {
-
-		tableView.performBatchUpdates({
-
-			self.commands.append(command)
-			self.tableView.insertRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
-
-		}, completion: nil)
-
+		NotificationCenter.default.addObserver(self.tableView, selector: #selector(UITableView.reloadData), name: .historyDidChange, object: nil)
 	}
+
 
 	override var preferredStatusBarStyle: UIStatusBarStyle {
 		return .lightContent
@@ -62,7 +51,7 @@ extension HistoryViewController: UITableViewDataSource {
 	}
 
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		return commands.count
+		return HistoryManager.history.count
 	}
 
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -70,7 +59,7 @@ extension HistoryViewController: UITableViewDataSource {
 		let cell = UITableViewCell(style: .default, reuseIdentifier: "cell")
 
 		cell.backgroundColor = self.view.backgroundColor
-		cell.textLabel?.text = commands.reversed()[indexPath.row]
+		cell.textLabel?.text = HistoryManager.history[indexPath.row]
 		cell.textLabel?.textColor = .white
 		cell.textLabel?.font = UIFont(name: "Menlo", size: 16)
 
@@ -85,7 +74,7 @@ extension HistoryViewController: UITableViewDelegate {
 
 		tableView.deselectRow(at: indexPath, animated: true)
 
-		let commandSelected = commands.reversed()[indexPath.row]
+		let commandSelected = HistoryManager.history[indexPath.row]
 		delegate?.didSelectCommand(command: commandSelected)
 
 		if let panelVC = self.panelNavigationController?.panelViewController {
