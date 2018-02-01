@@ -70,6 +70,12 @@ class ViewController: UIViewController {
         // mangled names for dlsym(), use swift-demangle to check, nm to get.
         replaceCommand("open-url", "_T08OpenTerm7openUrls5Int32VAD4argc_SpySpys4Int8VGSgGSg4argvtF", true)
         replaceCommand("share", "_T08OpenTerm9shareFiles5Int32VAD4argc_SpySpys4Int8VGSgGSg4argvtF", true)
+        replaceCommand("pbcopy", pbcopy, true) // TODO
+        replaceCommand("pbpaste", pbpaste, true) // TODO
+
+        // Call reloadData for the added commands.
+        terminalView.autoCompleteManager.reloadData()
+        
         shareFileViewController = self // shareFile needs to know which view controller to present share sheet from
 
 		setSSLCertIfNeeded()
@@ -164,7 +170,7 @@ class ViewController: UIViewController {
 			return
 		}
 
-		if historyViewController.commands.count > 5 {
+		if HistoryManager.history.count > 5 {
 			SKStoreReviewController.requestReview()
 			didRequestReview = true
 		}
@@ -252,13 +258,13 @@ class ViewController: UIViewController {
 
 	@objc func selectPreviousCommand() {
 
-		guard commandIndex < historyViewController.commands.count else {
+		guard commandIndex < HistoryManager.history.count else {
 			return
 		}
 
 		commandIndex += 1
 
-		terminalView.currentCommand = historyViewController.commands.reversed()[commandIndex - 1]
+		terminalView.currentCommand = HistoryManager.history[commandIndex - 1]
 
 	}
 
@@ -273,7 +279,7 @@ class ViewController: UIViewController {
 		if commandIndex == 0 {
 			terminalView.currentCommand = ""
 		} else {
-			terminalView.currentCommand = historyViewController.commands.reversed()[commandIndex - 1]
+			terminalView.currentCommand = HistoryManager.history[commandIndex - 1]
 		}
 
 	}
@@ -361,7 +367,7 @@ extension ViewController: TerminalViewDelegate {
 
 	func didEnterCommand(_ command: String) {
 
-		historyViewController.addCommand(command)
+		HistoryManager.add(command)
 		commandIndex = 0
 
         processCommand(command)
