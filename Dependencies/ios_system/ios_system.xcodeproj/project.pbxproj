@@ -324,7 +324,7 @@
 		22CF278C1FDB3FDB0087DDAD /* libutil.h in Headers */ = {isa = PBXBuildFile; fileRef = 22CF27601FDB3FDA0087DDAD /* libutil.h */; };
 		22F567C92020B80F009850FD /* ios_system.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 223496AB1FD5FC71007ED1A9 /* ios_system.framework */; };
 		22F567CA2020B83A009850FD /* ios_system.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 223496AB1FD5FC71007ED1A9 /* ios_system.framework */; };
-		22F567D92020BA2D009850FD /* ssh_main.c in Sources */ = {isa = PBXBuildFile; fileRef = 225F061120171B4300466685 /* ssh_main.c */; settings = {COMPILER_FLAGS = "-I ../../../libssh2-for-iOS/include/"; }; };
+		22F567D92020BA2D009850FD /* ssh_main.c in Sources */ = {isa = PBXBuildFile; fileRef = 225F061120171B4300466685 /* ssh_main.c */; settings = {COMPILER_FLAGS = "-I ../libssh2-for-iOS/bin/iPhoneOS11.2-arm64.sdk/include/"; }; };
 		22F567DA2020BA75009850FD /* ios_system.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 223496AB1FD5FC71007ED1A9 /* ios_system.framework */; };
 		22F567EE2020BDA9009850FD /* tee.c in Sources */ = {isa = PBXBuildFile; fileRef = 225F060A20163C2000466685 /* tee.c */; };
 		22F567EF2020BDAD009850FD /* echo.c in Sources */ = {isa = PBXBuildFile; fileRef = 22D8DEB5200791BB00FAADB7 /* echo.c */; };
