@@ -30,7 +30,9 @@ class CommandExecutor {
     weak var delegate: CommandExecutorDelegate?
 
     /// Dispatch queue to serially run commands on.
-    private let queue = DispatchQueue(label: "CommandExecutor", qos: .userInteractive)
+    private let executionQueue = DispatchQueue(label: "CommandExecutor", qos: .userInteractive)
+    /// Dispatch queue that delegate methods will be called on.
+    private let delegateQueue = DispatchQueue(label: "CommandExecutor-Delegate", qos: .userInteractive)
 
     // Create new pipes for our own stdout/stderr
     private let stdout = Pipe()
@@ -53,7 +55,7 @@ class CommandExecutor {
 
     // Dispatch a new text-based command to execute.
     func dispatch(_ command: String) {
-        queue.async {
+        executionQueue.async {
             let returnCode: ReturnCode
             do {
                 let executorCommand = self.executorCommand(forCommand: command, inContext: self.context)
@@ -61,7 +63,7 @@ class CommandExecutor {
             } catch {
                 returnCode = 1
                 // If an error was thrown while running, send it to the stderr
-                DispatchQueue.main.async {
+                self.delegateQueue.async {
                     self.delegate?.commandExecutor(self, receivedStderr: error.localizedDescription)
                 }
             }
@@ -71,7 +73,7 @@ class CommandExecutor {
 
             // Wait a bit to allow final stdout/stderr to get read.
             // TODO: This should not be needed, but it seems without it, output comes in after ios_system returns.
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            self.delegateQueue.asyncAfter(deadline: .now() + 0.2) {
                 self.delegate?.commandExecutor(self, didFinishDispatchWithExitCode: returnCode)
             }
         }
@@ -99,16 +101,42 @@ class CommandExecutor {
 
     // Called when the stdout file handle is written to
     private func onStdout(_ stdout: FileHandle) {
-        guard let str = String(data: stdout.availableData, encoding: .utf8), !str.isEmpty else { return }
-        DispatchQueue.main.async {
+        let data = stdout.availableData
+
+        // Convert to byte array, init from cString so invalid characters are ignored and parsing continues.
+        var byteArray = [UInt8](data)
+        var str = String.init(cString: &byteArray)
+
+        // TODO: This needs improvement, or data loss will occur on large buffered streams of data that arrive in chunks. (example: `curl -s wttr.in/london`)
+        // Unless encoding is wrong, these invalid characters will be caused by data at the end of the stream
+        // that was a UTF-8 code point that was only partially received and will arrive in the next output.
+        //
+        // There is currenly no buffering taking place here, so it's not possible to store the invalid data for later
+        // to prepend to the next output.
+        // Also, we don't know what the invalid data was, from the utf8 parsing API, so we wouldn't know what data to store.
+        //
+        // This current approach will display whatever utf-8 text can be parsed, and remove the rest.
+
+        // Remove invalid characters that were found in the above string.
+        str = str.replacingOccurrences(of: String(Character(Unicode.UTF8.decode(Unicode.UTF8.encodedReplacementCharacter))), with: "")
+
+        delegateQueue.async {
             self.delegate?.commandExecutor(self, receivedStdout: str)
         }
     }
 
     // Called when the stderr file handle is written to
     private func onStderr(_ stderr: FileHandle) {
-        guard let str = String(data: stderr.availableData, encoding: .utf8), !str.isEmpty else { return }
-        DispatchQueue.main.async {
+        let data = stderr.availableData
+        
+        // Convert to byte array, init from cString so invalid characters are ignored and parsing continues.
+        var byteArray = [UInt8](data)
+        var str = String.init(cString: &byteArray)
+
+        // Remove invalid characters
+        str = str.replacingOccurrences(of: String(Character(Unicode.UTF8.decode(Unicode.UTF8.encodedReplacementCharacter))), with: "")
+
+        delegateQueue.async {
             self.delegate?.commandExecutor(self, receivedStderr: str)
         }
     }
@@ -126,7 +154,7 @@ struct SystemExecutorCommand: CommandExecutorCommand {
 
         // Pass the value of the string to system, return its exit code.
         let returnCode = ios_system(command.utf8CString)
-        
+
         // Flush stdout and stderr before returning, so all output is finished before marking command as complete.
         fflush(executor.stdout_file)
         fflush(executor.stderr_file)

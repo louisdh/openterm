@@ -241,10 +241,8 @@ class ViewController: UIViewController {
 	}
 
 	func updateTitle() {
-
 		let url = URL(fileURLWithPath: DocumentManager.shared.fileManager.currentDirectoryPath)
 		self.title = url.lastPathComponent
-
 	}
 
 	var commandIndex = 0
@@ -342,8 +340,10 @@ extension ViewController: CommandExecutorDelegate {
         terminalView.writeOutput(sanitizeOutput(stderr))
     }
     func commandExecutor(_ commandExecutor: CommandExecutor, didFinishDispatchWithExitCode exitCode: Int32) {
-        terminalView.writePrompt()
-        updateTitle()
+        DispatchQueue.main.async {
+            self.terminalView.writePrompt()
+            self.updateTitle()
+        }
     }
 
     private func sanitizeOutput(_ output: String) -> String {
