@@ -11,8 +11,6 @@
 		228541DD201FB78200B93589 /* ios_system.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 228541DC201FB78200B93589 /* ios_system.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		22854240201FC4E700B93589 /* libtar.dylib in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2285423F201FC4E700B93589 /* libtar.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		22AC09DC202056D6006F7D8B /* libcurl.dylib in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 22AC09DB202056D6006F7D8B /* libcurl.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		22AC09E220207CD2006F7D8B /* lua_ios.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 22AC09E120207CD2006F7D8B /* lua_ios.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		22AC09E820209D53006F7D8B /* Python_ios.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 22AC09E720209D53006F7D8B /* Python_ios.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		22C728D9202382EC00889A27 /* ios_system.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 228541DC201FB78200B93589 /* ios_system.framework */; };
 		22D56F8520025BB00090C1F6 /* PanelKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 22D56F8420025BB00090C1F6 /* PanelKit.framework */; };
 		22D56F8720025C4A0090C1F6 /* Pods_Terminal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 22D56F8620025C4A0090C1F6 /* Pods_Terminal.framework */; };
@@ -70,8 +68,6 @@
 				22F5682C2020CA2E009850FD /* libawk.dylib in Embed Frameworks */,
 				22AC09DC202056D6006F7D8B /* libcurl.dylib in Embed Frameworks */,
 				228541D8201FB62C00B93589 /* libfiles.dylib in Embed Frameworks */,
-				22AC09E820209D53006F7D8B /* Python_ios.framework in Embed Frameworks */,
-				22AC09E220207CD2006F7D8B /* lua_ios.framework in Embed Frameworks */,
 				228541DD201FB78200B93589 /* ios_system.framework in Embed Frameworks */,
 				22D56F8A200268E90090C1F6 /* Pods_OpenTerm.framework in Embed Frameworks */,
 				22D56F8B200268E90090C1F6 /* PanelKit.framework in Embed Frameworks */,
