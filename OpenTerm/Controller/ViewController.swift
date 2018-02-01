@@ -70,8 +70,8 @@ class ViewController: UIViewController {
         // mangled names for dlsym(), use swift-demangle to check, nm to get.
         replaceCommand("open-url", "_T08OpenTerm7openUrls5Int32VAD4argc_SpySpys4Int8VGSgGSg4argvtF", true)
         replaceCommand("share", "_T08OpenTerm9shareFiles5Int32VAD4argc_SpySpys4Int8VGSgGSg4argvtF", true)
-        replaceCommand("pbcopy", pbcopy, true) // TODO
-        replaceCommand("pbpaste", pbpaste, true) // TODO
+        replaceCommand("pbcopy", "_T08OpenTerm6pbcopys5Int32VAD4argc_SpySpys4Int8VGSgGSg4argvtF", true)
+        replaceCommand("pbpaste", "_T08OpenTerm7pbpastes5Int32VAD4argc_SpySpys4Int8VGSgGSg4argvtF", true) 
 
         // Call reloadData for the added commands.
         terminalView.autoCompleteManager.reloadData()
