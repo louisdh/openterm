@@ -41,6 +41,9 @@ class ViewController: UIViewController {
 
 	var scriptsViewController: ScriptsViewController!
 	var scriptsPanelViewController: PanelViewController!
+    
+    var bookmarkViewController: BookmarkViewController!
+    var bookmarkPanelViewController: PanelViewController!
 
     let executor = CommandExecutor()
 
@@ -56,6 +59,11 @@ class ViewController: UIViewController {
 		scriptsViewController = storyboard.instantiateViewController(withIdentifier: "ScriptsViewController") as! ScriptsViewController
 		scriptsPanelViewController = PanelViewController(with: scriptsViewController, in: self)
 
+        bookmarkViewController = storyboard.instantiateViewController(withIdentifier: "BookmarkViewController") as! BookmarkViewController
+        bookmarkViewController.delegate = self
+        
+        bookmarkPanelViewController = PanelViewController(with: bookmarkViewController, in: self)
+        
         executor.delegate = self
 
 		terminalView.delegate = self
@@ -205,6 +213,16 @@ class ViewController: UIViewController {
 
 	}
 
+    @IBAction func showHBookmarks(_ sender: UIBarButtonItem) {
+        
+        bookmarkPanelViewController.modalPresentationStyle = .popover
+        bookmarkPanelViewController.popoverPresentationController?.barButtonItem = sender
+        
+        bookmarkPanelViewController.popoverPresentationController?.backgroundColor = bookmarkViewController.view.backgroundColor
+        present(bookmarkPanelViewController, animated: true, completion: nil)
+        
+    }
+    
 	@IBAction func showScripts(_ sender: UIBarButtonItem) {
 
 		scriptsPanelViewController.modalPresentationStyle = .popover
@@ -339,6 +357,261 @@ extension ViewController: UIDocumentPickerDelegate {
 
 }
 
+extension ViewController: BookmarkViewControllerDelegate {
+    
+    /// The file name of the start directory bookmark. It is stored as a static
+    /// constant so we can access it when saving or loading the bookmark and
+    /// such that the settings view controller can access is as well.
+    static let bookmarkDirectory = ".bookmarks"
+    
+    
+    /// Gets the URLs of the bookmarks that were previously saved.
+    ///
+    /// - Returns: The URLs of the saved bookmarks. If something fails, the returned array will be empty.
+    func savedBookmarkURLs() -> [URL] {
+        /**
+         *  Get the document directory of the app.
+         */
+        if let dir = FileManager.default.urls(for: .documentDirectory,
+                                              in: .userDomainMask).first {
+            
+            /**
+             *  Get the directory where the bookmarks are saved.
+             */
+            let bookmarkDirectoryURL = dir.appendingPathComponent(ViewController.bookmarkDirectory,
+                                                                  isDirectory: true)
+            
+            /**
+             *  Create the bookmarks directory (if it doesn't exist)
+             */
+            do {
+                try FileManager.default.createDirectory(at: bookmarkDirectoryURL,
+                                                        withIntermediateDirectories: true,
+                                                        attributes: nil)
+                
+                /**
+                 *  Get all files that are in the bookmarks directory.
+                 */
+                let bookmarkFiles = try FileManager.default.contentsOfDirectory(atPath: bookmarkDirectoryURL.path)
+                
+                /**
+                 *  The array that will hold the obtained URLs. This will be returned eventually.
+                 */
+                var bookmarkURLs = [URL]()
+                
+                /**
+                 *  Iterate all bookmark filenames.
+                 */
+                for bookmarkFileName in bookmarkFiles {
+                    
+                    /**
+                     *  Get the url of the current bookmark file.
+                     */
+                    let bookmarkDataURL = bookmarkDirectoryURL.appendingPathComponent(bookmarkFileName)
+                    
+                    /**
+                     *  We try to load the bookmark from the file.
+                     */
+                    let loadedBookmark = try URL.bookmarkData(withContentsOf: bookmarkDataURL)
+                    
+                    /**
+                     *  This variable will indicate whether the bookmark is stale.
+                     *  If the bookmark is stale we create a new bookmark with the
+                     *  obtained URL and save the new one instead of the old one.
+                     */
+                    var isStale = true
+                    
+                    /**
+                     *  Try to obtain the URL from the bookmark.
+                     */
+                    if let loadedBookmarkURL = try URL(resolvingBookmarkData: loadedBookmark, bookmarkDataIsStale: &isStale) {
+                        
+                        /**
+                         *  If the bookmark is stale, we create a new bookmark
+                         *  from the obtained URL.
+                         */
+                        if isStale {
+                            do {
+                                try self.saveBookmarkURL(url: loadedBookmarkURL)
+                            }
+                        }
+                        
+                        /**
+                         *  Append the loaded URLs.
+                         */
+                        bookmarkURLs.append(loadedBookmarkURL)
+                    }
+                }
+                
+                return bookmarkURLs
+            } catch {
+                return []
+            }
+        }
+        
+        return []
+    }
+    
+    /// When the bookmark view controller did select a bookmark, we change the
+    /// current directory to the bookmarked url.
+    /// - Note: Only urls that were saved as bookmarks will work.
+    ///
+    /// - Parameter bookmarkURL: The bookmark that was selected.
+    func didSelectBookmarkURL(bookmarkURL: URL) {
+        
+        /**
+         *  Access the bookmarked URL
+         */
+        _ = bookmarkURL.startAccessingSecurityScopedResource()
+        
+        /**
+         *  Change the directory to the bookmarked path.
+         */
+        DocumentManager.shared.fileManager.changeCurrentDirectoryPath(bookmarkURL.path)
+        
+        /**
+         *  Update the title.
+         */
+        self.updateTitle()
+    }
+    
+    /// Determines the current directory and saves the corresponding path as
+    /// bookmark.
+    ///
+    /// - Parameter sender: The view controller that asks to save the current directory. (Might be used to display alerts.)
+    func saveBookmarkForCurrentDirectory(sender: UIViewController) {
+        /**
+         *  Get the path of the current directory and create the corresponding URL.
+         */
+        let currentDirectoryPath = DocumentManager.shared.fileManager.currentDirectoryPath
+        let currentDirectoryURL = URL(fileURLWithPath: currentDirectoryPath)
+        
+        /**
+         *  If saving the URL fails, we show an alert with the error.
+         */
+        do {
+            try self.saveBookmarkURL(url: currentDirectoryURL)
+        } catch {
+            /**
+             *  We inform the user that the bookmark could not be saved.
+             */
+            let alertController = UIAlertController(title: "Could not save bookmark.",
+                                                    message: error.localizedDescription,
+                                                    preferredStyle: .alert)
+            
+            let cancelAction = UIAlertAction(title: "Cancel",
+                                             style: .cancel,
+                                             handler: nil)
+            
+            alertController.addAction(cancelAction)
+            
+            sender.present(alertController,
+                           animated: true,
+                           completion: nil)
+        }
+    }
+    
+    /// Saves the passed url as a bookmark.
+    ///
+    /// - Parameter url: The url to be saved as a bookmark.
+    func saveBookmarkURL(url: URL) throws {
+        /**
+         *  Getting the bookmark data for the current URL can fail. E.g.,
+         *  when we don't have access to the corresponding security scoped
+         *  resource. However, since the user can only save a directory URL
+         *  that is currently accessed, this should not happen.
+         */
+        do {
+            /**
+             *  Get the bookmark data for the URL making sure it is suitable
+             *  to be saved as a file.
+             */
+            let bookmark = try url.bookmarkData(options: .suitableForBookmarkFile,
+                                                includingResourceValuesForKeys: nil,
+                                                relativeTo: nil)
+            
+            /**
+             *  Get the document directory of the app. The bookmarks will be saved
+             *  in a hidden folder there.
+             */
+            if let dir = FileManager.default.urls(for: .documentDirectory,
+                                                  in: .userDomainMask).first {
+                
+                /**
+                 *  Get the URL of the bookmark directory (where the bookmarks are saved).
+                 */
+                let bookmarkDirectoryURL = dir.appendingPathComponent(ViewController.bookmarkDirectory,
+                                                                      isDirectory: true)
+                
+                /**
+                 *  Create the bookmarks directory (if it doesn't exist)
+                 */
+                try FileManager.default.createDirectory(at: bookmarkDirectoryURL,
+                                                        withIntermediateDirectories: true,
+                                                        attributes: nil)
+                
+                /**
+                 *  The URL for where the bookmark data will be saved.
+                 */
+                let bookmarkDataURL = bookmarkDirectoryURL.appendingPathComponent(url.lastPathComponent,
+                                                                                  isDirectory: false)
+                
+                /**
+                 *  Actually saving the bookmark data.
+                 */
+                try URL.writeBookmarkData(bookmark, to: bookmarkDataURL)
+                
+                /**
+                 *  Tell the bookmark view controller that the bookmarks were updated.
+                 */
+                self.bookmarkViewController.bookmarksWereUpdated()
+            }
+        } catch {
+            throw error
+        }
+    }
+    
+    /// Deletes a URL from the bookmarks.
+    ///
+    /// - Parameter bookmarkURL: The URL to be deleted.
+    func deleteBookmarkURL(bookmarkURL: URL) {
+        /**
+         *  Get the document directory of the app.
+         */
+        if let dir = FileManager.default.urls(for: .documentDirectory,
+                                              in: .userDomainMask).first {
+            
+            /**
+             *  Get the directory of where the bookmarks are saved.
+             */
+            let bookmarkDirectoryURL = dir.appendingPathComponent(ViewController.bookmarkDirectory,
+                                                                  isDirectory: true)
+            
+            /**
+             *  Create the bookmarks directory (if it doesn't exist)
+             */
+            do {
+                try FileManager.default.createDirectory(at: bookmarkDirectoryURL,
+                                                        withIntermediateDirectories: true,
+                                                        attributes: nil)
+                
+                /**
+                 *  The URL for where the bookmark data was saved to.
+                 */
+                let bookmarkFileURL = bookmarkDirectoryURL.appendingPathComponent(bookmarkURL.lastPathComponent,
+                                                                                  isDirectory: false)
+                
+                /**
+                 *  Actually deleting the file.
+                 */
+                try FileManager.default.removeItem(at: bookmarkFileURL)
+            } catch {
+                
+            }
+        }
+    }
+}
+
 extension ViewController: CommandExecutorDelegate {
 
     func commandExecutor(_ commandExecutor: CommandExecutor, receivedStdout stdout: String) {
@@ -411,7 +684,7 @@ extension ViewController: HistoryViewControllerDelegate {
 extension ViewController: PanelManager {
 
 	var panels: [PanelViewController] {
-		return [historyPanelViewController, scriptsPanelViewController]
+		return [historyPanelViewController, scriptsPanelViewController, bookmarkPanelViewController]
 	}
 
 	var panelContentWrapperView: UIView {
