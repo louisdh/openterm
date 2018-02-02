@@ -918,10 +918,14 @@ int ios_system(const char* inputCmd) {
             if ([libraryName isEqualToString: @"SELF"]) handle = RTLD_SELF;  // commands defined in ios_system.framework
             else if ([libraryName isEqualToString: @"MAIN"]) handle = RTLD_MAIN_ONLY; // commands defined in main program
             else handle = dlopen(libraryName.UTF8String, RTLD_LAZY | RTLD_GLOBAL); // commands defined in dynamic library
+#ifdef SIDELOADING
             if (handle == NULL) fprintf(thread_stderr, "Failed loading %s from %s, cause = %s\n", commandName.UTF8String, libraryName.UTF8String, dlerror());
+#endif
             NSString* functionName = commandStructure[1];
             function = dlsym(handle, functionName.UTF8String);
+#ifdef SIDELOADING
             if (function == NULL) fprintf(thread_stderr, "Failed loading %s from %s, cause = %s\n", commandName.UTF8String, libraryName.UTF8String, dlerror());
+#endif
         }
         if (function) {
             // We run the function in a thread because there are several
