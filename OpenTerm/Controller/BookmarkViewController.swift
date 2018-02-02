@@ -27,7 +27,7 @@ class BookmarkViewController: UIViewController {
     
     let bookmarkManager = BookmarkManager()
     
-    weak var delegate: (BookmarkViewControllerDelegate & CommandExecutorDelegate)? = nil
+    weak var delegate: BookmarkViewControllerDelegate? = nil
     
     @IBOutlet weak var tableView: UITableView!
     
