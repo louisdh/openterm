@@ -16,6 +16,8 @@ protocol BookmarkViewControllerDelegate: class {
     ///
     /// - Parameter bookmarkURL: The bookmark that was selected.
     func changeDirectoryToURL(url: URL)
+    
+    func sanitizeOutput(_ output: String) -> String
 }
 
 class BookmarkViewController: UIViewController {
@@ -25,7 +27,7 @@ class BookmarkViewController: UIViewController {
     
     let bookmarkManager = BookmarkManager()
     
-    weak var delegate: BookmarkViewControllerDelegate?
+    weak var delegate: (BookmarkViewControllerDelegate & CommandExecutorDelegate)? = nil
     
     @IBOutlet weak var tableView: UITableView!
     
@@ -78,7 +80,14 @@ extension BookmarkViewController: UITableViewDataSource {
         
         //  Show the name of the bookmark (last path component) and the actual file path in the cell.
         let bookmarkURL = bookmarks[indexPath.row]
-        cell.textLabel?.text = "\(bookmarkURL.lastPathComponent): \(bookmarkURL.absoluteString)"
+        
+        var urlDescription = bookmarkURL.absoluteString
+        
+        if let sanitizedDescription = self.delegate?.sanitizeOutput(urlDescription) {
+            urlDescription = sanitizedDescription
+        }
+        
+        cell.textLabel?.text = "\(bookmarkURL.lastPathComponent): \(urlDescription)"
         
         cell.textLabel?.textColor = .white
         cell.textLabel?.font = UIFont(name: "Menlo", size: 16)

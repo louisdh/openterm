@@ -384,7 +384,7 @@ extension ViewController: CommandExecutorDelegate {
         updateTitle()
     }
 
-    private func sanitizeOutput(_ output: String) -> String {
+    internal func sanitizeOutput(_ output: String) -> String {
         var output = output
         // Replace $HOME with "~"
         output = output.replacingOccurrences(of: DocumentManager.shared.activeDocumentsFolderURL.path, with: "~")
