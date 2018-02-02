@@ -15,7 +15,7 @@ protocol BookmarkViewControllerDelegate: class {
     /// Notifies the delegate that a bookmark was selected.
     ///
     /// - Parameter bookmarkURL: The bookmark that was selected.
-    func didSelectBookmarkURL(bookmarkURL: URL)
+    func changeDirectoryToURL(url: URL)
 }
 
 class BookmarkViewController: UIViewController {
@@ -112,7 +112,7 @@ extension BookmarkViewController: UITableViewDelegate {
         
         //  When a bookmark is selected, we notify the delegate about this.
         let selectedBookmarkURL = bookmarks[indexPath.row]
-        delegate?.didSelectBookmarkURL(bookmarkURL: selectedBookmarkURL)
+        delegate?.changeDirectoryToURL(url: selectedBookmarkURL)
         
         if let panelVC = self.panelNavigationController?.panelViewController {
             if panelVC.isFloating == false {

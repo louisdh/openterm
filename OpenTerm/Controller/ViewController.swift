@@ -347,30 +347,24 @@ extension ViewController: UIDocumentPickerDelegate {
 			return
 		}
 
-		_ = firstFolder.startAccessingSecurityScopedResource()
-
-		DocumentManager.shared.fileManager.changeCurrentDirectoryPath(firstFolder.path)
-
-		self.updateTitle()
-
+        self .changeDirectoryToURL(url: firstFolder)
 	}
 
 }
 
 extension ViewController: BookmarkViewControllerDelegate {
     
-    /// When the bookmark view controller did select a bookmark, we change the
-    /// current directory to the bookmarked url.
-    /// - Note: Only urls that were saved as bookmarks will work.
+    /// Changes the current directory to the passed url.
+    /// - Note: Only urls that contain the required access permissions will work..
     ///
     /// - Parameter bookmarkURL: The bookmark that was selected.
-    func didSelectBookmarkURL(bookmarkURL: URL) {
+    func changeDirectoryToURL(url: URL) {
         
-        //  Access the bookmarked URL
-        _ = bookmarkURL.startAccessingSecurityScopedResource()
+        //  Access the URL
+        _ = url.startAccessingSecurityScopedResource()
         
-        //  Change the directory to the bookmarked path.
-        DocumentManager.shared.fileManager.changeCurrentDirectoryPath(bookmarkURL.path)
+        //  Change the directory to the path.
+        DocumentManager.shared.fileManager.changeCurrentDirectoryPath(url.path)
         
         // Update the title.
         self.updateTitle()
