@@ -12,30 +12,10 @@ import PanelKit
 /// Protocol that is used to interact with the bookmark view controller.
 protocol BookmarkViewControllerDelegate: class {
     
-    
-    /// Request the saved bookmarks from the delegate.
-    ///
-    /// - Returns: The url that were stored as bookmarks.
-    func savedBookmarkURLs() -> [URL]
-    
-    
     /// Notifies the delegate that a bookmark was selected.
     ///
     /// - Parameter bookmarkURL: The bookmark that was selected.
     func didSelectBookmarkURL(bookmarkURL: URL)
-    
-    
-    /// Notify the delegate that the URL of the current directory should
-    /// by saved as bookmark.
-    ///
-    /// - Parameter sender: The view controller sending this method (might be needed to show alerts).
-    func saveBookmarkForCurrentDirectory(sender: UIViewController)
-    
-    
-    /// Notifies the delgate that a bookmark should be deleted.
-    ///
-    /// - Parameter bookmarkURL: <#bookmarkURL description#>
-    func deleteBookmarkURL(bookmarkURL: URL)
 }
 
 class BookmarkViewController: UIViewController {
@@ -45,12 +25,16 @@ class BookmarkViewController: UIViewController {
      */
     var bookmarks = [URL]()
     
+    let bookmarkManager = BookmarkManager()
+    
     weak var delegate: BookmarkViewControllerDelegate?
     
     @IBOutlet weak var tableView: UITableView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.bookmarkManager.delegate = self
         
         self.title = "Bookmarks"
         self.view.tintColor = .defaultMainTintColor
@@ -62,9 +46,7 @@ class BookmarkViewController: UIViewController {
         /**
          *  Get all the saved bookmarks from the delegate.
          */
-        if let savedBookmarks = self.delegate?.savedBookmarkURLs() {
-            self.bookmarks = savedBookmarks
-        }
+        self.bookmarks = self.bookmarkManager.savedBookmarkURLs()
         
         tableView.dataSource = self
         tableView.delegate = self
@@ -73,19 +55,7 @@ class BookmarkViewController: UIViewController {
     /// When the + button is pressed, we notify the delegate to save the current
     /// directory as URL.
     @objc func addBookmarkForCurrentDirectory() {
-        self.delegate?.saveBookmarkForCurrentDirectory(sender: self)
-    }
-    
-    
-    /// When the delegate notifies us that the saved bookmarks were changed
-    /// we reload the table view.
-    func bookmarksWereUpdated() {
-        
-        if let updatedBookmarks = self.delegate?.savedBookmarkURLs() {
-            self.bookmarks = updatedBookmarks
-            self.tableView.reloadSections(IndexSet(integer: 0),
-                                          with: .automatic)
-        }
+        self.bookmarkManager.saveBookmarkForCurrentDirectory(sender: self)
     }
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
@@ -136,7 +106,7 @@ extension BookmarkViewController: UITableViewDataSource {
              *  Notify the delegate that this bookmark should be deleted.
              */
             let bookmarkURLToDelete = self.bookmarks[indexPath.row]
-            self.delegate?.deleteBookmarkURL(bookmarkURL: bookmarkURLToDelete)
+            self.bookmarkManager.deleteBookmarkURL(bookmarkURL: bookmarkURLToDelete)
             
             /**
              *  Then delete the row from the table view.
@@ -203,3 +173,17 @@ extension BookmarkViewController: PanelStateCoder {
     
 }
 
+extension BookmarkViewController: BookmarkManagerDelegate {
+    
+    /// When the delegate notifies us that the saved bookmarks were changed
+    /// we reload the table view.
+    func bookmarksWereUpdated() {
+        
+        let updatedBookmarks = self.bookmarkManager.savedBookmarkURLs()
+        self.bookmarks = updatedBookmarks
+        self.tableView.reloadSections(IndexSet(integer: 0),
+                                      with: .automatic)
+        
+    }
+    
+}
