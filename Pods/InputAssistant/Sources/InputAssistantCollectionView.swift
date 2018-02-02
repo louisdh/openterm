@@ -21,11 +21,11 @@ class InputAssistantCollectionView: UICollectionView {
     
     init() {
         let layout = UICollectionViewFlowLayout()
-        layout.estimatedItemSize = CGSize(width: 100, height: 44)
+        layout.estimatedItemSize = CGSize(width: 100, height: 41)
         layout.itemSize = UICollectionViewFlowLayoutAutomaticSize
         layout.scrollDirection = .horizontal
         layout.minimumInteritemSpacing = 10
-        layout.sectionInset = UIEdgeInsets(top: 0, left: 5, bottom: 0, right: 5)
+        layout.sectionInset = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
         super.init(frame: .zero, collectionViewLayout: layout)
 
         register(InputAssistantCollectionViewCell.self, forCellWithReuseIdentifier: "Suggestion")
@@ -82,8 +82,9 @@ extension InputAssistantCollectionView: UICollectionViewDataSource {
         guard let inputAssistantView = inputAssistantView, let name = inputAssistantView.dataSource?.inputAssistantView(inputAssistantView, nameForSuggestionAtIndex: indexPath.row) else {
             fatalError("No suggestion name found at index.")
         }
-        
+
         cell.label.text = name
+        cell.keyboardAppearance = inputAssistantView.keyboardAppearance
         
         return cell
     }
@@ -92,13 +93,27 @@ extension InputAssistantCollectionView: UICollectionViewDataSource {
 private class InputAssistantCollectionViewCell: UICollectionViewCell {
     
     let label: UILabel
-    let highlightedBackgroundColor = UIColor(red: 194/255, green: 200/255, blue: 206/255, alpha: 1)
+    let highlightedBackgroundColor = UIColor(red: 235/255, green: 237/255, blue: 239/255, alpha: 1)
     let regularBackgroundColor = UIColor(red: 174/255, green: 180/255, blue: 186/255, alpha: 1)
+    let darkBackgroundColor = UIColor(white: 200/255, alpha: 0.4)
+
+    var keyboardAppearance: UIKeyboardAppearance = .default {
+        didSet { updateSelectionState() }
+    }
+
+    private var keyboardAppearanceBackgroundColor: UIColor {
+        switch keyboardAppearance {
+        case .dark: return self.darkBackgroundColor
+        default: return self.regularBackgroundColor
+        }
+    }
     
     override init(frame: CGRect) {
         label = UILabel()
         
         super.init(frame: frame)
+
+        label.textAlignment = .center
         
         self.contentView.addSubview(label)
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -106,12 +121,13 @@ private class InputAssistantCollectionViewCell: UICollectionViewCell {
             label.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
             label.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
             label.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
-            label.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8)
+            label.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8),
+            label.widthAnchor.constraint(greaterThanOrEqualToConstant: 50)
         ])
         
-        self.backgroundColor = regularBackgroundColor
         self.layer.cornerRadius = 4
-        label.textColor = .black
+        self.layer.masksToBounds = true
+        updateSelectionState()
     }
     
     required init?(coder aDecoder: NSCoder) { fatalError("init(coder:) has not been implemented") }
@@ -124,7 +140,8 @@ private class InputAssistantCollectionViewCell: UICollectionViewCell {
     }
     
     private func updateSelectionState() {
-        self.backgroundColor = isHighlighted || isSelected ? highlightedBackgroundColor : regularBackgroundColor
-        self.label.textColor = isHighlighted || isSelected ? self.tintColor : .black
+        let isHighlighted = self.isHighlighted || self.isSelected
+        self.backgroundColor = isHighlighted ? self.highlightedBackgroundColor : self.keyboardAppearanceBackgroundColor
+        self.label.textColor = isHighlighted ? .black : .white
     }
 }

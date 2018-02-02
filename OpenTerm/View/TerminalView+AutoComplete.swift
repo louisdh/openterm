@@ -44,18 +44,12 @@ extension TerminalView {
         self.inputAssistantView.delegate = self
         self.inputAssistantView.dataSource = self.autoCompleteManager
         self.textView.inputAccessoryView = self.inputAssistantView
-        self.inputAssistantView.tintColor = .lightGray
 
         inputAssistantView.trailingActions = [
             InputAssistantAction(image: TerminalView.downArrow, target: self, action: #selector(downTapped))
         ]
 
-        // Hide default undo/redo/etc buttons
-        textView.inputAssistantItem.leadingBarButtonGroups = []
-        textView.inputAssistantItem.trailingBarButtonGroups = []
-
-        // Disable built-in autocomplete
-        textView.autocorrectionType = .no
+        self.inputAssistantView.attach(to: self.textView)
 
         NotificationCenter.default.addObserver(self, selector: #selector(historyDidChange), name: .historyDidChange, object: nil)
     }
