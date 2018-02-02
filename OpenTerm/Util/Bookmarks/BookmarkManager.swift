@@ -126,43 +126,38 @@ class BookmarkManager {
          *  when we don't have access to the corresponding security scoped
          *  resource. However, since the user can only save a directory URL
          *  that is currently accessed, this should not happen.
+         *
+         *  We now get the bookmark data for the URL making sure it is suitable
+         *  to be saved as a file.
          */
-        do {
-            /**
-             *  Get the bookmark data for the URL making sure it is suitable
-             *  to be saved as a file.
-             */
-            let bookmark = try url.bookmarkData(options: .suitableForBookmarkFile,
-                                                includingResourceValuesForKeys: nil,
-                                                relativeTo: nil)
-            
-            /**
-             *  Get the document directory of the app. The bookmarks will be saved
-             *  in a hidden folder there.
-             */
-            let dir = DocumentManager.shared.activeDocumentsFolderURL
-            
-            //  Get the URL of the bookmark directory (where the bookmarks are saved).
-            let bookmarkDirectoryURL = dir.appendingPathComponent(BookmarkManager.bookmarkDirectory,
-                                                                  isDirectory: true)
-            
-            //  Create the bookmarks directory (if it doesn't exist)
-            try FileManager.default.createDirectory(at: bookmarkDirectoryURL,
-                                                    withIntermediateDirectories: true,
-                                                    attributes: nil)
-            
-            //  The URL for where the bookmark data will be saved.
-            let bookmarkDataURL = bookmarkDirectoryURL.appendingPathComponent(url.lastPathComponent,
-                                                                              isDirectory: false)
-            
-            //  Actually saving the bookmark data.
-            try URL.writeBookmarkData(bookmark, to: bookmarkDataURL)
-            
-            //  Tell the bookmark view controller that the bookmarks were updated.
-            self.delegate?.bookmarksWereUpdated()
-        } catch {
-            throw error
-        }
+        let bookmark = try url.bookmarkData(options: .suitableForBookmarkFile,
+                                            includingResourceValuesForKeys: nil,
+                                            relativeTo: nil)
+        
+        /**
+         *  Get the document directory of the app. The bookmarks will be saved
+         *  in a hidden folder there.
+         */
+        let dir = DocumentManager.shared.activeDocumentsFolderURL
+        
+        //  Get the URL of the bookmark directory (where the bookmarks are saved).
+        let bookmarkDirectoryURL = dir.appendingPathComponent(BookmarkManager.bookmarkDirectory,
+                                                              isDirectory: true)
+        
+        //  Create the bookmarks directory (if it doesn't exist)
+        try FileManager.default.createDirectory(at: bookmarkDirectoryURL,
+                                                withIntermediateDirectories: true,
+                                                attributes: nil)
+        
+        //  The URL for where the bookmark data will be saved.
+        let bookmarkDataURL = bookmarkDirectoryURL.appendingPathComponent(url.lastPathComponent,
+                                                                          isDirectory: false)
+        
+        //  Actually saving the bookmark data.
+        try URL.writeBookmarkData(bookmark, to: bookmarkDataURL)
+        
+        //  Tell the bookmark view controller that the bookmarks were updated.
+        self.delegate?.bookmarksWereUpdated()
     }
     
     /// Deletes a URL from the bookmarks.
