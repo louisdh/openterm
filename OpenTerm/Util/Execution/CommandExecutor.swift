@@ -30,13 +30,18 @@ class CommandExecutor {
     weak var delegate: CommandExecutorDelegate?
 
     /// Dispatch queue to serially run commands on.
-    private let queue = DispatchQueue(label: "CommandExecutor", qos: .userInteractive)
+    private let executionQueue = DispatchQueue(label: "CommandExecutor", qos: .userInteractive)
+    /// Dispatch queue that delegate methods will be called on.
+    private let delegateQueue = DispatchQueue(label: "CommandExecutor-Delegate", qos: .userInteractive)
 
     // Create new pipes for our own stdout/stderr
     private let stdout = Pipe()
     private let stderr = Pipe()
     fileprivate let stdout_file: UnsafeMutablePointer<FILE>?
     fileprivate let stderr_file: UnsafeMutablePointer<FILE>?
+
+    // The "End of transmission" control code. When received by stdout pipe, the didFinishDispatchWithExitCode delegate method is called.
+    private static let endCtrlCode = Character("\u{0004}")
 
     /// Context from commands run by this executor
     private var context = CommandExecutionContext()
@@ -53,7 +58,7 @@ class CommandExecutor {
 
     // Dispatch a new text-based command to execute.
     func dispatch(_ command: String) {
-        queue.async {
+        executionQueue.async {
             let returnCode: ReturnCode
             do {
                 let executorCommand = self.executorCommand(forCommand: command, inContext: self.context)
@@ -61,7 +66,7 @@ class CommandExecutor {
             } catch {
                 returnCode = 1
                 // If an error was thrown while running, send it to the stderr
-                DispatchQueue.main.async {
+                self.delegateQueue.async {
                     self.delegate?.commandExecutor(self, receivedStderr: error.localizedDescription)
                 }
             }
@@ -69,11 +74,9 @@ class CommandExecutor {
             /// Save return code into the context
             self.context[.status] = "\(returnCode)"
 
-            // Wait a bit to allow final stdout/stderr to get read.
-            // TODO: This should not be needed, but it seems without it, output comes in after ios_system returns.
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                self.delegate?.commandExecutor(self, didFinishDispatchWithExitCode: returnCode)
-            }
+            // Write the end code to stdout
+            // TODO: Also need to send to stderr?
+            self.stdout.fileHandleForWriting.write(String(CommandExecutor.endCtrlCode).data(using: .utf8)!)
         }
     }
 
@@ -97,20 +100,85 @@ class CommandExecutor {
         return SystemExecutorCommand(command: command)
     }
 
+    private var stdoutBuffer = Data()
     // Called when the stdout file handle is written to
     private func onStdout(_ stdout: FileHandle) {
-        guard let str = String(data: stdout.availableData, encoding: .utf8), !str.isEmpty else { return }
-        DispatchQueue.main.async {
-            self.delegate?.commandExecutor(self, receivedStdout: str)
+        var str = self.decodeUTF8(fromData: stdout.availableData, buffer: &stdoutBuffer)
+
+        var hadEnd: Bool = false
+        if let index = str.index(of: CommandExecutor.endCtrlCode) {
+            str = String(str[..<index])
+            hadEnd = true
+        }
+
+        delegateQueue.async {
+            if !str.isEmpty {
+                self.delegate?.commandExecutor(self, receivedStdout: str)
+            }
+            if hadEnd {
+                let lastStatus = Int32(self.context[.status] ?? "0") ?? 0
+                self.delegate?.commandExecutor(self, didFinishDispatchWithExitCode: lastStatus)
+            }
         }
     }
 
+    private var stderrBuffer = Data()
     // Called when the stderr file handle is written to
     private func onStderr(_ stderr: FileHandle) {
-        guard let str = String(data: stderr.availableData, encoding: .utf8), !str.isEmpty else { return }
-        DispatchQueue.main.async {
+        let str = self.decodeUTF8(fromData: stderr.availableData, buffer: &stderrBuffer)
+
+        delegateQueue.async {
             self.delegate?.commandExecutor(self, receivedStderr: str)
         }
+    }
+
+    private func decodeUTF8(fromData data: Data, buffer: inout Data) -> String {
+        let data = buffer + data
+
+        // Parse what we can from the previous leftover and the new data.
+        let (str, leftover) = self.decodeUTF8(fromData: data)
+
+        // There are two reasons we could get leftover data:
+        // - An invalid character was found in the middle of the string
+        // - An invalid character was found at the end
+        //
+        // We only want to keep data for parsing in the second case, since
+        // the parsing most likely failed due to missing data that will come
+        // in the next read from the pipe.
+        // The max size for the stuff we care about is the width of a utf8 code unit.
+        if leftover.count <= UTF8.CodeUnit.bitWidth {
+            buffer = leftover
+        } else {
+            buffer = Data()
+        }
+
+        return str
+    }
+
+    /// Decode UTF-8 string from the given data.
+    /// This is a custom implementation that decodes what characters it can then returns whatever it can't,
+    /// which is necessary since data can come in arbitrarily-sized chunks of bytes, with characters split
+    /// across multiple chunks.
+    /// The first time decoding fails, all of the rest of the data will be returned.
+    private func decodeUTF8(fromData data: Data) -> (decoded: String, remaining: Data) {
+        let byteArray = [UInt8](data)
+
+        var utf8Decoder = UTF8()
+        var str = ""
+        var byteIterator = byteArray.makeIterator()
+        var decodedByteCount = 0
+        Decode: while true {
+            switch utf8Decoder.decode(&byteIterator) {
+            case .scalarValue(let v):
+                str.append(Character(v))
+                decodedByteCount += UTF8.encode(v)!.count
+            case .emptyInput, .error:
+                break Decode
+            }
+        }
+
+        let remaining = Data.init(bytes: byteArray.suffix(from: decodedByteCount))
+        return (str, remaining)
     }
 }
 
@@ -125,13 +193,7 @@ struct SystemExecutorCommand: CommandExecutorCommand {
         thread_stderr = executor.stderr_file
 
         // Pass the value of the string to system, return its exit code.
-        let returnCode = ios_system(command.utf8CString)
-        
-        // Flush stdout and stderr before returning, so all output is finished before marking command as complete.
-        fflush(executor.stdout_file)
-        fflush(executor.stderr_file)
-
-        return returnCode
+        return ios_system(command.utf8CString)
     }
 }
 

@@ -25,6 +25,7 @@ class TerminalView: UIView {
 
 	let keyboardObserver = KeyboardObserver()
 
+    var currentTextState = ANSITextState()
     var currentCommandStartIndex: String.Index! {
         didSet { self.updateAutoComplete() }
     }
@@ -86,27 +87,54 @@ class TerminalView: UIView {
 
 	}
 
+    /// Performs the given block on the main thread, without dispatching if already there.
+    private func performOnMain(_ block: @escaping () -> Void) {
+        if Thread.isMainThread {
+            block()
+        } else {
+            DispatchQueue.main.async(execute: block)
+        }
+    }
+
+    private func appendText(_ text: NSAttributedString) {
+        dispatchPrecondition(condition: .onQueue(.main))
+
+        let new = NSMutableAttributedString(attributedString: textView.attributedText ?? NSAttributedString())
+        new.append(text)
+        textView.attributedText = new
+
+        let rect = textView.caretRect(for: textView.endOfDocument)
+        textView.scrollRectToVisible(rect, animated: true)
+        self.textView.isScrollEnabled = false
+        self.textView.isScrollEnabled = true
+    }
+    private func appendText(_ text: String) {
+        dispatchPrecondition(condition: .onQueue(.main))
+
+        appendText(NSAttributedString(string: text, attributes: [.foregroundColor: textView.textColor ?? .black, .font: textView.font!]))
+    }
+
     // Display a prompt at the beginning of the line.
     func writePrompt() {
         newLine()
-        textView.text = textView.text + "\(deviceName): "
+        appendText("\(deviceName): ")
         currentCommandStartIndex = textView.text.endIndex
     }
 
     // Appends the given string to the output, and updates the command start index.
     func writeOutput(_ string: String) {
-        var string = string
-        if !string.hasSuffix("\n") {
-            string += "\n"
+        let formattedString = string.formattedAttributedString(withTextState: &self.currentTextState)
+        performOnMain {
+            self.appendText(formattedString)
+            self.currentCommandStartIndex = self.textView.text.endIndex
         }
-        textView.text = textView.text + string
-        currentCommandStartIndex = textView.text.endIndex
     }
 
     // Moves the cursor to a new line, if it's not already
     func newLine() {
+        currentTextState.reset()
         if !textView.text.hasSuffix("\n") && !textView.text.isEmpty {
-            textView.text = textView.text + "\n"
+            appendText("\n")
         }
         currentCommandStartIndex = textView.text.endIndex
     }
@@ -115,6 +143,7 @@ class TerminalView: UIView {
 	func clearScreen() {
 		currentCommandStartIndex = nil
 		textView.text = ""
+        currentTextState.reset()
 	}
 
 	@discardableResult
@@ -135,13 +164,16 @@ class TerminalView: UIView {
 		}
 		set {
 
+            // Remove current command, if present
 			if let currentCommandStartIndex = currentCommandStartIndex, currentCommandStartIndex <= textView.text.endIndex {
 				let currentCmdRange = currentCommandStartIndex..<textView.text.endIndex
-				textView.text.replaceSubrange(currentCmdRange, with: "")
+                let attributedString = NSMutableAttributedString(attributedString: textView.attributedText ?? NSAttributedString())
+                attributedString.replaceCharacters(in: NSRange(currentCmdRange, in: textView.text), with: NSAttributedString())
+                textView.attributedText = attributedString
 			}
 
-			textView.text.append(newValue)
-
+            // Add new current command
+            appendText(newValue)
 		}
 	}
 
