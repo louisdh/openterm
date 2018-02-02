@@ -296,6 +296,27 @@ class ViewController: UIViewController {
         terminalView.textView.selectedTextRange = terminalView.textView.textRange(from: endPosition, to: endPosition)
     }
 
+    @objc func completeCommand() {
+        guard
+            let firstCompletion = terminalView.autoCompleteManager.completions.first?.name,
+            terminalView.currentCommand != firstCompletion
+            else { return }
+
+        let completed: String
+        if let lastCommand = terminalView.currentCommand.components(separatedBy: " ").last {
+            if lastCommand.isEmpty {
+                completed = terminalView.currentCommand + firstCompletion
+            } else {
+                completed = terminalView.currentCommand.replacingOccurrences(of: lastCommand, with: firstCompletion, options: .backwards)
+            }
+        } else {
+            completed = firstCompletion
+        }
+
+        terminalView.currentCommand = completed
+        terminalView.autoCompleteManager.reloadData()
+    }
+
 	override var keyCommands: [UIKeyCommand]? {
 
 		let prevCmd = UIKeyCommand(input: UIKeyInputUpArrow, modifierFlags: UIKeyModifierFlags(rawValue: 0), action: #selector(selectPreviousCommand), discoverabilityTitle: "Previous command")
@@ -308,11 +329,14 @@ class ViewController: UIViewController {
 
 		let endCmd = UIKeyCommand(input: "E", modifierFlags: .control, action: #selector(selectCommandEnd), discoverabilityTitle: "End")
 
+        let tabCmd = UIKeyCommand(input: "\t", modifierFlags: [], action: #selector(completeCommand), discoverabilityTitle: "Complete")
+
 		return [
 			prevCmd,
 			nextCmd,
 			clearBufferCmd,
 //			homeCmd,
+            tabCmd,
 			endCmd
 		]
 	}
