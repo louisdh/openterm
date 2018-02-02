@@ -67,8 +67,6 @@ class ViewController: UIViewController {
 		NotificationCenter.default.addObserver(self, selector: #selector(applicationDidEnterBackground), name: .UIApplicationDidEnterBackground, object: nil)
 
         initializeEnvironment()
-        // mangled names for dlsym(), use swift-demangle to check, nm to get.
-        // replaceCommand("open-url", "_T08OpenTerm7openUrls5Int32VAD4argc_SpySpys4Int8VGSgGSg4argvtF", true)
         replaceCommand("open-url", mangleFunctionName("openUrl"), true)
         replaceCommand("share", mangleFunctionName("shareFile"), true)
         replaceCommand("pbcopy", mangleFunctionName("pbcopy"), true)
