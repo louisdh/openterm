@@ -51,31 +51,37 @@ class BookmarkManager {
                 // Get the url of the current bookmark file.
                 let bookmarkDataURL = bookmarkDirectoryURL.appendingPathComponent(bookmarkFileName)
                 
-                //  We try to load the bookmark from the file.
-                let loadedBookmark = try URL.bookmarkData(withContentsOf: bookmarkDataURL)
-                
-                /**
-                 *  This variable will indicate whether the bookmark is stale.
-                 *  If the bookmark is stale we create a new bookmark with the
-                 *  obtained URL and save the new one instead of the old one.
-                 */
-                var isStale = true
-                
-                // Try to obtain the URL from the bookmark.
-                if let loadedBookmarkURL = try URL(resolvingBookmarkData: loadedBookmark, bookmarkDataIsStale: &isStale) {
+                do {
+                    //  We try to load the bookmark from the file.
+                    let loadedBookmark = try URL.bookmarkData(withContentsOf: bookmarkDataURL)
                     
                     /**
-                     *  If the bookmark is stale, we create a new bookmark
-                     *  from the obtained URL.
+                     *  This variable will indicate whether the bookmark is stale.
+                     *  If the bookmark is stale we create a new bookmark with the
+                     *  obtained URL and save the new one instead of the old one.
                      */
-                    if isStale {
-                        do {
-                            try self.saveBookmarkURL(url: loadedBookmarkURL)
-                        }
-                    }
+                    var isStale = true
                     
-                    // Append the loaded URLs.
-                    bookmarkURLs.append(loadedBookmarkURL)
+                    // Try to obtain the URL from the bookmark.
+                    if let loadedBookmarkURL = try URL(resolvingBookmarkData: loadedBookmark, bookmarkDataIsStale: &isStale) {
+                        
+                        /**
+                         *  If the bookmark is stale, we create a new bookmark
+                         *  from the obtained URL.
+                         */
+                        if isStale {
+                            do {
+                                try self.saveBookmarkURL(url: loadedBookmarkURL)
+                            }
+                        }
+                        
+                        // Append the loaded URLs.
+                        bookmarkURLs.append(loadedBookmarkURL)
+                    }
+                } catch {
+                    
+                    // When loading a bookmark fails, we remove the corresponding file.
+                    try FileManager.default.removeItem(at: bookmarkDataURL)
                 }
             }
             
