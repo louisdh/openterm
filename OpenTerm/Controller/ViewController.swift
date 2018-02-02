@@ -366,19 +366,13 @@ extension ViewController: BookmarkViewControllerDelegate {
     /// - Parameter bookmarkURL: The bookmark that was selected.
     func didSelectBookmarkURL(bookmarkURL: URL) {
         
-        /**
-         *  Access the bookmarked URL
-         */
+        //  Access the bookmarked URL
         _ = bookmarkURL.startAccessingSecurityScopedResource()
         
-        /**
-         *  Change the directory to the bookmarked path.
-         */
+        //  Change the directory to the bookmarked path.
         DocumentManager.shared.fileManager.changeCurrentDirectoryPath(bookmarkURL.path)
         
-        /**
-         *  Update the title.
-         */
+        // Update the title.
         self.updateTitle()
     }
 }

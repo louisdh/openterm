@@ -26,48 +26,32 @@ class BookmarkManager {
     ///
     /// - Returns: The URLs of the saved bookmarks. If something fails, the returned array will be empty.
     func savedBookmarkURLs() -> [URL] {
-        /**
-         *  Get the document directory of the app.
-         */
+        //  Get the document directory of the app.
         let dir = DocumentManager.shared.activeDocumentsFolderURL
             
-        /**
-         *  Get the directory where the bookmarks are saved.
-         */
+        // Get the directory where the bookmarks are saved.
         let bookmarkDirectoryURL = dir.appendingPathComponent(BookmarkManager.bookmarkDirectory,
                                                               isDirectory: true)
         
-        /**
-         *  Create the bookmarks directory (if it doesn't exist)
-         */
+        //  Create the bookmarks directory (if it doesn't exist)
         do {
             try FileManager.default.createDirectory(at: bookmarkDirectoryURL,
                                                     withIntermediateDirectories: true,
                                                     attributes: nil)
             
-            /**
-             *  Get all files that are in the bookmarks directory.
-             */
+            //  Get all files that are in the bookmarks directory.
             let bookmarkFiles = try FileManager.default.contentsOfDirectory(atPath: bookmarkDirectoryURL.path)
             
-            /**
-             *  The array that will hold the obtained URLs. This will be returned eventually.
-             */
+            //  The array that will hold the obtained URLs. This will be returned eventually.
             var bookmarkURLs = [URL]()
             
-            /**
-             *  Iterate all bookmark filenames.
-             */
+            // Iterate all bookmark filenames.
             for bookmarkFileName in bookmarkFiles {
                 
-                /**
-                 *  Get the url of the current bookmark file.
-                 */
+                // Get the url of the current bookmark file.
                 let bookmarkDataURL = bookmarkDirectoryURL.appendingPathComponent(bookmarkFileName)
                 
-                /**
-                 *  We try to load the bookmark from the file.
-                 */
+                //  We try to load the bookmark from the file.
                 let loadedBookmark = try URL.bookmarkData(withContentsOf: bookmarkDataURL)
                 
                 /**
@@ -77,9 +61,7 @@ class BookmarkManager {
                  */
                 var isStale = true
                 
-                /**
-                 *  Try to obtain the URL from the bookmark.
-                 */
+                // Try to obtain the URL from the bookmark.
                 if let loadedBookmarkURL = try URL(resolvingBookmarkData: loadedBookmark, bookmarkDataIsStale: &isStale) {
                     
                     /**
@@ -92,9 +74,7 @@ class BookmarkManager {
                         }
                     }
                     
-                    /**
-                     *  Append the loaded URLs.
-                     */
+                    // Append the loaded URLs.
                     bookmarkURLs.append(loadedBookmarkURL)
                 }
             }
@@ -110,21 +90,17 @@ class BookmarkManager {
     ///
     /// - Parameter sender: The view controller that asks to save the current directory. (Might be used to display alerts.)
     func saveBookmarkForCurrentDirectory(sender: UIViewController) {
-        /**
-         *  Get the path of the current directory and create the corresponding URL.
-         */
+        
+        // Get the path of the current directory and create the corresponding URL.
         let currentDirectoryPath = DocumentManager.shared.fileManager.currentDirectoryPath
         let currentDirectoryURL = URL(fileURLWithPath: currentDirectoryPath)
         
-        /**
-         *  If saving the URL fails, we show an alert with the error.
-         */
+        //  If saving the URL fails, we show an alert with the error.
         do {
             try self.saveBookmarkURL(url: currentDirectoryURL)
         } catch {
-            /**
-             *  We inform the user that the bookmark could not be saved.
-             */
+            
+            //  We inform the user that the bookmark could not be saved.
             let alertController = UIAlertController(title: "Could not save bookmark.",
                                                     message: error.localizedDescription,
                                                     preferredStyle: .alert)
@@ -165,34 +141,24 @@ class BookmarkManager {
              *  in a hidden folder there.
              */
             let dir = DocumentManager.shared.activeDocumentsFolderURL
-                
-            /**
-             *  Get the URL of the bookmark directory (where the bookmarks are saved).
-             */
+            
+            //  Get the URL of the bookmark directory (where the bookmarks are saved).
             let bookmarkDirectoryURL = dir.appendingPathComponent(BookmarkManager.bookmarkDirectory,
                                                                   isDirectory: true)
             
-            /**
-             *  Create the bookmarks directory (if it doesn't exist)
-             */
+            //  Create the bookmarks directory (if it doesn't exist)
             try FileManager.default.createDirectory(at: bookmarkDirectoryURL,
                                                     withIntermediateDirectories: true,
                                                     attributes: nil)
             
-            /**
-             *  The URL for where the bookmark data will be saved.
-             */
+            //  The URL for where the bookmark data will be saved.
             let bookmarkDataURL = bookmarkDirectoryURL.appendingPathComponent(url.lastPathComponent,
                                                                               isDirectory: false)
             
-            /**
-             *  Actually saving the bookmark data.
-             */
+            //  Actually saving the bookmark data.
             try URL.writeBookmarkData(bookmark, to: bookmarkDataURL)
             
-            /**
-             *  Tell the bookmark view controller that the bookmarks were updated.
-             */
+            //  Tell the bookmark view controller that the bookmarks were updated.
             self.delegate?.bookmarksWereUpdated()
         } catch {
             throw error
@@ -203,34 +169,24 @@ class BookmarkManager {
     ///
     /// - Parameter bookmarkURL: The URL to be deleted.
     func deleteBookmarkURL(bookmarkURL: URL) {
-        /**
-         *  Get the document directory of the app.
-         */
+        //  Get the document directory of the app.
         let dir = DocumentManager.shared.activeDocumentsFolderURL
         
-        /**
-         *  Get the directory of where the bookmarks are saved.
-         */
+        //  Get the directory of where the bookmarks are saved.
         let bookmarkDirectoryURL = dir.appendingPathComponent(BookmarkManager.bookmarkDirectory,
                                                               isDirectory: true)
         
-        /**
-         *  Create the bookmarks directory (if it doesn't exist)
-         */
+        //  Create the bookmarks directory (if it doesn't exist)
         do {
             try FileManager.default.createDirectory(at: bookmarkDirectoryURL,
                                                     withIntermediateDirectories: true,
                                                     attributes: nil)
             
-            /**
-             *  The URL for where the bookmark data was saved to.
-             */
+            //  The URL for where the bookmark data was saved to.
             let bookmarkFileURL = bookmarkDirectoryURL.appendingPathComponent(bookmarkURL.lastPathComponent,
                                                                               isDirectory: false)
             
-            /**
-             *  Actually deleting the file.
-             */
+            //  Actually deleting the file.
             try FileManager.default.removeItem(at: bookmarkFileURL)
         } catch {
             

@@ -20,9 +20,7 @@ protocol BookmarkViewControllerDelegate: class {
 
 class BookmarkViewController: UIViewController {
     
-    /**
-     *  Stores all bookmarked URLs.
-     */
+    //  Stores all bookmarked URLs.
     var bookmarks = [URL]()
     
     let bookmarkManager = BookmarkManager()
@@ -43,9 +41,7 @@ class BookmarkViewController: UIViewController {
         // Remove separators beyond content
         self.tableView.tableFooterView = UIView()
         
-        /**
-         *  Get all the saved bookmarks from the delegate.
-         */
+        //  Get all the saved bookmarks from the delegate.
         self.bookmarks = self.bookmarkManager.savedBookmarkURLs()
         
         tableView.dataSource = self
@@ -80,9 +76,7 @@ extension BookmarkViewController: UITableViewDataSource {
         
         cell.backgroundColor = self.view.backgroundColor
         
-        /**
-         *  Show the name of the bookmark (last path component) and the actual file path in the cell.
-         */
+        //  Show the name of the bookmark (last path component) and the actual file path in the cell.
         let bookmarkURL = bookmarks[indexPath.row]
         cell.textLabel?.text = "\(bookmarkURL.lastPathComponent): \(bookmarkURL.absoluteString)"
         
@@ -92,25 +86,17 @@ extension BookmarkViewController: UITableViewDataSource {
         return cell
     }
     
-    /**
-     *  Enable deleting a bookmark by swiping the corresponding cell.
-     */
+    //  Enable deleting a bookmark by swiping the corresponding cell.
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         
-        /**
-         *  If the bookmark should be deleted...
-         */
+        //  If the bookmark should be deleted...
         if editingStyle == .delete {
             
-            /**
-             *  Notify the delegate that this bookmark should be deleted.
-             */
+            //  Notify the delegate that this bookmark should be deleted.
             let bookmarkURLToDelete = self.bookmarks[indexPath.row]
             self.bookmarkManager.deleteBookmarkURL(bookmarkURL: bookmarkURLToDelete)
             
-            /**
-             *  Then delete the row from the table view.
-             */
+            //  Then delete the row from the table view.
             self.bookmarks.remove(at: indexPath.row)
             self.tableView.deleteRows(at: [indexPath], with: .automatic)
         }
@@ -124,9 +110,7 @@ extension BookmarkViewController: UITableViewDelegate {
         
         tableView.deselectRow(at: indexPath, animated: true)
         
-        /**
-         *  When a bookmark is selected, we notify the delegate about this.
-         */
+        //  When a bookmark is selected, we notify the delegate about this.
         let selectedBookmarkURL = bookmarks[indexPath.row]
         delegate?.didSelectBookmarkURL(bookmarkURL: selectedBookmarkURL)
         
