@@ -68,10 +68,11 @@ class ViewController: UIViewController {
 
         initializeEnvironment()
         // mangled names for dlsym(), use swift-demangle to check, nm to get.
-        replaceCommand("open-url", "_T08OpenTerm7openUrls5Int32VAD4argc_SpySpys4Int8VGSgGSg4argvtF", true)
-        replaceCommand("share", "_T08OpenTerm9shareFiles5Int32VAD4argc_SpySpys4Int8VGSgGSg4argvtF", true)
-        replaceCommand("pbcopy", "_T08OpenTerm6pbcopys5Int32VAD4argc_SpySpys4Int8VGSgGSg4argvtF", true)
-        replaceCommand("pbpaste", "_T08OpenTerm7pbpastes5Int32VAD4argc_SpySpys4Int8VGSgGSg4argvtF", true) 
+        // replaceCommand("open-url", "_T08OpenTerm7openUrls5Int32VAD4argc_SpySpys4Int8VGSgGSg4argvtF", true)
+        replaceCommand("open-url", mangleFunctionName("openUrl"), true)
+        replaceCommand("share", mangleFunctionName("shareFile"), true)
+        replaceCommand("pbcopy", mangleFunctionName("pbcopy"), true)
+        replaceCommand("pbpaste", mangleFunctionName("pbpaste"), true)
 
         // Call reloadData for the added commands.
         terminalView.autoCompleteManager.reloadData()
@@ -88,6 +89,13 @@ class ViewController: UIViewController {
 
 	}
 
+    func mangleFunctionName(_ functionName: String) -> String {
+        // This works because all functions have the same signature:
+        // (argc: Int32, argv: UnsafeMutablePointer<UnsafeMutablePointer<Int8>?>?) -> Int32
+        // The first part is the class name: _T0 + length + name. To change if not "OpenTerm"
+        return "_T08OpenTerm" + String(functionName.count) + functionName + "s5Int32VAD4argc_SpySpys4Int8VGSgGSg4argvtF"
+    }
+    
 	var didFirstLayout = false
 
 	override func viewDidLayoutSubviews() {
