@@ -155,8 +155,11 @@ class BookmarkManager {
                                                 withIntermediateDirectories: true,
                                                 attributes: nil)
         
+        var fileName = url.absoluteString.replacingOccurrences(of: "file://", with: "")
+        fileName = fileName.replacingOccurrences(of: "/", with: "_")
+
         //  The URL for where the bookmark data will be saved.
-        let bookmarkDataURL = bookmarkDirectoryURL.appendingPathComponent(url.lastPathComponent,
+        let bookmarkDataURL = bookmarkDirectoryURL.appendingPathComponent(fileName,
                                                                           isDirectory: false)
         
         //  Actually saving the bookmark data.
@@ -183,8 +186,11 @@ class BookmarkManager {
                                                     withIntermediateDirectories: true,
                                                     attributes: nil)
             
+            var fileName = bookmarkURL.absoluteString.replacingOccurrences(of: "file://", with: "")
+            fileName = fileName.replacingOccurrences(of: "/", with: "_")
+            
             //  The URL for where the bookmark data was saved to.
-            let bookmarkFileURL = bookmarkDirectoryURL.appendingPathComponent(bookmarkURL.lastPathComponent,
+            let bookmarkFileURL = bookmarkDirectoryURL.appendingPathComponent(fileName,
                                                                               isDirectory: false)
             
             //  Actually deleting the file.

@@ -87,6 +87,8 @@ extension BookmarkViewController: UITableViewDataSource {
             urlDescription = sanitizedDescription
         }
         
+        urlDescription = urlDescription.replacingOccurrences(of: "file://", with: "")
+        
         cell.textLabel?.text = "\(bookmarkURL.lastPathComponent): \(urlDescription)"
         
         cell.textLabel?.textColor = .white
