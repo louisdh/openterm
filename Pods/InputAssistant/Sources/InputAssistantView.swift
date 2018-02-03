@@ -84,7 +84,6 @@ open class InputAssistantView: UIInputView {
         
         for stackView in [leadingStackView, trailingStackView] {
             stackView.spacing = 10
-            stackView.tintColor = .black
             stackView.alignment = .center
             stackView.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
             updateActions([], stackView)
@@ -97,23 +96,72 @@ open class InputAssistantView: UIInputView {
         let containerStackView = UIStackView(arrangedSubviews: [leadingStackView, suggestionsCollectionView, trailingStackView])
         containerStackView.alignment = .fill
         containerStackView.axis = .horizontal
-        containerStackView.distribution = .equalSpacing
-        containerStackView.spacing = 10
-        
+        containerStackView.distribution = .equalCentering
+
+        // Stretch to fill bounds
+        containerStackView.frame = self.bounds
         self.addSubview(containerStackView)
-        containerStackView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            containerStackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 15),
-            containerStackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -15),
-            containerStackView.topAnchor.constraint(equalTo: topAnchor),
-            containerStackView.bottomAnchor.constraint(equalTo: bottomAnchor)
-        ])
+        containerStackView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
     }
     
     public required init?(coder aDecoder: NSCoder) { fatalError("init(coder:) has not been implemented") }
     
     public func reloadData() {
         suggestionsCollectionView.reloadData()
+    }
+
+    /// The keyboard appearance of the attached text input
+    internal var keyboardAppearance: UIKeyboardAppearance = .default {
+        didSet {
+            switch keyboardAppearance {
+            case .dark: self.tintColor = .white
+            default: self.tintColor = .black
+            }
+        }
+    }
+    private var keyboardAppearanceObserver: NSKeyValueObservation?
+
+    /// Attach the inputAssistant to the given UITextView.
+    public func attach(to textInput: UITextView) {
+        self.keyboardAppearance = textInput.keyboardAppearance
+
+        // Hide default undo/redo/etc buttons
+        textInput.inputAssistantItem.leadingBarButtonGroups = []
+        textInput.inputAssistantItem.trailingBarButtonGroups = []
+
+        // Disable built-in autocomplete
+        textInput.autocorrectionType = .no
+
+        // Add the input assistant view as an accessory view
+        textInput.inputAccessoryView = self
+
+        keyboardAppearanceObserver = textInput.observe(\UITextView.keyboardAppearance) { [weak self] textInput, _ in
+            self?.keyboardAppearance = textInput.keyboardAppearance
+        }
+    }
+    /// Attach the inputAssistant to the given UITextView.
+    public func attach(to textInput: UITextField) {
+        self.keyboardAppearance = textInput.keyboardAppearance
+
+        // Hide default undo/redo/etc buttons
+        textInput.inputAssistantItem.leadingBarButtonGroups = []
+        textInput.inputAssistantItem.trailingBarButtonGroups = []
+
+        // Disable built-in autocomplete
+        textInput.autocorrectionType = .no
+
+        // Add the input assistant view as an accessory view
+        textInput.inputAccessoryView = self
+
+        keyboardAppearanceObserver = textInput.observe(\UITextField.keyboardAppearance) { [weak self] textInput, _ in
+            self?.keyboardAppearance = textInput.keyboardAppearance
+        }
+    }
+
+    open override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        updateActions(leadingActions, leadingStackView)
+        updateActions(trailingActions, trailingStackView)
     }
     
     /// Remove existing actions, and add new ones to the given leading/trailing stack view.
@@ -126,12 +174,19 @@ open class InputAssistantView: UIInputView {
             emptyView.widthAnchor.constraint(equalToConstant: 0).isActive = true
             stackView.addArrangedSubview(emptyView)
         } else {
+            let itemWidth: CGFloat = self.traitCollection.horizontalSizeClass == .regular ? 60 : 40
             for action in actions {
                 let button = UIButton.init(type: .system)
                 button.setImage(action.image.scaled(toSize: CGSize(width: 25, height: 25)), for: .normal)
                 if let target = action.target, let action = action.action {
                     button.addTarget(target, action: action, for: .touchUpInside)
                 }
+
+                // If possible, the button should be at least 40px wide for a good sized tap target
+
+                let widthConstraint = button.widthAnchor.constraint(equalToConstant: itemWidth)
+                widthConstraint.priority = .defaultHigh
+                widthConstraint.isActive = true
                 
                 stackView.addArrangedSubview(button)
             }
