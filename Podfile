@@ -8,5 +8,6 @@ target 'OpenTerm' do
 
   pod 'PanelKit'
   pod 'InputAssistant'
+  pod 'TabView'
 end
 
