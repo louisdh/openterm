@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  TerminalViewController.swift
 //  OpenTerm
 //
 //  Created by Louis D'hauwe on 07/12/2017.
@@ -30,35 +30,73 @@ extension String {
 
 }
 
-class ViewController: UIViewController {
+class TerminalViewController: UIViewController {
 
-	@IBOutlet weak var terminalView: TerminalView!
+    let terminalView: TerminalView
 
-	@IBOutlet weak var contentWrapperView: UIView!
+	let contentWrapperView: UIView
 
-	var historyViewController: HistoryViewController!
+	let historyViewController: HistoryViewController
 	var historyPanelViewController: PanelViewController!
 
-	var scriptsViewController: ScriptsViewController!
+	let scriptsViewController: ScriptsViewController
 	var scriptsPanelViewController: PanelViewController!
 
     let executor = CommandExecutor()
 
+    private var overflowItems: [OverflowItem] = [] {
+        didSet { applyOverflowState() }
+    }
+    private var overflowState: OverflowState = .compact {
+        didSet { applyOverflowState() }
+    }
+
+    init() {
+        terminalView = TerminalView()
+        contentWrapperView = UIView()
+
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        historyViewController = storyboard.instantiateViewController(withIdentifier: "HistoryViewController") as! HistoryViewController
+        scriptsViewController = storyboard.instantiateViewController(withIdentifier: "ScriptsViewController") as! ScriptsViewController
+
+        super.init(nibName: nil, bundle: nil)
+
+        overflowItems = [
+            .init(visibleInBar: true, icon: #imageLiteral(resourceName: "Open"), title: "Open", action: self.showDocumentPicker),
+//            .init(visibleInBar: true, icon: #imageLiteral(resourceName: "Bookmarks"), title: "Bookmarks", action: self.showBookmarks),
+            .init(visibleInBar: true, icon: #imageLiteral(resourceName: "History"), title: "History", action: self.showHistory),
+            .init(visibleInBar: false, icon: #imageLiteral(resourceName: "Script"), title: "Scripts", action: self.showScripts)
+        ]
+
+        historyPanelViewController = PanelViewController(with: historyViewController, in: self)
+        historyPanelViewController.view.backgroundColor = .panelBackgroundColor
+        scriptsPanelViewController = PanelViewController(with: scriptsViewController, in: self)
+        scriptsPanelViewController.view.backgroundColor = .panelBackgroundColor
+
+        historyViewController.delegate = self
+        executor.delegate = self
+        terminalView.delegate = self
+    }
+
+    required init?(coder aDecoder: NSCoder) { fatalError("init(coder:) has not been implemented") }
+
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
-		let storyboard = UIStoryboard(name: "Main", bundle: nil)
-		historyViewController = storyboard.instantiateViewController(withIdentifier: "HistoryViewController") as! HistoryViewController
-		historyViewController.delegate = self
+        // Content wrapper is root view
+        contentWrapperView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(contentWrapperView)
+        NSLayoutConstraint.activate([
+            contentWrapperView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            contentWrapperView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            contentWrapperView.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor),
+            contentWrapperView.bottomAnchor.constraint(equalTo: view.layoutMarginsGuide.bottomAnchor)
+        ])
 
-		historyPanelViewController = PanelViewController(with: historyViewController, in: self)
-
-		scriptsViewController = storyboard.instantiateViewController(withIdentifier: "ScriptsViewController") as! ScriptsViewController
-		scriptsPanelViewController = PanelViewController(with: scriptsViewController, in: self)
-
-        executor.delegate = self
-
-		terminalView.delegate = self
+        // Add terminal view as subview
+        terminalView.frame = contentWrapperView.bounds
+        terminalView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        contentWrapperView.addSubview(terminalView)
 
 		updateTitle()
 
@@ -119,6 +157,12 @@ class ViewController: UIViewController {
 
 	}
 
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+
+        self.overflowState = self.traitCollection.horizontalSizeClass == .compact ? .compact : .expanded
+    }
+
 	func setSSLCertIfNeeded() {
 		
 		guard let cString = getenv("SSL_CERT_FILE") else {
@@ -159,21 +203,11 @@ class ViewController: UIViewController {
 		}
 		
 	}
-	
-	var didRequestReview = false
 
 	@objc
 	func didDismissKeyboard() {
 
-		guard !didRequestReview else {
-			return
-		}
-
-		if HistoryManager.history.count > 5 {
-			SKStoreReviewController.requestReview()
-			didRequestReview = true
-		}
-
+        StoreReviewPrompter.promptIfNeeded()
 	}
 
 	@objc
@@ -182,39 +216,6 @@ class ViewController: UIViewController {
 		savePanelStates()
 
 	}
-
-	@IBAction func openFolder(_ sender: UIBarButtonItem) {
-
-		terminalView.resignFirstResponder()
-
-		let picker = UIDocumentPickerViewController(documentTypes: [kUTTypeFolder as String], in: .open)
-		picker.allowsMultipleSelection = true
-		picker.delegate = self
-
-		self.present(picker, animated: true, completion: nil)
-
-	}
-
-	@IBAction func showHistory(_ sender: UIBarButtonItem) {
-
-		historyPanelViewController.modalPresentationStyle = .popover
-		historyPanelViewController.popoverPresentationController?.barButtonItem = sender
-
-		historyPanelViewController.popoverPresentationController?.backgroundColor = historyViewController.view.backgroundColor
-		present(historyPanelViewController, animated: true, completion: nil)
-
-	}
-
-	@IBAction func showScripts(_ sender: UIBarButtonItem) {
-
-		scriptsPanelViewController.modalPresentationStyle = .popover
-		scriptsPanelViewController.popoverPresentationController?.barButtonItem = sender
-
-		scriptsPanelViewController.popoverPresentationController?.backgroundColor = scriptsViewController.view.backgroundColor
-		present(scriptsPanelViewController, animated: true, completion: nil)
-
-	}
-
 	func availableCommands() -> [String] {
 
         let commands = String(commandsAsString())
@@ -341,9 +342,37 @@ class ViewController: UIViewController {
 		]
 	}
 
+    private func presentPopover(_ viewController: UIViewController, from presentingView: UIView) {
+        viewController.modalPresentationStyle = .popover
+        viewController.popoverPresentationController?.sourceView = presentingView
+        viewController.popoverPresentationController?.sourceRect = presentingView.bounds
+        viewController.popoverPresentationController?.permittedArrowDirections = .up
+        viewController.popoverPresentationController?.backgroundColor = viewController.view.backgroundColor
+
+        present(viewController, animated: true, completion: nil)
+    }
+
+    private func showDocumentPicker(_ sender: UIView) {
+        terminalView.resignFirstResponder()
+
+        let picker = UIDocumentPickerViewController(documentTypes: [kUTTypeFolder as String], in: .open)
+        picker.allowsMultipleSelection = true
+        picker.delegate = self
+
+        self.present(picker, animated: true, completion: nil)
+    }
+    private func showHistory(_ sender: UIView) {
+        presentPopover(historyPanelViewController, from: sender)
+    }
+    private func showScripts(_ sender: UIView) {
+        presentPopover(scriptsPanelViewController, from: sender)
+    }
+    private func showBookmarks(_ sender: UIView) {
+        // TODO
+    }
 }
 
-extension ViewController: UIDocumentPickerDelegate {
+extension TerminalViewController: UIDocumentPickerDelegate {
 
 	func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
 
@@ -361,7 +390,7 @@ extension ViewController: UIDocumentPickerDelegate {
 
 }
 
-extension ViewController: CommandExecutorDelegate {
+extension TerminalViewController: CommandExecutorDelegate {
 
     func commandExecutor(_ commandExecutor: CommandExecutor, receivedStdout stdout: String) {
         terminalView.writeOutput(sanitizeOutput(stdout))
@@ -386,7 +415,7 @@ extension ViewController: CommandExecutorDelegate {
     }
 }
 
-extension ViewController: TerminalViewDelegate {
+extension TerminalViewController: TerminalViewDelegate {
 
 	func didEnterCommand(_ command: String) {
 
@@ -422,7 +451,7 @@ extension ViewController: TerminalViewDelegate {
 
 }
 
-extension ViewController: HistoryViewControllerDelegate {
+extension TerminalViewController: HistoryViewControllerDelegate {
 
 	func didSelectCommand(command: String) {
 
@@ -432,7 +461,7 @@ extension ViewController: HistoryViewControllerDelegate {
 
 }
 
-extension ViewController: PanelManager {
+extension TerminalViewController: PanelManager {
 
 	var panels: [PanelViewController] {
 		return [historyPanelViewController, scriptsPanelViewController]
@@ -454,7 +483,7 @@ extension ViewController: PanelManager {
 
 }
 
-extension ViewController {
+extension TerminalViewController {
 
 	@objc
 	func savePanelStates() {
@@ -498,4 +527,129 @@ extension ViewController {
 
 	}
 
+}
+
+private extension TerminalViewController {
+
+    /// State of the overflow button items
+    enum OverflowState: Int {
+        /// All items are visible
+        case expanded
+
+        /// All items are in an overflow menu
+        case compact
+    }
+
+    /// Item to display in either the right bar button items or in an overflow menu
+    struct OverflowItem {
+        let visibleInBar: Bool
+        let icon: UIImage
+        let title: String
+        let action: (_ sender: UIView) -> Void
+    }
+
+    func applyOverflowState() {
+        let overflowItem = UIBarButtonItem.init(image: #imageLiteral(resourceName: "More"), style: .plain, target: self, action: #selector(showOverflowMenu(_:)))
+        switch self.overflowState {
+        case .expanded:
+            let visibleItems = overflowItems.filter { $0.visibleInBar }.map { OverflowBarButtonItem.init(item: $0) }
+            self.navigationItem.rightBarButtonItems = visibleItems + (visibleItems.count != overflowItems.count ? [overflowItem] : [])
+        case .compact:
+            self.navigationItem.rightBarButtonItems = [overflowItem]
+        }
+    }
+
+    @objc
+    private func showOverflowMenu(_ sender: UIView) {
+        let items: [OverflowItem]
+        switch self.overflowState {
+        case .expanded:
+            items = overflowItems.filter { !$0.visibleInBar }
+        case .compact:
+            items = overflowItems
+        }
+
+        let menu = OverflowMenuViewController(items: items)
+        menu.modalPresentationStyle = .popover
+        menu.popoverPresentationController?.delegate = menu
+        self.presentPopover(menu, from: sender)
+    }
+
+    private class OverflowMenuViewController: UITableViewController, UIPopoverPresentationControllerDelegate {
+
+        let items: [OverflowItem]
+        init(items: [OverflowItem]) {
+            self.items = items
+            super.init(style: .plain)
+            tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
+            tableView.alwaysBounceVertical = false
+        }
+
+        required init?(coder aDecoder: NSCoder) { fatalError("init(coder:) has not been implemented") }
+
+        override func viewDidLayoutSubviews() {
+            super.viewDidLayoutSubviews()
+
+            self.preferredContentSize = CGSize.init(width: 240, height: tableView.contentSize.height)
+        }
+
+        override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+            return items.count
+        }
+        override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+            let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
+
+            let item = items[indexPath.row]
+            cell.textLabel?.text = item.title
+            cell.imageView?.image = item.icon
+            cell.imageView?.backgroundColor = .darkGray
+            cell.imageView?.layer.cornerRadius = 5
+            cell.backgroundColor = .clear
+            cell.selectionStyle = .none
+
+            return cell
+        }
+
+        override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+            tableView.deselectRow(at: indexPath, animated: true)
+
+            // Get the view that presented this popover
+            guard let presentingView = popoverPresentationController?.sourceView else { return }
+
+            // Dismiss ourself, and run action with presentiing view
+            let item = items[indexPath.row]
+            presentingViewController?.dismiss(animated: true, completion: {
+                item.action(presentingView)
+            })
+        }
+
+        override func tableView(_ tableView: UITableView, didHighlightRowAt indexPath: IndexPath) {
+            tableView.cellForRow(at: indexPath)?.backgroundColor = UIColor.black.withAlphaComponent(0.1)
+        }
+
+        override func tableView(_ tableView: UITableView, didUnhighlightRowAt indexPath: IndexPath) {
+            tableView.cellForRow(at: indexPath)?.backgroundColor = .clear
+        }
+
+        // Always show in popover, even on iPhone
+        func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
+            return .none
+        }
+        func adaptivePresentationStyle(for controller: UIPresentationController, traitCollection: UITraitCollection) -> UIModalPresentationStyle {
+            return .none
+        }
+    }
+
+    private class OverflowBarButtonItem: UIBarButtonItem {
+        var item: OverflowItem?
+        convenience init(item: OverflowItem) {
+            self.init(image: item.icon, style: .plain, target: nil, action: #selector(onTap))
+            self.target = self
+            self.item = item
+        }
+
+        @objc private func onTap(_ sender: UIView) {
+            item?.action(sender)
+        }
+    }
 }
