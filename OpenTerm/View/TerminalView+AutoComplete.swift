@@ -145,9 +145,8 @@ extension TerminalView: AutoCompleteManagerDataSource {
     private func itemsInCurrentDirectory(showFolders: Bool, showFiles: Bool) -> [String] {
         if !showFolders && !showFiles { return [] }
 
-        let fileManager = DocumentManager.shared.fileManager
         do {
-            let contents = try fileManager.contentsOfDirectory(at: URL(fileURLWithPath: fileManager.currentDirectoryPath), includingPropertiesForKeys: [.isDirectoryKey], options: .skipsHiddenFiles)
+            let contents = try DocumentManager.shared.fileManager.contentsOfDirectory(at: executor.currentWorkingDirectory, includingPropertiesForKeys: [.isDirectoryKey], options: .skipsHiddenFiles)
             let files = try contents.filter { url in
                 let resourceValues = try url.resourceValues(forKeys: [.isDirectoryKey])
                 let isDirectory = resourceValues.isDirectory ?? false
