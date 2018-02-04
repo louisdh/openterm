@@ -208,10 +208,11 @@ class TabViewBar: UIView {
     func hideTabsIfNeeded() {
         // To hide, the bar is moved up by its height, then set to isHidden.
         let minimum = (barDataSource?.hidesSingleTab ?? true) ? 1 : 0
-        if tabCollectionView.numberOfItems(inSection: 0) <= minimum && !tabCollectionView.isHidden {
+        let shouldHide = tabCollectionView.numberOfItems(inSection: 0) <= minimum
+        if shouldHide && !tabCollectionView.isHidden {
             tabCollectionView.isHidden = true
             tabTopConstraint?.constant = -tabHeight
-        } else if tabCollectionView.isHidden {
+        } else if !shouldHide && tabCollectionView.isHidden {
             tabCollectionView.isHidden = false
             tabTopConstraint?.constant = 0
         }
