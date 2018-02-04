@@ -283,10 +283,12 @@ class TerminalViewController: UIViewController {
         terminalView.writePrompt()
     }
 
-//    @objc func selectCommandHome() {
-//        // FIXME: set cursor to start of line and offset with deviceName
-//        // Maybe by finding the last "\n"?
-//    }
+    @objc func selectCommandHome() {
+        let commandStartDifference = terminalView.textView.text.distance(from: terminalView.currentCommandStartIndex, to: terminalView.textView.text.endIndex)
+        if let commandStartPosition = terminalView.textView.position(from: terminalView.textView.endOfDocument, offset: -commandStartDifference) {
+            terminalView.textView.selectedTextRange = terminalView.textView.textRange(from: commandStartPosition, to: commandStartPosition)
+        }
+    }
 
     @objc func selectCommandEnd() {
         let endPosition = terminalView.textView.endOfDocument
@@ -315,26 +317,20 @@ class TerminalViewController: UIViewController {
     }
 
 	override var keyCommands: [UIKeyCommand]? {
-
-		let prevCmd = UIKeyCommand(input: UIKeyInputUpArrow, modifierFlags: UIKeyModifierFlags(rawValue: 0), action: #selector(selectPreviousCommand), discoverabilityTitle: "Previous command")
-
-		let nextCmd = UIKeyCommand(input: UIKeyInputDownArrow, modifierFlags: UIKeyModifierFlags(rawValue: 0), action: #selector(selectNextCommand), discoverabilityTitle: "Next command")
-
-		let clearBufferCmd = UIKeyCommand(input: "K", modifierFlags: .command, action: #selector(clearBufferCommand), discoverabilityTitle: "Clear Buffer")
-
-//		let homeCmd = UIKeyCommand(input: "A", modifierFlags: .control, action: #selector(selectCommandHome), discoverabilityTitle: "Home")
-
-		let endCmd = UIKeyCommand(input: "E", modifierFlags: .control, action: #selector(selectCommandEnd), discoverabilityTitle: "End")
-
-        let tabCmd = UIKeyCommand(input: "\t", modifierFlags: [], action: #selector(completeCommand), discoverabilityTitle: "Complete")
-
 		return [
-			prevCmd,
-			nextCmd,
-			clearBufferCmd,
-//			homeCmd,
-            tabCmd,
-			endCmd
+            // Navigation between commands
+			UIKeyCommand(input: UIKeyInputUpArrow, modifierFlags: UIKeyModifierFlags(rawValue: 0), action: #selector(selectPreviousCommand), discoverabilityTitle: "Previous command"),
+			UIKeyCommand(input: UIKeyInputDownArrow, modifierFlags: UIKeyModifierFlags(rawValue: 0), action: #selector(selectNextCommand), discoverabilityTitle: "Next command"),
+
+            // Clear
+			UIKeyCommand(input: "K", modifierFlags: .command, action: #selector(clearBufferCommand), discoverabilityTitle: "Clear Buffer"),
+
+            // Text selection, navigation
+            UIKeyCommand(input: "A", modifierFlags: .control, action: #selector(selectCommandHome), discoverabilityTitle: "Beginning of Line"),
+            UIKeyCommand(input: "E", modifierFlags: .control, action: #selector(selectCommandEnd), discoverabilityTitle: "End of Line"),
+
+            // Tab completion
+			UIKeyCommand(input: "\t", modifierFlags: [], action: #selector(completeCommand), discoverabilityTitle: "Complete")
 		]
 	}
 
@@ -414,6 +410,13 @@ extension TerminalViewController: TerminalViewDelegate {
             let commands = availableCommands().joined(separator: ", ")
             terminalView.writeOutput(commands)
             terminalView.writePrompt()
+            return
+        }
+
+        if command == "exit" {
+            if let parent = self.parent as? TerminalTabViewController {
+                parent.closeTab(self)
+            }
             return
         }
         

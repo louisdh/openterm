@@ -124,6 +124,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		3C15E37C2026CE4F003216CF /* Commands */ = {
+			isa = PBXGroup;
+			children = (
+				1C81BE5620225C3800D07301 /* Clipboard.swift */,
+				BE165407201909030067EC92 /* xCallBackUrl.swift */,
+				BE505065201E5ED900CDFC60 /* Share.swift */,
+			);
+			path = Commands;
+			sourceTree = "<group>";
+		};
 		3C406E1820207CDA005F97C4 /* Execution */ = {
 			isa = PBXGroup;
 			children = (
@@ -234,6 +244,7 @@
 		BE3808541FD9BFB600393EB8 /* OpenTerm */ = {
 			isa = PBXGroup;
 			children = (
+				3C15E37C2026CE4F003216CF /* Commands */,
 				BE244DC6201FBB4F00A7EA4E /* Default certs */,
 				BEA8E28F2001346D00002475 /* Util */,
 				BEA8E28E2001345700002475 /* View */,
@@ -284,10 +295,7 @@
 				F4602B48200A63FC009D0547 /* UserDefaults+UIColor.swift */,
 				BEA4992D1FDC305B001B9B9D /* KeyboardObserver.swift */,
 				BEA499251FD9C4D7001B9B9D /* DocumentManager.swift */,
-				BE505065201E5ED900CDFC60 /* Share.swift */,
 				BE9275052013961D00BD2761 /* UserDefaultsController.swift */,
-				BE165407201909030067EC92 /* xCallBackUrl.swift */,
-				1C81BE5620225C3800D07301 /* Clipboard.swift */,
 				3C905FC920265BC60084BA63 /* StoreReviewPrompter.swift */,
 			);
 			path = Util;

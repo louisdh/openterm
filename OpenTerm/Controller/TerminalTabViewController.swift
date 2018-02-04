@@ -44,4 +44,17 @@ class TerminalTabViewController: TabViewController {
         self.activateTab(TerminalViewController())
     }
 
+    @objc private func closeCurrentTab() {
+        if let visibleViewController = self.visibleViewController {
+            self.closeTab(visibleViewController)
+        }
+    }
+
+    override var keyCommands: [UIKeyCommand]? {
+        return [
+            UIKeyCommand.init(input: "T", modifierFlags: .command, action: #selector(addTab), discoverabilityTitle: "New tab"),
+            UIKeyCommand.init(input: "W", modifierFlags: .command, action: #selector(closeCurrentTab), discoverabilityTitle: "Close tab")
+        ]
+    }
+
 }
