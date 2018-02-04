@@ -48,6 +48,11 @@ class DocumentManager {
 		return ubiquityContainerURL?.appendingPathComponent("Documents")
 	}
 
+    var currentDirectoryURL: URL {
+        get { return URL(fileURLWithPath: fileManager.currentDirectoryPath).standardizedFileURL }
+        set { fileManager.changeCurrentDirectoryPath(newValue.standardizedFileURL.path) }
+    }
+
 	var activeDocumentsFolderURL: URL {
 
 		if let cloudDocumentsURL = cloudDocumentsURL {

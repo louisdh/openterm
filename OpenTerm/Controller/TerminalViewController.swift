@@ -42,8 +42,6 @@ class TerminalViewController: UIViewController {
 	let scriptsViewController: ScriptsViewController
 	var scriptsPanelViewController: PanelViewController!
 
-    let executor = CommandExecutor()
-
     private var overflowItems: [OverflowItem] = [] {
         didSet { applyOverflowState() }
     }
@@ -74,7 +72,6 @@ class TerminalViewController: UIViewController {
         scriptsPanelViewController.view.backgroundColor = .panelBackgroundColor
 
         historyViewController.delegate = self
-        executor.delegate = self
         terminalView.delegate = self
     }
 
@@ -248,8 +245,7 @@ class TerminalViewController: UIViewController {
 	}
 
 	func updateTitle() {
-		let url = URL(fileURLWithPath: DocumentManager.shared.fileManager.currentDirectoryPath)
-		self.title = url.lastPathComponent
+		self.title = terminalView.executor.currentWorkingDirectory.lastPathComponent
 	}
 
 	var commandIndex = 0
@@ -382,37 +378,9 @@ extension TerminalViewController: UIDocumentPickerDelegate {
 
 		_ = firstFolder.startAccessingSecurityScopedResource()
 
-		DocumentManager.shared.fileManager.changeCurrentDirectoryPath(firstFolder.path)
-
-		self.updateTitle()
-
+        self.terminalView.executor.currentWorkingDirectory = firstFolder
 	}
 
-}
-
-extension TerminalViewController: CommandExecutorDelegate {
-
-    func commandExecutor(_ commandExecutor: CommandExecutor, receivedStdout stdout: String) {
-        terminalView.writeOutput(sanitizeOutput(stdout))
-    }
-    func commandExecutor(_ commandExecutor: CommandExecutor, receivedStderr stderr: String) {
-        terminalView.writeOutput(sanitizeOutput(stderr))
-    }
-    func commandExecutor(_ commandExecutor: CommandExecutor, didFinishDispatchWithExitCode exitCode: Int32) {
-        DispatchQueue.main.async {
-            self.terminalView.writePrompt()
-            self.updateTitle()
-        }
-    }
-
-    private func sanitizeOutput(_ output: String) -> String {
-        var output = output
-        // Replace $HOME with "~"
-        output = output.replacingOccurrences(of: DocumentManager.shared.activeDocumentsFolderURL.path, with: "~")
-        // Sometimes, fileManager adds /private in front of the directory
-        output = output.replacingOccurrences(of: "/private", with: "")
-        return output
-    }
 }
 
 extension TerminalViewController: TerminalViewDelegate {
@@ -424,6 +392,10 @@ extension TerminalViewController: TerminalViewDelegate {
 
         processCommand(command)
 	}
+
+    func didChangeCurrentWorkingDirectory(_ workingDirectory: URL) {
+        updateTitle()
+    }
 
     private func processCommand(_ command: String) {
 
@@ -446,7 +418,7 @@ extension TerminalViewController: TerminalViewDelegate {
         }
         
         // Dispatch the command to the executor
-        executor.dispatch(command)
+        terminalView.executor.dispatch(command)
     }
 
 }
