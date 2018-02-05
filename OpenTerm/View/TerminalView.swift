@@ -8,6 +8,7 @@
 
 import UIKit
 import InputAssistant
+import MobileCoreServices
 
 protocol TerminalViewDelegate: class {
 
@@ -69,6 +70,7 @@ class TerminalView: UIView {
 
 		textView.textDragDelegate = self
 		textView.textDropDelegate = self
+        textView.pasteDelegate = self
 
 		self.setupAutoComplete()
 
@@ -95,7 +97,7 @@ class TerminalView: UIView {
             DispatchQueue.main.async(execute: block)
         }
     }
-
+    
     private func appendText(_ text: NSAttributedString) {
         dispatchPrecondition(condition: .onQueue(.main))
 
@@ -108,10 +110,17 @@ class TerminalView: UIView {
         self.textView.isScrollEnabled = false
         self.textView.isScrollEnabled = true
     }
+    
+    // current attributes applied to plain text
+    var attributes: [NSAttributedStringKey : Any] {
+        return [NSAttributedStringKey.font: textView.font!,
+                NSAttributedStringKey.foregroundColor: textView.textColor!]
+    }
+
     private func appendText(_ text: String) {
         dispatchPrecondition(condition: .onQueue(.main))
 
-        appendText(NSAttributedString(string: text, attributes: [.foregroundColor: textView.textColor ?? .black, .font: textView.font!]))
+        appendText(NSAttributedString(string: text, attributes: attributes))
     }
 
     // Display a prompt at the beginning of the line.
@@ -123,7 +132,9 @@ class TerminalView: UIView {
 
     // Appends the given string to the output, and updates the command start index.
     func writeOutput(_ string: String) {
-        let formattedString = string.formattedAttributedString(withTextState: &self.currentTextState)
+        var formattedString = string.formattedAttributedString(withTextState: &self.currentTextState)
+        formattedString = formattedString.withFilesAsLinks()
+        
         performOnMain {
             self.appendText(formattedString)
             self.currentCommandStartIndex = self.textView.text.endIndex
@@ -181,14 +192,100 @@ class TerminalView: UIView {
 
 extension TerminalView: UITextDragDelegate {
 
-	func textDraggableView(_ textDraggableView: UIView & UITextDraggable, itemsForDrag dragRequest: UITextDragRequest) -> [UIDragItem] {
-		return []
-	}
+    private func previewForDrag(dragRequest: UITextDragRequest) -> UIDragPreview {
+        let label = UILabel()
+        label.text = textView.text(in: dragRequest.dragRange)
+        label.backgroundColor = UIColor.clear
+        label.textColor = textView.textColor
+        label.font = textView.font
+        label.textAlignment = .center
+        var size = label.sizeThatFits(CGSize(width: 300, height: 200))
+        size.width += 10
+        size.height += 10
+        label.frame = CGRect(origin: CGPoint.zero, size: size)
+        
+        let parameters = UIDragPreviewParameters()
+        parameters.visiblePath = UIBezierPath.init(roundedRect: label.bounds, cornerRadius: 7)
+        
+        let preview = UIDragPreview(view:label, parameters:parameters)
+        return preview
+    }
+    
+    func textDraggableView(_ textDraggableView: UIView & UITextDraggable, itemsForDrag dragRequest: UITextDragRequest) -> [UIDragItem] {
+        // return dragRequest.suggestedItems
+        
+        // allow dragging URLs
+        var items = [UIDragItem]()
+        for item in dragRequest.suggestedItems {
+            let fileURLType = kUTTypeFileURL as String
+            if item.itemProvider.hasItemConformingToTypeIdentifier(fileURLType) {
+                
+                // determine uti making sure not to use dynamic type
+                let filename = (textView.text(in: dragRequest.dragRange) ?? "") as NSString
+                let uti_ns = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, filename.pathExtension as CFString, nil)?.takeRetainedValue() as NSString?
+                var uti = uti_ns != nil ? String(uti_ns!) : (kUTTypeFileURL as String)
+                if uti.hasPrefix("dyn.") { uti = kUTTypeFileURL as String }
+                
+                let provider = NSItemProvider()
+                provider.registerFileRepresentation(forTypeIdentifier: uti, fileOptions: .openInPlace, visibility: .all,
+                                                    loadHandler: { (completion) in
+
+                    // read url from source provider
+                    let _ = item.itemProvider.loadObject(ofClass: URL.self,
+                                                         completionHandler: { (reader, error) in
+                        completion(reader, true, error)
+                    })
+
+                    return nil
+                })
+                provider.suggestedName = String(filename)
+                
+                let dragItem = UIDragItem(itemProvider: provider)
+                
+                // use label of dragged text as preview
+                dragItem.previewProvider = { return self.previewForDrag(dragRequest: dragRequest) }
+                items.append(dragItem)
+            }
+        }
+        return items
+    }
 
 }
 
 extension TerminalView: UITextDropDelegate {
+    func textDroppableView(_ textDroppableView: UIView & UITextDroppable, proposalForDrop drop: UITextDropRequest) -> UITextDropProposal {
+        let proposal = UITextDropProposal(operation: UIDropOperation.copy)
+        proposal.useFastSameViewOperations = false
+        proposal.dropAction = .replaceSelection
+        return proposal
+    }
+    
+    func textDroppableView(_ textDroppableView: UIView & UITextDroppable,
+                           dropSessionDidEnd session: UIDropSession) {
+        // move cursor to end of document when finished with drop
+        let end = textView.endOfDocument
+        textView.selectedTextRange = textView.textRange(from: end, to: end)
+        textView.becomeFirstResponder()
+    }
+}
 
+extension TerminalView : UITextPasteDelegate {
+    func textPasteConfigurationSupporting(_ textPasteConfigurationSupporting: UITextPasteConfigurationSupporting,
+                                          transform item: UITextPasteItem) {
+        
+        let uti = item.itemProvider.registeredTypeIdentifiers.first ?? (kUTTypeData as String)
+        item.itemProvider.loadInPlaceFileRepresentation(forTypeIdentifier: uti,
+                                                        completionHandler: { url, _, error in
+            // default behaviour on error or non-file URL
+            guard url?.isFileURL ?? false else {
+                item.setDefaultResult()
+                return
+            }
+                                                            
+            let result = relative(filename: url!.path, to: FileManager.default.currentDirectoryPath)
+            item.setResult(string: result)
+        })
+    }    
 }
 
 extension TerminalView: UITextViewDelegate {
