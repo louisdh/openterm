@@ -2360,7 +2360,7 @@ diff -Naur file_cmds-272/cp/utils.c file_cmds/cp/utils.c
  "target_directory");
 diff -Naur file_cmds-272/df/df.c file_cmds/df/df.c
 --- file_cmds-272/df/df.c	2015-05-13 02:57:59.000000000 +0200
-+++ file_cmds/df/df.c	2018-01-23 22:30:00.000000000 +0100
++++ file_cmds/df/df.c	2018-02-01 17:42:13.000000000 +0100
 @@ -61,7 +61,7 @@
  #include <sys/stat.h>
  #include <sys/mount.h>
@@ -2370,10 +2370,12 @@ diff -Naur file_cmds-272/df/df.c file_cmds/df/df.c
  #include <errno.h>
  #include <fcntl.h>
  #include <fstab.h>
-@@ -72,10 +72,11 @@
+@@ -71,11 +71,12 @@
+ #include <string.h>
  #include <sysexits.h>
  #include <unistd.h>
- #include <libutil.h>
+-#include <libutil.h>
++#include "libutil.h"
 +#include "ios_error.h"
  
  #ifdef __APPLE__
@@ -4029,8 +4031,8 @@ diff -Naur file_cmds-272/ls/ls.h file_cmds/ls/ls.h
  #include <sys/acl.h>
 diff -Naur file_cmds-272/ls/print.c file_cmds/ls/print.c
 --- file_cmds-272/ls/print.c	2016-09-28 00:43:20.000000000 +0200
-+++ file_cmds/ls/print.c	2018-01-23 22:30:00.000000000 +0100
-@@ -56,7 +56,7 @@
++++ file_cmds/ls/print.c	2018-02-01 17:42:17.000000000 +0100
+@@ -56,12 +56,12 @@
  #include <uuid/uuid.h>
  #endif
  
@@ -4039,6 +4041,12 @@ diff -Naur file_cmds-272/ls/print.c file_cmds/ls/print.c
  #include <errno.h>
  #include <fts.h>
  #include <math.h>
+ #include <langinfo.h>
+-#include <libutil.h>
++#include "libutil.h"
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <string.h>
 @@ -75,13 +75,15 @@
  #include <stdint.h>		/* intmax_t */
  #include <assert.h>

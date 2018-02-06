@@ -8,6 +8,19 @@
 
 /* Begin PBXBuildFile section */
 		1C81BE5720225C3800D07301 /* Clipboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C81BE5620225C3800D07301 /* Clipboard.swift */; };
+		228541D8201FB62C00B93589 /* libfiles.dylib in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 228541D7201FB62C00B93589 /* libfiles.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		22854240201FC4E700B93589 /* libtar.dylib in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2285423F201FC4E700B93589 /* libtar.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		229EC3CE2024537D004E76C6 /* PanelKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 229EC3CD2024537C004E76C6 /* PanelKit.framework */; };
+		229EC3CF20245527004E76C6 /* ios_system.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 228541DC201FB78200B93589 /* ios_system.framework */; };
+		229EC3D020245527004E76C6 /* ios_system.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 228541DC201FB78200B93589 /* ios_system.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		22AC09DC202056D6006F7D8B /* libcurl.dylib in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 22AC09DB202056D6006F7D8B /* libcurl.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		22D56F8B200268E90090C1F6 /* (null) in Embed Frameworks */ = {isa = PBXBuildFile; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		22F5682A2020CA2E009850FD /* libshell.dylib in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 22F568242020CA2E009850FD /* libshell.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		22F5682B2020CA2E009850FD /* libssh_cmd.dylib in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 22F568252020CA2E009850FD /* libssh_cmd.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		22F5682C2020CA2E009850FD /* libawk.dylib in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 22F568272020CA2E009850FD /* libawk.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		22F5682E2020CA67009850FD /* libtext.dylib in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 22F5682D2020CA66009850FD /* libtext.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		28CDA426202444CC0055206D /* BookmarkViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28CDA425202444CC0055206D /* BookmarkViewController.swift */; };
+		28CDA4292024B3510055206D /* BookmarkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28CDA4282024B3510055206D /* BookmarkManager.swift */; };
 		3C2E4374201EF67C00E4254A /* TerminalView+AutoComplete.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C2E4373201EF67C00E4254A /* TerminalView+AutoComplete.swift */; };
 		3C2E4385201EFF4700E4254A /* AutoCompleteManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C2E4384201EFF4700E4254A /* AutoCompleteManager.swift */; };
 		3C406E1A20207CE7005F97C4 /* CommandExecutor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C406E1920207CE7005F97C4 /* CommandExecutor.swift */; };
@@ -24,7 +37,6 @@
 		5A38CC73C499E1A878353871 /* Pods_OpenTerm.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC01604DAC695ABD64544260 /* Pods_OpenTerm.framework */; };
 		BE000C081FEC4F6C00D06B91 /* ios_system.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BE3768EE1FEC4DCE00D5A2D1 /* ios_system.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		BE000C091FEC4F6F00D06B91 /* ios_system.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BE3768EE1FEC4DCE00D5A2D1 /* ios_system.framework */; settings = {ATTRIBUTES = (Required, ); }; };
-		BE000C0A1FEC4F6F00D06B91 /* ios_system.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = BE3768EE1FEC4DCE00D5A2D1 /* ios_system.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		BE165408201909040067EC92 /* xCallBackUrl.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE165407201909030067EC92 /* xCallBackUrl.swift */; };
 		BE244DC8201FBB6000A7EA4E /* cacert.pem in Resources */ = {isa = PBXBuildFile; fileRef = BE244DC7201FBB6000A7EA4E /* cacert.pem */; };
 		BE3808561FD9BFB600393EB8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE3808551FD9BFB600393EB8 /* AppDelegate.swift */; };
@@ -55,7 +67,15 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				BE000C0A1FEC4F6F00D06B91 /* ios_system.framework in Embed Frameworks */,
+				22F5682E2020CA67009850FD /* libtext.dylib in Embed Frameworks */,
+				22F5682A2020CA2E009850FD /* libshell.dylib in Embed Frameworks */,
+				22F5682B2020CA2E009850FD /* libssh_cmd.dylib in Embed Frameworks */,
+				22854240201FC4E700B93589 /* libtar.dylib in Embed Frameworks */,
+				22F5682C2020CA2E009850FD /* libawk.dylib in Embed Frameworks */,
+				22AC09DC202056D6006F7D8B /* libcurl.dylib in Embed Frameworks */,
+				228541D8201FB62C00B93589 /* libfiles.dylib in Embed Frameworks */,
+				22D56F8B200268E90090C1F6 /* (null) in Embed Frameworks */,
+				229EC3D020245527004E76C6 /* ios_system.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -64,7 +84,21 @@
 
 /* Begin PBXFileReference section */
 		1C81BE5620225C3800D07301 /* Clipboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Clipboard.swift; sourceTree = "<group>"; };
+		228541D7201FB62C00B93589 /* libfiles.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libfiles.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		228541DC201FB78200B93589 /* ios_system.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ios_system.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		2285423F201FC4E700B93589 /* libtar.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libtar.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		229EC3CD2024537C004E76C6 /* PanelKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PanelKit.framework; path = Dependencies/PanelKit.framework; sourceTree = "<group>"; };
+		22AC09DB202056D6006F7D8B /* libcurl.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libcurl.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		22F568242020CA2E009850FD /* libshell.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libshell.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		22F568252020CA2E009850FD /* libssh_cmd.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libssh_cmd.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		22F568262020CA2E009850FD /* libtar.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libtar.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		22F568272020CA2E009850FD /* libawk.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libawk.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		22F568282020CA2E009850FD /* libcurl.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libcurl.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		22F568292020CA2E009850FD /* libfiles.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libfiles.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		22F5682D2020CA66009850FD /* libtext.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libtext.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		24F6A88F715402F565B82F26 /* Pods-Terminal.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Terminal.release.xcconfig"; path = "Pods/Target Support Files/Pods-Terminal/Pods-Terminal.release.xcconfig"; sourceTree = "<group>"; };
+		28CDA425202444CC0055206D /* BookmarkViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BookmarkViewController.swift; sourceTree = "<group>"; };
+		28CDA4282024B3510055206D /* BookmarkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkManager.swift; sourceTree = "<group>"; };
 		3C2E4373201EF67C00E4254A /* TerminalView+AutoComplete.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TerminalView+AutoComplete.swift"; sourceTree = "<group>"; };
 		3C2E4384201EFF4700E4254A /* AutoCompleteManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoCompleteManager.swift; sourceTree = "<group>"; };
 		3C406E1920207CE7005F97C4 /* CommandExecutor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommandExecutor.swift; sourceTree = "<group>"; };
@@ -118,6 +152,8 @@
 			files = (
 				BE000C081FEC4F6C00D06B91 /* ios_system.framework in Frameworks */,
 				BE000C091FEC4F6F00D06B91 /* ios_system.framework in Frameworks */,
+				229EC3CF20245527004E76C6 /* ios_system.framework in Frameworks */,
+				229EC3CE2024537D004E76C6 /* PanelKit.framework in Frameworks */,
 				5A38CC73C499E1A878353871 /* Pods_OpenTerm.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -125,6 +161,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		28CDA4272024B33D0055206D /* Bookmarks */ = {
+			isa = PBXGroup;
+			children = (
+				28CDA4282024B3510055206D /* BookmarkManager.swift */,
+			);
+			path = Bookmarks;
+			sourceTree = "<group>";
+		};
 		3C406E1820207CDA005F97C4 /* Execution */ = {
 			isa = PBXGroup;
 			children = (
@@ -191,6 +235,7 @@
 			isa = PBXGroup;
 			children = (
 				BEE5D942202659320040C72A /* Cub.framework */,
+				229EC3CD2024537C004E76C6 /* PanelKit.framework */,
 				BE3768EE1FEC4DCE00D5A2D1 /* ios_system.framework */,
 				83138AA9A57F46310B4DFF53 /* Pods_Terminal.framework */,
 				FC01604DAC695ABD64544260 /* Pods_OpenTerm.framework */,
@@ -201,13 +246,24 @@
 		BE3808491FD9BFB600393EB8 = {
 			isa = PBXGroup;
 			children = (
+				22F5682D2020CA66009850FD /* libtext.dylib */,
+				22F568272020CA2E009850FD /* libawk.dylib */,
+				22F568282020CA2E009850FD /* libcurl.dylib */,
+				22F568292020CA2E009850FD /* libfiles.dylib */,
+				22F568242020CA2E009850FD /* libshell.dylib */,
+				22F568252020CA2E009850FD /* libssh_cmd.dylib */,
+				22F568262020CA2E009850FD /* libtar.dylib */,
+				22AC09DB202056D6006F7D8B /* libcurl.dylib */,
+				2285423F201FC4E700B93589 /* libtar.dylib */,
+				228541D7201FB62C00B93589 /* libfiles.dylib */,
+				228541DC201FB78200B93589 /* ios_system.framework */,
 				BE3808541FD9BFB600393EB8 /* OpenTerm */,
 				BE3808531FD9BFB600393EB8 /* Products */,
 				BE3768EC1FEC4DCE00D5A2D1 /* Frameworks */,
 				EDE154E4BB3A66786AACAA5C /* Pods */,
 			);
 			sourceTree = "<group>";
-			usesTabs = 0;
+			usesTabs = 1;
 		};
 		BE3808531FD9BFB600393EB8 /* Products */ = {
 			isa = PBXGroup;
@@ -241,6 +297,7 @@
 				3CA32103201FFC0300974B5F /* Scripting */,
 				BE3808571FD9BFB600393EB8 /* ViewController.swift */,
 				BEECFF091FFC1DC0009608B3 /* HistoryViewController.swift */,
+				28CDA425202444CC0055206D /* BookmarkViewController.swift */,
 				BEECFF381FFEC187009608B3 /* SettingsViewController.swift */,
 				F4602B40200A08D0009D0547 /* ColorPickerViewController.swift */,
 			);
@@ -266,6 +323,7 @@
 				3C406E1820207CDA005F97C4 /* Execution */,
 				3CA32100201FF6A100974B5F /* Scripting */,
 				3CE5764120225E1B00760E43 /* History */,
+				28CDA4272024B33D0055206D /* Bookmarks */,
 				BEA8E2902001348C00002475 /* UIColor+AssetCatalog.swift */,
 				F4602B48200A63FC009D0547 /* UserDefaults+UIColor.swift */,
 				BEA4992D1FDC305B001B9B9D /* KeyboardObserver.swift */,
@@ -304,6 +362,7 @@
 				BE000C0B1FEC4F7000D06B91 /* Embed Frameworks */,
 				7E594A5DD24920828A657E90 /* [CP] Embed Pods Frameworks */,
 				0817298A6DFC720C403FB709 /* [CP] Copy Pods Resources */,
+				BEE23C96202A35AD00D038C6 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -429,6 +488,19 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-OpenTerm/Pods-OpenTerm-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
+		BEE23C96202A35AD00D038C6 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if which swiftlint >/dev/null; then\nswiftlint\nelse\necho \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi";
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -437,6 +509,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				BEA8E2912001348C00002475 /* UIColor+AssetCatalog.swift in Sources */,
+				28CDA4292024B3510055206D /* BookmarkManager.swift in Sources */,
 				3CE5764A20226D8900760E43 /* String+ANSIFormatting.swift in Sources */,
 				BEE5D957202793570040C72A /* Cub+SavannaKit.swift in Sources */,
 				3CA320FF201FE8E100974B5F /* ScriptsViewController.swift in Sources */,
@@ -445,6 +518,7 @@
 				BEA499301FDC3B93001B9B9D /* TerminalView.swift in Sources */,
 				F4602B49200A63FC009D0547 /* UserDefaults+UIColor.swift in Sources */,
 				BE3808581FD9BFB600393EB8 /* ViewController.swift in Sources */,
+				28CDA426202444CC0055206D /* BookmarkViewController.swift in Sources */,
 				3CA32105201FFC1300974B5F /* ScriptEditViewController.swift in Sources */,
 				3C2E4374201EF67C00E4254A /* TerminalView+AutoComplete.swift in Sources */,
 				BEECFF391FFEC187009608B3 /* SettingsViewController.swift in Sources */,
@@ -608,6 +682,10 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 6G5LMQ72D8;
 				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Dependencies",
+				);
 				INFOPLIST_FILE = "$(SRCROOT)/OpenTerm/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -630,6 +708,10 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 6G5LMQ72D8;
 				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Dependencies",
+				);
 				INFOPLIST_FILE = "$(SRCROOT)/OpenTerm/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

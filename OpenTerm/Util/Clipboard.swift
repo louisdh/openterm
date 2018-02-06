@@ -28,4 +28,3 @@ public func pbcopy(argc: Int32, argv: UnsafeMutablePointer<UnsafeMutablePointer<
     UIPasteboard.general.string = String(data: data, encoding: .utf8)
     return 0
 }
-

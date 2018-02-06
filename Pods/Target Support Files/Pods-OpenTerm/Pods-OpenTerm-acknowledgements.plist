@@ -138,6 +138,7 @@ SOFTWARE.
 		</dict>
 		<dict>
 			<key>FooterText</key>
+
 			<string>The MIT License (MIT)
 
 Copyright (c) 2015 Realm Inc.

@@ -45,6 +45,9 @@ class ViewController: UIViewController {
 
 	var scriptsViewController: ScriptsViewController!
 	var scriptsPanelViewController: PanelViewController!
+    
+    var bookmarkViewController: BookmarkViewController!
+    var bookmarkPanelViewController: PanelViewController!
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -60,6 +63,11 @@ class ViewController: UIViewController {
 		scriptsViewController = storyboard.instantiateViewController(withIdentifier: "ScriptsViewController") as! ScriptsViewController
 		scriptsPanelViewController = PanelViewController(with: scriptsViewController, in: self)
 
+        bookmarkViewController = storyboard.instantiateViewController(withIdentifier: "BookmarkViewController") as! BookmarkViewController
+        bookmarkViewController.delegate = self
+        
+        bookmarkPanelViewController = PanelViewController(with: bookmarkViewController, in: self)
+        
         executor.delegate = self
 
 		terminalView.delegate = self
@@ -71,11 +79,12 @@ class ViewController: UIViewController {
 		NotificationCenter.default.addObserver(self, selector: #selector(applicationDidEnterBackground), name: .UIApplicationDidEnterBackground, object: nil)
 
         initializeEnvironment()
-        replaceCommand("open-url", openUrl, true)
-        replaceCommand("share", shareFile, true)
-        replaceCommand("pbcopy", pbcopy, true)
-        replaceCommand("pbpaste", pbpaste, true)
-        replaceCommand("cub", cub, true)
+
+        replaceCommand("open-url", mangleFunctionName("openUrl"), true)
+        replaceCommand("share", mangleFunctionName("shareFile"), true)
+        replaceCommand("pbcopy", mangleFunctionName("pbcopy"), true)
+        replaceCommand("pbpaste", mangleFunctionName("pbpaste"), true)
+        replaceCommand("cub", mangleFunctionName("cub"), true)
 
         // Call reloadData for the added commands.
         terminalView.autoCompleteManager.reloadData()
@@ -92,6 +101,13 @@ class ViewController: UIViewController {
 
 	}
 
+    func mangleFunctionName(_ functionName: String) -> String {
+        // This works because all functions have the same signature:
+        // (argc: Int32, argv: UnsafeMutablePointer<UnsafeMutablePointer<Int8>?>?) -> Int32
+        // The first part is the class name: _T0 + length + name. To change if not "OpenTerm"
+        return "_T08OpenTerm" + String(functionName.count) + functionName + "s5Int32VAD4argc_SpySpys4Int8VGSgGSg4argvtF"
+    }
+    
 	var didFirstLayout = false
 
 	override func viewDidLayoutSubviews() {
@@ -110,7 +126,7 @@ class ViewController: UIViewController {
 
 		coordinator.animate(alongsideTransition: { (context) in
 
-		}) { (_) in
+        }, completion: { (_) in
 
 			if !self.allowFloatingPanels {
 				self.closeAllFloatingPanels()
@@ -120,7 +136,7 @@ class ViewController: UIViewController {
 				self.closeAllPinnedPanels()
 			}
 
-		}
+		})
 
 	}
 
@@ -210,6 +226,16 @@ class ViewController: UIViewController {
 
 	}
 
+    @IBAction func showHBookmarks(_ sender: UIBarButtonItem) {
+        
+        bookmarkPanelViewController.modalPresentationStyle = .popover
+        bookmarkPanelViewController.popoverPresentationController?.barButtonItem = sender
+        
+        bookmarkPanelViewController.popoverPresentationController?.backgroundColor = bookmarkViewController.view.backgroundColor
+        present(bookmarkPanelViewController, animated: true, completion: nil)
+        
+    }
+    
 	@IBAction func showScripts(_ sender: UIBarButtonItem) {
 
 		scriptsPanelViewController.modalPresentationStyle = .popover
@@ -302,24 +328,10 @@ class ViewController: UIViewController {
     }
 
     @objc func completeCommand() {
-        guard
-            let firstCompletion = terminalView.autoCompleteManager.completions.first?.name,
-            terminalView.currentCommand != firstCompletion
-            else { return }
-
-        let completed: String
-        if let lastCommand = terminalView.currentCommand.components(separatedBy: " ").last {
-            if lastCommand.isEmpty {
-                completed = terminalView.currentCommand + firstCompletion
-            } else {
-                completed = terminalView.currentCommand.replacingOccurrences(of: lastCommand, with: firstCompletion, options: .backwards)
-            }
-        } else {
-            completed = firstCompletion
+        // When tab key is pressed, insert first completion, if we have one.
+        if let firstCompletion = terminalView.autoCompleteManager.completions.first {
+            terminalView.insertCompletion(firstCompletion)
         }
-
-        terminalView.currentCommand = completed
-        terminalView.autoCompleteManager.reloadData()
     }
 
 	override var keyCommands: [UIKeyCommand]? {
@@ -356,14 +368,28 @@ extension ViewController: UIDocumentPickerDelegate {
 			return
 		}
 
-		_ = firstFolder.startAccessingSecurityScopedResource()
-
-		DocumentManager.shared.fileManager.changeCurrentDirectoryPath(firstFolder.path)
-
-		self.updateTitle()
-
+        self .changeDirectoryToURL(url: firstFolder)
 	}
 
+}
+
+extension ViewController: BookmarkViewControllerDelegate {
+    
+    /// Changes the current directory to the passed url.
+    /// - Note: Only urls that contain the required access permissions will work..
+    ///
+    /// - Parameter bookmarkURL: The bookmark that was selected.
+    func changeDirectoryToURL(url: URL) {
+        
+        //  Access the URL
+        _ = url.startAccessingSecurityScopedResource()
+        
+        //  Change the directory to the path.
+        DocumentManager.shared.fileManager.changeCurrentDirectoryPath(url.path)
+        
+        // Update the title.
+        self.updateTitle()
+    }
 }
 
 extension ViewController: CommandExecutorDelegate {
@@ -383,7 +409,7 @@ extension ViewController: CommandExecutorDelegate {
         }
     }
 
-    private func sanitizeOutput(_ output: String) -> String {
+    internal func sanitizeOutput(_ output: String) -> String {
         var output = output
         // Replace $HOME with "~"
         output = output.replacingOccurrences(of: DocumentManager.shared.activeDocumentsFolderURL.path, with: "~")
@@ -442,7 +468,7 @@ extension ViewController: HistoryViewControllerDelegate {
 extension ViewController: PanelManager {
 
 	var panels: [PanelViewController] {
-		return [historyPanelViewController, scriptsPanelViewController]
+		return [historyPanelViewController, scriptsPanelViewController, bookmarkPanelViewController]
 	}
 
 	var panelContentWrapperView: UIView {
