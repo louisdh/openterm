@@ -35,8 +35,8 @@ class CommandExecutor {
     private let delegateQueue = DispatchQueue(label: "CommandExecutor-Delegate", qos: .userInteractive)
 
     // Create new pipes for our own stdout/stderr
-    private let stdout = Pipe()
-    private let stderr = Pipe()
+    private let stdout_pipe = Pipe()
+    private let stderr_pipe = Pipe()
     fileprivate let stdout_file: UnsafeMutablePointer<FILE>?
     fileprivate let stderr_file: UnsafeMutablePointer<FILE>?
 
@@ -48,17 +48,21 @@ class CommandExecutor {
 
     init() {
         // Get file for stdout/stderr that can be written to
-        stdout_file = fdopen(stdout.fileHandleForWriting.fileDescriptor, "w")
-        stderr_file = fdopen(stderr.fileHandleForWriting.fileDescriptor, "w")
+        stdout_file = fdopen(stdout_pipe.fileHandleForWriting.fileDescriptor, "w")
+        stderr_file = fdopen(stderr_pipe.fileHandleForWriting.fileDescriptor, "w")
 
         // Call the following functions when data is written to stdout/stderr.
-        stdout.fileHandleForReading.readabilityHandler = self.onStdout
-        stderr.fileHandleForReading.readabilityHandler = self.onStderr
+        stdout_pipe.fileHandleForReading.readabilityHandler = self.onStdout
+        stderr_pipe.fileHandleForReading.readabilityHandler = self.onStderr
     }
 
     // Dispatch a new text-based command to execute.
     func dispatch(_ command: String) {
+        let push_stdout = stdout
+        let push_stderr = stderr
         executionQueue.async {
+            stdout = self.stdout_file!
+            stderr = self.stderr_file!
             let returnCode: ReturnCode
             do {
                 let executorCommand = self.executorCommand(forCommand: command, inContext: self.context)
@@ -74,10 +78,12 @@ class CommandExecutor {
             /// Save return code into the context
             self.context[.status] = "\(returnCode)"
 
-            // Write the end code to stdout
+            // Write the end code to stdout_pipe
             // TODO: Also need to send to stderr?
-            self.stdout.fileHandleForWriting.write(String(CommandExecutor.endCtrlCode).data(using: .utf8)!)
+            self.stdout_pipe.fileHandleForWriting.write(String(CommandExecutor.endCtrlCode).data(using: .utf8)!)
         }
+        stdout = push_stdout
+        stderr = push_stderr
     }
 
     /// Take user-entered command, decide what to do with it, then return an executor command that will do the work.

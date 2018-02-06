@@ -41,7 +41,7 @@ __FBSDID("$FreeBSD$");
 #include <stdlib.h>
 #include <string.h>
 #include <locale.h>
-#include <libutil.h>
+#include "libutil.h"
 
 static const int maxscale = 7;
 

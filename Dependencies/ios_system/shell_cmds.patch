@@ -280,7 +280,7 @@ diff -Naur shell_cmds-203/echo/echo.c shell_cmds/echo/echo.c
  	}
 diff -Naur shell_cmds-203/env/env.c shell_cmds/env/env.c
 --- shell_cmds-203/env/env.c	2014-08-05 00:47:11.000000000 +0200
-+++ shell_cmds/env/env.c	2018-01-23 22:30:16.000000000 +0100
++++ shell_cmds/env/env.c	2018-02-01 14:48:56.000000000 +0100
 @@ -42,7 +42,7 @@
  #include <sys/cdefs.h>
  __FBSDID("$FreeBSD$");
@@ -290,7 +290,7 @@ diff -Naur shell_cmds-203/env/env.c shell_cmds/env/env.c
  #include <errno.h>
  #include <stdio.h>
  #include <string.h>
-@@ -50,15 +50,16 @@
+@@ -50,15 +50,18 @@
  #include <unistd.h>
  
  #include "envopts.h"
@@ -303,13 +303,15 @@ diff -Naur shell_cmds-203/env/env.c shell_cmds/env/env.c
  
  static void usage(void);
  
++
++
  int
 -main(int argc, char **argv)
 +env_main(int argc, char **argv)
  {
  	char *altpath, **ep, *p, **parg;
  	char *cleanenv[1];
-@@ -67,6 +68,7 @@
+@@ -67,6 +70,7 @@
  
  	altpath = NULL;
  	want_clear = 0;
@@ -317,7 +319,7 @@ diff -Naur shell_cmds-203/env/env.c shell_cmds/env/env.c
  	while ((ch = getopt(argc, argv, "-iP:S:u:v")) != -1)
  		switch(ch) {
  		case '-':
-@@ -85,15 +87,18 @@
+@@ -85,15 +89,18 @@
  			break;
  		case 'u':
  			if (env_verbosity)
@@ -340,7 +342,7 @@ diff -Naur shell_cmds-203/env/env.c shell_cmds/env/env.c
  				    env_verbosity);
  			break;
  		case '?':
-@@ -104,40 +109,45 @@
+@@ -104,41 +111,71 @@
  		environ = cleanenv;
  		cleanenv[0] = NULL;
  		if (env_verbosity)
@@ -396,6 +398,32 @@ diff -Naur shell_cmds-203/env/env.c shell_cmds/env/env.c
  	    "usage: env [-iv] [-P utilpath] [-S string] [-u name]\n"
  	    "           [name=value ...] [utility [argument ...]]\n");
  	exit(1);
+ }
++
++
++int setenv_main(int argc, char** argv) {
++    if (argc <= 1) return env_main(argc, argv);
++    if (argc > 3) {
++        fprintf(thread_stderr, "setenv: Too many arguments\n"); fflush(thread_stderr);
++        return 0;
++    }
++    // setenv VARIABLE value
++    if (argv[2] != NULL) setenv(argv[1], argv[2], 1);
++    else setenv(argv[1], "", 1); // if there's no value, pass an empty string instead of a null pointer
++    return 0;
++}
++
++int unsetenv_main(int argc, char** argv) {
++    if (argc <= 1) {
++        fprintf(thread_stderr, "unsetenv: Too few arguments\n"); fflush(thread_stderr);
++        return 0;
++    }
++    // unsetenv acts on all parameters
++    for (int i = 1; i < argc; i++) unsetenv(argv[i]);
++    return 0;
++}
++
++
 diff -Naur shell_cmds-203/env/envopts.c shell_cmds/env/envopts.c
 --- shell_cmds-203/env/envopts.c	2014-08-05 00:47:11.000000000 +0200
 +++ shell_cmds/env/envopts.c	2018-01-23 22:30:16.000000000 +0100
@@ -1369,7 +1397,7 @@ diff -Naur shell_cmds-203/w/proc_compare.c shell_cmds/w/proc_compare.c
  
 diff -Naur shell_cmds-203/w/w.c shell_cmds/w/w.c
 --- shell_cmds-203/w/w.c	2007-10-03 11:55:12.000000000 +0200
-+++ shell_cmds/w/w.c	2018-01-23 22:30:16.000000000 +0100
++++ shell_cmds/w/w.c	2018-02-01 17:43:56.000000000 +0100
 @@ -50,15 +50,16 @@
   * This program is similar to the systat command on Tenex/Tops 10/20
   *
@@ -1389,7 +1417,7 @@ diff -Naur shell_cmds-203/w/w.c shell_cmds/w/w.c
  
  #ifndef __APPLE__
  #include <machine/cpu.h>
-@@ -68,7 +69,7 @@
+@@ -68,24 +69,24 @@
  #include <arpa/nameser.h>
  
  #include <ctype.h>
@@ -1398,7 +1426,11 @@ diff -Naur shell_cmds-203/w/w.c shell_cmds/w/w.c
  #include <errno.h>
  #include <fcntl.h>
  #if HAVE_KVM
-@@ -79,13 +80,13 @@
+ #include <kvm.h>
+ #endif
+ #include <langinfo.h>
+-#include <libutil.h>
++#include "libutil.h"
  #include <limits.h>
  #include <locale.h>
  #include <netdb.h>

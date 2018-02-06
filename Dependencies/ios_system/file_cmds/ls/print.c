@@ -61,7 +61,7 @@ __RCSID("$FreeBSD: src/bin/ls/print.c,v 1.57 2002/08/29 14:29:09 keramida Exp $"
 #include <fts.h>
 #include <math.h>
 #include <langinfo.h>
-#include <libutil.h>
+#include "libutil.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
