@@ -10,8 +10,7 @@ DEPENDENCIES:
   - InputAssistant (~> 1.0)
   - PanelKit (~> 2.0)
   - SavannaKit (~> 0.6)
-  - SwiftLint (0.24.2)
-
+  - SwiftLint
 
 SPEC CHECKSUMS:
   Cub: 249c3cd02a996d65dff3a89813837e1f635cebd3
@@ -20,6 +19,6 @@ SPEC CHECKSUMS:
   SavannaKit: 409b6f55cc282b9f2788357108b5379538e0520c
   SwiftLint: 2aa21b96c8d13396a051bc1cb659d2ce1e0075b0
 
-PODFILE CHECKSUM: 6a7797b6eb837cec87821a8d7cdc2fad5d39ac31
+PODFILE CHECKSUM: 80a259e84f26f0fd75ee6a942578d8906c555c70
 
 COCOAPODS: 1.4.0
