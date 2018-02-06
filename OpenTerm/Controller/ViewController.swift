@@ -41,6 +41,9 @@ class ViewController: UIViewController {
 
 	var scriptsViewController: ScriptsViewController!
 	var scriptsPanelViewController: PanelViewController!
+    
+    var bookmarkViewController: BookmarkViewController!
+    var bookmarkPanelViewController: PanelViewController!
 
     let executor = CommandExecutor()
 
@@ -56,6 +59,11 @@ class ViewController: UIViewController {
 		scriptsViewController = storyboard.instantiateViewController(withIdentifier: "ScriptsViewController") as! ScriptsViewController
 		scriptsPanelViewController = PanelViewController(with: scriptsViewController, in: self)
 
+        bookmarkViewController = storyboard.instantiateViewController(withIdentifier: "BookmarkViewController") as! BookmarkViewController
+        bookmarkViewController.delegate = self
+        
+        bookmarkPanelViewController = PanelViewController(with: bookmarkViewController, in: self)
+        
         executor.delegate = self
 
 		terminalView.delegate = self
@@ -205,6 +213,16 @@ class ViewController: UIViewController {
 
 	}
 
+    @IBAction func showHBookmarks(_ sender: UIBarButtonItem) {
+        
+        bookmarkPanelViewController.modalPresentationStyle = .popover
+        bookmarkPanelViewController.popoverPresentationController?.barButtonItem = sender
+        
+        bookmarkPanelViewController.popoverPresentationController?.backgroundColor = bookmarkViewController.view.backgroundColor
+        present(bookmarkPanelViewController, animated: true, completion: nil)
+        
+    }
+    
 	@IBAction func showScripts(_ sender: UIBarButtonItem) {
 
 		scriptsPanelViewController.modalPresentationStyle = .popover
@@ -351,14 +369,28 @@ extension ViewController: UIDocumentPickerDelegate {
 			return
 		}
 
-		_ = firstFolder.startAccessingSecurityScopedResource()
-
-		DocumentManager.shared.fileManager.changeCurrentDirectoryPath(firstFolder.path)
-
-		self.updateTitle()
-
+        self .changeDirectoryToURL(url: firstFolder)
 	}
 
+}
+
+extension ViewController: BookmarkViewControllerDelegate {
+    
+    /// Changes the current directory to the passed url.
+    /// - Note: Only urls that contain the required access permissions will work..
+    ///
+    /// - Parameter bookmarkURL: The bookmark that was selected.
+    func changeDirectoryToURL(url: URL) {
+        
+        //  Access the URL
+        _ = url.startAccessingSecurityScopedResource()
+        
+        //  Change the directory to the path.
+        DocumentManager.shared.fileManager.changeCurrentDirectoryPath(url.path)
+        
+        // Update the title.
+        self.updateTitle()
+    }
 }
 
 extension ViewController: CommandExecutorDelegate {
@@ -376,7 +408,7 @@ extension ViewController: CommandExecutorDelegate {
         }
     }
 
-    private func sanitizeOutput(_ output: String) -> String {
+    internal func sanitizeOutput(_ output: String) -> String {
         var output = output
         // Replace $HOME with "~"
         output = output.replacingOccurrences(of: DocumentManager.shared.activeDocumentsFolderURL.path, with: "~")
@@ -435,7 +467,7 @@ extension ViewController: HistoryViewControllerDelegate {
 extension ViewController: PanelManager {
 
 	var panels: [PanelViewController] {
-		return [historyPanelViewController, scriptsPanelViewController]
+		return [historyPanelViewController, scriptsPanelViewController, bookmarkPanelViewController]
 	}
 
 	var panelContentWrapperView: UIView {

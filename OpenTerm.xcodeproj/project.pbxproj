@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		1C81BE5720225C3800D07301 /* Clipboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C81BE5620225C3800D07301 /* Clipboard.swift */; };
+		28CDA426202444CC0055206D /* BookmarkViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28CDA425202444CC0055206D /* BookmarkViewController.swift */; };
+		28CDA4292024B3510055206D /* BookmarkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28CDA4282024B3510055206D /* BookmarkManager.swift */; };
 		3C2E4374201EF67C00E4254A /* TerminalView+AutoComplete.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C2E4373201EF67C00E4254A /* TerminalView+AutoComplete.swift */; };
 		3C2E4385201EFF4700E4254A /* AutoCompleteManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C2E4384201EFF4700E4254A /* AutoCompleteManager.swift */; };
 		3C406E1A20207CE7005F97C4 /* CommandExecutor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C406E1920207CE7005F97C4 /* CommandExecutor.swift */; };
@@ -63,6 +65,8 @@
 /* Begin PBXFileReference section */
 		1C81BE5620225C3800D07301 /* Clipboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Clipboard.swift; sourceTree = "<group>"; };
 		24F6A88F715402F565B82F26 /* Pods-Terminal.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Terminal.release.xcconfig"; path = "Pods/Target Support Files/Pods-Terminal/Pods-Terminal.release.xcconfig"; sourceTree = "<group>"; };
+		28CDA425202444CC0055206D /* BookmarkViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BookmarkViewController.swift; sourceTree = "<group>"; };
+		28CDA4282024B3510055206D /* BookmarkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkManager.swift; sourceTree = "<group>"; };
 		3C2E4373201EF67C00E4254A /* TerminalView+AutoComplete.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TerminalView+AutoComplete.swift"; sourceTree = "<group>"; };
 		3C2E4384201EFF4700E4254A /* AutoCompleteManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoCompleteManager.swift; sourceTree = "<group>"; };
 		3C406E1920207CE7005F97C4 /* CommandExecutor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommandExecutor.swift; sourceTree = "<group>"; };
@@ -120,6 +124,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		28CDA4272024B33D0055206D /* Bookmarks */ = {
+			isa = PBXGroup;
+			children = (
+				28CDA4282024B3510055206D /* BookmarkManager.swift */,
+			);
+			path = Bookmarks;
+			sourceTree = "<group>";
+		};
 		3C406E1820207CDA005F97C4 /* Execution */ = {
 			isa = PBXGroup;
 			children = (
@@ -234,6 +246,7 @@
 				3CA32103201FFC0300974B5F /* Scripting */,
 				BE3808571FD9BFB600393EB8 /* ViewController.swift */,
 				BEECFF091FFC1DC0009608B3 /* HistoryViewController.swift */,
+				28CDA425202444CC0055206D /* BookmarkViewController.swift */,
 				BEECFF381FFEC187009608B3 /* SettingsViewController.swift */,
 				F4602B40200A08D0009D0547 /* ColorPickerViewController.swift */,
 			);
@@ -259,6 +272,7 @@
 				3C406E1820207CDA005F97C4 /* Execution */,
 				3CA32100201FF6A100974B5F /* Scripting */,
 				3CE5764120225E1B00760E43 /* History */,
+				28CDA4272024B33D0055206D /* Bookmarks */,
 				BEA8E2902001348C00002475 /* UIColor+AssetCatalog.swift */,
 				F4602B48200A63FC009D0547 /* UserDefaults+UIColor.swift */,
 				BEA4992D1FDC305B001B9B9D /* KeyboardObserver.swift */,
@@ -425,6 +439,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				BEA8E2912001348C00002475 /* UIColor+AssetCatalog.swift in Sources */,
+				28CDA4292024B3510055206D /* BookmarkManager.swift in Sources */,
 				3CE5764A20226D8900760E43 /* String+ANSIFormatting.swift in Sources */,
 				3CA320FF201FE8E100974B5F /* ScriptsViewController.swift in Sources */,
 				3C2E4385201EFF4700E4254A /* AutoCompleteManager.swift in Sources */,
@@ -432,6 +447,7 @@
 				BEA499301FDC3B93001B9B9D /* TerminalView.swift in Sources */,
 				F4602B49200A63FC009D0547 /* UserDefaults+UIColor.swift in Sources */,
 				BE3808581FD9BFB600393EB8 /* ViewController.swift in Sources */,
+				28CDA426202444CC0055206D /* BookmarkViewController.swift in Sources */,
 				3CA32105201FFC1300974B5F /* ScriptEditViewController.swift in Sources */,
 				3C2E4374201EF67C00E4254A /* TerminalView+AutoComplete.swift in Sources */,
 				BEECFF391FFEC187009608B3 /* SettingsViewController.swift in Sources */,
