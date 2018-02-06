@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-protocol BookmarkManagerDelegate {
+protocol BookmarkManagerDelegate: class {
     func bookmarksWereUpdated()
 }
 
@@ -20,7 +20,7 @@ class BookmarkManager {
     /// such that the settings view controller can access is as well.
     static let bookmarkDirectory = ".bookmarks"
     
-    var delegate: BookmarkManagerDelegate? = nil
+    weak var delegate: BookmarkManagerDelegate?
     
     /// Gets the URLs of the bookmarks that were previously saved.
     ///

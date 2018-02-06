@@ -113,7 +113,7 @@ class ViewController: UIViewController {
 
 		coordinator.animate(alongsideTransition: { (context) in
 
-		}) { (_) in
+        }, completion: { (_) in
 
 			if !self.allowFloatingPanels {
 				self.closeAllFloatingPanels()
@@ -123,7 +123,7 @@ class ViewController: UIViewController {
 				self.closeAllPinnedPanels()
 			}
 
-		}
+		})
 
 	}
 

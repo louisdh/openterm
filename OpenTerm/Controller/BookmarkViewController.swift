@@ -8,7 +8,6 @@
 import UIKit
 import PanelKit
 
-
 /// Protocol that is used to interact with the bookmark view controller.
 protocol BookmarkViewControllerDelegate: class {
     
@@ -27,7 +26,7 @@ class BookmarkViewController: UIViewController {
     
     let bookmarkManager = BookmarkManager()
     
-    weak var delegate: BookmarkViewControllerDelegate? = nil
+    weak var delegate: BookmarkViewControllerDelegate?
     
     @IBOutlet weak var tableView: UITableView!
     

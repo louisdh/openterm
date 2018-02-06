@@ -112,7 +112,7 @@ For x-callback-url's the command does not terminate until either x-success or x-
     if waitForCallback {
         if !urlString.contains("?") {
             urlString.append("?")
-        } else if(!urlString.hasSuffix("&")) {
+        } else if !urlString.hasSuffix("&") {
             urlString.append("&")
         }
         urlString.append("x-source=OpenTerm&")
