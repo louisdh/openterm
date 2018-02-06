@@ -45,7 +45,18 @@ Commands included:
 This project uses a modified version of [ios_system](https://github.com/holzschu/ios_system), which requires OpenSSL. For convenience both of these are included in the `Dependencies` folder.
 
 ## Running
-Open `OpenTerm.xcworkspace`, change the bundle identifier to an identifier linked to your Apple developer account in order to run. Build using the `OpenTerm` scheme. Please note that with the current setup you can only build for arm64 (so no iOS simulator).
+Open `OpenTerm.xcworkspace`, change the bundle identifier to an identifier linked to your Apple developer account in order to run. Build using the `OpenTerm` scheme. 
+
+### Device
+Please note that by default you can only build for arm64. No further action is required.
+
+### Simulator
+To build for the iOS simulator, run:
+
+```bash
+./Dependencies/ios_system/Frameworks/prepare_simulator.sh
+```
+This will copy the necessary dependencies for the x86_64 architecture.
 
 ## License
 

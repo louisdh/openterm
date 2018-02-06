@@ -42,6 +42,9 @@ class TerminalViewController: UIViewController {
 	let scriptsViewController: ScriptsViewController
 	var scriptsPanelViewController: PanelViewController!
 
+	var bookmarkViewController: BookmarkViewController!
+	var bookmarkPanelViewController: PanelViewController!
+
     private var overflowItems: [OverflowItem] = [] {
         didSet { applyOverflowState() }
     }
@@ -56,12 +59,13 @@ class TerminalViewController: UIViewController {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         historyViewController = storyboard.instantiateViewController(withIdentifier: "HistoryViewController") as! HistoryViewController
         scriptsViewController = storyboard.instantiateViewController(withIdentifier: "ScriptsViewController") as! ScriptsViewController
+		bookmarkViewController = storyboard.instantiateViewController(withIdentifier: "BookmarkViewController") as! BookmarkViewController
 
         super.init(nibName: nil, bundle: nil)
 
         overflowItems = [
             .init(visibleInBar: true, icon: #imageLiteral(resourceName: "Open"), title: "Open", action: self.showDocumentPicker),
-//            .init(visibleInBar: true, icon: #imageLiteral(resourceName: "Bookmarks"), title: "Bookmarks", action: self.showBookmarks),
+            .init(visibleInBar: true, icon: #imageLiteral(resourceName: "Bookmarks"), title: "Bookmarks", action: self.showBookmarks),
             .init(visibleInBar: true, icon: #imageLiteral(resourceName: "History"), title: "History", action: self.showHistory),
             .init(visibleInBar: false, icon: #imageLiteral(resourceName: "Script"), title: "Scripts", action: self.showScripts)
         ]
@@ -70,8 +74,11 @@ class TerminalViewController: UIViewController {
         historyPanelViewController.view.backgroundColor = .panelBackgroundColor
         scriptsPanelViewController = PanelViewController(with: scriptsViewController, in: self)
         scriptsPanelViewController.view.backgroundColor = .panelBackgroundColor
+		bookmarkPanelViewController = PanelViewController(with: bookmarkViewController, in: self)
+		bookmarkPanelViewController.view.backgroundColor = .panelBackgroundColor
 
         historyViewController.delegate = self
+		bookmarkViewController.delegate = self
         terminalView.delegate = self
     }
 
@@ -360,7 +367,7 @@ class TerminalViewController: UIViewController {
         presentPopover(scriptsPanelViewController, from: sender)
     }
     private func showBookmarks(_ sender: UIView) {
-        // TODO
+        presentPopover(bookmarkPanelViewController, from: sender)
     }
 }
 
@@ -377,6 +384,28 @@ extension TerminalViewController: UIDocumentPickerDelegate {
         self.terminalView.executor.currentWorkingDirectory = firstFolder
 	}
 
+}
+
+extension TerminalViewController: BookmarkViewControllerDelegate {
+	func sanitizeOutput(_ output: String) -> String {
+		return terminalView.sanitizeOutput(output)
+	}
+
+	/// Changes the current directory to the passed url.
+	/// - Note: Only urls that contain the required access permissions will work..
+	///
+	/// - Parameter bookmarkURL: The bookmark that was selected.
+	func changeDirectoryToURL(url: URL) {
+
+		//  Access the URL
+		_ = url.startAccessingSecurityScopedResource()
+
+		//  Change the directory to the path.
+		DocumentManager.shared.fileManager.changeCurrentDirectoryPath(url.path)
+
+		// Update the title.
+		self.updateTitle()
+	}
 }
 
 extension TerminalViewController: TerminalViewDelegate {

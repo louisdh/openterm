@@ -44,10 +44,9 @@ class HistoryManager {
     private static func loadHistory() -> [String] {
         do {
             let string = try String.init(contentsOf: historyFileURL)
-            return string.components(separatedBy: .newlines).filter{ !$0.isEmpty }.reversed()
+            return string.components(separatedBy: .newlines).filter { !$0.isEmpty }.reversed()
         } catch {
             return []
         }
     }
 }
-

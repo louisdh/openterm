@@ -7,63 +7,63 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0011DE00FF2D15C1EEFE3AB0FD2D1D61 /* InputAssistant-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 7C93A8D47A8C4850A9B87067B75ED130 /* InputAssistant-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		006E7D2B666EF8B0FDB8C19E09B32E90 /* PanelViewController+Keyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4620ABCA6392ECA01678A1A0C0EE8A83 /* PanelViewController+Keyboard.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		06ABB362DC0D664ED95EB8CE5B218DCA /* ResizeStart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33B5F7CF2DAAA8610BF1329D4942D1FE /* ResizeStart.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		0CCD86A485B28D7B68814B5D9858FBD2 /* TabViewBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22E12400F9329193B269ABED325F9866 /* TabViewBar.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		0E2F3F9A66EB1CF3F86F9235759CBAC3 /* TabViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F61EB482464984C197B10C3CE8CCC697 /* TabViewController.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		101351F1D06A6568B9E464B3F6966114 /* PanelViewController+States.swift in Sources */ = {isa = PBXBuildFile; fileRef = B987F693FD8E52BEA30201BAB572C914 /* PanelViewController+States.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		116300FA727FE9B2B17E4449813DD9E2 /* PanelContentDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E8E8A46C82C33A2E12F26FCA5C63F06 /* PanelContentDelegate.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		14CB249151077801B257A0A7834AB91A /* InputAssistant-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 911230489C8C94B9ADB8DA6461F04467 /* InputAssistant-dummy.m */; };
-		1D271AF532CE3F623A9495AD368ADB4A /* PanelManager+AutoLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D9F69AA7B8C20A859C70CE73449F73F /* PanelManager+AutoLayout.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		21EB687538B1D07F73DBFF284D31A190 /* PanelManager+Pinning.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3065F5816489EA968A7D87CFFD80587 /* PanelManager+Pinning.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		2414E12BA3DA414E20F20DB86A737954 /* PanelContentDelegate+Default.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFA1944F7404472E874BC794E6FD81CB /* PanelContentDelegate+Default.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		27532A31DD7FE5FA47E614F418D45D0B /* TabView-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 0451E0E4B24244B9E7DC74FC9A526075 /* TabView-dummy.m */; };
-		29DEAEBF9B8CD05AE02DBC44E8EF02B7 /* PanelManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 180E1760E0EEEF878C565336C2604D48 /* PanelManager.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		32D2750C66A66B5BD1FBFB71C3C437F7 /* PanelViewController+Appearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E979208A4C7B2CDAEF5A94D88CD1AE6 /* PanelViewController+Appearance.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		33FA0D34AD6E1C39E3FEAB1D186EC1DC /* BlockBarButtonItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E588B6C45BEB967B4B01FA3A73D0EEA /* BlockBarButtonItem.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		35898F19FEC40D5550262C2CDE5564EA /* PanelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72131914F5CB513339D7E8CC40AC9225 /* PanelViewController.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		37663B83CB7982110DF7A1A9C2D485D1 /* PanelViewController+Resize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CCD6C9B8DBACAEBC9C7F6428645DA0C /* PanelViewController+Resize.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		3C61251E912CEC563C647A19309AA3A5 /* UIBarButtonItem+View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A2AC73AB8F0738CCB542F4E33740B89 /* UIBarButtonItem+View.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		46AF7370CD670C5824B1DC32BFB7A39D /* PanelContentDelegate+Navigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = C07FECC117A718C99B875D815F666A55 /* PanelContentDelegate+Navigation.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		48B9DBC766E8A674B8EB092F6AE27B0C /* BlockGestureRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C31364FDC7FD86D1C807CF1D1A3433E1 /* BlockGestureRecognizer.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		4AC97CDAF82292F4D2B0EAB0066A3AA9 /* UnpinningMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B0B5F7960303F4D4B23121C81AD4762 /* UnpinningMetadata.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		4D1AA29717CF10D4B433C928B32BCF77 /* PanelManager+Dragging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D1E5C00709186AF17A71105AD0FB230 /* PanelManager+Dragging.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		50F8BD37C9D92BA705F600AB30821294 /* PanelNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6A1AF28E40721ED65251AB6143020E8 /* PanelNavigationController.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		51E25E4B0A582EC02416DE0E2D8B317E /* PanelFloatingState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4278112F128BEC17679E82408F09AB1F /* PanelFloatingState.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		562E5980EA546964266250E580A97423 /* PinnedPosition.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0E1CAD56EFAEC58A54B44CB3F1ED9D5 /* PinnedPosition.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		5CDB25512F58809551A6B0CD0B2691CD /* AssociatedObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E65AD1209261DC01C41D684726022E7 /* AssociatedObject.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		63F754CDBA53F1BA01A4284581B6E408 /* CGRect+Center.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D71B5F923B7E33A27D5A782B087E557 /* CGRect+Center.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		66931B6AF62712272B745E3CCA007436 /* PanelManager+Offscreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8973859ABCD520C873572C6D9F76025 /* PanelManager+Offscreen.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		6F7B3C47EFC6EAED12EB97453BC7B29F /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04DCE103A3FBD56234D4596CAB4D14A7 /* Theme.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		6FFD9C49598CC059AA66143A178C1E90 /* UIViewController+Popover.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F206EC287F42C21423DA53102A77D3B /* UIViewController+Popover.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		75896A11C613E62D9394576F0B7C83DA /* PanelManager+Floating.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E2EACC0EC4B079284A1D3113A66FD53 /* PanelManager+Floating.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		0011DE00FF2D15C1EEFE3AB0FD2D1D61 /* InputAssistant-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 489B57AE0332DE755749EEA636C08AA5 /* InputAssistant-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		006E7D2B666EF8B0FDB8C19E09B32E90 /* PanelViewController+Keyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC7A81E9F01FDA9D182DBE98FD0C307 /* PanelViewController+Keyboard.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		06ABB362DC0D664ED95EB8CE5B218DCA /* ResizeStart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42EA6A4966D6090BD7A3A27F4DC5778E /* ResizeStart.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		0CCD86A485B28D7B68814B5D9858FBD2 /* TabViewBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 331F6BA4274578F7F6890D6DA42FE895 /* TabViewBar.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		0E2F3F9A66EB1CF3F86F9235759CBAC3 /* TabViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D928797DCEB73FBBD4556A4F216CA5D /* TabViewController.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		101351F1D06A6568B9E464B3F6966114 /* PanelViewController+States.swift in Sources */ = {isa = PBXBuildFile; fileRef = 764A5A3CCEE8ABE3F43FBA760C70D1D9 /* PanelViewController+States.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		116300FA727FE9B2B17E4449813DD9E2 /* PanelContentDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD23C71CA4E5037190165BBD43220B6F /* PanelContentDelegate.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		14CB249151077801B257A0A7834AB91A /* InputAssistant-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = C66DDC0A49D52B2E336E182C9CC3F42F /* InputAssistant-dummy.m */; };
+		1D271AF532CE3F623A9495AD368ADB4A /* PanelManager+AutoLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = E10211F3D58C159D2A9741ADE9CBABB1 /* PanelManager+AutoLayout.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		21EB687538B1D07F73DBFF284D31A190 /* PanelManager+Pinning.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBB9EA07E5B17C9EAFA5B08D32FAE472 /* PanelManager+Pinning.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		2414E12BA3DA414E20F20DB86A737954 /* PanelContentDelegate+Default.swift in Sources */ = {isa = PBXBuildFile; fileRef = 442137E12C5DDA02DED65D29BC3CB928 /* PanelContentDelegate+Default.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		27532A31DD7FE5FA47E614F418D45D0B /* TabView-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 201A7C4B0CB047899430D7BD5F735F30 /* TabView-dummy.m */; };
+		29DEAEBF9B8CD05AE02DBC44E8EF02B7 /* PanelManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BA6777E3418BDF756EA7AE375E6BF12 /* PanelManager.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		32D2750C66A66B5BD1FBFB71C3C437F7 /* PanelViewController+Appearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9035BEFFA0FC1064F2878FBAE10F72A /* PanelViewController+Appearance.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		33FA0D34AD6E1C39E3FEAB1D186EC1DC /* BlockBarButtonItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E0788DAB72F34E9135875279D2471DD /* BlockBarButtonItem.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		35898F19FEC40D5550262C2CDE5564EA /* PanelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AD47B0B04B6DBB04C81BD4B4392FED6 /* PanelViewController.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		37663B83CB7982110DF7A1A9C2D485D1 /* PanelViewController+Resize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A16F7DDAE17E44960F56CC39FBB2A5F /* PanelViewController+Resize.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		3C61251E912CEC563C647A19309AA3A5 /* UIBarButtonItem+View.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE42CE85FB34996E0C0DD1292FF01EA0 /* UIBarButtonItem+View.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		46AF7370CD670C5824B1DC32BFB7A39D /* PanelContentDelegate+Navigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = B27D9C7F1E421EFDD71833297D33D6A2 /* PanelContentDelegate+Navigation.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		48B9DBC766E8A674B8EB092F6AE27B0C /* BlockGestureRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD5F193446A58D2790983F0D3ED3B259 /* BlockGestureRecognizer.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		4AC97CDAF82292F4D2B0EAB0066A3AA9 /* UnpinningMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 874F900AA9BEA8F57EE21CBE7A956535 /* UnpinningMetadata.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		4D1AA29717CF10D4B433C928B32BCF77 /* PanelManager+Dragging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A116558540EB9835D6C469E78352803 /* PanelManager+Dragging.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		50F8BD37C9D92BA705F600AB30821294 /* PanelNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 035999E3F5AF65EE281DB817EE439C2F /* PanelNavigationController.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		51E25E4B0A582EC02416DE0E2D8B317E /* PanelFloatingState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 921CF05273F42B45E1648829296911C4 /* PanelFloatingState.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		562E5980EA546964266250E580A97423 /* PinnedPosition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EA902EA101E37BCE13F4013175DB257 /* PinnedPosition.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		5CDB25512F58809551A6B0CD0B2691CD /* AssociatedObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BC04E5D6D5289D27BBC308D4A4CDBB2 /* AssociatedObject.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		63F754CDBA53F1BA01A4284581B6E408 /* CGRect+Center.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96ABC330B924CA352783A22CA52E40F9 /* CGRect+Center.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		66931B6AF62712272B745E3CCA007436 /* PanelManager+Offscreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA358A9340E1ABF811C4FC900DF08E6C /* PanelManager+Offscreen.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		6F7B3C47EFC6EAED12EB97453BC7B29F /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6B4B0B1D1F9539948B22ADE42E788D /* Theme.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		6FFD9C49598CC059AA66143A178C1E90 /* UIViewController+Popover.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18A6C5F3E0F771BCB689A4B058E8AB8A /* UIViewController+Popover.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		75896A11C613E62D9394576F0B7C83DA /* PanelManager+Floating.swift in Sources */ = {isa = PBXBuildFile; fileRef = E488C59942B302E77374D7524F7D1E08 /* PanelManager+Floating.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
 		761405C9BD2AFEEA335205716AFF68D6 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6604A7D69453B4569E4E4827FB9155A9 /* Foundation.framework */; };
-		79CACB934903BCFDFF4E0B6C859C126A /* PanelManager+Expose.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2686E373310F41C07BFAFAFA34EE28CE /* PanelManager+Expose.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		7EF3E05025F5013754B7C52332F30B69 /* PanelManager+Default.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E4E33B869D43DA83843D920EA748372 /* PanelManager+Default.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		879F86464687F6476090C8E277B800AB /* PanelKit-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = E31D410CF1775CA47F86FEF250E719DE /* PanelKit-dummy.m */; };
-		8B00D60ED2CC4AB1450255AD7AA9929F /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D7F24898B4EE12D9BF38CF6289CEA8B /* Constants.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		79CACB934903BCFDFF4E0B6C859C126A /* PanelManager+Expose.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42C4E3364B11EAABCF3B49FBB7C02DBD /* PanelManager+Expose.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		7EF3E05025F5013754B7C52332F30B69 /* PanelManager+Default.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92FA47B41F444960342564681F8636C4 /* PanelManager+Default.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		879F86464687F6476090C8E277B800AB /* PanelKit-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 11CC02901EFFA47E625B216C20F2DBD2 /* PanelKit-dummy.m */; };
+		8B00D60ED2CC4AB1450255AD7AA9929F /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A7249612E114EB7DFECC2BAB8A2FFB9 /* Constants.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
 		993675AEE2C9F7B720824772B04FBBF8 /* Pods-OpenTerm-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = A85DDA809198724F7251D4368AEE5689 /* Pods-OpenTerm-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		99E763FC4B97CDF2CAB0BDD4FA589CF0 /* NavigationItemObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4812AFF1C815EDBF98D4FAEE4C9D111A /* NavigationItemObserver.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		9F790F9B821173D6191EBBEA8128B2DC /* PanelState.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBA1FB42DDE30477F7B644A96D6FDFEB /* PanelState.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		A565959AE08283D7B853EAC6CBBA9CB6 /* PanelKit-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 3BD9118FB89E109D24EF296CC6E234E5 /* PanelKit-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		AAA7735FF956AA5C79988108969ECBE5 /* PanelManager+State.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72D30332689D4C7792627F19002AB021 /* PanelManager+State.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		AEB71A6BD682F31E156B54B930C2E447 /* InputAssistantCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8F04C558049A54460A892779D746D62 /* InputAssistantCollectionView.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		AF01E00A0B4C1363A705CDB2EBADB058 /* PanelStateCoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB1A4A27DB62BF220FF90490AECABCC /* PanelStateCoder.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		B42CB01C99B0702BA2BBD02DA383A2D8 /* PanelViewController+Offscreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = B52C608A0774AB3A42282D9FB70EFE41 /* PanelViewController+Offscreen.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		99E763FC4B97CDF2CAB0BDD4FA589CF0 /* NavigationItemObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02D7CD71CD8398CF4392F3451D8ACFB3 /* NavigationItemObserver.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		9F790F9B821173D6191EBBEA8128B2DC /* PanelState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 458CFF2E17335D451D871ECCF28A1073 /* PanelState.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		A565959AE08283D7B853EAC6CBBA9CB6 /* PanelKit-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 882692400BC70BA371F6562176AF49B4 /* PanelKit-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		AAA7735FF956AA5C79988108969ECBE5 /* PanelManager+State.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90CD319A20EC069652F3611C3A863769 /* PanelManager+State.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		AEB71A6BD682F31E156B54B930C2E447 /* InputAssistantCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C23F86D412CF864B16D0521B7B480E6A /* InputAssistantCollectionView.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		AF01E00A0B4C1363A705CDB2EBADB058 /* PanelStateCoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEB6182750B11710644BC6BC79E0DE7D /* PanelStateCoder.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		B42CB01C99B0702BA2BBD02DA383A2D8 /* PanelViewController+Offscreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 643EC72882F68D91B6FEDE54502ABC7C /* PanelViewController+Offscreen.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
 		C39538070EE56E0E8C71532598ABF93B /* Pods-OpenTerm-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = B2ECF83AF66708350761090AC2D38395 /* Pods-OpenTerm-dummy.m */; };
 		C4A90D1F99876908E685666829409670 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6604A7D69453B4569E4E4827FB9155A9 /* Foundation.framework */; };
-		C60A9C9E3C63C145D23B2903FE9FC4AA /* InputAssistantView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C3533802D10D511C88BD1D5624CE4F0 /* InputAssistantView.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		C60A9C9E3C63C145D23B2903FE9FC4AA /* InputAssistantView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B74B0B5298164849418592F843637E4 /* InputAssistantView.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
 		CBFB24E52754E0678A4FA923FD18705C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6604A7D69453B4569E4E4827FB9155A9 /* Foundation.framework */; };
-		CCF58BCA6BC2B83EC63D8418E4FC2817 /* LogLevel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F18A5B2E05F2C7F5D3D650C5DC09863 /* LogLevel.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		D0E645BB2CDF5773B1D5FC8840F570D8 /* TabView-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 6DABB4870AEDED5C8B482073779FEFA4 /* TabView-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		D0F25DD85CC8BF804AF604A03855E143 /* PanelManager+Closing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98CEA004518A2D31CF6FBC0A63F4C49A /* PanelManager+Closing.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		D3049056F06D3C1313662DF5C14A356E /* TabViewTabCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 305C5CBF41FFE9DAA5C231CF4582FFA8 /* TabViewTabCollectionView.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		D7CF02C7B867E6C75F8373F75FF01735 /* PanelPinnedMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CC8EE08A14FDDA3AB5C2B3F8619870B /* PanelPinnedMetadata.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		DB62948F3931C439F8AE3AB7F1889BC0 /* PanelPinSide.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FBF32660D83271CD9018204667BD212 /* PanelPinSide.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		DF745178882162AFA7A97F19D79DBEDC /* NSLayoutConstraint+Custom.swift in Sources */ = {isa = PBXBuildFile; fileRef = F31CE35675A693E2C76E180B220C1EA8 /* NSLayoutConstraint+Custom.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		E0101656B5154B50676845963CD65267 /* PanelViewController+Dragging.swift in Sources */ = {isa = PBXBuildFile; fileRef = D43876C1010B495D4BE280E3DEE0413B /* PanelViewController+Dragging.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		E8AA3B237B4275FEB849553A56B72ABA /* CornerHandleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2F41AA8E892EACDB8668DFE5C434294 /* CornerHandleView.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		CCF58BCA6BC2B83EC63D8418E4FC2817 /* LogLevel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5576435AF6D44D5572AE10D0A587F2AE /* LogLevel.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		D0E645BB2CDF5773B1D5FC8840F570D8 /* TabView-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = EE393DBE39322E2D39447888C239FBC7 /* TabView-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D0F25DD85CC8BF804AF604A03855E143 /* PanelManager+Closing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5974CFCDD2545BB8D2D546EFD40C8373 /* PanelManager+Closing.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		D3049056F06D3C1313662DF5C14A356E /* TabViewTabCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35244ED449E0C5B1CFF401D7312383F1 /* TabViewTabCollectionView.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		D7CF02C7B867E6C75F8373F75FF01735 /* PanelPinnedMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11651F031AB765A789AF9876C0115DAA /* PanelPinnedMetadata.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		DB62948F3931C439F8AE3AB7F1889BC0 /* PanelPinSide.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3349292BD990FFADF877DA434C578F2 /* PanelPinSide.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		DF745178882162AFA7A97F19D79DBEDC /* NSLayoutConstraint+Custom.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA74CA3FCB4B45323E3A259D12FC4E33 /* NSLayoutConstraint+Custom.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		E0101656B5154B50676845963CD65267 /* PanelViewController+Dragging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 092C540A2BA62B794BBFB2F20B17AA4C /* PanelViewController+Dragging.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		E8AA3B237B4275FEB849553A56B72ABA /* CornerHandleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A348538A41B07A2C14AF3E203327D633 /* CornerHandleView.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
 		ED516481976C6A00141EC8247887CBAB /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6604A7D69453B4569E4E4827FB9155A9 /* Foundation.framework */; };
 /* End PBXBuildFile section */
 
@@ -92,85 +92,85 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		0451E0E4B24244B9E7DC74FC9A526075 /* TabView-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "TabView-dummy.m"; sourceTree = "<group>"; };
-		04DCE103A3FBD56234D4596CAB4D14A7 /* Theme.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Theme.swift; path = Sources/Theme.swift; sourceTree = "<group>"; };
-		0B0B5F7960303F4D4B23121C81AD4762 /* UnpinningMetadata.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = UnpinningMetadata.swift; path = PanelKit/Model/UnpinningMetadata.swift; sourceTree = "<group>"; };
-		0E588B6C45BEB967B4B01FA3A73D0EEA /* BlockBarButtonItem.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = BlockBarButtonItem.swift; path = PanelKit/Utils/BlockBarButtonItem.swift; sourceTree = "<group>"; };
+		02D7CD71CD8398CF4392F3451D8ACFB3 /* NavigationItemObserver.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NavigationItemObserver.swift; path = Sources/Internal/Util/NavigationItemObserver.swift; sourceTree = "<group>"; };
+		035999E3F5AF65EE281DB817EE439C2F /* PanelNavigationController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PanelNavigationController.swift; path = PanelKit/Controller/PanelNavigationController.swift; sourceTree = "<group>"; };
+		092C540A2BA62B794BBFB2F20B17AA4C /* PanelViewController+Dragging.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "PanelViewController+Dragging.swift"; path = "PanelKit/Controller/PanelViewController+Dragging.swift"; sourceTree = "<group>"; };
+		0EC1AED74A85EDD4619F6C7B9306D947 /* TabView-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "TabView-prefix.pch"; sourceTree = "<group>"; };
+		11651F031AB765A789AF9876C0115DAA /* PanelPinnedMetadata.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PanelPinnedMetadata.swift; path = PanelKit/Model/PanelPinnedMetadata.swift; sourceTree = "<group>"; };
+		11CC02901EFFA47E625B216C20F2DBD2 /* PanelKit-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "PanelKit-dummy.m"; sourceTree = "<group>"; };
+		1267028626DB5A394747EAA307EE917E /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1291F81A4F5F288F05A91D4CE2F13F5A /* Pods-OpenTerm.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; path = "Pods-OpenTerm.modulemap"; sourceTree = "<group>"; };
-		180E1760E0EEEF878C565336C2604D48 /* PanelManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PanelManager.swift; path = PanelKit/PanelManager/PanelManager.swift; sourceTree = "<group>"; };
+		18A6C5F3E0F771BCB689A4B058E8AB8A /* UIViewController+Popover.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "UIViewController+Popover.swift"; path = "PanelKit/Utils/UIViewController+Popover.swift"; sourceTree = "<group>"; };
+		1A116558540EB9835D6C469E78352803 /* PanelManager+Dragging.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "PanelManager+Dragging.swift"; path = "PanelKit/PanelManager/PanelManager+Dragging.swift"; sourceTree = "<group>"; };
 		1AAE40A64E01B5EFBA0CF426901F3D6F /* Pods-OpenTerm-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-OpenTerm-resources.sh"; sourceTree = "<group>"; };
-		1D9F69AA7B8C20A859C70CE73449F73F /* PanelManager+AutoLayout.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "PanelManager+AutoLayout.swift"; path = "PanelKit/PanelManager/PanelManager+AutoLayout.swift"; sourceTree = "<group>"; };
-		1E2EACC0EC4B079284A1D3113A66FD53 /* PanelManager+Floating.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "PanelManager+Floating.swift"; path = "PanelKit/PanelManager/PanelManager+Floating.swift"; sourceTree = "<group>"; };
-		1F206EC287F42C21423DA53102A77D3B /* UIViewController+Popover.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "UIViewController+Popover.swift"; path = "PanelKit/Utils/UIViewController+Popover.swift"; sourceTree = "<group>"; };
-		22E12400F9329193B269ABED325F9866 /* TabViewBar.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TabViewBar.swift; path = Sources/Internal/TabViewBar.swift; sourceTree = "<group>"; };
-		2686E373310F41C07BFAFAFA34EE28CE /* PanelManager+Expose.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "PanelManager+Expose.swift"; path = "PanelKit/PanelManager/PanelManager+Expose.swift"; sourceTree = "<group>"; };
-		2C3533802D10D511C88BD1D5624CE4F0 /* InputAssistantView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = InputAssistantView.swift; path = Sources/InputAssistantView.swift; sourceTree = "<group>"; };
-		2D7F24898B4EE12D9BF38CF6289CEA8B /* Constants.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Constants.swift; path = PanelKit/Model/Constants.swift; sourceTree = "<group>"; };
-		305C5CBF41FFE9DAA5C231CF4582FFA8 /* TabViewTabCollectionView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TabViewTabCollectionView.swift; path = Sources/Internal/TabViewTabCollectionView.swift; sourceTree = "<group>"; };
-		33B5F7CF2DAAA8610BF1329D4942D1FE /* ResizeStart.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ResizeStart.swift; path = PanelKit/Model/ResizeStart.swift; sourceTree = "<group>"; };
-		3BD9118FB89E109D24EF296CC6E234E5 /* PanelKit-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "PanelKit-umbrella.h"; sourceTree = "<group>"; };
-		3CC8EE08A14FDDA3AB5C2B3F8619870B /* PanelPinnedMetadata.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PanelPinnedMetadata.swift; path = PanelKit/Model/PanelPinnedMetadata.swift; sourceTree = "<group>"; };
-		3D1E5C00709186AF17A71105AD0FB230 /* PanelManager+Dragging.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "PanelManager+Dragging.swift"; path = "PanelKit/PanelManager/PanelManager+Dragging.swift"; sourceTree = "<group>"; };
-		3D71B5F923B7E33A27D5A782B087E557 /* CGRect+Center.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "CGRect+Center.swift"; path = "PanelKit/Utils/CGRect+Center.swift"; sourceTree = "<group>"; };
-		3E8E8A46C82C33A2E12F26FCA5C63F06 /* PanelContentDelegate.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PanelContentDelegate.swift; path = PanelKit/PanelContentDelegate/PanelContentDelegate.swift; sourceTree = "<group>"; };
-		4278112F128BEC17679E82408F09AB1F /* PanelFloatingState.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PanelFloatingState.swift; path = PanelKit/Model/PanelFloatingState.swift; sourceTree = "<group>"; };
-		4620ABCA6392ECA01678A1A0C0EE8A83 /* PanelViewController+Keyboard.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "PanelViewController+Keyboard.swift"; path = "PanelKit/Controller/PanelViewController+Keyboard.swift"; sourceTree = "<group>"; };
-		4812AFF1C815EDBF98D4FAEE4C9D111A /* NavigationItemObserver.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NavigationItemObserver.swift; path = Sources/Internal/Util/NavigationItemObserver.swift; sourceTree = "<group>"; };
+		1ADBD77ACDF687612C6BB695418A85B0 /* InputAssistant-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "InputAssistant-prefix.pch"; sourceTree = "<group>"; };
+		201A7C4B0CB047899430D7BD5F735F30 /* TabView-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "TabView-dummy.m"; sourceTree = "<group>"; };
+		331F6BA4274578F7F6890D6DA42FE895 /* TabViewBar.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TabViewBar.swift; path = Sources/Internal/TabViewBar.swift; sourceTree = "<group>"; };
+		35244ED449E0C5B1CFF401D7312383F1 /* TabViewTabCollectionView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TabViewTabCollectionView.swift; path = Sources/Internal/TabViewTabCollectionView.swift; sourceTree = "<group>"; };
+		3A5247660F47C94B23AA2ECDDC46C8CC /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		3E0788DAB72F34E9135875279D2471DD /* BlockBarButtonItem.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = BlockBarButtonItem.swift; path = PanelKit/Utils/BlockBarButtonItem.swift; sourceTree = "<group>"; };
+		3FC48C503DC989EE24C8933CEFF741DA /* PanelKit-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "PanelKit-prefix.pch"; sourceTree = "<group>"; };
+		42C4E3364B11EAABCF3B49FBB7C02DBD /* PanelManager+Expose.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "PanelManager+Expose.swift"; path = "PanelKit/PanelManager/PanelManager+Expose.swift"; sourceTree = "<group>"; };
+		42EA6A4966D6090BD7A3A27F4DC5778E /* ResizeStart.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ResizeStart.swift; path = PanelKit/Model/ResizeStart.swift; sourceTree = "<group>"; };
+		442137E12C5DDA02DED65D29BC3CB928 /* PanelContentDelegate+Default.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "PanelContentDelegate+Default.swift"; path = "PanelKit/PanelContentDelegate/PanelContentDelegate+Default.swift"; sourceTree = "<group>"; };
+		458CFF2E17335D451D871ECCF28A1073 /* PanelState.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PanelState.swift; path = "PanelKit/State Restoration/PanelState.swift"; sourceTree = "<group>"; };
+		489B57AE0332DE755749EEA636C08AA5 /* InputAssistant-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "InputAssistant-umbrella.h"; sourceTree = "<group>"; };
+		4AD47B0B04B6DBB04C81BD4B4392FED6 /* PanelViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PanelViewController.swift; path = PanelKit/Controller/PanelViewController.swift; sourceTree = "<group>"; };
+		4D928797DCEB73FBBD4556A4F216CA5D /* TabViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TabViewController.swift; path = Sources/TabViewController.swift; sourceTree = "<group>"; };
+		5576435AF6D44D5572AE10D0A587F2AE /* LogLevel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = LogLevel.swift; path = PanelKit/Model/LogLevel.swift; sourceTree = "<group>"; };
+		5974CFCDD2545BB8D2D546EFD40C8373 /* PanelManager+Closing.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "PanelManager+Closing.swift"; path = "PanelKit/PanelManager/PanelManager+Closing.swift"; sourceTree = "<group>"; };
 		5A13FD6B56285902C262E4D016235B1C /* Pods-OpenTerm.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-OpenTerm.release.xcconfig"; sourceTree = "<group>"; };
-		5E65AD1209261DC01C41D684726022E7 /* AssociatedObject.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AssociatedObject.swift; path = PanelKit/Model/AssociatedObject.swift; sourceTree = "<group>"; };
+		643EC72882F68D91B6FEDE54502ABC7C /* PanelViewController+Offscreen.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "PanelViewController+Offscreen.swift"; path = "PanelKit/Controller/PanelViewController+Offscreen.swift"; sourceTree = "<group>"; };
 		6604A7D69453B4569E4E4827FB9155A9 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS10.3.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
-		69F8003D508CA6263F39EA4F5C4812EC /* TabView.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = TabView.xcconfig; sourceTree = "<group>"; };
+		6BC04E5D6D5289D27BBC308D4A4CDBB2 /* AssociatedObject.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AssociatedObject.swift; path = PanelKit/Model/AssociatedObject.swift; sourceTree = "<group>"; };
 		6C29CACC12FB350AED74A0B7B58E13FF /* InputAssistant.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = InputAssistant.framework; path = InputAssistant.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		6CCD6C9B8DBACAEBC9C7F6428645DA0C /* PanelViewController+Resize.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "PanelViewController+Resize.swift"; path = "PanelKit/Controller/PanelViewController+Resize.swift"; sourceTree = "<group>"; };
-		6DABB4870AEDED5C8B482073779FEFA4 /* TabView-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "TabView-umbrella.h"; sourceTree = "<group>"; };
-		6E979208A4C7B2CDAEF5A94D88CD1AE6 /* PanelViewController+Appearance.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "PanelViewController+Appearance.swift"; path = "PanelKit/Controller/PanelViewController+Appearance.swift"; sourceTree = "<group>"; };
-		709DBC48264F852F5376E081DECBD09C /* PanelKit.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; path = PanelKit.modulemap; sourceTree = "<group>"; };
-		72131914F5CB513339D7E8CC40AC9225 /* PanelViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PanelViewController.swift; path = PanelKit/Controller/PanelViewController.swift; sourceTree = "<group>"; };
-		72D30332689D4C7792627F19002AB021 /* PanelManager+State.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "PanelManager+State.swift"; path = "PanelKit/PanelManager/PanelManager+State.swift"; sourceTree = "<group>"; };
-		757092151475E5576CDB5F6A9AC9C043 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		787E42120BC5B5AD163A7EF0A8A3EA61 /* PanelKit.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = PanelKit.xcconfig; sourceTree = "<group>"; };
-		7A2AC73AB8F0738CCB542F4E33740B89 /* UIBarButtonItem+View.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "UIBarButtonItem+View.swift"; path = "Sources/Internal/Extension/UIBarButtonItem+View.swift"; sourceTree = "<group>"; };
-		7C93A8D47A8C4850A9B87067B75ED130 /* InputAssistant-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "InputAssistant-umbrella.h"; sourceTree = "<group>"; };
-		7E4E33B869D43DA83843D920EA748372 /* PanelManager+Default.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "PanelManager+Default.swift"; path = "PanelKit/PanelManager/PanelManager+Default.swift"; sourceTree = "<group>"; };
-		8FBF32660D83271CD9018204667BD212 /* PanelPinSide.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PanelPinSide.swift; path = PanelKit/Model/PanelPinSide.swift; sourceTree = "<group>"; };
-		8FF3D3EC747ABAEEA788910D485675DF /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		911230489C8C94B9ADB8DA6461F04467 /* InputAssistant-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "InputAssistant-dummy.m"; sourceTree = "<group>"; };
+		6EA902EA101E37BCE13F4013175DB257 /* PinnedPosition.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PinnedPosition.swift; path = PanelKit/Model/PinnedPosition.swift; sourceTree = "<group>"; };
+		764A5A3CCEE8ABE3F43FBA760C70D1D9 /* PanelViewController+States.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "PanelViewController+States.swift"; path = "PanelKit/Controller/PanelViewController+States.swift"; sourceTree = "<group>"; };
+		874F900AA9BEA8F57EE21CBE7A956535 /* UnpinningMetadata.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = UnpinningMetadata.swift; path = PanelKit/Model/UnpinningMetadata.swift; sourceTree = "<group>"; };
+		882692400BC70BA371F6562176AF49B4 /* PanelKit-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "PanelKit-umbrella.h"; sourceTree = "<group>"; };
+		8A16F7DDAE17E44960F56CC39FBB2A5F /* PanelViewController+Resize.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "PanelViewController+Resize.swift"; path = "PanelKit/Controller/PanelViewController+Resize.swift"; sourceTree = "<group>"; };
+		8B74B0B5298164849418592F843637E4 /* InputAssistantView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = InputAssistantView.swift; path = Sources/InputAssistantView.swift; sourceTree = "<group>"; };
+		90CD319A20EC069652F3611C3A863769 /* PanelManager+State.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "PanelManager+State.swift"; path = "PanelKit/PanelManager/PanelManager+State.swift"; sourceTree = "<group>"; };
 		91AA7E9C89D1DC939D4ACD686DEC0C33 /* Pods-OpenTerm.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-OpenTerm.debug.xcconfig"; sourceTree = "<group>"; };
-		9244EA99432696B2540A163AB9936201 /* TabView-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "TabView-prefix.pch"; sourceTree = "<group>"; };
+		921CF05273F42B45E1648829296911C4 /* PanelFloatingState.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PanelFloatingState.swift; path = PanelKit/Model/PanelFloatingState.swift; sourceTree = "<group>"; };
 		92D79C31C49A22BD69D8BDBD6E7144E0 /* PanelKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = PanelKit.framework; path = PanelKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		92FA47B41F444960342564681F8636C4 /* PanelManager+Default.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "PanelManager+Default.swift"; path = "PanelKit/PanelManager/PanelManager+Default.swift"; sourceTree = "<group>"; };
 		93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
-		98CEA004518A2D31CF6FBC0A63F4C49A /* PanelManager+Closing.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "PanelManager+Closing.swift"; path = "PanelKit/PanelManager/PanelManager+Closing.swift"; sourceTree = "<group>"; };
+		96ABC330B924CA352783A22CA52E40F9 /* CGRect+Center.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "CGRect+Center.swift"; path = "PanelKit/Utils/CGRect+Center.swift"; sourceTree = "<group>"; };
+		9A7249612E114EB7DFECC2BAB8A2FFB9 /* Constants.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Constants.swift; path = PanelKit/Model/Constants.swift; sourceTree = "<group>"; };
+		9BA6777E3418BDF756EA7AE375E6BF12 /* PanelManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PanelManager.swift; path = PanelKit/PanelManager/PanelManager.swift; sourceTree = "<group>"; };
 		9D9C2A371C267C1042705DE635D69A0F /* Pods-OpenTerm-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-OpenTerm-acknowledgements.plist"; sourceTree = "<group>"; };
-		9F18A5B2E05F2C7F5D3D650C5DC09863 /* LogLevel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = LogLevel.swift; path = PanelKit/Model/LogLevel.swift; sourceTree = "<group>"; };
-		A73388073F55F7C9E56B2B2FE11C2173 /* TabView.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; path = TabView.modulemap; sourceTree = "<group>"; };
+		A348538A41B07A2C14AF3E203327D633 /* CornerHandleView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CornerHandleView.swift; path = PanelKit/View/CornerHandleView.swift; sourceTree = "<group>"; };
 		A85DDA809198724F7251D4368AEE5689 /* Pods-OpenTerm-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-OpenTerm-umbrella.h"; sourceTree = "<group>"; };
+		AE42CE85FB34996E0C0DD1292FF01EA0 /* UIBarButtonItem+View.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "UIBarButtonItem+View.swift"; path = "Sources/Internal/Extension/UIBarButtonItem+View.swift"; sourceTree = "<group>"; };
+		B0BCE95F90FCD42AAA295E3738E14FB9 /* TabView.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; path = TabView.modulemap; sourceTree = "<group>"; };
+		B22891EC0C863EE634D99B9A85701671 /* PanelKit.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; path = PanelKit.modulemap; sourceTree = "<group>"; };
+		B27D9C7F1E421EFDD71833297D33D6A2 /* PanelContentDelegate+Navigation.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "PanelContentDelegate+Navigation.swift"; path = "PanelKit/PanelContentDelegate/PanelContentDelegate+Navigation.swift"; sourceTree = "<group>"; };
 		B2ECF83AF66708350761090AC2D38395 /* Pods-OpenTerm-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-OpenTerm-dummy.m"; sourceTree = "<group>"; };
-		B52C608A0774AB3A42282D9FB70EFE41 /* PanelViewController+Offscreen.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "PanelViewController+Offscreen.swift"; path = "PanelKit/Controller/PanelViewController+Offscreen.swift"; sourceTree = "<group>"; };
-		B987F693FD8E52BEA30201BAB572C914 /* PanelViewController+States.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "PanelViewController+States.swift"; path = "PanelKit/Controller/PanelViewController+States.swift"; sourceTree = "<group>"; };
-		C07FECC117A718C99B875D815F666A55 /* PanelContentDelegate+Navigation.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "PanelContentDelegate+Navigation.swift"; path = "PanelKit/PanelContentDelegate/PanelContentDelegate+Navigation.swift"; sourceTree = "<group>"; };
-		C31364FDC7FD86D1C807CF1D1A3433E1 /* BlockGestureRecognizer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = BlockGestureRecognizer.swift; path = PanelKit/Model/BlockGestureRecognizer.swift; sourceTree = "<group>"; };
-		C50A6EB839F1A872DCE47D03167FB3CD /* InputAssistant-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "InputAssistant-prefix.pch"; sourceTree = "<group>"; };
-		C8973859ABCD520C873572C6D9F76025 /* PanelManager+Offscreen.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "PanelManager+Offscreen.swift"; path = "PanelKit/PanelManager/PanelManager+Offscreen.swift"; sourceTree = "<group>"; };
-		D0E1CAD56EFAEC58A54B44CB3F1ED9D5 /* PinnedPosition.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PinnedPosition.swift; path = PanelKit/Model/PinnedPosition.swift; sourceTree = "<group>"; };
+		B3349292BD990FFADF877DA434C578F2 /* PanelPinSide.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PanelPinSide.swift; path = PanelKit/Model/PanelPinSide.swift; sourceTree = "<group>"; };
+		B6CAFEFD6552EEE5CD2FBA28E941A0FA /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		BA74CA3FCB4B45323E3A259D12FC4E33 /* NSLayoutConstraint+Custom.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "NSLayoutConstraint+Custom.swift"; path = "Sources/Internal/Extension/NSLayoutConstraint+Custom.swift"; sourceTree = "<group>"; };
+		BBB9EA07E5B17C9EAFA5B08D32FAE472 /* PanelManager+Pinning.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "PanelManager+Pinning.swift"; path = "PanelKit/PanelManager/PanelManager+Pinning.swift"; sourceTree = "<group>"; };
+		BC6B4B0B1D1F9539948B22ADE42E788D /* Theme.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Theme.swift; path = Sources/Theme.swift; sourceTree = "<group>"; };
+		BD5F193446A58D2790983F0D3ED3B259 /* BlockGestureRecognizer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = BlockGestureRecognizer.swift; path = PanelKit/Model/BlockGestureRecognizer.swift; sourceTree = "<group>"; };
+		C0452D372EAD80D337ACA0A1A79CC551 /* TabView.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = TabView.xcconfig; sourceTree = "<group>"; };
+		C23F86D412CF864B16D0521B7B480E6A /* InputAssistantCollectionView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = InputAssistantCollectionView.swift; path = Sources/InputAssistantCollectionView.swift; sourceTree = "<group>"; };
+		C66DDC0A49D52B2E336E182C9CC3F42F /* InputAssistant-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "InputAssistant-dummy.m"; sourceTree = "<group>"; };
+		C9416D36BB86F4F3FAA89AE6AB956073 /* InputAssistant.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; path = InputAssistant.modulemap; sourceTree = "<group>"; };
+		CEC7A81E9F01FDA9D182DBE98FD0C307 /* PanelViewController+Keyboard.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "PanelViewController+Keyboard.swift"; path = "PanelKit/Controller/PanelViewController+Keyboard.swift"; sourceTree = "<group>"; };
 		D114A177DADFE57CB018A4202B6CEF92 /* Pods_OpenTerm.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_OpenTerm.framework; path = "Pods-OpenTerm.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
-		D2F41AA8E892EACDB8668DFE5C434294 /* CornerHandleView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CornerHandleView.swift; path = PanelKit/View/CornerHandleView.swift; sourceTree = "<group>"; };
-		D43876C1010B495D4BE280E3DEE0413B /* PanelViewController+Dragging.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "PanelViewController+Dragging.swift"; path = "PanelKit/Controller/PanelViewController+Dragging.swift"; sourceTree = "<group>"; };
 		D720C7E71B5EC2A5DC5D816A5C52A05D /* Pods-OpenTerm-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-OpenTerm-acknowledgements.markdown"; sourceTree = "<group>"; };
-		D8F04C558049A54460A892779D746D62 /* InputAssistantCollectionView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = InputAssistantCollectionView.swift; path = Sources/InputAssistantCollectionView.swift; sourceTree = "<group>"; };
-		D96B24C1E8655D47B6CCD5900380B2F0 /* PanelKit-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "PanelKit-prefix.pch"; sourceTree = "<group>"; };
-		DCB1A4A27DB62BF220FF90490AECABCC /* PanelStateCoder.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PanelStateCoder.swift; path = "PanelKit/State Restoration/PanelStateCoder.swift"; sourceTree = "<group>"; };
-		DFA1944F7404472E874BC794E6FD81CB /* PanelContentDelegate+Default.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "PanelContentDelegate+Default.swift"; path = "PanelKit/PanelContentDelegate/PanelContentDelegate+Default.swift"; sourceTree = "<group>"; };
-		E271A27934C32FA372944153AC087554 /* InputAssistant.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = InputAssistant.xcconfig; sourceTree = "<group>"; };
-		E3065F5816489EA968A7D87CFFD80587 /* PanelManager+Pinning.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "PanelManager+Pinning.swift"; path = "PanelKit/PanelManager/PanelManager+Pinning.swift"; sourceTree = "<group>"; };
-		E31D410CF1775CA47F86FEF250E719DE /* PanelKit-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "PanelKit-dummy.m"; sourceTree = "<group>"; };
-		E4A23B52F4460CB0DBFA5F29B73C7198 /* InputAssistant.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; path = InputAssistant.modulemap; sourceTree = "<group>"; };
+		D9035BEFFA0FC1064F2878FBAE10F72A /* PanelViewController+Appearance.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "PanelViewController+Appearance.swift"; path = "PanelKit/Controller/PanelViewController+Appearance.swift"; sourceTree = "<group>"; };
+		E10211F3D58C159D2A9741ADE9CBABB1 /* PanelManager+AutoLayout.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "PanelManager+AutoLayout.swift"; path = "PanelKit/PanelManager/PanelManager+AutoLayout.swift"; sourceTree = "<group>"; };
+		E488C59942B302E77374D7524F7D1E08 /* PanelManager+Floating.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "PanelManager+Floating.swift"; path = "PanelKit/PanelManager/PanelManager+Floating.swift"; sourceTree = "<group>"; };
 		E4F72102A89D3DA6F373D0F92D34DAD1 /* TabView.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = TabView.framework; path = TabView.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		EB9E573F39A56C6A0063283E406E69B1 /* PanelKit.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = PanelKit.xcconfig; sourceTree = "<group>"; };
 		EE105DCE8F01861457710F1766A42DB0 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		F091039A4D889182A831ADE166C3B5AB /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		F31CE35675A693E2C76E180B220C1EA8 /* NSLayoutConstraint+Custom.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "NSLayoutConstraint+Custom.swift"; path = "Sources/Internal/Extension/NSLayoutConstraint+Custom.swift"; sourceTree = "<group>"; };
-		F61EB482464984C197B10C3CE8CCC697 /* TabViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TabViewController.swift; path = Sources/TabViewController.swift; sourceTree = "<group>"; };
-		F6A1AF28E40721ED65251AB6143020E8 /* PanelNavigationController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PanelNavigationController.swift; path = PanelKit/Controller/PanelNavigationController.swift; sourceTree = "<group>"; };
-		FBA1FB42DDE30477F7B644A96D6FDFEB /* PanelState.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PanelState.swift; path = "PanelKit/State Restoration/PanelState.swift"; sourceTree = "<group>"; };
+		EE393DBE39322E2D39447888C239FBC7 /* TabView-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "TabView-umbrella.h"; sourceTree = "<group>"; };
+		EEB6182750B11710644BC6BC79E0DE7D /* PanelStateCoder.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PanelStateCoder.swift; path = "PanelKit/State Restoration/PanelStateCoder.swift"; sourceTree = "<group>"; };
+		F61076582C85765E70B8D093A6014408 /* InputAssistant.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = InputAssistant.xcconfig; sourceTree = "<group>"; };
+		FA358A9340E1ABF811C4FC900DF08E6C /* PanelManager+Offscreen.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "PanelManager+Offscreen.swift"; path = "PanelKit/PanelManager/PanelManager+Offscreen.swift"; sourceTree = "<group>"; };
+		FD23C71CA4E5037190165BBD43220B6F /* PanelContentDelegate.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PanelContentDelegate.swift; path = PanelKit/PanelContentDelegate/PanelContentDelegate.swift; sourceTree = "<group>"; };
 		FF83D48BB617F6BDE81C7C3186CFA6C1 /* Pods-OpenTerm-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-OpenTerm-frameworks.sh"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -210,94 +210,29 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		0A69129127EFE9437DAB97717DE5BD2D /* TabView */ = {
+		1222CBA0A96AA737C270EC0E61D9B9B9 /* Support Files */ = {
 			isa = PBXGroup;
 			children = (
-				4812AFF1C815EDBF98D4FAEE4C9D111A /* NavigationItemObserver.swift */,
-				F31CE35675A693E2C76E180B220C1EA8 /* NSLayoutConstraint+Custom.swift */,
-				22E12400F9329193B269ABED325F9866 /* TabViewBar.swift */,
-				F61EB482464984C197B10C3CE8CCC697 /* TabViewController.swift */,
-				305C5CBF41FFE9DAA5C231CF4582FFA8 /* TabViewTabCollectionView.swift */,
-				04DCE103A3FBD56234D4596CAB4D14A7 /* Theme.swift */,
-				7A2AC73AB8F0738CCB542F4E33740B89 /* UIBarButtonItem+View.swift */,
-				36B4E614851DF1690F797A1E31F22DC8 /* Support Files */,
-			);
-			name = TabView;
-			path = TabView;
-			sourceTree = "<group>";
-		};
-		1DB6560C608D284EEC4DF2610F74F3FC /* PanelKit */ = {
-			isa = PBXGroup;
-			children = (
-				5E65AD1209261DC01C41D684726022E7 /* AssociatedObject.swift */,
-				0E588B6C45BEB967B4B01FA3A73D0EEA /* BlockBarButtonItem.swift */,
-				C31364FDC7FD86D1C807CF1D1A3433E1 /* BlockGestureRecognizer.swift */,
-				3D71B5F923B7E33A27D5A782B087E557 /* CGRect+Center.swift */,
-				2D7F24898B4EE12D9BF38CF6289CEA8B /* Constants.swift */,
-				D2F41AA8E892EACDB8668DFE5C434294 /* CornerHandleView.swift */,
-				9F18A5B2E05F2C7F5D3D650C5DC09863 /* LogLevel.swift */,
-				3E8E8A46C82C33A2E12F26FCA5C63F06 /* PanelContentDelegate.swift */,
-				DFA1944F7404472E874BC794E6FD81CB /* PanelContentDelegate+Default.swift */,
-				C07FECC117A718C99B875D815F666A55 /* PanelContentDelegate+Navigation.swift */,
-				4278112F128BEC17679E82408F09AB1F /* PanelFloatingState.swift */,
-				180E1760E0EEEF878C565336C2604D48 /* PanelManager.swift */,
-				1D9F69AA7B8C20A859C70CE73449F73F /* PanelManager+AutoLayout.swift */,
-				98CEA004518A2D31CF6FBC0A63F4C49A /* PanelManager+Closing.swift */,
-				7E4E33B869D43DA83843D920EA748372 /* PanelManager+Default.swift */,
-				3D1E5C00709186AF17A71105AD0FB230 /* PanelManager+Dragging.swift */,
-				2686E373310F41C07BFAFAFA34EE28CE /* PanelManager+Expose.swift */,
-				1E2EACC0EC4B079284A1D3113A66FD53 /* PanelManager+Floating.swift */,
-				C8973859ABCD520C873572C6D9F76025 /* PanelManager+Offscreen.swift */,
-				E3065F5816489EA968A7D87CFFD80587 /* PanelManager+Pinning.swift */,
-				72D30332689D4C7792627F19002AB021 /* PanelManager+State.swift */,
-				F6A1AF28E40721ED65251AB6143020E8 /* PanelNavigationController.swift */,
-				3CC8EE08A14FDDA3AB5C2B3F8619870B /* PanelPinnedMetadata.swift */,
-				8FBF32660D83271CD9018204667BD212 /* PanelPinSide.swift */,
-				FBA1FB42DDE30477F7B644A96D6FDFEB /* PanelState.swift */,
-				DCB1A4A27DB62BF220FF90490AECABCC /* PanelStateCoder.swift */,
-				72131914F5CB513339D7E8CC40AC9225 /* PanelViewController.swift */,
-				6E979208A4C7B2CDAEF5A94D88CD1AE6 /* PanelViewController+Appearance.swift */,
-				D43876C1010B495D4BE280E3DEE0413B /* PanelViewController+Dragging.swift */,
-				4620ABCA6392ECA01678A1A0C0EE8A83 /* PanelViewController+Keyboard.swift */,
-				B52C608A0774AB3A42282D9FB70EFE41 /* PanelViewController+Offscreen.swift */,
-				6CCD6C9B8DBACAEBC9C7F6428645DA0C /* PanelViewController+Resize.swift */,
-				B987F693FD8E52BEA30201BAB572C914 /* PanelViewController+States.swift */,
-				D0E1CAD56EFAEC58A54B44CB3F1ED9D5 /* PinnedPosition.swift */,
-				33B5F7CF2DAAA8610BF1329D4942D1FE /* ResizeStart.swift */,
-				1F206EC287F42C21423DA53102A77D3B /* UIViewController+Popover.swift */,
-				0B0B5F7960303F4D4B23121C81AD4762 /* UnpinningMetadata.swift */,
-				38A1905D3DA44A4FE7D8D4E0B793E811 /* Support Files */,
-			);
-			name = PanelKit;
-			path = PanelKit;
-			sourceTree = "<group>";
-		};
-		36B4E614851DF1690F797A1E31F22DC8 /* Support Files */ = {
-			isa = PBXGroup;
-			children = (
-				F091039A4D889182A831ADE166C3B5AB /* Info.plist */,
-				A73388073F55F7C9E56B2B2FE11C2173 /* TabView.modulemap */,
-				69F8003D508CA6263F39EA4F5C4812EC /* TabView.xcconfig */,
-				0451E0E4B24244B9E7DC74FC9A526075 /* TabView-dummy.m */,
-				9244EA99432696B2540A163AB9936201 /* TabView-prefix.pch */,
-				6DABB4870AEDED5C8B482073779FEFA4 /* TabView-umbrella.h */,
+				1267028626DB5A394747EAA307EE917E /* Info.plist */,
+				B0BCE95F90FCD42AAA295E3738E14FB9 /* TabView.modulemap */,
+				C0452D372EAD80D337ACA0A1A79CC551 /* TabView.xcconfig */,
+				201A7C4B0CB047899430D7BD5F735F30 /* TabView-dummy.m */,
+				0EC1AED74A85EDD4619F6C7B9306D947 /* TabView-prefix.pch */,
+				EE393DBE39322E2D39447888C239FBC7 /* TabView-umbrella.h */,
 			);
 			name = "Support Files";
 			path = "../Target Support Files/TabView";
 			sourceTree = "<group>";
 		};
-		38A1905D3DA44A4FE7D8D4E0B793E811 /* Support Files */ = {
+		1561199F2D7F818271F17CCF732E2BEE /* InputAssistant */ = {
 			isa = PBXGroup;
 			children = (
-				8FF3D3EC747ABAEEA788910D485675DF /* Info.plist */,
-				709DBC48264F852F5376E081DECBD09C /* PanelKit.modulemap */,
-				787E42120BC5B5AD163A7EF0A8A3EA61 /* PanelKit.xcconfig */,
-				E31D410CF1775CA47F86FEF250E719DE /* PanelKit-dummy.m */,
-				D96B24C1E8655D47B6CCD5900380B2F0 /* PanelKit-prefix.pch */,
-				3BD9118FB89E109D24EF296CC6E234E5 /* PanelKit-umbrella.h */,
+				C23F86D412CF864B16D0521B7B480E6A /* InputAssistantCollectionView.swift */,
+				8B74B0B5298164849418592F843637E4 /* InputAssistantView.swift */,
+				A07987642054AE36DB7DDF28BBF8E333 /* Support Files */,
 			);
-			name = "Support Files";
-			path = "../Target Support Files/PanelKit";
+			name = InputAssistant;
+			path = InputAssistant;
 			sourceTree = "<group>";
 		};
 		3BF3A05044A9F6D17C0B7FD09AB4D0FD /* Pods-OpenTerm */ = {
@@ -318,15 +253,18 @@
 			path = "Target Support Files/Pods-OpenTerm";
 			sourceTree = "<group>";
 		};
-		45070C62E55234E161E53D55916E04F5 /* InputAssistant */ = {
+		4E56C374E65A5745E07D5AE00FB4DD87 /* Support Files */ = {
 			isa = PBXGroup;
 			children = (
-				D8F04C558049A54460A892779D746D62 /* InputAssistantCollectionView.swift */,
-				2C3533802D10D511C88BD1D5624CE4F0 /* InputAssistantView.swift */,
-				CE748BC7C9B1AA5FC4E587CBAF4F5A81 /* Support Files */,
+				3A5247660F47C94B23AA2ECDDC46C8CC /* Info.plist */,
+				B22891EC0C863EE634D99B9A85701671 /* PanelKit.modulemap */,
+				EB9E573F39A56C6A0063283E406E69B1 /* PanelKit.xcconfig */,
+				11CC02901EFFA47E625B216C20F2DBD2 /* PanelKit-dummy.m */,
+				3FC48C503DC989EE24C8933CEFF741DA /* PanelKit-prefix.pch */,
+				882692400BC70BA371F6562176AF49B4 /* PanelKit-umbrella.h */,
 			);
-			name = InputAssistant;
-			path = InputAssistant;
+			name = "Support Files";
+			path = "../Target Support Files/PanelKit";
 			sourceTree = "<group>";
 		};
 		7DB346D0F39D3F0E887471402A8071AB = {
@@ -334,10 +272,94 @@
 			children = (
 				93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */,
 				BC3CA7F9E30CC8F7E2DD044DD34432FC /* Frameworks */,
-				CF8A5B9A071D96279AE19E3991C5F546 /* Pods */,
+				CFB5F7B64AA261DB73C323EC886766DD /* Pods */,
 				B9EED0E2E198B66DB0B98D1E5BF52FCD /* Products */,
 				D0B9ACF226066733949A29878F7B5BDE /* Targets Support Files */,
 			);
+			sourceTree = "<group>";
+		};
+		87B1A5B809E8854C1F270561F5C445BC /* PanelKit */ = {
+			isa = PBXGroup;
+			children = (
+				6BC04E5D6D5289D27BBC308D4A4CDBB2 /* AssociatedObject.swift */,
+				3E0788DAB72F34E9135875279D2471DD /* BlockBarButtonItem.swift */,
+				BD5F193446A58D2790983F0D3ED3B259 /* BlockGestureRecognizer.swift */,
+				96ABC330B924CA352783A22CA52E40F9 /* CGRect+Center.swift */,
+				9A7249612E114EB7DFECC2BAB8A2FFB9 /* Constants.swift */,
+				A348538A41B07A2C14AF3E203327D633 /* CornerHandleView.swift */,
+				5576435AF6D44D5572AE10D0A587F2AE /* LogLevel.swift */,
+				FD23C71CA4E5037190165BBD43220B6F /* PanelContentDelegate.swift */,
+				442137E12C5DDA02DED65D29BC3CB928 /* PanelContentDelegate+Default.swift */,
+				B27D9C7F1E421EFDD71833297D33D6A2 /* PanelContentDelegate+Navigation.swift */,
+				921CF05273F42B45E1648829296911C4 /* PanelFloatingState.swift */,
+				9BA6777E3418BDF756EA7AE375E6BF12 /* PanelManager.swift */,
+				E10211F3D58C159D2A9741ADE9CBABB1 /* PanelManager+AutoLayout.swift */,
+				5974CFCDD2545BB8D2D546EFD40C8373 /* PanelManager+Closing.swift */,
+				92FA47B41F444960342564681F8636C4 /* PanelManager+Default.swift */,
+				1A116558540EB9835D6C469E78352803 /* PanelManager+Dragging.swift */,
+				42C4E3364B11EAABCF3B49FBB7C02DBD /* PanelManager+Expose.swift */,
+				E488C59942B302E77374D7524F7D1E08 /* PanelManager+Floating.swift */,
+				FA358A9340E1ABF811C4FC900DF08E6C /* PanelManager+Offscreen.swift */,
+				BBB9EA07E5B17C9EAFA5B08D32FAE472 /* PanelManager+Pinning.swift */,
+				90CD319A20EC069652F3611C3A863769 /* PanelManager+State.swift */,
+				035999E3F5AF65EE281DB817EE439C2F /* PanelNavigationController.swift */,
+				11651F031AB765A789AF9876C0115DAA /* PanelPinnedMetadata.swift */,
+				B3349292BD990FFADF877DA434C578F2 /* PanelPinSide.swift */,
+				458CFF2E17335D451D871ECCF28A1073 /* PanelState.swift */,
+				EEB6182750B11710644BC6BC79E0DE7D /* PanelStateCoder.swift */,
+				4AD47B0B04B6DBB04C81BD4B4392FED6 /* PanelViewController.swift */,
+				D9035BEFFA0FC1064F2878FBAE10F72A /* PanelViewController+Appearance.swift */,
+				092C540A2BA62B794BBFB2F20B17AA4C /* PanelViewController+Dragging.swift */,
+				CEC7A81E9F01FDA9D182DBE98FD0C307 /* PanelViewController+Keyboard.swift */,
+				643EC72882F68D91B6FEDE54502ABC7C /* PanelViewController+Offscreen.swift */,
+				8A16F7DDAE17E44960F56CC39FBB2A5F /* PanelViewController+Resize.swift */,
+				764A5A3CCEE8ABE3F43FBA760C70D1D9 /* PanelViewController+States.swift */,
+				6EA902EA101E37BCE13F4013175DB257 /* PinnedPosition.swift */,
+				42EA6A4966D6090BD7A3A27F4DC5778E /* ResizeStart.swift */,
+				18A6C5F3E0F771BCB689A4B058E8AB8A /* UIViewController+Popover.swift */,
+				874F900AA9BEA8F57EE21CBE7A956535 /* UnpinningMetadata.swift */,
+				4E56C374E65A5745E07D5AE00FB4DD87 /* Support Files */,
+			);
+			name = PanelKit;
+			path = PanelKit;
+			sourceTree = "<group>";
+		};
+		8B64A4198D1498681947B6B2DB652B48 /* TabView */ = {
+			isa = PBXGroup;
+			children = (
+				02D7CD71CD8398CF4392F3451D8ACFB3 /* NavigationItemObserver.swift */,
+				BA74CA3FCB4B45323E3A259D12FC4E33 /* NSLayoutConstraint+Custom.swift */,
+				331F6BA4274578F7F6890D6DA42FE895 /* TabViewBar.swift */,
+				4D928797DCEB73FBBD4556A4F216CA5D /* TabViewController.swift */,
+				35244ED449E0C5B1CFF401D7312383F1 /* TabViewTabCollectionView.swift */,
+				BC6B4B0B1D1F9539948B22ADE42E788D /* Theme.swift */,
+				AE42CE85FB34996E0C0DD1292FF01EA0 /* UIBarButtonItem+View.swift */,
+				1222CBA0A96AA737C270EC0E61D9B9B9 /* Support Files */,
+			);
+			name = TabView;
+			path = TabView;
+			sourceTree = "<group>";
+		};
+		926A262085CCE8B4E4D6B527B43C91D8 /* SwiftLint */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = SwiftLint;
+			path = SwiftLint;
+			sourceTree = "<group>";
+		};
+		A07987642054AE36DB7DDF28BBF8E333 /* Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				B6CAFEFD6552EEE5CD2FBA28E941A0FA /* Info.plist */,
+				C9416D36BB86F4F3FAA89AE6AB956073 /* InputAssistant.modulemap */,
+				F61076582C85765E70B8D093A6014408 /* InputAssistant.xcconfig */,
+				C66DDC0A49D52B2E336E182C9CC3F42F /* InputAssistant-dummy.m */,
+				1ADBD77ACDF687612C6BB695418A85B0 /* InputAssistant-prefix.pch */,
+				489B57AE0332DE755749EEA636C08AA5 /* InputAssistant-umbrella.h */,
+			);
+			name = "Support Files";
+			path = "../Target Support Files/InputAssistant";
 			sourceTree = "<group>";
 		};
 		B9EED0E2E198B66DB0B98D1E5BF52FCD /* Products */ = {
@@ -359,26 +381,13 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		CE748BC7C9B1AA5FC4E587CBAF4F5A81 /* Support Files */ = {
+		CFB5F7B64AA261DB73C323EC886766DD /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				757092151475E5576CDB5F6A9AC9C043 /* Info.plist */,
-				E4A23B52F4460CB0DBFA5F29B73C7198 /* InputAssistant.modulemap */,
-				E271A27934C32FA372944153AC087554 /* InputAssistant.xcconfig */,
-				911230489C8C94B9ADB8DA6461F04467 /* InputAssistant-dummy.m */,
-				C50A6EB839F1A872DCE47D03167FB3CD /* InputAssistant-prefix.pch */,
-				7C93A8D47A8C4850A9B87067B75ED130 /* InputAssistant-umbrella.h */,
-			);
-			name = "Support Files";
-			path = "../Target Support Files/InputAssistant";
-			sourceTree = "<group>";
-		};
-		CF8A5B9A071D96279AE19E3991C5F546 /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				45070C62E55234E161E53D55916E04F5 /* InputAssistant */,
-				1DB6560C608D284EEC4DF2610F74F3FC /* PanelKit */,
-				0A69129127EFE9437DAB97717DE5BD2D /* TabView */,
+				1561199F2D7F818271F17CCF732E2BEE /* InputAssistant */,
+				87B1A5B809E8854C1F270561F5C445BC /* PanelKit */,
+				926A262085CCE8B4E4D6B527B43C91D8 /* SwiftLint */,
+				8B64A4198D1498681947B6B2DB652B48 /* TabView */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -642,7 +651,7 @@
 /* Begin XCBuildConfiguration section */
 		07B83EA0BA3E67A02631D3478829C6E5 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = E271A27934C32FA372944153AC087554 /* InputAssistant.xcconfig */;
+			baseConfigurationReference = F61076582C85765E70B8D093A6014408 /* InputAssistant.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
@@ -728,7 +737,7 @@
 		};
 		40438815DF2EA26530D3C39DC9F531AF /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = E271A27934C32FA372944153AC087554 /* InputAssistant.xcconfig */;
+			baseConfigurationReference = F61076582C85765E70B8D093A6014408 /* InputAssistant.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
@@ -760,7 +769,7 @@
 		};
 		54E65470A6C3A5BC4F78BFAFD7447A7D /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 787E42120BC5B5AD163A7EF0A8A3EA61 /* PanelKit.xcconfig */;
+			baseConfigurationReference = EB9E573F39A56C6A0063283E406E69B1 /* PanelKit.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
@@ -852,7 +861,7 @@
 		};
 		813E4FFA7581689B9950EC3F212D72BA /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 69F8003D508CA6263F39EA4F5C4812EC /* TabView.xcconfig */;
+			baseConfigurationReference = C0452D372EAD80D337ACA0A1A79CC551 /* TabView.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
@@ -918,7 +927,7 @@
 		};
 		B0777F648658203D5C698396C55C67FD /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 787E42120BC5B5AD163A7EF0A8A3EA61 /* PanelKit.xcconfig */;
+			baseConfigurationReference = EB9E573F39A56C6A0063283E406E69B1 /* PanelKit.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
@@ -983,7 +992,7 @@
 		};
 		DD0F8415E484391C8A62DBC3271BA91C /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 69F8003D508CA6263F39EA4F5C4812EC /* TabView.xcconfig */;
+			baseConfigurationReference = C0452D372EAD80D337ACA0A1A79CC551 /* TabView.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";

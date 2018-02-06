@@ -281,7 +281,7 @@ private let colors: [(r:Int, g:Int, b:Int)] = [
 func indexedColor(atIndex index: Int) -> UIColor {
     guard index >= 0 && index <= 255 else { fatalError("Index out of bounds.") }
     let (r, g, b) = colors[index]
-    return UIColor.init(red: CGFloat(r) / 255, green: CGFloat(g) / 255, blue: CGFloat(b) / 255, alpha: 1)
+    return UIColor(red: CGFloat(r) / 255, green: CGFloat(g) / 255, blue: CGFloat(b) / 255, alpha: 1)
 }
 
 
@@ -306,7 +306,7 @@ func customColor(codes: [Int]) -> (color: UIColor, readCount: Int) {
         let r = codes[1]
         let g = codes[2]
         let b = codes[3]
-        let color = UIColor.init(red: CGFloat(r) / 255, green: CGFloat(g) / 255, blue: CGFloat(b) / 255, alpha: 1)
+        let color = UIColor(red: CGFloat(r) / 255, green: CGFloat(g) / 255, blue: CGFloat(b) / 255, alpha: 1)
         return (color, expectedCodes)
     default:
         return invalidResponse
@@ -396,11 +396,11 @@ struct ANSITextState {
     /// Get a font from the current state
     var font: UIFont {
         let textSize = CGFloat(UserDefaultsController.shared.terminalFontSize)
-        var descriptor = UIFontDescriptor.init(name: "Menlo", size: textSize)
+        var descriptor = UIFontDescriptor(name: "Menlo", size: textSize)
         if let traitDescriptor = descriptor.withSymbolicTraits(self.fontTraits) {
             descriptor = traitDescriptor
         }
-        return UIFont.init(descriptor: descriptor, size: textSize)
+        return UIFont(descriptor: descriptor, size: textSize)
     }
 
     mutating func reset() {
@@ -423,14 +423,14 @@ struct ANSITextState {
             if code == 0 { reset() }
 
             // Foreground color
-            else if let foregroundColor = ANSIForegroundColor.init(rawValue: code) { self.foregroundColor = foregroundColor.color }
+            else if let foregroundColor = ANSIForegroundColor(rawValue: code) { self.foregroundColor = foregroundColor.color }
             else if code == ANSIForegroundColor.custom { let result = customColor(codes: Array(codes.suffix(from: index + 1))); readCount += result.readCount; foregroundColor = result.color }
 
             // Background color
-            else if let backgroundColor = ANSIBackgroundColor.init(rawValue: code) { self.backgroundColor = backgroundColor.color }
+            else if let backgroundColor = ANSIBackgroundColor(rawValue: code) { self.backgroundColor = backgroundColor.color }
             else if code == ANSIBackgroundColor.custom { let result = customColor(codes: Array(codes.suffix(from: index + 1))); readCount += result.readCount; backgroundColor = result.color }
 
-            else if let fontState = ANSIFontState.init(rawValue: code) {
+            else if let fontState = ANSIFontState(rawValue: code) {
                 switch fontState {
                 case .bold: fontTraits.insert(.traitBold)
                 case .noBold: fontTraits.remove(.traitBold)
