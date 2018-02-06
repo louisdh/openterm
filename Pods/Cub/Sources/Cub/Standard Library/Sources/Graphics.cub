@@ -1,0 +1,32 @@
+//
+//  Graphics.cub
+//  Cub Standard Library
+//
+
+struct Color {
+	r, g, b, a
+}
+
+// Color convenience init
+
+func rgb(r, g, b) returns {
+	return Color(r, g, b, 1.0)
+}
+
+func rgba(r, g, b, a) returns {
+	return Color(r, g, b, a)
+}
+
+// Predefined colors
+
+red = Color(1.0, 0.0, 0.0, 1.0)
+green = Color(0.0, 1.0, 0.0, 1.0)
+blue = Color(0.0, 0.0, 1.0, 1.0)
+
+cyan = Color(0.0, 1.0, 1.0, 1.0)
+magenta = Color(1.0, 0.0, 1.0, 1.0)
+yellow = Color(1.0, 1.0, 0.0, 1.0)
+
+black = Color(0.0, 0.0, 0.0, 1.0)
+white = Color(1.0, 1.0, 1.0, 1.0)
+clear = Color(0.0, 0.0, 0.0, 0.0)

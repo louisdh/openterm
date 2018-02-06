@@ -30,6 +30,10 @@ extension String {
 
 }
 
+let executor = CommandExecutor()
+
+var activeVC: ViewController!
+
 class ViewController: UIViewController {
 
 	@IBOutlet weak var terminalView: TerminalView!
@@ -42,10 +46,10 @@ class ViewController: UIViewController {
 	var scriptsViewController: ScriptsViewController!
 	var scriptsPanelViewController: PanelViewController!
 
-    let executor = CommandExecutor()
-
 	override func viewDidLoad() {
 		super.viewDidLoad()
+        
+        activeVC = self
 
 		let storyboard = UIStoryboard(name: "Main", bundle: nil)
 		historyViewController = storyboard.instantiateViewController(withIdentifier: "HistoryViewController") as! HistoryViewController
@@ -71,6 +75,7 @@ class ViewController: UIViewController {
         replaceCommand("share", shareFile, true)
         replaceCommand("pbcopy", pbcopy, true)
         replaceCommand("pbpaste", pbpaste, true)
+        replaceCommand("cub", cub, true)
 
         // Call reloadData for the added commands.
         terminalView.autoCompleteManager.reloadData()
@@ -366,9 +371,11 @@ extension ViewController: CommandExecutorDelegate {
     func commandExecutor(_ commandExecutor: CommandExecutor, receivedStdout stdout: String) {
         terminalView.writeOutput(sanitizeOutput(stdout))
     }
+    
     func commandExecutor(_ commandExecutor: CommandExecutor, receivedStderr stderr: String) {
         terminalView.writeOutput(sanitizeOutput(stderr))
     }
+    
     func commandExecutor(_ commandExecutor: CommandExecutor, didFinishDispatchWithExitCode exitCode: Int32) {
         DispatchQueue.main.async {
             self.terminalView.writePrompt()

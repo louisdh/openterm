@@ -8,17 +8,19 @@
 
 import UIKit
 import InputAssistant
+import Cub
+import SavannaKit
 
 class ScriptEditViewController: UIViewController {
 
 	var script: Script
-    let textView: TerminalTextView
+    let textView: SyntaxTextView
     let autoCompleteManager: AutoCompleteManager
     let inputAssistantView: InputAssistantView
 
 	init(script: Script) {
 		self.script = script
-        self.textView = TerminalTextView()
+        self.textView = SyntaxTextView()
         self.autoCompleteManager = AutoCompleteManager()
         self.inputAssistantView = InputAssistantView()
 		super.init(nibName: nil, bundle: nil)
@@ -43,7 +45,7 @@ class ScriptEditViewController: UIViewController {
         // Set up input assistant and text view for auto completion
         self.inputAssistantView.delegate = self
         self.inputAssistantView.dataSource = self.autoCompleteManager
-        self.textView.inputAccessoryView = self.inputAssistantView
+//        self.textView.inputAccessoryView = self.inputAssistantView
         self.inputAssistantView.tintColor = .lightGray
 
         // Hide default undo/redo/etc buttons
@@ -51,7 +53,7 @@ class ScriptEditViewController: UIViewController {
         textView.inputAssistantItem.trailingBarButtonGroups = []
 
         // Disable built-in autocomplete
-        textView.autocorrectionType = .no
+//        textView.autocorrectionType = .no
 	}
 
 	override func viewDidAppear(_ animated: Bool) {
@@ -66,6 +68,19 @@ class ScriptEditViewController: UIViewController {
 		script.value = textView.text
 	}
 
+}
+
+extension ScriptEditViewController: SyntaxTextViewDelegate {
+    
+    func didChangeText(_ syntaxTextView: SyntaxTextView) {
+        save()
+//        autoCompleteManager.reloadData()
+    }
+    
+    func lexerForSource(_ source: String) -> SavannaKit.Lexer {
+        return Cub.Lexer(input: source)
+    }
+    
 }
 
 extension ScriptEditViewController: UITextViewDelegate {
@@ -90,10 +105,10 @@ extension ScriptEditViewController: InputAssistantViewDelegate {
     func inputAssistantView(_ inputAssistantView: InputAssistantView, didSelectSuggestionAtIndex index: Int) {
         let suggestion = autoCompleteManager.completions[index]
 
-        if suggestion.name == "+ new argument" {
-            textView.insertText("$<<argument>>")
-        } else {
-            textView.insertText("$<<\(suggestion.name)>>")
-        }
+//        if suggestion.name == "+ new argument" {
+//            textView.insertText("$<<argument>>")
+//        } else {
+//            textView.insertText("$<<\(suggestion.name)>>")
+//        }
     }
 }

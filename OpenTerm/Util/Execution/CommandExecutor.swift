@@ -46,6 +46,8 @@ class CommandExecutor {
     /// Context from commands run by this executor
     private var context = CommandExecutionContext()
 
+    private var commandExecutedCallback: ((ReturnCode) -> Void)?
+    
     init() {
         // Get file for stdout/stderr that can be written to
         stdout_file = fdopen(stdout.fileHandleForWriting.fileDescriptor, "w")
@@ -57,7 +59,10 @@ class CommandExecutor {
     }
 
     // Dispatch a new text-based command to execute.
-    func dispatch(_ command: String) {
+    func dispatch(_ command: String, callback: ((ReturnCode) -> Void)? = nil) {
+        
+        self.commandExecutedCallback = callback
+        
         executionQueue.async {
             let returnCode: ReturnCode
             do {
@@ -77,7 +82,9 @@ class CommandExecutor {
             // Write the end code to stdout
             // TODO: Also need to send to stderr?
             self.stdout.fileHandleForWriting.write(String(CommandExecutor.endCtrlCode).data(using: .utf8)!)
+            
         }
+        
     }
 
     /// Take user-entered command, decide what to do with it, then return an executor command that will do the work.
@@ -118,6 +125,7 @@ class CommandExecutor {
             if hadEnd {
                 let lastStatus = Int32(self.context[.status] ?? "0") ?? 0
                 self.delegate?.commandExecutor(self, didFinishDispatchWithExitCode: lastStatus)
+                self.commandExecutedCallback?(lastStatus)
             }
         }
     }

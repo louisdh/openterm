@@ -32,8 +32,10 @@ class TerminalView: UIView {
 
 	weak var delegate: TerminalViewDelegate?
 
-	private var isWaitingForCommand = false
+    var isWaitingForCommand = false
 
+    var isExecutingScript = false
+    
 	init() {
 		super.init(frame: .zero)
 
@@ -116,9 +118,15 @@ class TerminalView: UIView {
 
     // Display a prompt at the beginning of the line.
     func writePrompt() {
+        
+        guard !isExecutingScript else {
+            return
+        }
+        
         newLine()
         appendText("\(deviceName): ")
         currentCommandStartIndex = textView.text.endIndex
+        isWaitingForCommand = false
     }
 
     // Appends the given string to the output, and updates the command start index.
@@ -226,6 +234,7 @@ extension TerminalView: UITextViewDelegate {
             if input.isEmpty {
                 writePrompt()
             } else {
+                isWaitingForCommand = true
                 newLine()
                 delegate?.didEnterCommand(String(input))
             }
