@@ -315,24 +315,10 @@ class ViewController: UIViewController {
     }
 
     @objc func completeCommand() {
-        guard
-            let firstCompletion = terminalView.autoCompleteManager.completions.first?.name,
-            terminalView.currentCommand != firstCompletion
-            else { return }
-
-        let completed: String
-        if let lastCommand = terminalView.currentCommand.components(separatedBy: " ").last {
-            if lastCommand.isEmpty {
-                completed = terminalView.currentCommand + firstCompletion
-            } else {
-                completed = terminalView.currentCommand.replacingOccurrences(of: lastCommand, with: firstCompletion, options: .backwards)
-            }
-        } else {
-            completed = firstCompletion
+        // When tab key is pressed, insert first completion, if we have one.
+        if let firstCompletion = terminalView.autoCompleteManager.completions.first {
+            terminalView.insertCompletion(firstCompletion)
         }
-
-        terminalView.currentCommand = completed
-        terminalView.autoCompleteManager.reloadData()
     }
 
 	override var keyCommands: [UIKeyCommand]? {
