@@ -1718,6 +1718,8 @@
 					"-I",
 					../blink/Frameworks/libssh2.framework/Headers/,
 					"-DBLINKSHELL",
+					"-I",
+					../ios_system/,
 				);
 				OTHER_LDFLAGS = (
 					"-F",
@@ -1755,6 +1757,8 @@
 					"-I",
 					../blink/Frameworks/libssh2.framework/Headers/,
 					"-DBLINKSHELL",
+					"-I",
+					../ios_system/,
 				);
 				OTHER_LDFLAGS = (
 					"-F",
