@@ -10,5 +10,7 @@ target 'OpenTerm' do
   pod 'Cub', '~> 0.6'
   pod 'SavannaKit', '~> 0.6'
   pod 'InputAssistant', '~> 1.0'
+  pod 'SwiftLint'
+  
 end
 
