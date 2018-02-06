@@ -375,8 +375,8 @@ enum ANSIFontState: Int {
 }
 
 struct ANSITextState {
-    var foregroundColor: UIColor = UserDefaultsController.shared.terminalTextColor ?? .white
-    var backgroundColor: UIColor = UserDefaultsController.shared.terminalBackgroundColor ?? .black
+    var foregroundColor: UIColor = UserDefaultsController.shared.terminalTextColor
+    var backgroundColor: UIColor = UserDefaultsController.shared.terminalBackgroundColor
     var isUnderlined: Bool = false
     var isStrikethrough: Bool = false
     var fontTraits: UIFontDescriptorSymbolicTraits = []
@@ -404,8 +404,8 @@ struct ANSITextState {
     }
 
     mutating func reset() {
-        foregroundColor = UserDefaultsController.shared.terminalTextColor ?? .white
-        backgroundColor = UserDefaultsController.shared.terminalBackgroundColor ?? .black
+        foregroundColor = UserDefaultsController.shared.terminalTextColor
+        backgroundColor = UserDefaultsController.shared.terminalBackgroundColor
         isUnderlined = false
         isStrikethrough = false
         fontTraits = []

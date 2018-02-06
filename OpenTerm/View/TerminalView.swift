@@ -12,6 +12,7 @@ import InputAssistant
 protocol TerminalViewDelegate: class {
 
 	func didEnterCommand(_ command: String)
+    func didChangeCurrentWorkingDirectory(_ workingDirectory: URL)
 
 }
 
@@ -19,6 +20,7 @@ protocol TerminalViewDelegate: class {
 class TerminalView: UIView {
 
 	let deviceName = UIDevice.current.name
+    let executor = CommandExecutor()
 	let textView = TerminalTextView()
     let inputAssistantView = InputAssistantView()
     let autoCompleteManager = AutoCompleteManager()
@@ -54,6 +56,8 @@ class TerminalView: UIView {
 	}
 
 	private func setup() {
+
+        executor.delegate = self
 
 		textView.translatesAutoresizingMaskIntoConstraints = false
 		self.addSubview(textView)
@@ -177,6 +181,35 @@ class TerminalView: UIView {
 		}
 	}
 
+}
+
+extension TerminalView: CommandExecutorDelegate {
+
+    func commandExecutor(_ commandExecutor: CommandExecutor, receivedStdout stdout: String) {
+        self.writeOutput(sanitizeOutput(stdout))
+    }
+    func commandExecutor(_ commandExecutor: CommandExecutor, receivedStderr stderr: String) {
+        self.writeOutput(sanitizeOutput(stderr))
+    }
+    func commandExecutor(_ commandExecutor: CommandExecutor, didFinishDispatchWithExitCode exitCode: Int32) {
+        DispatchQueue.main.async {
+            self.writePrompt()
+        }
+    }
+    func commandExecutor(_ commandExecutor: CommandExecutor, didChangeWorkingDirectory to: URL) {
+        DispatchQueue.main.async {
+            self.delegate?.didChangeCurrentWorkingDirectory(to)
+        }
+    }
+
+    func sanitizeOutput(_ output: String) -> String {
+        var output = output
+        // Replace $HOME with "~"
+        output = output.replacingOccurrences(of: DocumentManager.shared.activeDocumentsFolderURL.path, with: "~")
+        // Sometimes, fileManager adds /private in front of the directory
+        output = output.replacingOccurrences(of: "/private", with: "")
+        return output
+    }
 }
 
 extension TerminalView: UITextDragDelegate {

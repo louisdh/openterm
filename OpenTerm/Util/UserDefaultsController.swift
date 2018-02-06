@@ -17,26 +17,20 @@ class UserDefaultsController {
 
 	init(userDefaults: UserDefaults) {
 		self.userDefaults = userDefaults
-
 	}
 
 	func registerDefaults() {
-
 		userDefaults.register(defaults: [
 			"terminalFontSize": 14,
 			"terminalTextColor": NSKeyedArchiver.archivedData(withRootObject: UIColor.defaultMainTintColor),
 			"terminalBackgroundColor": NSKeyedArchiver.archivedData(withRootObject: UIColor.panelBackgroundColor),
-			"userDarkKeyboardInTerminal": true])
-
+			"userDarkKeyboardInTerminal": true]
+        )
 	}
 
-	var terminalTextColor: UIColor? {
+	var terminalTextColor: UIColor {
 		get {
-			if let val = userDefaults.color(forKey: "terminalTextColor") {
-				return val
-			}
-
-			return nil
+			return userDefaults.color(forKey: "terminalTextColor") ?? UIColor.defaultMainTintColor
 		}
 		set {
 			userDefaults.set(newValue, forKey: "terminalTextColor")
@@ -44,13 +38,9 @@ class UserDefaultsController {
 		}
 	}
 
-	var terminalBackgroundColor: UIColor? {
+	var terminalBackgroundColor: UIColor {
 		get {
-			if let val = userDefaults.color(forKey: "terminalBackgroundColor") {
-				return val
-			}
-
-			return nil
+			return userDefaults.color(forKey: "terminalBackgroundColor") ?? UIColor.panelBackgroundColor
 		}
 		set {
 			userDefaults.set(newValue, forKey: "terminalBackgroundColor")
@@ -60,9 +50,7 @@ class UserDefaultsController {
 
 	var terminalFontSize: Int {
 		get {
-			let val = userDefaults.integer(forKey: "terminalFontSize")
-
-			return val
+			return userDefaults.integer(forKey: "terminalFontSize")
 		}
 		set {
 			userDefaults.set(newValue, forKey: "terminalFontSize")
@@ -72,9 +60,7 @@ class UserDefaultsController {
 
 	var userDarkKeyboardInTerminal: Bool {
 		get {
-			let val = userDefaults.bool(forKey: "userDarkKeyboardInTerminal")
-
-			return val
+			return userDefaults.bool(forKey: "userDarkKeyboardInTerminal")
 		}
 		set {
 			userDefaults.set(newValue, forKey: "userDarkKeyboardInTerminal")
@@ -82,4 +68,8 @@ class UserDefaultsController {
 		}
 	}
 
+    var lastStoreReviewPrompt: Date? {
+        get { return userDefaults.object(forKey: "lastStoreReviewPrompt") as? Date }
+        set { userDefaults.set(newValue, forKey: "lastStoreReviewPrompt") }
+    }
 }

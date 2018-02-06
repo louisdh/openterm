@@ -13,6 +13,7 @@ protocol CommandExecutorDelegate: class {
     func commandExecutor(_ commandExecutor: CommandExecutor, receivedStdout stdout: String)
     func commandExecutor(_ commandExecutor: CommandExecutor, receivedStderr stderr: String)
     func commandExecutor(_ commandExecutor: CommandExecutor, didFinishDispatchWithExitCode exitCode: Int32)
+    func commandExecutor(_ commandExecutor: CommandExecutor, didChangeWorkingDirectory to: URL)
 }
 
 // Exit status from an ios_system command
@@ -29,8 +30,17 @@ class CommandExecutor {
 
     weak var delegate: CommandExecutorDelegate?
 
+    // The current working directory for this executor.
+    var currentWorkingDirectory: URL {
+        didSet {
+            delegateQueue.async {
+                self.delegate?.commandExecutor(self, didChangeWorkingDirectory: self.currentWorkingDirectory)
+            }
+        }
+    }
+
     /// Dispatch queue to serially run commands on.
-    private let executionQueue = DispatchQueue(label: "CommandExecutor", qos: .userInteractive)
+    private static let executionQueue = DispatchQueue(label: "CommandExecutor", qos: .userInteractive)
     /// Dispatch queue that delegate methods will be called on.
     private let delegateQueue = DispatchQueue(label: "CommandExecutor-Delegate", qos: .userInteractive)
 
@@ -47,6 +57,8 @@ class CommandExecutor {
     private var context = CommandExecutionContext()
 
     init() {
+        self.currentWorkingDirectory = DocumentManager.shared.activeDocumentsFolderURL
+
         // Get file for stdout/stderr that can be written to
         stdout_file = fdopen(stdout_pipe.fileHandleForWriting.fileDescriptor, "w")
         stderr_file = fdopen(stderr_pipe.fileHandleForWriting.fileDescriptor, "w")
@@ -60,7 +72,10 @@ class CommandExecutor {
     func dispatch(_ command: String) {
         let push_stdout = stdout
         let push_stderr = stderr
-        executionQueue.async {
+
+        CommandExecutor.executionQueue.async {
+            // Set the executor's CWD as the process-wide CWD
+            DocumentManager.shared.currentDirectoryURL = self.currentWorkingDirectory
             stdout = self.stdout_file!
             stderr = self.stderr_file!
             let returnCode: ReturnCode
@@ -75,7 +90,15 @@ class CommandExecutor {
                 }
             }
 
-            /// Save return code into the context
+            // Save the current process-wide CWD to our value
+            let newDirectory = DocumentManager.shared.currentDirectoryURL
+            if newDirectory != self.currentWorkingDirectory {
+                self.currentWorkingDirectory = newDirectory
+            }
+            // Reset the process-wide CWD back to documents folder
+            DocumentManager.shared.currentDirectoryURL = DocumentManager.shared.activeDocumentsFolderURL
+
+            // Save return code into the context
             self.context[.status] = "\(returnCode)"
 
             // Write the end code to stdout_pipe
@@ -105,7 +128,6 @@ class CommandExecutor {
         // Default case: Just execute the string itself
         return SystemExecutorCommand(command: command)
     }
-
     private var stdoutBuffer = Data()
     // Called when the stdout file handle is written to
     private func onStdout(_ stdout: FileHandle) {
