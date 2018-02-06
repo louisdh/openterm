@@ -30,48 +30,48 @@ class ColorPickerViewController: UIViewController {
 
 	var didSelectCallback: ((UIColor) -> Void)?
 
-    @IBOutlet weak var collectionView: UICollectionView!
+	@IBOutlet weak var collectionView: UICollectionView!
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
+	override func viewDidLoad() {
+		super.viewDidLoad()
 
-        collectionView.dataSource = self
-        collectionView.delegate = self
+		collectionView.dataSource = self
+		collectionView.delegate = self
 
-    }
+	}
 
 }
 
 extension ColorPickerViewController: UICollectionViewDataSource {
 
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return colors.count
-    }
+	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+		return colors.count
+	}
 
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath)
+		let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath)
 
-        cell.backgroundColor = colors[indexPath.row]
-        cell.layer.borderWidth = 2
-        cell.layer.borderColor = UIColor.white.cgColor
-        cell.layer.cornerRadius = 5
+		cell.backgroundColor = colors[indexPath.row]
+		cell.layer.borderWidth = 2
+		cell.layer.borderColor = UIColor.white.cgColor
+		cell.layer.cornerRadius = 5
 
-        return cell
-    }
+		return cell
+	}
 
 }
 
 extension ColorPickerViewController: UICollectionViewDelegate {
 
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+	func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
 
 		let color = colors[indexPath.row]
 		didSelectCallback?(color)
 
 		navigationController?.popViewController(animated: true)
-        collectionView.deselectItem(at: indexPath, animated: true)
+		collectionView.deselectItem(at: indexPath, animated: true)
 
-    }
+	}
 
 }

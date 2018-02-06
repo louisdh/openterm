@@ -37,7 +37,6 @@ class HistoryViewController: UIViewController {
 		NotificationCenter.default.addObserver(self.tableView, selector: #selector(UITableView.reloadData), name: .historyDidChange, object: nil)
 	}
 
-
 	override var preferredStatusBarStyle: UIStatusBarStyle {
 		return .lightContent
 	}

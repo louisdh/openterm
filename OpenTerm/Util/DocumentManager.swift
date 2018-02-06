@@ -27,7 +27,7 @@ class DocumentManager {
 		}
 
 		fileManager.changeCurrentDirectoryPath(baseURL.path)
-        ios_setMiniRoot(baseURL.path)
+		ios_setMiniRoot(baseURL.path)
 
 	}
 
@@ -48,10 +48,10 @@ class DocumentManager {
 		return ubiquityContainerURL?.appendingPathComponent("Documents")
 	}
 
-    var currentDirectoryURL: URL {
-        get { return URL(fileURLWithPath: fileManager.currentDirectoryPath).standardizedFileURL }
-        set { fileManager.changeCurrentDirectoryPath(newValue.standardizedFileURL.path) }
-    }
+	var currentDirectoryURL: URL {
+		get { return URL(fileURLWithPath: fileManager.currentDirectoryPath).standardizedFileURL }
+		set { fileManager.changeCurrentDirectoryPath(newValue.standardizedFileURL.path) }
+	}
 
 	var activeDocumentsFolderURL: URL {
 

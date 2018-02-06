@@ -10,19 +10,19 @@ import UIKit
 
 /// UITextView that adopts the style of a terminal.
 class TerminalTextView: UITextView {
-	
+
 	override init(frame: CGRect, textContainer: NSTextContainer?) {
 		super.init(frame: frame, textContainer: textContainer)
 
 		setup()
 	}
-	
+
 	required init?(coder aDecoder: NSCoder) {
 		super.init(coder: aDecoder)
 
 		setup()
 	}
-	
+
 	private func setup() {
 
 		autocorrectionType = .no
@@ -37,14 +37,14 @@ class TerminalTextView: UITextView {
 
 		NotificationCenter.default.addObserver(self, selector: #selector(self.updateAppearanceFromSettingsAnimated), name: .appearanceDidChange, object: nil)
 	}
-	
+
 	@objc
 	private func updateAppearanceFromSettingsAnimated() {
 		UIView.animate(withDuration: 0.35) {
 			self.updateAppearanceFromSettings()
 		}
 	}
-	
+
 	private func updateAppearanceFromSettings() {
 		let userDefaultsController = UserDefaultsController.shared
 

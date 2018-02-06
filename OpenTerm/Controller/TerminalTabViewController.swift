@@ -11,50 +11,50 @@ import TabView
 
 class TerminalTabViewController: TabViewController {
 
-    init() {
-        super.init(theme: TabViewThemeDark())
+	init() {
+		super.init(theme: TabViewThemeDark())
 
-        self.viewControllers = [
-            TerminalViewController()
-        ]
+		self.viewControllers = [
+			TerminalViewController()
+		]
 
-        self.navigationItem.leftBarButtonItems = [
-            UIBarButtonItem.init(image: #imageLiteral(resourceName: "Settings"), style: .plain, target: self, action: #selector(showSettings))
-        ]
-        self.navigationItem.rightBarButtonItems = [
-            UIBarButtonItem.init(image: #imageLiteral(resourceName: "Add"), style: .plain, target: self, action: #selector(addTab)),
-        ]
-    }
+		self.navigationItem.leftBarButtonItems = [
+			UIBarButtonItem(image: #imageLiteral(resourceName: "Settings"), style: .plain, target: self, action: #selector(showSettings))
+		]
+		self.navigationItem.rightBarButtonItems = [
+			UIBarButtonItem(image: #imageLiteral(resourceName: "Add"), style: .plain, target: self, action: #selector(addTab))
+		]
+	}
 
-    required init?(coder aDecoder: NSCoder) { fatalError("init(coder:) has not been implemented") }
+	required init?(coder aDecoder: NSCoder) { fatalError("init(coder:) has not been implemented") }
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
-    }
+	override func viewDidLoad() {
+		super.viewDidLoad()
+	}
 
-    @objc private func showSettings() {
-        let settingsVC = UIStoryboard.init(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "SettingsViewController")
-        let nav = UINavigationController(rootViewController: settingsVC)
-        nav.navigationBar.barStyle = .black
-        nav.modalPresentationStyle = .formSheet
-        self.present(nav, animated: true, completion: nil)
-    }
+	@objc private func showSettings() {
+		let settingsVC = UIStoryboard.init(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "SettingsViewController")
+		let nav = UINavigationController(rootViewController: settingsVC)
+		nav.navigationBar.barStyle = .black
+		nav.modalPresentationStyle = .formSheet
+		self.present(nav, animated: true, completion: nil)
+	}
 
-    @objc private func addTab() {
-        self.activateTab(TerminalViewController())
-    }
+	@objc private func addTab() {
+		self.activateTab(TerminalViewController())
+	}
 
-    @objc private func closeCurrentTab() {
-        if let visibleViewController = self.visibleViewController {
-            self.closeTab(visibleViewController)
-        }
-    }
+	@objc private func closeCurrentTab() {
+		if let visibleViewController = self.visibleViewController {
+			self.closeTab(visibleViewController)
+		}
+	}
 
-    override var keyCommands: [UIKeyCommand]? {
-        return [
-            UIKeyCommand.init(input: "T", modifierFlags: .command, action: #selector(addTab), discoverabilityTitle: "New tab"),
-            UIKeyCommand.init(input: "W", modifierFlags: .command, action: #selector(closeCurrentTab), discoverabilityTitle: "Close tab")
-        ]
-    }
+	override var keyCommands: [UIKeyCommand]? {
+		return [
+			UIKeyCommand.init(input: "T", modifierFlags: .command, action: #selector(addTab), discoverabilityTitle: "New tab"),
+			UIKeyCommand.init(input: "W", modifierFlags: .command, action: #selector(closeCurrentTab), discoverabilityTitle: "Close tab")
+		]
+	}
 
 }

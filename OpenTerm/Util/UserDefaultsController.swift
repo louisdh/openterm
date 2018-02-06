@@ -25,7 +25,7 @@ class UserDefaultsController {
 			"terminalTextColor": NSKeyedArchiver.archivedData(withRootObject: UIColor.defaultMainTintColor),
 			"terminalBackgroundColor": NSKeyedArchiver.archivedData(withRootObject: UIColor.panelBackgroundColor),
 			"userDarkKeyboardInTerminal": true]
-        )
+		)
 	}
 
 	var terminalTextColor: UIColor {
@@ -68,8 +68,8 @@ class UserDefaultsController {
 		}
 	}
 
-    var lastStoreReviewPrompt: Date? {
-        get { return userDefaults.object(forKey: "lastStoreReviewPrompt") as? Date }
-        set { userDefaults.set(newValue, forKey: "lastStoreReviewPrompt") }
-    }
+	var lastStoreReviewPrompt: Date? {
+		get { return userDefaults.object(forKey: "lastStoreReviewPrompt") as? Date }
+		set { userDefaults.set(newValue, forKey: "lastStoreReviewPrompt") }
+	}
 }

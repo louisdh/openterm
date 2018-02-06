@@ -11,13 +11,13 @@ import Foundation
 private let scriptsDir = DocumentManager.shared.activeDocumentsFolderURL.appendingPathComponent(".scripts")
 
 private enum ScriptError: LocalizedError {
-    case missingArguments(arguments: [String])
+	case missingArguments(arguments: [String])
 
-    var errorDescription: String? {
-        switch self {
-        case .missingArguments(let arguments): return "Script is missing arguments: \(arguments.joined(separator: ", "))"
-        }
-    }
+	var errorDescription: String? {
+		switch self {
+		case .missingArguments(let arguments): return "Script is missing arguments: \(arguments.joined(separator: ", "))"
+		}
+	}
 }
 
 /// This class contains methods for loading/parsing/executing scripts.
@@ -38,29 +38,29 @@ class Script {
 
 	/// Replace argument templates with argument values
 	func runnableCommands(withArgs args: [String]) throws -> [String] {
-        // Step 1: Parse arguments from "--argname=value" to dictionary ["argname": "value"]
-        let argDict: [String: String] = Dictionary(uniqueKeysWithValues: args.flatMap({ arg in
-            let components = arg.components(separatedBy: "=")
-            guard let name = components.first, let value = components.last else { return nil }
-            return (name.replacingOccurrences(of: "--", with: ""), value)
-        }))
+		// Step 1: Parse arguments from "--argname=value" to dictionary ["argname": "value"]
+		let argDict: [String: String] = Dictionary(uniqueKeysWithValues: args.flatMap({ arg in
+			let components = arg.components(separatedBy: "=")
+			guard let name = components.first, let value = components.last else { return nil }
+			return (name.replacingOccurrences(of: "--", with: ""), value)
+		}))
 
-        // Step 2: Find missing arguments, if any
-        let providedArgNames = Set(argDict.keys)
-        let requiredArgNames = Set(self.argumentNames)
-        let missingArgs = requiredArgNames.subtracting(providedArgNames)
-        if !missingArgs.isEmpty {
-            throw ScriptError.missingArguments(arguments: missingArgs.sorted())
-        }
+		// Step 2: Find missing arguments, if any
+		let providedArgNames = Set(argDict.keys)
+		let requiredArgNames = Set(self.argumentNames)
+		let missingArgs = requiredArgNames.subtracting(providedArgNames)
+		if !missingArgs.isEmpty {
+			throw ScriptError.missingArguments(arguments: missingArgs.sorted())
+		}
 
-        // Step 3: Replace arg format strings with values for each command, return updated commands.
-        return commands.map { command in
-            var command = command
-            for (key, value) in argDict {
-                command = command.replacingOccurrences(of: "$<<\(key)>>", with: value)
-            }
-            return command
-        }
+		// Step 3: Replace arg format strings with values for each command, return updated commands.
+		return commands.map { command in
+			var command = command
+			for (key, value) in argDict {
+				command = command.replacingOccurrences(of: "$<<\(key)>>", with: value)
+			}
+			return command
+		}
 	}
 
 	/// The names of the arguments, unique, and sorted by name
@@ -102,11 +102,11 @@ class Script {
 		return (try? DocumentManager.shared.fileManager.contentsOfDirectory(atPath: scriptsDir.path)) ?? []
 	}
 
-    // Create a new script, or overwrite an existing one.
-    @discardableResult
-    static func create(_ name: String) -> Script {
-        let script = Script(name: name, value: "")
-        script.save()
-        return script
-    }
+	// Create a new script, or overwrite an existing one.
+	@discardableResult
+	static func create(_ name: String) -> Script {
+		let script = Script(name: name, value: "")
+		script.save()
+		return script
+	}
 }

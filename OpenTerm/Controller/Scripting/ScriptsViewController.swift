@@ -30,26 +30,26 @@ class ScriptsViewController: UITableViewController {
 
 		reload()
 	}
-    
-    override var preferredStatusBarStyle: UIStatusBarStyle {
-        return .lightContent
-    }
+
+	override var preferredStatusBarStyle: UIStatusBarStyle {
+		return .lightContent
+	}
 
 	@objc
 	fileprivate func addScript() {
 		let alertController = UIAlertController(title: "New Script", message: "Enter a unique name for your new script.", preferredStyle: .alert)
-        alertController.addTextField { textField in
-            textField.placeholder = "script_name"
-            textField.autocapitalizationType = .none
-            textField.autocorrectionType = .no
-        }
-        alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-        alertController.addAction(UIAlertAction(title: "Create", style: .default, handler: { [unowned self] _ in
-            guard let name = alertController.textFields?.first?.text else { return }
-            Script.create(name)
-            self.reload()
-        }))
-        self.present(alertController, animated: true, completion: nil)
+		alertController.addTextField { textField in
+			textField.placeholder = "script_name"
+			textField.autocapitalizationType = .none
+			textField.autocorrectionType = .no
+		}
+		alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+		alertController.addAction(UIAlertAction(title: "Create", style: .default, handler: { [unowned self] _ in
+			guard let name = alertController.textFields?.first?.text else { return }
+			Script.create(name)
+			self.reload()
+		}))
+		self.present(alertController, animated: true, completion: nil)
 	}
 
 	private func reload() {

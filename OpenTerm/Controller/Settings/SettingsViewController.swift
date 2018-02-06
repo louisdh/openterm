@@ -43,59 +43,59 @@ extension Bundle {
 
 class SettingsViewController: UITableViewController {
 
-    @IBOutlet weak var fontSizeLabel: UILabel!
-    @IBOutlet weak var fontSizeStepper: UIStepper!
+	@IBOutlet weak var fontSizeLabel: UILabel!
+	@IBOutlet weak var fontSizeStepper: UIStepper!
 
-    @IBOutlet weak var terminalTextColorView: UIView!
-    @IBOutlet weak var terminalBackgroundColorView: UIView!
+	@IBOutlet weak var terminalTextColorView: UIView!
+	@IBOutlet weak var terminalBackgroundColorView: UIView!
 
-    @IBOutlet weak var useDarkKeyboardSwitch: UISwitch!
+	@IBOutlet weak var useDarkKeyboardSwitch: UISwitch!
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
+	override func viewDidLoad() {
+		super.viewDidLoad()
 
-    }
+	}
 
-    override func viewWillLayoutSubviews() {
-        super.viewWillLayoutSubviews()
+	override func viewWillLayoutSubviews() {
+		super.viewWillLayoutSubviews()
 
-        updateView()
-    }
+		updateView()
+	}
 
-    func updateView() {
+	func updateView() {
 
-        let fontSize = UserDefaultsController.shared.terminalFontSize
-        fontSizeStepper.value = Double(fontSize)
-        fontSizeLabel.text = String(fontSize)
-        fontSizeStepper.minimumValue = 8
-        fontSizeStepper.maximumValue = 32
+		let fontSize = UserDefaultsController.shared.terminalFontSize
+		fontSizeStepper.value = Double(fontSize)
+		fontSizeLabel.text = String(fontSize)
+		fontSizeStepper.minimumValue = 8
+		fontSizeStepper.maximumValue = 32
 
-        terminalTextColorView.backgroundColor = UserDefaultsController.shared.terminalTextColor
-        terminalBackgroundColorView.backgroundColor = UserDefaultsController.shared.terminalBackgroundColor
+		terminalTextColorView.backgroundColor = UserDefaultsController.shared.terminalTextColor
+		terminalBackgroundColorView.backgroundColor = UserDefaultsController.shared.terminalBackgroundColor
 
-        useDarkKeyboardSwitch.isOn = UserDefaultsController.shared.userDarkKeyboardInTerminal
+		useDarkKeyboardSwitch.isOn = UserDefaultsController.shared.userDarkKeyboardInTerminal
 
-    }
+	}
 
-    @IBAction func fontSizeStepperDidChange(_ sender: UIStepper) {
+	@IBAction func fontSizeStepperDidChange(_ sender: UIStepper) {
 
 		let newFontSize = Int(sender.value)
 
 		UserDefaultsController.shared.terminalFontSize = newFontSize
-        fontSizeLabel.text = String(newFontSize)
-        NotificationCenter.default.post(name: .appearanceDidChange, object: nil)
+		fontSizeLabel.text = String(newFontSize)
+		NotificationCenter.default.post(name: .appearanceDidChange, object: nil)
 
-    }
+	}
 
-    @IBAction func useDarkKeyboardSwitchDidChange(_ sender: UISwitch) {
+	@IBAction func useDarkKeyboardSwitchDidChange(_ sender: UISwitch) {
 
 		UserDefaultsController.shared.userDarkKeyboardInTerminal = useDarkKeyboardSwitch.isOn
 
 		NotificationCenter.default.post(name: .appearanceDidChange, object: nil)
 
-    }
+	}
 
-    @IBAction func close(_ sender: UIBarButtonItem) {
+	@IBAction func close(_ sender: UIBarButtonItem) {
 
 		self.dismiss(animated: true, completion: nil)
 
@@ -205,7 +205,7 @@ class SettingsViewController: UITableViewController {
 				}
 			default: return
 			}
-			
+
 			if let urlString = url, let url = URL(string: urlString) {
 				UIApplication.shared.open((url), options: [:], completionHandler: nil)
 			}
