@@ -70,7 +70,6 @@ class TerminalView: UIView {
 
 		textView.textDragDelegate = self
 		textView.textDropDelegate = self
-        textView.pasteDelegate = self
 
 		self.setupAutoComplete()
 
@@ -260,12 +259,17 @@ extension TerminalView: UITextDropDelegate {
         return proposal
     }
     
+    func textDroppableView(_ textDroppableView: UIView & UITextDroppable, willPerformDrop drop: UITextDropRequest) {
+        textView.pasteDelegate = self
+    }
+    
     func textDroppableView(_ textDroppableView: UIView & UITextDroppable,
                            dropSessionDidEnd session: UIDropSession) {
         // move cursor to end of document when finished with drop
         let end = textView.endOfDocument
         textView.selectedTextRange = textView.textRange(from: end, to: end)
         textView.becomeFirstResponder()
+        textView.pasteDelegate = nil
     }
 }
 
