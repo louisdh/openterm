@@ -147,7 +147,7 @@ class TerminalViewController: UIViewController {
 
 		coordinator.animate(alongsideTransition: { (_) in
 
-		}) { (_) in
+		}, completion: { (_) in
 
 			if !self.allowFloatingPanels {
 				self.closeAllFloatingPanels()
@@ -157,7 +157,7 @@ class TerminalViewController: UIViewController {
 				self.closeAllPinnedPanels()
 			}
 
-		}
+		})
 
 	}
 
@@ -394,28 +394,33 @@ extension TerminalViewController: UIDocumentPickerDelegate {
 }
 
 extension TerminalViewController: BookmarkViewControllerDelegate {
-	func sanitizeOutput(_ output: String) -> String {
-		return terminalView.sanitizeOutput(output)
+
+	var currentDirectoryURL: URL {
+		get {
+			return self.terminalView.executor.currentWorkingDirectory
+		}
+		set {
+			// TODO: Only allow this while command is not running
+
+			//  Access the URL
+			_ = newValue.startAccessingSecurityScopedResource()
+
+			//  Change the directory to the path.
+			self.terminalView.executor.currentWorkingDirectory = newValue
+
+			self.terminalView.newLine()
+			self.terminalView.writeOutput("Current directory changed to \"\(newValue.path)\"")
+			self.terminalView.writePrompt()
+		}
 	}
 
-	/// Changes the current directory to the passed url.
-	/// - Note: Only urls that contain the required access permissions will work..
-	///
-	/// - Parameter bookmarkURL: The bookmark that was selected.
-	func changeDirectoryToURL(url: URL) {
-
-		//  Access the URL
-		_ = url.startAccessingSecurityScopedResource()
-
-		//  Change the directory to the path.
-		DocumentManager.shared.fileManager.changeCurrentDirectoryPath(url.path)
-
-		// Update the title.
-		self.updateTitle()
-	}
 }
 
 extension TerminalViewController: TerminalViewDelegate {
+
+	func commandDidEnd() {
+		self.updateTitle()
+	}
 
 	func didEnterCommand(_ command: String) {
 
@@ -456,6 +461,14 @@ extension TerminalViewController: TerminalViewDelegate {
 			return
 		}
 
+		#if DEBUG
+			if command == "debug-colors" {
+				terminalView.writeOutput(String.colorTestingString)
+				terminalView.writePrompt()
+				return
+			}
+		#endif
+
 		// Dispatch the command to the executor
 		terminalView.executor.dispatch(command)
 	}
@@ -475,7 +488,7 @@ extension TerminalViewController: HistoryViewControllerDelegate {
 extension TerminalViewController: PanelManager {
 
 	var panels: [PanelViewController] {
-		return [historyPanelViewController, scriptsPanelViewController]
+		return [historyPanelViewController, scriptsPanelViewController, bookmarkPanelViewController]
 	}
 
 	var panelContentWrapperView: UIView {

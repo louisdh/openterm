@@ -12,6 +12,7 @@ import InputAssistant
 protocol TerminalViewDelegate: class {
 
 	func didEnterCommand(_ command: String)
+	func commandDidEnd()
 	func didChangeCurrentWorkingDirectory(_ workingDirectory: URL)
 
 }
@@ -27,7 +28,8 @@ class TerminalView: UIView {
 
 	let keyboardObserver = KeyboardObserver()
 
-	var currentTextState = ANSITextState()
+	var stdoutParser = Parser()
+	var stderrParser = Parser()
 	var currentCommandStartIndex: String.Index! {
 		didSet { self.updateAutoComplete() }
 	}
@@ -57,6 +59,8 @@ class TerminalView: UIView {
 
 	private func setup() {
 
+		stdoutParser.delegate = self
+		stderrParser.delegate = self
 		executor.delegate = self
 
 		textView.translatesAutoresizingMaskIntoConstraints = false
@@ -103,6 +107,9 @@ class TerminalView: UIView {
 	private func appendText(_ text: NSAttributedString) {
 		dispatchPrecondition(condition: .onQueue(.main))
 
+		let text = NSMutableAttributedString.init(attributedString: text)
+		OutputSanitizer.sanitize(text.mutableString)
+
 		let new = NSMutableAttributedString(attributedString: textView.attributedText ?? NSAttributedString())
 		new.append(text)
 		textView.attributedText = new
@@ -127,16 +134,20 @@ class TerminalView: UIView {
 
 	// Appends the given string to the output, and updates the command start index.
 	func writeOutput(_ string: String) {
-		let formattedString = string.formattedAttributedString(withTextState: &self.currentTextState)
 		performOnMain {
-			self.appendText(formattedString)
+			self.appendText(string)
+			self.currentCommandStartIndex = self.textView.text.endIndex
+		}
+	}
+	func writeOutput(_ string: NSAttributedString) {
+		performOnMain {
+			self.appendText(string)
 			self.currentCommandStartIndex = self.textView.text.endIndex
 		}
 	}
 
 	// Moves the cursor to a new line, if it's not already
 	func newLine() {
-		currentTextState.reset()
 		if !textView.text.hasSuffix("\n") && !textView.text.isEmpty {
 			appendText("\n")
 		}
@@ -147,7 +158,8 @@ class TerminalView: UIView {
 	func clearScreen() {
 		currentCommandStartIndex = nil
 		textView.text = ""
-		currentTextState.reset()
+		stdoutParser.reset()
+		stderrParser.reset()
 	}
 
 	@discardableResult
@@ -183,32 +195,32 @@ class TerminalView: UIView {
 
 }
 
-extension TerminalView: CommandExecutorDelegate {
+extension TerminalView: ParserDelegate {
 
-	func commandExecutor(_ commandExecutor: CommandExecutor, receivedStdout stdout: String) {
-		self.writeOutput(sanitizeOutput(stdout))
-	}
-	func commandExecutor(_ commandExecutor: CommandExecutor, receivedStderr stderr: String) {
-		self.writeOutput(sanitizeOutput(stderr))
-	}
-	func commandExecutor(_ commandExecutor: CommandExecutor, didFinishDispatchWithExitCode exitCode: Int32) {
+	func parserDidEndTransmission(_ parser: Parser) {
 		DispatchQueue.main.async {
 			self.writePrompt()
 		}
 	}
+
+	func parser(_ parser: Parser, didReceiveString string: NSAttributedString) {
+		self.writeOutput(string)
+	}
+}
+
+extension TerminalView: CommandExecutorDelegate {
+
+	func commandExecutor(_ commandExecutor: CommandExecutor, receivedStdout stdout: Data) {
+		stdoutParser.parse(stdout)
+	}
+	func commandExecutor(_ commandExecutor: CommandExecutor, receivedStderr stderr: Data) {
+		stderrParser.parse(stderr)
+	}
+
 	func commandExecutor(_ commandExecutor: CommandExecutor, didChangeWorkingDirectory to: URL) {
 		DispatchQueue.main.async {
 			self.delegate?.didChangeCurrentWorkingDirectory(to)
 		}
-	}
-
-	func sanitizeOutput(_ output: String) -> String {
-		var output = output
-		// Replace $HOME with "~"
-		output = output.replacingOccurrences(of: DocumentManager.shared.activeDocumentsFolderURL.path, with: "~")
-		// Sometimes, fileManager adds /private in front of the directory
-		output = output.replacingOccurrences(of: "/private", with: "")
-		return output
 	}
 }
 

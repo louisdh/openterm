@@ -141,7 +141,7 @@ extension TerminalView: AutoCompleteManagerDataSource {
 		// depending on if the command can touch those things.
 		let commandTypes = CommandTypes.forCommand(command)
 
-		let currentURL = DocumentManager.shared.currentDirectoryURL
+		let currentURL = executor.currentWorkingDirectory
 		if let last = currentArguments.last, !last.isEmpty {
 			// If we are in the middle of typing an argument, typically there are no completions available.
 			// However, if that argument being typed is a path, we should show the contents of the deepest folder in the path.
@@ -190,7 +190,7 @@ extension TerminalView: AutoCompleteManagerDataSource {
 		// If we're in the middle of typing a path, special filtering rules apply
 		if lastArgument.contains("/") {
 			// Get the on-disk url of the path being typed
-			let appendedURL = DocumentManager.shared.currentDirectoryURL.appendingPathComponent(lastArgument)
+			let appendedURL = executor.currentWorkingDirectory.appendingPathComponent(lastArgument)
 
 			// Find completions that are inside the appendedURL, and who's names are partially typed.
 			// Only completions with `data` set to a URL are considered.
@@ -223,7 +223,7 @@ extension TerminalView: AutoCompleteManagerDataSource {
 		if !showFolders && !showFiles { return [] }
 
 		do {
-			let contents = try DocumentManager.shared.fileManager.contentsOfDirectory(at: executor.currentWorkingDirectory, includingPropertiesForKeys: [.isDirectoryKey], options: .skipsHiddenFiles)
+			let contents = try DocumentManager.shared.fileManager.contentsOfDirectory(at: directory, includingPropertiesForKeys: [.isDirectoryKey], options: .skipsHiddenFiles)
 			return try contents.flatMap { url in
 				let resourceValues = try url.resourceValues(forKeys: [.isDirectoryKey])
 				let isDirectory = resourceValues.isDirectory ?? false
