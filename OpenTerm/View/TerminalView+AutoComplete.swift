@@ -33,159 +33,217 @@ struct CommandTypes: OptionSet {
 /// This extension adds methods to deal with auto completion.
 extension TerminalView {
 
-    /// Set up the auto complete functionality.
-    func setupAutoComplete() {
+	/// Set up the auto complete functionality.
+	func setupAutoComplete() {
 
-        // Set up auto complete manager
-        self.autoCompleteManager.dataSource = self
-        self.autoCompleteManager.delegate = self.inputAssistantView
+		// Set up auto complete manager
+		self.autoCompleteManager.dataSource = self
+		self.autoCompleteManager.delegate = self.inputAssistantView
 
-        // Set up input assistant and text view for auto completion
-        self.inputAssistantView.delegate = self
-        self.inputAssistantView.dataSource = self.autoCompleteManager
-        self.textView.inputAccessoryView = self.inputAssistantView
+		// Set up input assistant and text view for auto completion
+		self.inputAssistantView.delegate = self
+		self.inputAssistantView.dataSource = self.autoCompleteManager
+		self.textView.inputAccessoryView = self.inputAssistantView
 
-        inputAssistantView.trailingActions = [
-            InputAssistantAction(image: TerminalView.downArrow, target: self, action: #selector(downTapped))
-        ]
+		inputAssistantView.trailingActions = [
+			InputAssistantAction(image: TerminalView.downArrow, target: self, action: #selector(downTapped))
+		]
 
-        self.inputAssistantView.attach(to: self.textView)
+		self.inputAssistantView.attach(to: self.textView)
 
-        NotificationCenter.default.addObserver(self, selector: #selector(historyDidChange), name: .historyDidChange, object: nil)
-    }
+		NotificationCenter.default.addObserver(self, selector: #selector(historyDidChange), name: .historyDidChange, object: nil)
+	}
 
-    /// Updates auto complete when current command changes
-    func updateAutoComplete() {
-        autoCompleteManager.currentCommand = self.currentCommand
-    }
+	/// Updates auto complete when current command changes
+	func updateAutoComplete() {
+		autoCompleteManager.currentCommand = self.currentCommand
+	}
 
-    /// Dismiss the keyboard when the down arrow is tapped
-    @objc private func downTapped() {
-        textView.resignFirstResponder()
-    }
+	func insertCompletion(_ completion: AutoCompleteManager.Completion) {
+		// Two options:
+		// - There is a space at the end => insert full word
+		// - Complete current word
 
-    @objc private func historyDidChange() {
-        autoCompleteManager.reloadData()
-    }
+		let currentCommand = self.currentCommand
+		if currentCommand.hasSuffix(" ") || currentCommand.hasSuffix("/") {
+			// This will be a new argument, or append to the end of a path. Just insert the text.
+			textView.insertText(completion.name)
+		} else {
+			// We need to complete the current argument
+			var components = currentCommand.components(separatedBy: CharacterSet.whitespaces)
+			if let lastComponent = components.popLast() {
+				// If the argument we are completing is a path, we must only replace the last part of the path
+				if lastComponent.contains("/") {
+					components.append(((lastComponent as NSString).deletingLastPathComponent as NSString).appendingPathComponent(completion.name))
+				} else {
+					components.append(completion.name)
+				}
+			}
+			self.currentCommand = components.joined(separator: " ")
+		}
 
-    /// Construct an image for the down arrow.
-    private static var downArrow: UIImage {
-        return UIGraphicsImageRenderer(size: .init(width: 24, height: 24)).image(actions: { context in
+		// Insert suffix at end
+		textView.insertText(completion.appendingSuffix)
+	}
 
-            // Top left to center
-            let downwards = UIBezierPath()
-            downwards.move(to: CGPoint(x: 1, y: 7))
-            downwards.addLine(to: CGPoint(x: 11, y: 17))
-            UIColor.white.setStroke()
-            downwards.lineWidth = 2
-            downwards.stroke()
+	/// Dismiss the keyboard when the down arrow is tapped
+	@objc private func downTapped() {
+		textView.resignFirstResponder()
+	}
 
-            // Center to top right
-            let upwards = UIBezierPath()
-            upwards.move(to: CGPoint(x: 11, y: 17))
-            upwards.addLine(to: CGPoint(x: 22, y: 7))
-            UIColor.white.setStroke()
-            upwards.lineWidth = 2
-            upwards.stroke()
+	@objc private func historyDidChange() {
+		autoCompleteManager.reloadData()
+	}
 
-            context.cgContext.addPath(downwards.cgPath)
-            context.cgContext.addPath(upwards.cgPath)
-        }).withRenderingMode(.alwaysOriginal)
-    }
+	/// Construct an image for the down arrow.
+	private static var downArrow: UIImage {
+		return UIGraphicsImageRenderer(size: .init(width: 24, height: 24)).image(actions: { context in
+
+			// Top left to center
+			let downwards = UIBezierPath()
+			downwards.move(to: CGPoint(x: 1, y: 7))
+			downwards.addLine(to: CGPoint(x: 11, y: 17))
+			UIColor.white.setStroke()
+			downwards.lineWidth = 2
+			downwards.stroke()
+
+			// Center to top right
+			let upwards = UIBezierPath()
+			upwards.move(to: CGPoint(x: 11, y: 17))
+			upwards.addLine(to: CGPoint(x: 22, y: 7))
+			UIColor.white.setStroke()
+			upwards.lineWidth = 2
+			upwards.stroke()
+
+			context.cgContext.addPath(downwards.cgPath)
+			context.cgContext.addPath(upwards.cgPath)
+		}).withRenderingMode(.alwaysOriginal)
+	}
 }
 
 extension TerminalView: AutoCompleteManagerDataSource {
 
-    func allCommandsForAutoCompletion() -> [String] {
-        let allCommands = (commandsAsArray() as? [String] ?? []).sorted()
-        let recentHistory = uniqueItemsInRecentHistory()
-        return recentHistory + Script.allNames + allCommands + ["help", "clear"]
-    }
+	func allCommandsForAutoCompletion() -> [String] {
+		let allCommands = (commandsAsArray() as? [String] ?? []).sorted()
+		let recentHistory = uniqueItemsInRecentHistory()
+		return recentHistory + Script.allNames + allCommands + ["help", "clear"]
+	}
 
-    func completionsForCommand(_ command: String) -> [AutoCompleteManager.Completion] {
-        // If command is a script, return the argument names in options form, for that script. Without ones that are already entered.
-        if Script.allNames.contains(command), let script = try? Script.named(command) {
-            return script.argumentNames.map { "--\($0)=" }.map { AutoCompleteManager.Completion($0, isStandalone: false) }
-        }
+	func completionsForProgram(_ command: String, _ currentArguments: [String]) -> [AutoCompleteManager.Completion] {
+		// If command is a script, return the argument names in options form, for that script. Without ones that are already entered.
+		if Script.allNames.contains(command), let script = try? Script.named(command) {
+			return script.argumentNames.map { "--\($0)=" }.map { AutoCompleteManager.Completion($0, appendingSuffix: "") }
+		}
 
-        var options: [String] = []
+		var completions: [AutoCompleteManager.Completion] = []
 
-        // Find types of command, and add files/folders in directory
-        // depending on if the command can touch those things.
-        let commandTypes = CommandTypes.forCommand(command)
-        options += itemsInCurrentDirectory(showFolders: commandTypes.contains(.affectsFolders), showFiles: commandTypes.contains(.affectsFiles))
+		// Find types of command, and add files/folders in directory
+		// depending on if the command can touch those things.
+		let commandTypes = CommandTypes.forCommand(command)
 
-        // TODO: There must be a better way to add flags. Don't want to hard code these per command. Parsing man pages could automate this.
-        switch command {
-        case "awk":
-            options += ["-F", "-v", "-f", "'{", "}'"]
-        case "cat":
-            options += ["-b", "-e", "-n", "-s", "-t", "-u", "-v"]
-        case "ls":
-            options += ["-@", "-1", "-A", "-a", "-B", "-b", "-C", "-c", "-d", "-e", "-F", "-f", "-G", "-g", "-H", "-h", "-i", "-k", "-L", "-l", "-m", "-n", "-O", "-P", "-q", "-R", "-r", "-S", "-s", "-T", "-t", "-u", "-U", "-v", "-W", "-w", "-x"]
-        default:
-            break
-        }
-        return options.map { AutoCompleteManager.Completion($0) }
-    }
+		let currentURL = DocumentManager.shared.currentDirectoryURL
+		if let last = currentArguments.last, !last.isEmpty {
+			// If we are in the middle of typing an argument, typically there are no completions available.
+			// However, if that argument being typed is a path, we should show the contents of the deepest folder in the path.
 
-    private func uniqueItemsInRecentHistory() -> [String] {
-        let recents = Array(HistoryManager.history.prefix(4))
-        var seen = Set<String>()
-        return recents.filter { recent in
-            if seen.contains(recent) {
-                return false
-            }
-            seen.insert(recent)
-            return true
-        }
-    }
+			// Append the argument to the current url
+			var appendedURL = currentURL.appendingPathComponent(last)
 
-    // Get the names of files/folders in the current working directory.
-    private func itemsInCurrentDirectory(showFolders: Bool, showFiles: Bool) -> [String] {
-        if !showFolders && !showFiles { return [] }
+			// If it ends with "/", assume it's a folder. Otherwise, we want to look in the parent of whatever is typed.
+			if !last.hasSuffix("/") {
+				appendedURL.deleteLastPathComponent()
+			}
 
-        let fileManager = DocumentManager.shared.fileManager
-        do {
-            let contents = try fileManager.contentsOfDirectory(at: URL(fileURLWithPath: fileManager.currentDirectoryPath), includingPropertiesForKeys: [.isDirectoryKey], options: .skipsHiddenFiles)
-            let files = try contents.filter { url in
-                let resourceValues = try url.resourceValues(forKeys: [.isDirectoryKey])
-                let isDirectory = resourceValues.isDirectory ?? false
-                return showFolders && isDirectory || showFiles && !isDirectory
-            }
-            return files.map { $0.lastPathComponent }
-        } catch {
-            return []
-        }
-    }
+			// If this is a valid path to a folder, then show the contents as completions
+			if (try? appendedURL.checkResourceIsReachable()) ?? false {
+				// The last argument is a valid path.
+				completions += fileSystemCompletions(inDirectory: appendedURL, showFolders: commandTypes.contains(.affectsFolders), showFiles: commandTypes.contains(.affectsFiles))
+			}
+		} else {
+			// No last arguments, so show items in current folder
+			completions += fileSystemCompletions(inDirectory: currentURL, showFolders: commandTypes.contains(.affectsFolders), showFiles: commandTypes.contains(.affectsFiles))
+		}
+
+		// TODO: There must be a better way to add flags. Don't want to hard code these per command. Parsing man pages could automate this.
+		let flags: [String]
+		switch command {
+		case "awk":
+			flags = ["-F", "-v", "-f", "'{", "}'"]
+		case "cat":
+			flags = ["-b", "-e", "-n", "-s", "-t", "-u", "-v"]
+		case "ls":
+			flags = ["-@", "-1", "-A", "-a", "-B", "-b", "-C", "-c", "-d", "-e", "-F", "-f", "-G", "-g", "-H", "-h", "-i", "-k", "-L", "-l", "-m", "-n", "-O", "-P", "-q", "-R", "-r", "-S", "-s", "-T", "-t", "-u", "-U", "-v", "-W", "-w", "-x"]
+		default:
+			flags = []
+		}
+		completions += flags.map { AutoCompleteManager.Completion($0) }
+
+		return completions
+	}
+
+	func availableCompletions(in completions: [AutoCompleteManager.Completion], forArguments arguments: [String]) -> [AutoCompleteManager.Completion] {
+		guard let lastArgument = arguments.last else { return completions }
+
+		// If last character was a space, all completions are available
+		if lastArgument.isEmpty { return completions }
+
+		// If we're in the middle of typing a path, special filtering rules apply
+		if lastArgument.contains("/") {
+			// Get the on-disk url of the path being typed
+			let appendedURL = DocumentManager.shared.currentDirectoryURL.appendingPathComponent(lastArgument)
+
+			// Find completions that are inside the appendedURL, and who's names are partially typed.
+			// Only completions with `data` set to a URL are considered.
+			return completions.filter { completion in
+				if let url = completion.data as? URL {
+					return appendedURL.standardizedFileURL.path.hasPrefix(url.deletingLastPathComponent().standardizedFileURL.path) && (completion.name.hasPrefix(appendedURL.lastPathComponent) || lastArgument.hasSuffix("/"))
+				}
+				return false
+			}
+		}
+
+		// In all other cases, the completion must be partially typed
+		return completions.filter { $0.name.hasPrefix(lastArgument) }
+	}
+
+	private func uniqueItemsInRecentHistory() -> [String] {
+		let recents = Array(HistoryManager.history.prefix(4))
+		var seen = Set<String>()
+		return recents.filter { recent in
+			if seen.contains(recent) {
+				return false
+			}
+			seen.insert(recent)
+			return true
+		}
+	}
+
+	// Get the names of files/folders in the current working directory.
+	private func fileSystemCompletions(inDirectory directory: URL, showFolders: Bool, showFiles: Bool) -> [AutoCompleteManager.Completion] {
+		if !showFolders && !showFiles { return [] }
+
+		do {
+			let contents = try DocumentManager.shared.fileManager.contentsOfDirectory(at: executor.currentWorkingDirectory, includingPropertiesForKeys: [.isDirectoryKey], options: .skipsHiddenFiles)
+			return try contents.flatMap { url in
+				let resourceValues = try url.resourceValues(forKeys: [.isDirectoryKey])
+				let isDirectory = resourceValues.isDirectory ?? false
+				if showFolders && isDirectory || showFiles && !isDirectory {
+					return AutoCompleteManager.Completion.init(url.lastPathComponent, appendingSuffix: isDirectory ? "/" : " ", data: url.standardizedFileURL)
+				}
+				return nil
+			}
+		} catch {
+			return []
+		}
+	}
 }
 
 extension TerminalView: InputAssistantViewDelegate {
 
-    func inputAssistantView(_ inputAssistantView: InputAssistantView, didSelectSuggestionAtIndex index: Int) {
-        // Get the text to insert
-        let completion = autoCompleteManager.completions[index]
+	func inputAssistantView(_ inputAssistantView: InputAssistantView, didSelectSuggestionAtIndex index: Int) {
+		// Get the text to insert
+		let completion = autoCompleteManager.completions[index]
 
-        // Two options:
-        // - There is a space at the end => insert full word
-        // - Complete current word
-
-        let currentCommand = self.currentCommand
-        if currentCommand.hasSuffix(" ") {
-            textView.insertText(completion.name)
-        } else {
-            var components = currentCommand.components(separatedBy: .whitespaces)
-            if let lastComponent = components.popLast() {
-                let commonPrefix = lastComponent.commonPrefix(with: completion.name)
-                let completedComponent = lastComponent + completion.name.replacingOccurrences(of: commonPrefix, with: "")
-                components.append(completedComponent)
-            }
-            self.currentCommand = components.joined(separator: " ")
-        }
-
-        // Insert whitespace at end
-        if completion.isStandalone {
-            textView.insertText(" ")
-        }
-    }
+		insertCompletion(completion)
+	}
 }

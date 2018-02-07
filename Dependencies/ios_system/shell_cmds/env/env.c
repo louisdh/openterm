@@ -58,6 +58,8 @@ __thread int	 env_verbosity;
 
 static void usage(void);
 
+
+
 int
 env_main(int argc, char **argv)
 {
@@ -152,3 +154,28 @@ usage(void)
 	    "           [name=value ...] [utility [argument ...]]\n");
 	exit(1);
 }
+
+
+int setenv_main(int argc, char** argv) {
+    if (argc <= 1) return env_main(argc, argv);
+    if (argc > 3) {
+        fprintf(thread_stderr, "setenv: Too many arguments\n"); fflush(thread_stderr);
+        return 0;
+    }
+    // setenv VARIABLE value
+    if (argv[2] != NULL) setenv(argv[1], argv[2], 1);
+    else setenv(argv[1], "", 1); // if there's no value, pass an empty string instead of a null pointer
+    return 0;
+}
+
+int unsetenv_main(int argc, char** argv) {
+    if (argc <= 1) {
+        fprintf(thread_stderr, "unsetenv: Too few arguments\n"); fflush(thread_stderr);
+        return 0;
+    }
+    // unsetenv acts on all parameters
+    for (int i = 1; i < argc; i++) unsetenv(argv[i]);
+    return 0;
+}
+
+

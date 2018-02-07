@@ -17,103 +17,19 @@
 // This is because mch_can_exe (called by executable()) checks for the existence of binaries with the same name in the
 // path. Our commands don't exist in the path.
 //
-// ios_popen(cmd, type): returns a FILE*, executes cmd, and thread_output into input of cmd (if type=="r") or
-// the reverse (if type == "w").
+// ios_popen(cmd, type): returns a FILE*, executes cmd, and thread_output into input of cmd (if type=="w") or
+// the reverse (if type == "r").
 
 #include <pthread.h>
 #include <sys/stat.h>
 #include <libgen.h> // for basename()
-#define S_ISXXX(m) ((m) & (S_IXUSR | S_IXGRP | S_IXOTH)) // is executable, looking at "x" bit. Other methods fails on iOS
-
-// Note: we could use dlsym() to make this code simpler, but it would also make it harder
-// to be accepted in the AppleStore. Dynamic libraries are already loaded, so it would be:
-// function = dlsym(argv[0] + "_main", RTLD_DEFAULT);
-
-#define FILE_UTILITIES   // file_cmds_ios
-#define ARCHIVE_UTILITIES // libarchive_ios
-#define SHELL_UTILITIES  // shell_cmds_ios
-#define TEXT_UTILITIES  // text_cmds_ios
-// to activate CURL, you need openSSL.framework and libssh2.framework
-// see, https://github.com/blinksh/blink or https://github.com/x2on/libssh2-for-iOS
-#define CURL_COMMANDS
-// to activate TEX_COMMANDS, you need the lib-tex libraries:
-// See: https://github.com/holzschu/lib-tex
-// #define TEX_COMMANDS    // pdftex, luatex, bibtex and the like
-// to activate Python, you need python-ios: https://github.com/holzschu/python_ios
-// #define FEAT_PYTHON
-// to activate Lua, you need lua-ios: https://github.com/holzschu/lua_ios
-// #define FEAT_LUA
-
-//#define NETWORK_UTILITIES
-
-
-#ifdef FILE_UTILITIES
-// Most useful file utilities (file_cmds_ios)
-extern int ls_main(int argc, char *argv[]);
-extern int touch_main(int argc, char *argv[]);
-extern int rm_main(int argc, char *argv[]);
-extern int cp_main(int argc, char *argv[]);
-extern int ln_main(int argc, char *argv[]);
-extern int mv_main(int argc, char *argv[]);
-extern int mkdir_main(int argc, char *argv[]);
-extern int rmdir_main(int argc, char *argv[]);
-// Useful
-extern int du_main(int argc, char *argv[]);
-extern int df_main(int argc, char *argv[]);
-extern int chksum_main(int argc, char *argv[]);
-extern int compress_main(int argc, char *argv[]);
-extern int gzip_main(int argc, char *argv[]);
-// Most likely useless in a sandboxed environment, but provided nevertheless
-extern int chmod_main(int argc, char *argv[]);
-extern int chflags_main(int argc, char *argv[]);
-extern int chown_main(int argc, char *argv[]);
-extern int stat_main(int argc, char *argv[]);
-#endif
-#ifdef ARCHIVE_UTILITIES
-// from libarchive:
-extern int tar_main(int argc, char **argv);
-#endif
-#ifdef CURL_COMMANDS
-extern int curl_main(int argc, char **argv);
-#endif
-
-#ifdef SHELL_UTILITIES
-extern int date_main(int argc, char *argv[]);
-extern int echo_main(int argc, char *argv[]);
-extern int env_main(int argc, char *argv[]);     // does the same as printenv
-extern int id_main(int argc, char *argv[]); // also groups, whoami
-extern int printenv_main(int argc, char *argv[]);
-extern int pwd_main(int argc, char *argv[]);
-extern int tee_main(int argc, char *argv[]);
-extern int uname_main(int argc, char *argv[]);
-extern int w_main(int argc, char *argv[]); // also uptime
-#endif
-#ifdef TEXT_UTILITIES
-extern int cat_main(int argc, char *argv[]);
-extern int grep_main(int argc, char *argv[]);
-extern int wc_main(int argc, char *argv[]);
-extern int ed_main(int argc, char *argv[]);
-extern int tr_main(int argc, char *argv[]);
-extern int sed_main(int argc, char *argv[]);
-extern int awk_main(int argc, char *argv[]);
-#endif
-#ifdef FEAT_LUA
-extern int lua_main(int argc, char *argv[]);
-extern int luac_main(int argc, char *argv[]);
-#endif
-#ifdef FEAT_PYTHON
-extern int python_main(int argc, char **argv);
-#endif
-#ifdef TEX_COMMANDS
-extern int bibtex_main(int argc, char *argv[]);
-extern int dllluatexmain(int argc, char *argv[]);
-extern int dllpdftexmain(int argc, char *argv[]);
-#endif
-// local commands
-static int setenv_main(int argc, char *argv[]);
-static int unsetenv_main(int argc, char *argv[]);
-static int cd_main(int argc, char *argv[]);
-extern int ssh_main(int argc, char *argv[]);
+#include <dlfcn.h>  // for dlopen()/dlsym()/dlclose()
+// is executable, looking at "x" bit. Other methods fails on iOS:
+#define S_ISXXX(m) ((m) & (S_IXUSR | S_IXGRP | S_IXOTH))
+// Sideloading: when you compile yourself, as opposed to uploading on the app store
+// If defined, all functions are enabled. If undefined, you get a smaller set, but
+// more compliance with AppStore rules.
+// #define SIDELOADING
 
 extern __thread int    __db_getopt_reset;
 __thread FILE* thread_stdin;
@@ -126,6 +42,7 @@ typedef struct _functionParameters {
     char** argv_ref;
     int (*function)(int ac, char** av);
     FILE *stdin, *stdout, *stderr;
+    void* dlHandle;
     bool isPipe;
 } functionParameters;
 
@@ -146,6 +63,9 @@ static void cleanup_function(void* parameters) {
         fclose(thread_stdout);
         thread_stdout = NULL;
     }
+    if ((p->dlHandle != RTLD_SELF) && (p->dlHandle != RTLD_MAIN_ONLY)
+        && (p->dlHandle != RTLD_DEFAULT) && (p->dlHandle != RTLD_NEXT))
+        dlclose(p->dlHandle);
     free(parameters); // This was malloc'ed in ios_system
 }
 
@@ -196,6 +116,7 @@ void initializeEnvironment() {
     if (![fullCommandPath containsString:@"Documents/bin"]) {
         NSString *binPath = [docsPath stringByAppendingPathComponent:@"bin"];
         fullCommandPath = [[binPath stringByAppendingString:@":"] stringByAppendingString:fullCommandPath];
+        setenv("PATH", fullCommandPath.UTF8String, 1); // 1 = override existing value
     }
     setenv("APPDIR", [[NSBundle mainBundle] resourcePath].UTF8String, 1);
     setenv("TERM", "xterm", 1); // 1 = override existing value
@@ -206,7 +127,7 @@ void initializeEnvironment() {
     setenv("CURL_HOME", docsPath.UTF8String, 0); // CURL config in ~/Documents/ or [Cloud Drive]/
     setenv("SSL_CERT_FILE", [docsPath stringByAppendingPathComponent:@"cacert.pem"].UTF8String, 0); // SLL cacert.pem in ~/Documents/cacert.pem or [Cloud Drive]/cacert.pem
     // iOS already defines "HOME" as the home dir of the application
-#ifdef FEAT_PYTHON
+#ifdef SIDELOADING
     NSString *libPath = [NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES) lastObject];
     if (![fullCommandPath containsString:@"Library/bin"]) {
         NSString *binPath = [libPath stringByAppendingPathComponent:@"bin"];
@@ -300,156 +221,128 @@ static char* parseArgument(char* argument, char* command) {
     return returnValue;
 }
 
+
 static void initializeCommandList()
 {
-    commandList = @{
-#ifdef FILE_UTILITIES
-                    // Commands from Apple file_cmds:
-                    @"ls" : [NSValue valueWithPointer: ls_main],
-                    @"touch" : [NSValue valueWithPointer: touch_main],
-                    @"rm" : [NSValue valueWithPointer: rm_main],
-                    @"cp" : [NSValue valueWithPointer: cp_main],
-                    @"ln" : [NSValue valueWithPointer: ln_main],
-                    @"link" : [NSValue valueWithPointer: ln_main],
-                    @"mv" : [NSValue valueWithPointer: mv_main],
-                    @"mkdir" : [NSValue valueWithPointer: mkdir_main],
-                    @"rmdir" : [NSValue valueWithPointer: rmdir_main],
-//                    @"chown" : [NSValue valueWithPointer: chown_main],
-//                    @"chgrp" : [NSValue valueWithPointer: chown_main],
-                    @"chflags": [NSValue valueWithPointer: chflags_main],
-//                    @"chmod": [NSValue valueWithPointer: chmod_main],
-                    @"du"   : [NSValue valueWithPointer: du_main],
-//                    @"df"   : [NSValue valueWithPointer: df_main],
-                    @"chksum" : [NSValue valueWithPointer: chksum_main],
-                    @"sum"    : [NSValue valueWithPointer: chksum_main],
-                    @"stat"   : [NSValue valueWithPointer: stat_main],
-                    @"readlink": [NSValue valueWithPointer: stat_main],
-                    @"compress": [NSValue valueWithPointer: compress_main],
-                    @"uncompress": [NSValue valueWithPointer: compress_main],
-                    @"gzip"   : [NSValue valueWithPointer: gzip_main],
-                    @"gunzip" : [NSValue valueWithPointer: gzip_main],
+    // 1st component: name of digital library
+    // 2nd component: name of command
+    // 3rd component: chain sent to getopt (for arguments in autocomplete)
+    // 4th component: takes a file/directory as argument
+    if (commandList != nil) return;
+    commandList = \
+    @{
+      // libfiles.dylib
+      @"ls"    : [NSArray arrayWithObjects: @"libfiles.dylib", @"ls_main", @"1@ABCFGHLOPRSTUWabcdefghiklmnopqrstuvwx", @"file", nil],
+      @"touch" : [NSArray arrayWithObjects:@"libfiles.dylib", @"touch_main", @"A:acfhmr:t:", @"file", nil],
+      @"rm"    : [NSArray arrayWithObjects:@"libfiles.dylib", @"rm_main", @"dfiPRrvW", @"file", nil],
+      @"unlink": [NSArray arrayWithObjects:@"libfiles.dylib", @"rm_main", @"", @"file", nil],
+      @"cp"    : [NSArray arrayWithObjects:@"libfiles.dylib", @"cp_main", @"cHLPRXafinprv",  @"file", nil],
+      @"ln"    : [NSArray arrayWithObjects:@"libfiles.dylib", @"ln_main", @"Ffhinsv", @"file", nil],
+      @"link"  : [NSArray arrayWithObjects:@"libfiles.dylib", @"ln_main", @"", @"file", nil],
+      @"mv"    : [NSArray arrayWithObjects:@"libfiles.dylib", @"mv_main", @"finv", @"file", nil],
+      @"mkdir" : [NSArray arrayWithObjects:@"libfiles.dylib", @"mkdir_main", @"m:pv", @"directory", nil],
+      @"rmdir" : [NSArray arrayWithObjects:@"libfiles.dylib", @"rmdir_main", @"p", @"directory", nil],
+      @"chflags": [NSArray arrayWithObjects:@"libfiles.dylib", @"chflags_main", @"HLPRfhv", @"file", nil],
+#ifdef SIDELOADING
+      // Exposes the outside of the sandbox a little too much. YMMV
+      @"chown" : [NSArray arrayWithObjects:@"libfiles.dylib", @"chown_main", @"HLPRfhv", @"file", nil],
+      @"chgrp" : [NSArray arrayWithObjects:@"libfiles.dylib", @"chown_main", @"HLPRfhv", @"file", nil],
+      @"chmod" : [NSArray arrayWithObjects:@"libfiles.dylib", @"chmod_main", @"ACEHILNPRVXafghinorstuvwx", @"file", nil],
+      @"df"    : [NSArray arrayWithObjects:@"libfiles.dylib", @"df_main", @"abgHhiklmnPtT:", @"file", nil],
 #endif
-#ifdef ARCHIVE_UTILITIES
-                    // from libarchive:
-                    @"tar"    : [NSValue valueWithPointer: tar_main],
+      @"du"    : [NSArray arrayWithObjects:@"libfiles.dylib", @"du_main", @"HI:LPasd:cghkmrx", @"no", nil],
+      @"chksum" : [NSArray arrayWithObjects:@"libfiles.dylib", @"chksum_main", @"o:", @"file", nil],
+      @"sum"    : [NSArray arrayWithObjects:@"libfiles.dylib", @"chksum_main", @"", @"file", nil],
+      @"stat"   : [NSArray arrayWithObjects:@"libfiles.dylib", @"stat_main", @"f:FlLnqrst:x", @"file", nil],
+      @"readlink": [NSArray arrayWithObjects:@"libfiles.dylib", @"stat_main", @"n", @"file", nil],
+      @"compress": [NSArray arrayWithObjects:@"libfiles.dylib", @"compress_main", @"b:cdfv", @"file", nil],
+      @"uncompress": [NSArray arrayWithObjects:@"libfiles.dylib", @"compress_main", @"b:cdfv", @"file", nil],
+      @"gzip"   : [NSArray arrayWithObjects:@"libfiles.dylib", @"gzip_main", @"123456789acdfhklLNnqrS:tVv", @"file", nil],
+      @"gunzip" : [NSArray arrayWithObjects:@"libfiles.dylib", @"gzip_main", @"123456789acdfhklLNnqrS:tVv", @"file", nil],
+      // libtar.dylib
+      @"tar"    : [NSArray arrayWithObjects:@"libtar.dylib", @"tar_main", @"Bb:C:cf:HhI:JjkLlmnOoPpqrSs:T:tUuvW:wX:xyZz", @"file", nil],
+      // libcurl.dylib
+      // From curl. curl with ssh requires keys, and thus keys generation / management.
+      // We assume you moved over the keys, known_host files from elsewhere
+      // http, https, ftp... should be OK.
+      @"curl"    : [NSArray arrayWithObjects:@"libcurl.dylib", @"curl_main", @"2346aAbBcCdDeEfgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwxXYyz#", @"file", nil],
+      // scp / sftp require conversion to curl, rewriting arguments
+      @"scp"     : [NSArray arrayWithObjects:@"libcurl.dylib", @"curl_main", @"q", @"file", nil],
+      @"sftp"    : [NSArray arrayWithObjects:@"libcurl.dylib", @"curl_main", @"q", @"file", nil],
+      @"ssh"     : [NSArray arrayWithObjects:@"libssh_cmd.dylib", @"ssh_main", @"q", @"file", nil],
+      // local commands. Either self (here) or main (main program)
+      @"cd"      : [NSArray arrayWithObjects:@"SELF", @"cd_main", @"", @"directory", nil],
+      // Commands from Apple shell_cmds:
+      @"echo"   : [NSArray arrayWithObjects:@"libshell.dylib", @"echo_main", @"n", @"no", nil],
+      @"printenv": [NSArray arrayWithObjects:@"libshell.dylib", @"printenv_main", @"", @"no", nil],
+      @"pwd"    : [NSArray arrayWithObjects:@"libshell.dylib", @"pwd_main", @"LP", @"no", nil],
+      @"tee"    : [NSArray arrayWithObjects:@"libshell.dylib", @"tee_main", @"ai", @"file", nil],
+      @"uname"  : [NSArray arrayWithObjects:@"libshell.dylib", @"uname_main", @"amnprsv", @"no", nil],
+      @"date"   : [NSArray arrayWithObjects:@"libshell.dylib", @"date_main", @"d:f:jnRr:t:uv:", @"no", nil],
+      @"env"    : [NSArray arrayWithObjects:@"libshell.dylib", @"env_main", @"-iP:S:u:v", @"no", nil],
+      @"setenv"     : [NSArray arrayWithObjects:@"libshell.dylib", @"setenv_main", @"", @"no", nil],
+      @"unsetenv"     : [NSArray arrayWithObjects:@"libshell.dylib", @"unsetenv_main", @"", @"no", nil],
+      @"whoami" : [NSArray arrayWithObjects:@"libshell.dylib", @"id_main", @"", @"no", nil],
+      @"uptime" : [NSArray arrayWithObjects:@"libshell.dylib", @"w_main", @"", @"no", nil],
+#ifdef SIDELOADING
+      // Exposes the outside of the sandbox a little too much. YMMV
+      @"id"     : [NSArray arrayWithObjects:@"libshell.dylib", @"id_main", @"AFPGMagnpru", @"no", nil],
+      @"groups" : [NSArray arrayWithObjects:@"libshell.dylib", @"id_main", @"", @"no", nil],
+      @"w"      : [NSArray arrayWithObjects:@"libshell.dylib", @"w_main", @"dhiflM:N:nsuw", @"no", nil],
 #endif
-#ifdef SHELL_UTILITIES
-                    // Commands from Apple shell_cmds:
-                    @"echo" : [NSValue valueWithPointer: echo_main],
-                    @"printenv": [NSValue valueWithPointer: printenv_main],
-                    @"pwd"    : [NSValue valueWithPointer: pwd_main],
-                    @"tee"    : [NSValue valueWithPointer: tee_main],
-                    @"uname"  : [NSValue valueWithPointer: uname_main],
-                    @"date"   : [NSValue valueWithPointer: date_main],
-                    @"env"    : [NSValue valueWithPointer: env_main],
-//                    @"id"     : [NSValue valueWithPointer: id_main],
-//                    @"groups" : [NSValue valueWithPointer: id_main],
-                    @"whoami" : [NSValue valueWithPointer: id_main],
-                    @"uptime" : [NSValue valueWithPointer: w_main],
-//                    @"w"      : [NSValue valueWithPointer: w_main],
+      // Commands from Apple text_cmds:
+      @"cat"    : [NSArray arrayWithObjects:@"libtext.dylib", @"cat_main", @"benstuv", @"file", nil],
+      @"wc"     : [NSArray arrayWithObjects:@"libtext.dylib", @"wc_main", @"dhiflM:N:nsuw", @"file", nil],
+      @"tr"     : [NSArray arrayWithObjects:@"libtext.dylib", @"tr_main", @"Ccdsu", @"no", nil],
+      // compiled, but deactivated until we have interactive mode
+      // @"ed"     : [NSArray arrayWithObjects:@"libtext.dylib", @"w_main", @"p:sx", @"file", nil][NSValue valueWithPointer: ed_main],
+      // @"red"     : [NSArray arrayWithObjects:@"libtext.dylib", @"w_main", @"p:sx", @"file", nil][NSValue valueWithPointer: ed_main],
+      @"sed"     : [NSArray arrayWithObjects:@"libtext.dylib", @"sed_main", @"Eae:f:i:ln", @"file", nil],
+      @"awk"     : [NSArray arrayWithObjects:@"libtext.dylib", @"awk_main", @"dhiflM:N:nsuw", @"file", nil],
+      @"grep"   : [NSArray arrayWithObjects:@"libtext.dylib", @"grep_main", @"0123456789A:B:C:D:EFGHIJMLOPSRUVZabcd:e:f:hilm:nopqrsuvwxXy", @"file", nil],
+      @"egrep"  : [NSArray arrayWithObjects:@"libtext.dylib", @"grep_main", @"0123456789A:B:C:D:EFGHIJMLOPSRUVZabcd:e:f:hilm:nopqrsuvwxXy", @"file", nil],
+      @"fgrep"  : [NSArray arrayWithObjects:@"libtext.dylib", @"grep_main", @"0123456789A:B:C:D:EFGHIJMLOPSRUVZabcd:e:f:hilm:nopqrsuvwxXy", @"file", nil],
+#ifdef SIDELOADING
+      // Scripts and programming languages. Might move outside of here at some point
+      // lua
+      @"lua"     : [NSArray arrayWithObjects:@"lua_ios.framework/lua_ios", @"lua_main", @"e:il:vE", @"file", nil],
+      @"luac"    : [NSArray arrayWithObjects:@"lua_ios.framework/lua_ios", @"luac_main", @"lpsvo:", @"file", nil],
+      // from python:
+      @"python"  : [NSArray arrayWithObjects:@"Python_ios.framework/Python_ios", @"python_main", @"3bBc:dEhiJm:OQ:RsStuUvVW:xX?", @"file", nil],
+      // TeX
+      // LuaTeX:
+      @"luatex"     : [NSArray arrayWithObjects:@"libluatex.dylib", @"dllluatexmain", @"", @"file", nil],
+      @"lualatex"     : [NSArray arrayWithObjects:@"libluatex.dylib", @"dllluatexmain", @"", @"file", nil],
+      @"texlua"     : [NSArray arrayWithObjects:@"libluatex.dylib", @"dllluatexmain", @"", @"file", nil],
+      @"texluac"     : [NSArray arrayWithObjects:@"libluatex.dylib", @"dllluatexmain", @"", @"file", nil],
+      @"dviluatex"     : [NSArray arrayWithObjects:@"libluatex.dylib", @"dllluatexmain", @"", @"file", nil],
+      @"dvilualatex"     : [NSArray arrayWithObjects:@"libluatex.dylib", @"dllluatexmain", @"", @"file", nil],
+      // pdfTeX
+      @"amstex"     :  [NSArray arrayWithObjects:@"libpdftex.dylib", @"dllpdftexmain", @"", @"file", nil],
+      @"cslatex"     : [NSArray arrayWithObjects:@"libpdftex.dylib", @"dllpdftexmain", @"", @"file", nil],
+      @"csplain"     : [NSArray arrayWithObjects:@"libpdftex.dylib", @"dllpdftexmain", @"", @"file", nil],
+      @"eplain"     : [NSArray arrayWithObjects:@"libpdftex.dylib", @"dllpdftexmain", @"", @"file", nil],
+      @"etex"     : [NSArray arrayWithObjects:@"libpdftex.dylib", @"dllpdftexmain", @"", @"file", nil],
+      @"jadetex"     : [NSArray arrayWithObjects:@"libpdftex.dylib", @"dllpdftexmain", @"", @"file", nil],
+      @"latex"     : [NSArray arrayWithObjects:@"libpdftex.dylib", @"dllpdftexmain", @"", @"file", nil],
+      @"mex"     : [NSArray arrayWithObjects:@"libpdftex.dylib", @"dllpdftexmain", @"", @"file", nil],
+      @"mllatex"     : [NSArray arrayWithObjects:@"libpdftex.dylib", @"dllpdftexmain", @"", @"file", nil],
+      @"mltex"     : [NSArray arrayWithObjects:@"libpdftex.dylib", @"dllpdftexmain", @"", @"file", nil],
+      @"pdfcslatex"     : [NSArray arrayWithObjects:@"libpdftex.dylib", @"dllpdftexmain", @"", @"file", nil],
+      @"pdfcsplain"     : [NSArray arrayWithObjects:@"libpdftex.dylib", @"dllpdftexmain", @"", @"file", nil],
+      @"pdfetex"     : [NSArray arrayWithObjects:@"libpdftex.dylib", @"dllpdftexmain", @"", @"file", nil],
+      @"pdfjadetex"     : [NSArray arrayWithObjects:@"libpdftex.dylib", @"dllpdftexmain", @"", @"file", nil],
+      @"pdflatex"     : [NSArray arrayWithObjects:@"libpdftex.dylib", @"dllpdftexmain", @"", @"file", nil],
+      @"pdftex"     : [NSArray arrayWithObjects:@"libpdftex.dylib", @"dllpdftexmain", @"", @"file", nil],
+      @"pdfmex"     : [NSArray arrayWithObjects:@"libpdftex.dylib", @"dllpdftexmain", @"", @"file", nil],
+      @"pdfxmltex"     : [NSArray arrayWithObjects:@"libpdftex.dylib", @"dllpdftexmain", @"", @"file", nil],
+      @"texsis"     : [NSArray arrayWithObjects:@"libpdftex.dylib", @"dllpdftexmain", @"", @"file", nil],
+      @"utf8mex"     : [NSArray arrayWithObjects:@"libpdftex.dylib", @"dllpdftexmain", @"", @"file", nil],
+      @"xmltex"     : [NSArray arrayWithObjects:@"libpdftex.dylib", @"dllpdftexmain", @"", @"file", nil],
+      // BibTeX
+      @"bibtex"     : [NSArray arrayWithObjects:@"libbibtex.dylib", @"bibtex_main", @"", @"file", nil],
 #endif
-#ifdef TEXT_UTILITIES
-                    // Commands from Apple text_cmds:
-                    @"cat"    : [NSValue valueWithPointer: cat_main],
-                    @"wc"     : [NSValue valueWithPointer: wc_main],
-                    @"tr"     : [NSValue valueWithPointer: tr_main],
-                    // compiled, but deactivated until we have interactive mode
-//                    @"ed"     : [NSValue valueWithPointer: ed_main],
-//                    @"red"     : [NSValue valueWithPointer: ed_main],
-                    @"sed"     : [NSValue valueWithPointer: sed_main],
-                    @"awk"     : [NSValue valueWithPointer: awk_main],
-                    @"grep"   : [NSValue valueWithPointer: grep_main],
-                    @"egrep"  : [NSValue valueWithPointer: grep_main],
-                    @"fgrep"  : [NSValue valueWithPointer: grep_main],
-#endif
-#ifdef NETWORK_UTILITIES
-                    // Use with caution. Doesn't make sense except inside a terminal.
-                    // Commands from Apple network_cmds:
-                    @"ping"  : [NSValue valueWithPointer: ping_main],
-#endif
-#ifdef CURL_COMMANDS
-                    // From curl. curl with ssh requires keys, and thus keys generation / management.
-                    // We assume you moved over the keys, known_host files from elsewhere
-                    // http, https, ftp... should be OK.
-                    @"curl"   : [NSValue valueWithPointer: curl_main],
-                    // scp / sftp require conversion to curl, rewriting arguments
-                    @"scp"    : [NSValue valueWithPointer: curl_main],
-                    @"sftp"   : [NSValue valueWithPointer: curl_main],
-#endif
-#ifdef FEAT_PYTHON
-                    // from python:
-                    @"python"  : [NSValue valueWithPointer: python_main],
-#endif
-#ifdef FEAT_LUA
-                    // from lua:
-                    @"lua"     : [NSValue valueWithPointer: lua_main],
-                    @"luac"    : [NSValue valueWithPointer: luac_main],
-#endif
-#ifdef TEX_COMMANDS
-                    // from TeX:
-                    // LuaTeX:
-                    @"luatex"     : [NSValue valueWithPointer: dllluatexmain],
-                    @"lualatex"     : [NSValue valueWithPointer: dllluatexmain],
-                    @"texlua"     : [NSValue valueWithPointer: dllluatexmain],
-                    @"texluac"     : [NSValue valueWithPointer: dllluatexmain],
-                    @"dviluatex"     : [NSValue valueWithPointer: dllluatexmain],
-                    @"dvilualatex"     : [NSValue valueWithPointer: dllluatexmain],
-                    // pdfTeX
-                    @"amstex"     : [NSValue valueWithPointer: dllpdftexmain],
-                    @"cslatex"     : [NSValue valueWithPointer: dllpdftexmain],
-                    @"csplain"     : [NSValue valueWithPointer: dllpdftexmain],
-                    @"eplain"     : [NSValue valueWithPointer: dllpdftexmain],
-                    @"etex"     : [NSValue valueWithPointer: dllpdftexmain],
-                    @"jadetex"     : [NSValue valueWithPointer: dllpdftexmain],
-                    @"latex"     : [NSValue valueWithPointer: dllpdftexmain],
-                    @"mex"     : [NSValue valueWithPointer: dllpdftexmain],
-                    @"mllatex"     : [NSValue valueWithPointer: dllpdftexmain],
-                    @"mltex"     : [NSValue valueWithPointer: dllpdftexmain],
-                    @"pdfcslatex"     : [NSValue valueWithPointer: dllpdftexmain],
-                    @"pdfcsplain"     : [NSValue valueWithPointer: dllpdftexmain],
-                    @"pdfetex"     : [NSValue valueWithPointer: dllpdftexmain],
-                    @"pdfjadetex"     : [NSValue valueWithPointer: dllpdftexmain],
-                    @"pdflatex"     : [NSValue valueWithPointer: dllpdftexmain],
-                    @"pdftex"     : [NSValue valueWithPointer: dllpdftexmain],
-                    @"pdfmex"     : [NSValue valueWithPointer: dllpdftexmain],
-                    @"pdfxmltex"     : [NSValue valueWithPointer: dllpdftexmain],
-                    @"texsis"     : [NSValue valueWithPointer: dllpdftexmain],
-                    @"utf8mex"     : [NSValue valueWithPointer: dllpdftexmain],
-                    @"xmltex"     : [NSValue valueWithPointer: dllpdftexmain],
-                    // XeTeX:
-                    // @"xetex"     : [NSValue valueWithPointer: dllxetexmain],
-                    // @"xelatex"     : [NSValue valueWithPointer: dllxetexmain],
-                    // BibTeX
-                    @"bibtex"     : [NSValue valueWithPointer: bibtex_main],
-#endif
-                    // local commands
-                    @"setenv"     : [NSValue valueWithPointer: setenv_main],
-                    @"unsetenv"     : [NSValue valueWithPointer: unsetenv_main],
-                    @"cd"     : [NSValue valueWithPointer: cd_main],
-                    @"ssh"     : [NSValue valueWithPointer: ssh_main],
-                    };
-}
-
-static int setenv_main(int argc, char** argv) {
-    if (argc <= 1) return env_main(argc, argv);
-    if (argc > 3) {
-        fprintf(thread_stderr, "setenv: Too many arguments\n"); fflush(thread_stderr);
-        return 0;
-    }
-    // setenv VARIABLE value
-    if (argv[2] != NULL) setenv(argv[1], argv[2], 1);
-    else setenv(argv[1], "", 1); // if there's no value, pass an empty string instead of a null pointer
-    return 0;
-}
-
-static int unsetenv_main(int argc, char** argv) {
-    if (argc <= 1) {
-        fprintf(thread_stderr, "unsetenv: Too few arguments\n"); fflush(thread_stderr);
-        return 0;
-    }
-    // unsetenv acts on all parameters
-    for (int i = 1; i < argc; i++) unsetenv(argv[i]);
-    return 0;
+    };
 }
 
 int ios_setMiniRoot(NSString* mRoot) {
@@ -472,7 +365,7 @@ int ios_setMiniRoot(NSString* mRoot) {
     return 0;
 }
 
-static int cd_main(int argc, char** argv) {
+int cd_main(int argc, char** argv) {
     NSString* currentDir = [[NSFileManager defaultManager] currentDirectoryPath];
     if (argc > 1) {
         NSString* newDir = @(argv[1]);
@@ -511,14 +404,29 @@ static int cd_main(int argc, char** argv) {
     return 0;
 }
 
+
+NSString* getoptString(NSString* commandName) {
+    if (commandList == nil) initializeCommandList();
+    NSArray* commandStructure = [commandList objectForKey: commandName];
+    if (commandStructure != nil) return commandStructure[2];
+    else return @"";
+}
+
+NSString* operatesOn(NSString* commandName) {
+    if (commandList == nil) initializeCommandList();
+    NSArray* commandStructure = [commandList objectForKey: commandName];
+    if (commandStructure != nil) return commandStructure[3];
+    else return @"";
+}
+
+
 int ios_executable(const char* inputCmd) {
     // returns 1 if this is one of the commands we define in ios_system, 0 otherwise
-    int (*function)(int ac, char** av) = NULL;
     if (commandList == nil) initializeCommandList();
-    NSString* commandName = [NSString stringWithCString:inputCmd encoding:NSASCIIStringEncoding];
-    function = [[commandList objectForKey: commandName] pointerValue];
-    if (function) return 1;
-    else return 0;
+    NSArray* valuesFromDict = [commandList objectForKey: [NSString stringWithCString:inputCmd]];
+    // we could dlopen() here, but that would defeat the purpose
+    if (valuesFromDict == nil) return 0;
+    else return 1;
 }
 
 // Where to direct input/output of the next thread:
@@ -640,26 +548,26 @@ int ios_dup2(int fd1, int fd2)
 
 
 // For customization:
-// replaces a function pointer (e.g. ls_main) with another one, provided by the user (ls_mine_main)
+// replaces a function  (e.g. ls_main) with another one, provided by the user (ls_mine_main)
 // if the function does not exist, add it to the list
 // if "allOccurences" is true, search for all commands that share the same function, replace them too.
 // ("compress" and "uncompress" both point to compress_main. You probably want to replace both, but maybe
 // you just happen to have a very fast uncompress, different from compress).
-void replaceCommand(NSString* commandName, int (*newFunction)(int argc, char *argv[]), bool allOccurences) {
+// We work with function names, not function pointers.
+void replaceCommand(NSString* commandName, NSString* functionName, bool allOccurences) {
     if (commandList == nil) initializeCommandList();
-    
-    int (*oldFunction)(int ac, char** av) = [[commandList objectForKey: commandName] pointerValue];
+    NSArray* oldValues = [commandList objectForKey: commandName];
+    NSString* oldFunctionName = nil;
+    if (oldValues != nil) oldFunctionName = oldValues[1];
     NSMutableDictionary *mutableDict = [commandList mutableCopy];
-    mutableDict[commandName] = [NSValue valueWithPointer: newFunction];
+    mutableDict[commandName] = [NSArray arrayWithObjects: @"MAIN", functionName, @"", @"file", nil];
     
-    if (oldFunction && allOccurences) {
+    if ((oldFunctionName != nil) && allOccurences) {
         // scan through all dictionary entries
-        
         for (NSString* existingCommand in mutableDict.allKeys) {
-            int (*existingFunction)(int ac, char** av) = [[mutableDict objectForKey: existingCommand] pointerValue];
-            if (existingFunction == oldFunction) {
-                [mutableDict setValue: [NSValue valueWithPointer: newFunction] forKey: existingCommand];
-            }
+            NSArray* currentPosition = [mutableDict objectForKey: existingCommand];
+            if ([currentPosition[1] isEqualToString:oldFunctionName])
+                [mutableDict setValue: [NSArray arrayWithObjects: @"MAIN", functionName, @"", @"file", nil] forKey: existingCommand];
         }
     }
     commandList = [mutableDict mutableCopy];
@@ -899,6 +807,7 @@ int ios_system(const char* inputCmd) {
         while (str && (str[0] == ' ')) str++; // skip multiple spaces
     }
     argv[argc] = NULL;
+    long returnValue = 0;
     if (argc != 0) {
         // So far, all arguments are pointers into originalCommand.
         // We need to change them (environment variables expansion, ~ expansion, etc)
@@ -1002,8 +911,22 @@ int ios_system(const char* inputCmd) {
         int (*function)(int ac, char** av) = NULL;
         if (commandList == nil) initializeCommandList();
         NSString* commandName = [NSString stringWithCString:argv[0] encoding:NSASCIIStringEncoding];
-        // Insert code here. With #ifdef ???
-        function = [[commandList objectForKey: commandName] pointerValue];
+        NSArray* commandStructure = [commandList objectForKey: commandName];
+        void* handle = NULL;
+        if (commandStructure != nil) {
+            NSString* libraryName = commandStructure[0];
+            if ([libraryName isEqualToString: @"SELF"]) handle = RTLD_SELF;  // commands defined in ios_system.framework
+            else if ([libraryName isEqualToString: @"MAIN"]) handle = RTLD_MAIN_ONLY; // commands defined in main program
+            else handle = dlopen(libraryName.UTF8String, RTLD_LAZY | RTLD_GLOBAL); // commands defined in dynamic library
+#ifdef SIDELOADING
+            if (handle == NULL) fprintf(thread_stderr, "Failed loading %s from %s, cause = %s\n", commandName.UTF8String, libraryName.UTF8String, dlerror());
+#endif
+            NSString* functionName = commandStructure[1];
+            function = dlsym(handle, functionName.UTF8String);
+#ifdef SIDELOADING
+            if (function == NULL) fprintf(thread_stderr, "Failed loading %s from %s, cause = %s\n", commandName.UTF8String, libraryName.UTF8String, dlerror());
+#endif
+        }
         if (function) {
             // We run the function in a thread because there are several
             // points where we can exit from a shell function.
@@ -1013,6 +936,7 @@ int ios_system(const char* inputCmd) {
             params->argc = argc;
             params->argv = argv;
             params->function = function;
+            params->dlHandle = handle;
             params->isPipe = (params->stdout != thread_stdout);
             if (isMainThread) {
                 // Send a signal to the system that we're going to change the current directory:
@@ -1036,16 +960,20 @@ int ios_system(const char* inputCmd) {
                 if (lastThreadId == 0) lastThreadId = _tid;
             }
         } else {
-            // TODO: this should also raise an exception, for python scripts
+            if ((handle != NULL) && (handle != RTLD_SELF)
+                && (handle != RTLD_MAIN_ONLY)
+                && (handle != RTLD_DEFAULT) && (handle != RTLD_NEXT))
+                dlclose(handle);
             fprintf(thread_stderr, "%s: command not found\n", argv[0]);
+            returnValue = 127;
+            // TODO: this should also raise an exception, for python scripts
         } // if (function)
     } else { // argc != 0
         free(argv); // argv is otherwise freed in cleanup_function
     }
     free(originalCommand); // releases cmd, which was a strdup of inputCommand
     // Did we write anything?
-    long numCharWritten = 0;
-    if (errorFileName) numCharWritten = ftell(thread_stderr);
-    else if (sharedErrorOutput && outputFileName) numCharWritten = ftell(thread_stdout);
-    return (numCharWritten); // 0 = success, not 0 = failure
+    if (errorFileName) returnValue = ftell(thread_stderr);
+    else if (sharedErrorOutput && outputFileName) returnValue = ftell(thread_stdout);
+    return (returnValue); // 0 = success, not 0 = failure
 }

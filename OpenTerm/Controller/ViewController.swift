@@ -42,7 +42,10 @@ class ViewController: UIViewController {
 	var scriptsViewController: ScriptsViewController!
 	var scriptsPanelViewController: PanelViewController!
 
-    let executor = CommandExecutor()
+	var bookmarkViewController: BookmarkViewController!
+	var bookmarkPanelViewController: PanelViewController!
+
+	let executor = CommandExecutor()
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -56,7 +59,12 @@ class ViewController: UIViewController {
 		scriptsViewController = storyboard.instantiateViewController(withIdentifier: "ScriptsViewController") as! ScriptsViewController
 		scriptsPanelViewController = PanelViewController(with: scriptsViewController, in: self)
 
-        executor.delegate = self
+		bookmarkViewController = storyboard.instantiateViewController(withIdentifier: "BookmarkViewController") as! BookmarkViewController
+		bookmarkViewController.delegate = self
+
+		bookmarkPanelViewController = PanelViewController(with: bookmarkViewController, in: self)
+
+		executor.delegate = self
 
 		terminalView.delegate = self
 
@@ -66,16 +74,16 @@ class ViewController: UIViewController {
 
 		NotificationCenter.default.addObserver(self, selector: #selector(applicationDidEnterBackground), name: .UIApplicationDidEnterBackground, object: nil)
 
-        initializeEnvironment()
-        replaceCommand("open-url", openUrl, true)
-        replaceCommand("share", shareFile, true)
-        replaceCommand("pbcopy", pbcopy, true)
-        replaceCommand("pbpaste", pbpaste, true)
+		initializeEnvironment()
+		replaceCommand("open-url", mangleFunctionName("openUrl"), true)
+		replaceCommand("share", mangleFunctionName("shareFile"), true)
+		replaceCommand("pbcopy", mangleFunctionName("pbcopy"), true)
+		replaceCommand("pbpaste", mangleFunctionName("pbpaste"), true)
 
-        // Call reloadData for the added commands.
-        terminalView.autoCompleteManager.reloadData()
-        
-        shareFileViewController = self // shareFile needs to know which view controller to present share sheet from
+		// Call reloadData for the added commands.
+		terminalView.autoCompleteManager.reloadData()
+
+		shareFileViewController = self // shareFile needs to know which view controller to present share sheet from
 
 		setSSLCertIfNeeded()
 	}
@@ -87,10 +95,17 @@ class ViewController: UIViewController {
 
 	}
 
+	func mangleFunctionName(_ functionName: String) -> String {
+		// This works because all functions have the same signature:
+		// (argc: Int32, argv: UnsafeMutablePointer<UnsafeMutablePointer<Int8>?>?) -> Int32
+		// The first part is the class name: _T0 + length + name. To change if not "OpenTerm"
+		return "_T08OpenTerm" + String(functionName.count) + functionName + "s5Int32VAD4argc_SpySpys4Int8VGSgGSg4argvtF"
+	}
+
 	var didFirstLayout = false
 
 	override func viewDidLayoutSubviews() {
-		 super.viewDidLayoutSubviews()
+		super.viewDidLayoutSubviews()
 
 		if !didFirstLayout {
 			restorePanelStatesFromDisk()
@@ -103,9 +118,9 @@ class ViewController: UIViewController {
 	override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
 		super.viewWillTransition(to: size, with: coordinator)
 
-		coordinator.animate(alongsideTransition: { (context) in
+		coordinator.animate(alongsideTransition: { (_) in
 
-		}) { (_) in
+		}, completion: { (_) in
 
 			if !self.allowFloatingPanels {
 				self.closeAllFloatingPanels()
@@ -115,40 +130,40 @@ class ViewController: UIViewController {
 				self.closeAllPinnedPanels()
 			}
 
-		}
+		})
 
 	}
 
 	func setSSLCertIfNeeded() {
-		
+
 		guard let cString = getenv("SSL_CERT_FILE") else {
 			return
 		}
-			
+
 		guard let str = NSString(cString: cString, encoding: String.Encoding.utf8.rawValue) as String? else {
 			return
 		}
-	
+
 		let fileManager = DocumentManager.shared.fileManager
-		
+
 		if !fileManager.fileExists(atPath: str) {
-			
+
 			guard let url = Bundle.main.url(forResource: "cacert", withExtension: "pem") else {
 				return
 			}
-			
+
 			guard let data = try? Data(contentsOf: url) else {
 				return
 			}
-			
+
 			let certsFolderURL = DocumentManager.shared.activeDocumentsFolderURL.appendingPathComponent(".certs")
-			
+
 			let newURL = certsFolderURL.appendingPathComponent("cacert.pem")
-			
+
 			do {
-				
+
 				try fileManager.createDirectory(at: certsFolderURL, withIntermediateDirectories: true, attributes: nil)
-				
+
 				try data.write(to: newURL)
 				setenv("SSL_CERT_FILE", newURL.path.toCString(), 1)
 
@@ -157,9 +172,9 @@ class ViewController: UIViewController {
 			}
 
 		}
-		
+
 	}
-	
+
 	var didRequestReview = false
 
 	@objc
@@ -205,6 +220,16 @@ class ViewController: UIViewController {
 
 	}
 
+	@IBAction func showHBookmarks(_ sender: UIBarButtonItem) {
+
+		bookmarkPanelViewController.modalPresentationStyle = .popover
+		bookmarkPanelViewController.popoverPresentationController?.barButtonItem = sender
+
+		bookmarkPanelViewController.popoverPresentationController?.backgroundColor = bookmarkViewController.view.backgroundColor
+		present(bookmarkPanelViewController, animated: true, completion: nil)
+
+	}
+
 	@IBAction func showScripts(_ sender: UIBarButtonItem) {
 
 		scriptsPanelViewController.modalPresentationStyle = .popover
@@ -217,7 +242,7 @@ class ViewController: UIViewController {
 
 	func availableCommands() -> [String] {
 
-        let commands = String(commandsAsString())
+		let commands = String(commandsAsString())
 
 		guard let data = commands.data(using: .utf8) else {
 			assertionFailure("Expected valid data")
@@ -281,41 +306,27 @@ class ViewController: UIViewController {
 
 	}
 
-    @objc func clearBufferCommand() {
-        terminalView.clearScreen()
-        terminalView.writePrompt()
-    }
+	@objc func clearBufferCommand() {
+		terminalView.clearScreen()
+		terminalView.writePrompt()
+	}
 
-//    @objc func selectCommandHome() {
-//        // FIXME: set cursor to start of line and offset with deviceName
-//        // Maybe by finding the last "\n"?
-//    }
+	//    @objc func selectCommandHome() {
+	//        // FIXME: set cursor to start of line and offset with deviceName
+	//        // Maybe by finding the last "\n"?
+	//    }
 
-    @objc func selectCommandEnd() {
-        let endPosition = terminalView.textView.endOfDocument
-        terminalView.textView.selectedTextRange = terminalView.textView.textRange(from: endPosition, to: endPosition)
-    }
+	@objc func selectCommandEnd() {
+		let endPosition = terminalView.textView.endOfDocument
+		terminalView.textView.selectedTextRange = terminalView.textView.textRange(from: endPosition, to: endPosition)
+	}
 
-    @objc func completeCommand() {
-        guard
-            let firstCompletion = terminalView.autoCompleteManager.completions.first?.name,
-            terminalView.currentCommand != firstCompletion
-            else { return }
-
-        let completed: String
-        if let lastCommand = terminalView.currentCommand.components(separatedBy: " ").last {
-            if lastCommand.isEmpty {
-                completed = terminalView.currentCommand + firstCompletion
-            } else {
-                completed = terminalView.currentCommand.replacingOccurrences(of: lastCommand, with: firstCompletion, options: .backwards)
-            }
-        } else {
-            completed = firstCompletion
-        }
-
-        terminalView.currentCommand = completed
-        terminalView.autoCompleteManager.reloadData()
-    }
+	@objc func completeCommand() {
+		// When tab key is pressed, insert first completion, if we have one.
+		if let firstCompletion = terminalView.autoCompleteManager.completions.first {
+			terminalView.insertCompletion(firstCompletion)
+		}
+	}
 
 	override var keyCommands: [UIKeyCommand]? {
 
@@ -325,18 +336,18 @@ class ViewController: UIViewController {
 
 		let clearBufferCmd = UIKeyCommand(input: "K", modifierFlags: .command, action: #selector(clearBufferCommand), discoverabilityTitle: "Clear Buffer")
 
-//		let homeCmd = UIKeyCommand(input: "A", modifierFlags: .control, action: #selector(selectCommandHome), discoverabilityTitle: "Home")
+		//		let homeCmd = UIKeyCommand(input: "A", modifierFlags: .control, action: #selector(selectCommandHome), discoverabilityTitle: "Home")
 
 		let endCmd = UIKeyCommand(input: "E", modifierFlags: .control, action: #selector(selectCommandEnd), discoverabilityTitle: "End")
 
-        let tabCmd = UIKeyCommand(input: "\t", modifierFlags: [], action: #selector(completeCommand), discoverabilityTitle: "Complete")
+		let tabCmd = UIKeyCommand(input: "\t", modifierFlags: [], action: #selector(completeCommand), discoverabilityTitle: "Complete")
 
 		return [
 			prevCmd,
 			nextCmd,
 			clearBufferCmd,
-//			homeCmd,
-            tabCmd,
+			//			homeCmd,
+			tabCmd,
 			endCmd
 		]
 	}
@@ -351,39 +362,53 @@ extension ViewController: UIDocumentPickerDelegate {
 			return
 		}
 
-		_ = firstFolder.startAccessingSecurityScopedResource()
-
-		DocumentManager.shared.fileManager.changeCurrentDirectoryPath(firstFolder.path)
-
-		self.updateTitle()
-
+		self .changeDirectoryToURL(url: firstFolder)
 	}
 
 }
 
+extension ViewController: BookmarkViewControllerDelegate {
+
+	/// Changes the current directory to the passed url.
+	/// - Note: Only urls that contain the required access permissions will work..
+	///
+	/// - Parameter bookmarkURL: The bookmark that was selected.
+	func changeDirectoryToURL(url: URL) {
+
+		//  Access the URL
+		_ = url.startAccessingSecurityScopedResource()
+
+		//  Change the directory to the path.
+		DocumentManager.shared.fileManager.changeCurrentDirectoryPath(url.path)
+
+		// Update the title.
+		self.updateTitle()
+	}
+}
+
 extension ViewController: CommandExecutorDelegate {
 
-    func commandExecutor(_ commandExecutor: CommandExecutor, receivedStdout stdout: String) {
-        terminalView.writeOutput(sanitizeOutput(stdout))
-    }
-    func commandExecutor(_ commandExecutor: CommandExecutor, receivedStderr stderr: String) {
-        terminalView.writeOutput(sanitizeOutput(stderr))
-    }
-    func commandExecutor(_ commandExecutor: CommandExecutor, didFinishDispatchWithExitCode exitCode: Int32) {
-        DispatchQueue.main.async {
-            self.terminalView.writePrompt()
-            self.updateTitle()
-        }
-    }
+	func commandExecutor(_ commandExecutor: CommandExecutor, receivedStdout stdout: String) {
+		terminalView.writeOutput(sanitizeOutput(stdout))
+	}
+	func commandExecutor(_ commandExecutor: CommandExecutor, receivedStderr stderr: String) {
+		terminalView.writeOutput(sanitizeOutput(stderr))
+	}
+	func commandExecutor(_ commandExecutor: CommandExecutor, didFinishDispatchWithExitCode exitCode: Int32) {
+		DispatchQueue.main.async {
+			self.terminalView.writePrompt()
+			self.updateTitle()
+		}
+	}
 
-    private func sanitizeOutput(_ output: String) -> String {
-        var output = output
-        // Replace $HOME with "~"
-        output = output.replacingOccurrences(of: DocumentManager.shared.activeDocumentsFolderURL.path, with: "~")
-        // Sometimes, fileManager adds /private in front of the directory
-        output = output.replacingOccurrences(of: "/private", with: "")
-        return output
-    }
+	internal func sanitizeOutput(_ output: String) -> String {
+		var output = output
+		// Replace $HOME with "~"
+		output = output.replacingOccurrences(of: DocumentManager.shared.activeDocumentsFolderURL.path, with: "~")
+		// Sometimes, fileManager adds /private in front of the directory
+		output = output.replacingOccurrences(of: "/private", with: "")
+		return output
+	}
 }
 
 extension ViewController: TerminalViewDelegate {
@@ -393,32 +418,32 @@ extension ViewController: TerminalViewDelegate {
 		HistoryManager.add(command)
 		commandIndex = 0
 
-        processCommand(command)
+		processCommand(command)
 	}
 
-    private func processCommand(_ command: String) {
+	private func processCommand(_ command: String) {
 
-        // Trim leading/trailing space
-        let command = command.trimmingCharacters(in: .whitespacesAndNewlines)
+		// Trim leading/trailing space
+		let command = command.trimmingCharacters(in: .whitespacesAndNewlines)
 
-        // Special case for clear
-        if command == "clear" {
-            terminalView.clearScreen()
-            terminalView.writePrompt()
-            return
-        }
+		// Special case for clear
+		if command == "clear" {
+			terminalView.clearScreen()
+			terminalView.writePrompt()
+			return
+		}
 
-        // Special case for help
-        if command == "help" || command == "?" {
-            let commands = availableCommands().joined(separator: ", ")
-            terminalView.writeOutput(commands)
-            terminalView.writePrompt()
-            return
-        }
-        
-        // Dispatch the command to the executor
-        executor.dispatch(command)
-    }
+		// Special case for help
+		if command == "help" || command == "?" {
+			let commands = availableCommands().joined(separator: ", ")
+			terminalView.writeOutput(commands)
+			terminalView.writePrompt()
+			return
+		}
+
+		// Dispatch the command to the executor
+		executor.dispatch(command)
+	}
 
 }
 
@@ -435,7 +460,7 @@ extension ViewController: HistoryViewControllerDelegate {
 extension ViewController: PanelManager {
 
 	var panels: [PanelViewController] {
-		return [historyPanelViewController, scriptsPanelViewController]
+		return [historyPanelViewController, scriptsPanelViewController, bookmarkPanelViewController]
 	}
 
 	var panelContentWrapperView: UIView {

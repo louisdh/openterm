@@ -1,0 +1,29 @@
+disabled_rules:
+    - type_name
+    - variable_name_min_length
+    - force_try
+    - function_body_length
+    - nesting
+    - variable_name
+    - line_length
+    - type_body_length
+    - todo
+    - valid_docs
+    - missing_docs
+    - file_length
+    - implicit_getter
+    - function_parameter_count
+    - large_tuple
+    - operator_whitespace
+    - force_cast
+    - unused_closure_parameter
+
+excluded:
+    - Pods
+    - Dependencies
+
+trailing_whitespace:
+    ignores_empty_lines: true
+
+vertical_whitespace:
+    max_empty_lines: 2

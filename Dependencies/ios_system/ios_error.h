@@ -33,6 +33,7 @@ extern __thread FILE* thread_stdout;
 extern __thread FILE* thread_stderr;
 
 #define popen ios_popen
+#define pclose fclose
 #define system ios_system
 #define execv ios_execv
 #define execve ios_execve
