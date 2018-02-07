@@ -54,12 +54,23 @@
 		BEA4992E1FDC305B001B9B9D /* KeyboardObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEA4992D1FDC305B001B9B9D /* KeyboardObserver.swift */; };
 		BEA499301FDC3B93001B9B9D /* TerminalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEA4992F1FDC3B93001B9B9D /* TerminalView.swift */; };
 		BEA8E2912001348C00002475 /* UIColor+AssetCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEA8E2902001348C00002475 /* UIColor+AssetCatalog.swift */; };
+		BEC75BFD202B716600216462 /* OpenTermTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEC75BFC202B716600216462 /* OpenTermTests.swift */; };
 		BEECFF0A1FFC1DC0009608B3 /* HistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEECFF091FFC1DC0009608B3 /* HistoryViewController.swift */; };
 		BEECFF391FFEC187009608B3 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEECFF381FFEC187009608B3 /* SettingsViewController.swift */; };
 		F456629E200B9BC500C574AA /* ColorDisplayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F456629D200B9BC500C574AA /* ColorDisplayView.swift */; };
 		F4602B41200A08D0009D0547 /* ColorPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4602B40200A08D0009D0547 /* ColorPickerViewController.swift */; };
 		F4602B49200A63FC009D0547 /* UserDefaults+UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4602B48200A63FC009D0547 /* UserDefaults+UIColor.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		BEC75BFF202B716600216462 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BE38084A1FD9BFB600393EB8 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = BE3808511FD9BFB600393EB8;
+			remoteInfo = OpenTerm;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		BE000C0B1FEC4F7000D06B91 /* Embed Frameworks */ = {
@@ -136,6 +147,9 @@
 		BEA4992D1FDC305B001B9B9D /* KeyboardObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardObserver.swift; sourceTree = "<group>"; };
 		BEA4992F1FDC3B93001B9B9D /* TerminalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TerminalView.swift; sourceTree = "<group>"; };
 		BEA8E2902001348C00002475 /* UIColor+AssetCatalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+AssetCatalog.swift"; sourceTree = "<group>"; };
+		BEC75BFA202B716600216462 /* OpenTermTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OpenTermTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		BEC75BFC202B716600216462 /* OpenTermTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenTermTests.swift; sourceTree = "<group>"; };
+		BEC75BFE202B716600216462 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		BEECFF091FFC1DC0009608B3 /* HistoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = HistoryViewController.swift; path = OpenTerm/Controller/History/HistoryViewController.swift; sourceTree = SOURCE_ROOT; };
 		BEECFF381FFEC187009608B3 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SettingsViewController.swift; path = OpenTerm/Controller/Settings/SettingsViewController.swift; sourceTree = SOURCE_ROOT; };
 		D4433523D5E174B363623AD4 /* Pods-OpenTerm.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenTerm.release.xcconfig"; path = "Pods/Target Support Files/Pods-OpenTerm/Pods-OpenTerm.release.xcconfig"; sourceTree = "<group>"; };
@@ -156,6 +170,13 @@
 				229EC3CF20245527004E76C6 /* ios_system.framework in Frameworks */,
 				229EC3CE2024537D004E76C6 /* PanelKit.framework in Frameworks */,
 				5A38CC73C499E1A878353871 /* Pods_OpenTerm.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BEC75BF7202B716600216462 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -293,6 +314,7 @@
 				228541D7201FB62C00B93589 /* libfiles.dylib */,
 				228541DC201FB78200B93589 /* ios_system.framework */,
 				BE3808541FD9BFB600393EB8 /* OpenTerm */,
+				BEC75BFB202B716600216462 /* OpenTermTests */,
 				BE3808531FD9BFB600393EB8 /* Products */,
 				BE3768EC1FEC4DCE00D5A2D1 /* Frameworks */,
 				EDE154E4BB3A66786AACAA5C /* Pods */,
@@ -304,6 +326,7 @@
 			isa = PBXGroup;
 			children = (
 				BE3808521FD9BFB600393EB8 /* OpenTerm.app */,
+				BEC75BFA202B716600216462 /* OpenTermTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -370,6 +393,15 @@
 			path = Util;
 			sourceTree = "<group>";
 		};
+		BEC75BFB202B716600216462 /* OpenTermTests */ = {
+			isa = PBXGroup;
+			children = (
+				BEC75BFC202B716600216462 /* OpenTermTests.swift */,
+				BEC75BFE202B716600216462 /* Info.plist */,
+			);
+			path = OpenTermTests;
+			sourceTree = "<group>";
+		};
 		EDE154E4BB3A66786AACAA5C /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -406,6 +438,24 @@
 			productReference = BE3808521FD9BFB600393EB8 /* OpenTerm.app */;
 			productType = "com.apple.product-type.application";
 		};
+		BEC75BF9202B716600216462 /* OpenTermTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = BEC75C03202B716600216462 /* Build configuration list for PBXNativeTarget "OpenTermTests" */;
+			buildPhases = (
+				BEC75BF6202B716600216462 /* Sources */,
+				BEC75BF7202B716600216462 /* Frameworks */,
+				BEC75BF8202B716600216462 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				BEC75C00202B716600216462 /* PBXTargetDependency */,
+			);
+			name = OpenTermTests;
+			productName = OpenTermTests;
+			productReference = BEC75BFA202B716600216462 /* OpenTermTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -428,6 +478,11 @@
 							};
 						};
 					};
+					BEC75BF9202B716600216462 = {
+						CreatedOnToolsVersion = 9.2;
+						ProvisioningStyle = Automatic;
+						TestTargetID = BE3808511FD9BFB600393EB8;
+					};
 				};
 			};
 			buildConfigurationList = BE38084D1FD9BFB600393EB8 /* Build configuration list for PBXProject "OpenTerm" */;
@@ -444,6 +499,7 @@
 			projectRoot = "";
 			targets = (
 				BE3808511FD9BFB600393EB8 /* OpenTerm */,
+				BEC75BF9202B716600216462 /* OpenTermTests */,
 			);
 		};
 /* End PBXProject section */
@@ -458,6 +514,13 @@
 				BEA4992C1FDC0918001B9B9D /* icon-320.png in Resources */,
 				BE38085B1FD9BFB600393EB8 /* Main.storyboard in Resources */,
 				BE244DC8201FBB6000A7EA4E /* cacert.pem in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BEC75BF8202B716600216462 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -575,7 +638,23 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		BEC75BF6202B716600216462 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BEC75BFD202B716600216462 /* OpenTermTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		BEC75C00202B716600216462 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = BE3808511FD9BFB600393EB8 /* OpenTerm */;
+			targetProxy = BEC75BFF202B716600216462 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		BE3808591FD9BFB600393EB8 /* Main.storyboard */ = {
@@ -754,6 +833,40 @@
 			};
 			name = Release;
 		};
+		BEC75C01202B716600216462 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 6G5LMQ72D8;
+				INFOPLIST_FILE = OpenTermTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.silverfox.OpenTermTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/OpenTerm.app/OpenTerm";
+			};
+			name = Debug;
+		};
+		BEC75C02202B716600216462 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 6G5LMQ72D8;
+				INFOPLIST_FILE = OpenTermTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.silverfox.OpenTermTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/OpenTerm.app/OpenTerm";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -771,6 +884,15 @@
 			buildConfigurations = (
 				BE3808651FD9BFB600393EB8 /* Debug */,
 				BE3808661FD9BFB600393EB8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		BEC75C03202B716600216462 /* Build configuration list for PBXNativeTarget "OpenTermTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BEC75C01202B716600216462 /* Debug */,
+				BEC75C02202B716600216462 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
