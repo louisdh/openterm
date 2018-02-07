@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import TabView
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -17,7 +18,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		// Override point for customization after application launch.
 
 		window = UIWindow(frame: UIScreen.main.bounds)
-		window?.rootViewController = TerminalTabViewController()
+		window?.rootViewController = TabViewContainerViewController<TerminalTabViewController>(theme: TabViewThemeDark())
 		window?.tintColor = .defaultMainTintColor
 		window?.makeKeyAndVisible()
 

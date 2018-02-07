@@ -25,7 +25,13 @@ A replacement for UITabViewController, which mimics Safari tabs on iOS
 
 # Usage
 
-Either subclass or instantiate a `TabViewController`, then add and remove tabs from it using its simple public API.
+There are two primary view controllers in this library: `TabViewController` and `TabViewContainerViewController`.
+A `TabViewController` contains an array of tabs, a visible tab, and some methods to add and remove tabs. A `TabViewContainerViewController` contains `TabViewController`s.
+
+It's not necessary to use a `TabViewContainerViewController`, but it's suggested, as it allows for split screen on iPad.
+
+To get started, take a look at the public API for both classes, and look at the sample app for an example of how to use both.
+At a minimum, you must subclass or instantiate a `TabViewController`, and add and remove tabs from it using its `activateTab(_:)` and `closeTab(_:)` methods.
 
 # Installation
 
