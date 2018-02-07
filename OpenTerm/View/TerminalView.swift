@@ -8,6 +8,7 @@
 
 import UIKit
 import InputAssistant
+import MobileCoreServices
 
 protocol TerminalViewDelegate: class {
 
@@ -127,7 +128,9 @@ class TerminalView: UIView {
 
 	// Appends the given string to the output, and updates the command start index.
 	func writeOutput(_ string: String) {
-		let formattedString = string.formattedAttributedString(withTextState: &self.currentTextState)
+		var formattedString = string.formattedAttributedString(withTextState: &self.currentTextState)
+		formattedString = formattedString.withFilesAsLinks(currentDirectory: executor.currentWorkingDirectory.path)
+		
 		performOnMain {
 			self.appendText(formattedString)
 			self.currentCommandStartIndex = self.textView.text.endIndex
@@ -214,14 +217,107 @@ extension TerminalView: CommandExecutorDelegate {
 
 extension TerminalView: UITextDragDelegate {
 
+	private func previewForDrag(dragRequest: UITextDragRequest) -> UIDragPreview {
+		let label = UILabel()
+		label.text = textView.text(in: dragRequest.dragRange)
+		label.backgroundColor = UIColor.clear
+		label.textColor = textView.textColor
+		label.font = textView.font
+		label.textAlignment = .center
+		var size = label.sizeThatFits(CGSize(width: 300, height: 200))
+		size.width += 10
+		size.height += 10
+		label.frame = CGRect(origin: CGPoint.zero, size: size)
+		
+		let parameters = UIDragPreviewParameters()
+		parameters.visiblePath = UIBezierPath.init(roundedRect: label.bounds, cornerRadius: 7)
+		
+		let preview = UIDragPreview(view:label, parameters:parameters)
+		return preview
+	}
+	
 	func textDraggableView(_ textDraggableView: UIView & UITextDraggable, itemsForDrag dragRequest: UITextDragRequest) -> [UIDragItem] {
-		return []
+		// allow dragging URLs
+		var items = [UIDragItem]()
+		for item in dragRequest.suggestedItems {
+			let fileURLType = kUTTypeFileURL as String
+			if item.itemProvider.hasItemConformingToTypeIdentifier(fileURLType) {
+				
+				// determine uti making sure not to use dynamic type
+				let filename = (textView.text(in: dragRequest.dragRange) ?? "") as NSString
+				let uti_ns = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, filename.pathExtension as CFString, nil)?.takeRetainedValue() as NSString?
+				var uti = uti_ns != nil ? String(uti_ns!) : (kUTTypeFileURL as String)
+				if uti.hasPrefix("dyn.") { uti = kUTTypeFileURL as String }
+				
+				let provider = NSItemProvider()
+				provider.registerFileRepresentation(forTypeIdentifier: uti, fileOptions: .openInPlace, visibility: .all,
+													loadHandler: { (completion) in
+														
+					// read url from source provider
+					let _ = item.itemProvider.loadObject(ofClass: URL.self,
+														 completionHandler: { (reader, error) in
+						completion(reader, true, error)
+					})
+														
+					return nil
+				})
+				provider.suggestedName = String(filename)
+				
+				let dragItem = UIDragItem(itemProvider: provider)
+				
+				// TODO: We want to set url from attributtedText directory 
+				// dragItem.localObject = url
+				
+				// use label of dragged text as preview
+				dragItem.previewProvider = { return self.previewForDrag(dragRequest: dragRequest) }
+				items.append(dragItem)
+			}
+		}
+		return items
 	}
 
 }
 
 extension TerminalView: UITextDropDelegate {
+	func textDroppableView(_ textDroppableView: UIView & UITextDroppable, proposalForDrop drop: UITextDropRequest) -> UITextDropProposal {
+		let proposal = UITextDropProposal(operation: UIDropOperation.copy)
+		proposal.useFastSameViewOperations = false
+		proposal.dropAction = .replaceSelection
+		return proposal
+	}
+	
+	func textDroppableView(_ textDroppableView: UIView & UITextDroppable, willPerformDrop drop: UITextDropRequest) {
+		textView.pasteDelegate = self
+	}
+	
+	func textDroppableView(_ textDroppableView: UIView & UITextDroppable,
+						   dropSessionDidEnd session: UIDropSession) {
+		// move cursor to end of document when finished with drop
+		let end = textView.endOfDocument
+		textView.selectedTextRange = textView.textRange(from: end, to: end)
+		textView.becomeFirstResponder()
+		textView.pasteDelegate = nil
+	}
+}
 
+extension TerminalView : UITextPasteDelegate {
+	func textPasteConfigurationSupporting(_ textPasteConfigurationSupporting: UITextPasteConfigurationSupporting,
+										  transform item: UITextPasteItem) {
+		
+		let uti = item.itemProvider.registeredTypeIdentifiers.first ?? (kUTTypeFileURL as String)
+		item.itemProvider.loadInPlaceFileRepresentation(forTypeIdentifier: uti,
+														completionHandler: { url, _, error in
+			// default behaviour on error or non-file URL
+			guard url?.isFileURL ?? false else {
+				item.setDefaultResult()
+				return
+			}
+															
+			let currentDirectory = self.executor.currentWorkingDirectory.path
+			let result = relative(filename: url!.path, to: currentDirectory)
+			item.setResult(string: result)
+		})
+	}
 }
 
 extension TerminalView: UITextViewDelegate {

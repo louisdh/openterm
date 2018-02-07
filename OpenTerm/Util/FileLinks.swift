@@ -9,7 +9,7 @@
 import Foundation
 
 extension NSAttributedString {
-    public func withFilesAsLinks() -> NSAttributedString {
+	public func withFilesAsLinks(currentDirectory: String) -> NSAttributedString {
         let text = string
         let mutable = self.mutableCopy() as! NSMutableAttributedString
         
@@ -17,7 +17,7 @@ extension NSAttributedString {
         let manager = FileManager.default
         var files = [String:[String]]() // key is first word of filename, value is entire filename relative to current dir
         do {
-            for filename in try manager.contentsOfDirectory(atPath: manager.currentDirectoryPath) {
+			for filename in try manager.contentsOfDirectory(atPath: currentDirectory) {
                 if let word = filename.components(separatedBy: " ").first {
                     var array = files[word] ?? [String]()
                     array.append(filename)
@@ -68,24 +68,24 @@ extension NSAttributedString {
 // calculate path for filename relative to directory inserting .. as needed
 func relative(filename: String, to directory: String) -> String {
     
-    var dirParts = ((directory as NSString).standardizingPath as NSString).pathComponents
-    var pathParts = ((filename as NSString).standardizingPath as NSString).pathComponents
+    var dirParts = URL(fileURLWithPath: directory).standardizedFileURL.pathComponents
+	var pathParts = URL(fileURLWithPath: filename).standardizedFileURL.pathComponents
     
     // head is grown from the start and tail from the end
-    var head = ""
-    var tail = ""
+	var head = URL(fileURLWithPath: "")
+    var tail = URL(fileURLWithPath: "")
     
     while !dirParts.isEmpty || !pathParts.isEmpty {
         if dirParts.isEmpty {
             // we have no more dir, which means we must specify relative
             let path = pathParts.removeFirst()
-            tail = (tail as NSString).appendingPathComponent(path)
+            tail = tail.appendingPathComponent(path)
             continue
             
         } else if(pathParts.isEmpty) {
             // we have no more path, which means we must go out
             dirParts.removeFirst()
-            head = (head as NSString).appendingPathComponent("..")
+			head = head.appendingPathComponent("..")
             continue
         }
         
@@ -95,9 +95,14 @@ func relative(filename: String, to directory: String) -> String {
         if dir == path { continue }
         
         // step out and step in
-        head = (head as NSString).appendingPathComponent("..")
-        tail = (tail as NSString).appendingPathComponent(path)
+        head = head.appendingPathComponent("..")
+        tail = tail.appendingPathComponent(path)
     }
-    
-    return (head as NSString).appendingPathComponent(tail)
+	
+	var result = tail.relativePath
+	if head.relativePath != "." {
+		result = head.appendingPathComponent(tail.relativePath).relativePath
+	}
+	// TODO: skip leading ./
+	return result
 }
