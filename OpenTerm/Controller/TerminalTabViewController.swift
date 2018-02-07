@@ -11,8 +11,8 @@ import TabView
 
 class TerminalTabViewController: TabViewController {
 
-	init() {
-		super.init(theme: TabViewThemeDark())
+	required init(theme: TabViewTheme) {
+		super.init(theme: theme)
 
 		self.viewControllers = [
 			TerminalViewController()

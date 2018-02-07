@@ -21,7 +21,8 @@ protocol TabViewBarDataSource: class {
 protocol TabViewBarDelegate: class {
     func activateTab(_ tab: UIViewController)
     func closeTab(_ tab: UIViewController)
-    func swapTab(atIndex index: Int, withTabAtIndex atIndex: Int)
+    func insertTab(_ tab: UIViewController, atIndex index: Int)
+    var dragInProgress: Bool { get set }
 }
 
 /// Replacement for UINavigationBar, contains a TabCollectionView at the bottom.

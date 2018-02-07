@@ -12,8 +12,7 @@ private let closeButtonSize: CGFloat = 28
 private let closeButtonImageSize: CGFloat = 15
 private let closeButtonImagePadding: CGFloat = 4
 private let closeButtonImageThickness: CGFloat = 1
-private let minimumTabWidth: CGFloat = 125
-private let titleLabelPadding: CGFloat = 8
+private let titleLabelPadding: CGFloat = 12
 
 /// Collection view to display a horizontal list of tabs.
 class TabViewTabCollectionView: UICollectionView {
@@ -24,22 +23,14 @@ class TabViewTabCollectionView: UICollectionView {
     private var barDataSource: TabViewBarDataSource? { return bar?.barDataSource }
     private var barDelegate: TabViewBarDelegate? { return bar?.barDelegate }
 
-    private let layout: UICollectionViewFlowLayout
-
     var theme: TabViewTheme {
         didSet { applyTheme(theme) }
     }
 
     init(theme: TabViewTheme) {
-        self.layout = TabViewTabCollectionViewLayout()
         self.theme = theme
 
-        super.init(frame: .zero, collectionViewLayout: layout)
-
-        layout.scrollDirection = .horizontal
-        layout.minimumLineSpacing = 0
-        layout.minimumInteritemSpacing = 0
-        layout.sectionInset = UIEdgeInsets.zero
+        super.init(frame: .zero, collectionViewLayout: TabViewTabCollectionViewLayout())
 
         self.backgroundColor = nil
         self.showsHorizontalScrollIndicator = false
@@ -47,12 +38,17 @@ class TabViewTabCollectionView: UICollectionView {
         self.decelerationRate = UIScrollViewDecelerationRateFast
         self.allowsMultipleSelection = false
 
-        self.addGestureRecognizer(UILongPressGestureRecognizer(target: self, action: #selector(handleLongPressGesture(gesture:))))
+        // Enable drag and drop
+        self.dragInteractionEnabled = true
 
         self.register(TabViewTab.self, forCellWithReuseIdentifier: "Tab")
 
         self.delegate = self
         self.dataSource = self
+        self.dragDelegate = self
+        self.dropDelegate = self
+
+        applyTheme(theme)
     }
 
     required init?(coder aDecoder: NSCoder) { fatalError("init(coder:) has not been implemented") }
@@ -67,6 +63,7 @@ class TabViewTabCollectionView: UICollectionView {
 
     /// Apply the given theme to the view
     private func applyTheme(_ theme: TabViewTheme) {
+        (self.collectionViewLayout as? TabViewTabCollectionViewLayout)?.separatorColor = theme.separatorColor
         updateVisibleTabs()
     }
 
@@ -103,51 +100,92 @@ extension TabViewTabCollectionView: UICollectionViewDelegate {
         barDelegate?.activateTab(viewController)
     }
 
-    public func collectionView(_ collectionView: UICollectionView, moveItemAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-        // Allow for reordering tabs
+}
 
-        barDelegate?.swapTab(atIndex: sourceIndexPath.row, withTabAtIndex: destinationIndexPath.row)
+extension TabViewTabCollectionView: UICollectionViewDragDelegate {
+
+    func collectionView(_ collectionView: UICollectionView, dragSessionWillBegin session: UIDragSession) {
+        barDelegate?.dragInProgress = true
+        session.localContext = self.barDelegate
     }
 
-}
-extension TabViewTabCollectionView: UICollectionViewDelegateFlowLayout {
-    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let cvHeight = collectionView.frame.size.height
-        let cvWidth = collectionView.frame.size.width
-
-        let numVCs = CGFloat(viewControllers.count)
-
-        return CGSize(width: max(minimumTabWidth, cvWidth / numVCs), height: cvHeight)
+    func collectionView(_ collectionView: UICollectionView, dragSessionDidEnd session: UIDragSession) {
+        barDelegate?.dragInProgress = false
     }
-}
-// MARK: Long press gesture
-extension TabViewTabCollectionView {
 
-    @objc func handleLongPressGesture(gesture: UILongPressGestureRecognizer) {
-        switch gesture.state {
+    func collectionView(_ collectionView: UICollectionView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
+        let dragItem = UIDragItem.init(itemProvider: NSItemProvider.init())
+        dragItem.localObject = viewControllers[indexPath.item]
 
-        case .began:
-            guard let selectedIndexPath = self.indexPathForItem(at: gesture.location(in: self)) else {
-                break
-            }
-            self.beginInteractiveMovementForItem(at: selectedIndexPath)
-        case .changed:
-            var location = gesture.location(in: gesture.view!)
-            location.y = gesture.view!.bounds.size.height / 2
-            self.updateInteractiveMovementTargetPosition(location)
-        case .ended:
-            self.endInteractiveMovement()
-        default:
-            self.cancelInteractiveMovement()
+        // Render the cell in the given size, so even if it is shrunk (on iPad), it will be a reasonable size.
+        let size = CGSize.init(width: 120, height: collectionView.bounds.height)
+        let snapshot = self.snapshotCell(at: indexPath, withSize: size)
+
+        // Put the snapshot in an image view and give it to the drag item for previewing
+        let imageView = UIImageView(image: snapshot)
+        let parameters = self.collectionView(collectionView, dragPreviewParametersForItemAt: indexPath)!
+        dragItem.previewProvider = { return UIDragPreview.init(view: imageView, parameters: parameters) }
+        return [
+            dragItem
+        ]
+    }
+
+    private func snapshotCell(at indexPath: IndexPath, withSize size: CGSize) -> UIImage {
+        guard let view = cellForItem(at: indexPath) else { return UIImage() }
+        let frame = view.frame
+        view.frame = CGRect.init(origin: .zero, size: size)
+        let image = UIGraphicsImageRenderer.init(size: size).image { context in
+            view.drawHierarchy(in: view.frame, afterScreenUpdates: true)
         }
+        view.frame = frame
+        return image
+    }
+
+    func collectionView(_ collectionView: UICollectionView, dragPreviewParametersForItemAt indexPath: IndexPath) -> UIDragPreviewParameters? {
+        let parameters = UIDragPreviewParameters()
+        // Since the cell may not have a background color (if it's selected), set one to the background color of the bar
+        parameters.backgroundColor = theme.barTintColor
+        return parameters
+    }
+
+    func collectionView(_ collectionView: UICollectionView, dragSessionIsRestrictedToDraggingApplication session: UIDragSession) -> Bool {
+        // Don't let tabs escape the current app.
+        return true
+    }
+}
+
+extension TabViewTabCollectionView: UICollectionViewDropDelegate {
+
+    func collectionView(_ collectionView: UICollectionView, canHandle session: UIDropSession) -> Bool {
+        guard let localSession = session.localDragSession, let localObject = localSession.items.first?.localObject else { return false }
+        let canHandle = localObject is UIViewController
+        return canHandle
+    }
+
+    func collectionView(_ collectionView: UICollectionView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath destinationIndexPath: IndexPath?) -> UICollectionViewDropProposal {
+        return UICollectionViewDropProposal.init(operation: .move, intent: .insertAtDestinationIndexPath)
+    }
+
+    func collectionView(_ collectionView: UICollectionView, performDropWith coordinator: UICollectionViewDropCoordinator) {
+        guard
+            let dragItem = coordinator.session.localDragSession?.items.first,
+            let destinationIndexPath = coordinator.destinationIndexPath,
+            let viewController = dragItem.localObject as? UIViewController,
+            let oldDelegate = coordinator.session.localDragSession?.localContext as? TabViewBarDelegate
+        else { return }
+        oldDelegate.closeTab(viewController)
+        barDelegate?.insertTab(viewController, atIndex: destinationIndexPath.item)
+        self.barDelegate?.activateTab(viewController)
     }
 }
 
 private class TabViewTab: UICollectionViewCell {
 
-    private let leftSeparatorView: UIView
     private let titleView: UILabel
     private let closeButton: UIButton
+
+    private var titleViewLeadingConstraint: NSLayoutConstraint?
+    private var titleViewWidthConstraint: NSLayoutConstraint?
 
     private weak var currentTab: UIViewController?
     weak var collectionView: TabViewTabCollectionView?
@@ -157,20 +195,12 @@ private class TabViewTab: UICollectionViewCell {
     }
 
     override init(frame: CGRect) {
-        leftSeparatorView = UIView()
         closeButton = UIButton()
         titleView = UILabel()
 
         super.init(frame: frame)
 
-        leftSeparatorView.translatesAutoresizingMaskIntoConstraints = false
-        addSubview(leftSeparatorView)
-        NSLayoutConstraint.activate([
-            leftSeparatorView.widthAnchor.constraint(equalToConstant: 0.5),
-            leftSeparatorView.rightAnchor.constraint(equalTo: leftAnchor),
-            leftSeparatorView.topAnchor.constraint(equalTo: topAnchor),
-            leftSeparatorView.bottomAnchor.constraint(equalTo: bottomAnchor)
-        ])
+        self.clipsToBounds = true
 
         let buttonSize = CGSize(width: closeButtonSize, height: closeButtonSize)
         let buttonImageSize = CGSize(width: closeButtonImageSize, height: closeButtonImageSize)
@@ -184,7 +214,7 @@ private class TabViewTab: UICollectionViewCell {
         closeButton.addTarget(self, action: #selector(TabViewTab.closeButtonTapped), for: .touchUpInside)
 
         titleView.textAlignment = .center
-        titleView.font = UIFont.systemFont(ofSize: 15, weight: .medium)
+        titleView.font = UIFont.systemFont(ofSize: 12, weight: .semibold)
         titleView.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
 
         closeButton.translatesAutoresizingMaskIntoConstraints = false
@@ -193,14 +223,20 @@ private class TabViewTab: UICollectionViewCell {
         contentView.addSubview(titleView)
 
         NSLayoutConstraint.activate([
-            closeButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 4),
+            closeButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             closeButton.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
             closeButton.widthAnchor.constraint(equalToConstant: buttonSize.width).withPriority(.defaultHigh),
             closeButton.heightAnchor.constraint(equalToConstant: buttonSize.height).withPriority(.defaultHigh)
         ])
+
+        let titleViewLeadingConstraint = titleView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: titleLabelPadding)
+        let titleViewWidthConstraint = titleView.widthAnchor.constraint(greaterThanOrEqualToConstant: 0)
+        self.titleViewLeadingConstraint = titleViewLeadingConstraint
+        self.titleViewWidthConstraint = titleViewWidthConstraint
         NSLayoutConstraint.activate([
-            titleView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 4),
-            titleView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -4),
+            titleViewLeadingConstraint,
+            titleView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -titleLabelPadding).withPriority(.defaultHigh),
+            titleViewWidthConstraint,
             titleView.topAnchor.constraint(equalTo: contentView.topAnchor),
             titleView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
         ])
@@ -210,20 +246,25 @@ private class TabViewTab: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 
+    override func preferredLayoutAttributesFitting(_ layoutAttributes: UICollectionViewLayoutAttributes) -> UICollectionViewLayoutAttributes {
+        // Don't provide our own attributes. The default implementation calls systemLayoutSizeFittingSize, which is expensive.
+        return layoutAttributes
+    }
+
+    private var isActive: Bool {
+        return collectionView?.bar?.barDataSource?.visibleViewController == currentTab
+    }
+
     func applyTheme(_ theme: TabViewTheme) {
 
         closeButton.imageView?.tintColor = theme.tabCloseButtonColor
         closeButton.imageView?.backgroundColor = theme.tabCloseButtonBackgroundColor
 
-        if self.isSelected {
-            self.leftSeparatorView.backgroundColor = nil
+        if isActive {
             self.backgroundColor = nil
-            self.closeButton.isHidden = false
             titleView.textColor = theme.tabSelectedTextColor
         } else {
-            self.leftSeparatorView.backgroundColor = theme.separatorColor
             self.backgroundColor = theme.tabBackgroundDeselectedColor
-            self.closeButton.isHidden = true
             titleView.textColor = theme.tabTextColor
         }
     }
@@ -245,10 +286,15 @@ private class TabViewTab: UICollectionViewCell {
             applyTheme(theme)
         }
 
-        if !closeButton.isHidden && self.bounds.width - titleView.intrinsicContentSize.width < closeButtonSize {
-            titleView.text = "\t" + (currentTab?.title ?? "")
+        self.closeButton.isHidden = !self.isActive || self.bounds.size.width < closeButtonSize
+
+        titleView.text = self.currentTab?.title
+        if !closeButton.isHidden && self.bounds.width - titleView.intrinsicContentSize.width - titleLabelPadding * 2 < closeButtonSize {
+            self.titleViewLeadingConstraint?.constant = closeButtonSize
+            self.titleViewWidthConstraint?.constant = 120 - (closeButtonSize + titleLabelPadding)
         } else {
-            titleView.text = currentTab?.title
+            self.titleViewLeadingConstraint?.constant = titleLabelPadding
+            self.titleViewWidthConstraint?.constant = 120 - titleLabelPadding * 2
         }
     }
 
@@ -282,11 +328,4 @@ private class TabViewTab: UICollectionViewCell {
             context.cgContext.addPath(upwards.cgPath)
         }).withRenderingMode(.alwaysTemplate)
     }()
-}
-
-private class TabViewTabCollectionViewLayout: UICollectionViewFlowLayout {
-
-    override func shouldInvalidateLayout(forBoundsChange newBounds: CGRect) -> Bool {
-        return true
-    }
 }
