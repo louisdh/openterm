@@ -147,7 +147,7 @@ class TerminalViewController: UIViewController {
 
 		coordinator.animate(alongsideTransition: { (_) in
 
-		}) { (_) in
+		}, completion: { (_) in
 
 			if !self.allowFloatingPanels {
 				self.closeAllFloatingPanels()
@@ -157,7 +157,7 @@ class TerminalViewController: UIViewController {
 				self.closeAllPinnedPanels()
 			}
 
-		}
+		})
 
 	}
 
@@ -394,7 +394,7 @@ extension TerminalViewController: UIDocumentPickerDelegate {
 }
 
 extension TerminalViewController: BookmarkViewControllerDelegate {
-	func sanitizeOutput(_ output: String) -> String {
+	func sanitizeOutput(_ output: NSMutableString) {
 		return terminalView.sanitizeOutput(output)
 	}
 
@@ -408,7 +408,7 @@ extension TerminalViewController: BookmarkViewControllerDelegate {
 		_ = url.startAccessingSecurityScopedResource()
 
 		//  Change the directory to the path.
-		DocumentManager.shared.fileManager.changeCurrentDirectoryPath(url.path)
+		self.terminalView.executor.currentWorkingDirectory = url
 
 		// Update the title.
 		self.updateTitle()
@@ -416,6 +416,10 @@ extension TerminalViewController: BookmarkViewControllerDelegate {
 }
 
 extension TerminalViewController: TerminalViewDelegate {
+
+	func commandDidEnd() {
+		self.updateTitle()
+	}
 
 	func didEnterCommand(_ command: String) {
 
@@ -456,6 +460,14 @@ extension TerminalViewController: TerminalViewDelegate {
 			return
 		}
 
+		#if DEBUG
+			if command == "debug-colors" {
+				terminalView.writeOutput(String.colorTestingString)
+				terminalView.writePrompt()
+				return
+			}
+		#endif
+
 		// Dispatch the command to the executor
 		terminalView.executor.dispatch(command)
 	}
@@ -475,7 +487,7 @@ extension TerminalViewController: HistoryViewControllerDelegate {
 extension TerminalViewController: PanelManager {
 
 	var panels: [PanelViewController] {
-		return [historyPanelViewController, scriptsPanelViewController]
+		return [historyPanelViewController, scriptsPanelViewController, bookmarkPanelViewController]
 	}
 
 	var panelContentWrapperView: UIView {
