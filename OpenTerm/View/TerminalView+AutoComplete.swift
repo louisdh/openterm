@@ -141,7 +141,7 @@ extension TerminalView: AutoCompleteManagerDataSource {
 		// depending on if the command can touch those things.
 		let commandTypes = CommandTypes.forCommand(command)
 
-		let currentURL = DocumentManager.shared.currentDirectoryURL
+		let currentURL = executor.currentWorkingDirectory
 		if let last = currentArguments.last, !last.isEmpty {
 			// If we are in the middle of typing an argument, typically there are no completions available.
 			// However, if that argument being typed is a path, we should show the contents of the deepest folder in the path.

@@ -11,12 +11,10 @@ import PanelKit
 /// Protocol that is used to interact with the bookmark view controller.
 protocol BookmarkViewControllerDelegate: class {
 
-	/// Notifies the delegate that a bookmark was selected.
+	/// Notifies the delegate that a bookmark was selected, or retrieves the current directory.
 	///
 	/// - Parameter bookmarkURL: The bookmark that was selected.
-	func changeDirectoryToURL(url: URL)
-
-	func sanitizeOutput(_ output: NSMutableString)
+	var currentDirectoryURL: URL { get set }
 }
 
 class BookmarkViewController: UIViewController {
@@ -52,7 +50,21 @@ class BookmarkViewController: UIViewController {
 	/// When the + button is pressed, we notify the delegate to save the current
 	/// directory as URL.
 	@objc func addBookmarkForCurrentDirectory() {
-		self.bookmarkManager.saveBookmarkForCurrentDirectory(sender: self)
+		guard let url = self.delegate?.currentDirectoryURL else { return }
+		do {
+			try self.bookmarkManager.saveBookmarkURL(url: url)
+		} catch {
+			//  We inform the user that the bookmark could not be saved.
+			let alertController = UIAlertController(title: "Could not save bookmark.",
+													message: error.localizedDescription,
+													preferredStyle: .alert)
+
+			let cancelAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+
+			alertController.addAction(cancelAction)
+
+			self.present(alertController, animated: true, completion: nil)
+		}
 	}
 
 	override var preferredStatusBarStyle: UIStatusBarStyle {
@@ -81,8 +93,7 @@ extension BookmarkViewController: UITableViewDataSource {
 		let bookmarkURL = bookmarks[indexPath.row]
 
 		let urlDescription = NSMutableString.init(string: bookmarkURL.absoluteURL.path)
-
-		self.delegate?.sanitizeOutput(urlDescription)
+		OutputSanitizer.sanitize(urlDescription)
 
 		cell.textLabel?.text = "\(bookmarkURL.lastPathComponent): \(urlDescription)"
 
@@ -118,7 +129,7 @@ extension BookmarkViewController: UITableViewDelegate {
 
 		//  When a bookmark is selected, we notify the delegate about this.
 		let selectedBookmarkURL = bookmarks[indexPath.row]
-		delegate?.changeDirectoryToURL(url: selectedBookmarkURL)
+		delegate?.currentDirectoryURL = selectedBookmarkURL
 
 		if let panelVC = self.panelNavigationController?.panelViewController {
 			if panelVC.isFloating == false {

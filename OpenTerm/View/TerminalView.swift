@@ -107,6 +107,9 @@ class TerminalView: UIView {
 	private func appendText(_ text: NSAttributedString) {
 		dispatchPrecondition(condition: .onQueue(.main))
 
+		let text = NSMutableAttributedString.init(attributedString: text)
+		OutputSanitizer.sanitize(text.mutableString)
+
 		let new = NSMutableAttributedString(attributedString: textView.attributedText ?? NSAttributedString())
 		new.append(text)
 		textView.attributedText = new
@@ -201,17 +204,7 @@ extension TerminalView: ParserDelegate {
 	}
 
 	func parser(_ parser: Parser, didReceiveString string: NSAttributedString) {
-		let mutableStr = NSMutableAttributedString.init(attributedString: string)
-		self.sanitizeOutput(mutableStr.mutableString)
-		self.writeOutput(mutableStr)
-	}
-
-	func sanitizeOutput(_ output: NSMutableString) {
-		// Replace $HOME with "~"
-		output.replaceOccurrences(of: DocumentManager.shared.activeDocumentsFolderURL.path, with: "~", options: .caseInsensitive, range: NSRange.init(location: 0, length: output.length))
-
-		// Sometimes, fileManager adds /private in front of the directory
-		output.replaceOccurrences(of: "/private", with: "", options: .caseInsensitive, range: NSRange.init(location: 0, length: output.length))
+		self.writeOutput(string)
 	}
 }
 

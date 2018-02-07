@@ -394,25 +394,26 @@ extension TerminalViewController: UIDocumentPickerDelegate {
 }
 
 extension TerminalViewController: BookmarkViewControllerDelegate {
-	func sanitizeOutput(_ output: NSMutableString) {
-		return terminalView.sanitizeOutput(output)
+
+	var currentDirectoryURL: URL {
+		get {
+			return self.terminalView.executor.currentWorkingDirectory
+		}
+		set {
+			// TODO: Only allow this while command is not running
+
+			//  Access the URL
+			_ = newValue.startAccessingSecurityScopedResource()
+
+			//  Change the directory to the path.
+			self.terminalView.executor.currentWorkingDirectory = newValue
+
+			self.terminalView.newLine()
+			self.terminalView.writeOutput("Current directory changed to \"\(newValue.path)\"")
+			self.terminalView.writePrompt()
+		}
 	}
 
-	/// Changes the current directory to the passed url.
-	/// - Note: Only urls that contain the required access permissions will work..
-	///
-	/// - Parameter bookmarkURL: The bookmark that was selected.
-	func changeDirectoryToURL(url: URL) {
-
-		//  Access the URL
-		_ = url.startAccessingSecurityScopedResource()
-
-		//  Change the directory to the path.
-		self.terminalView.executor.currentWorkingDirectory = url
-
-		// Update the title.
-		self.updateTitle()
-	}
 }
 
 extension TerminalViewController: TerminalViewDelegate {
