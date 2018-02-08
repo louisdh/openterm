@@ -113,6 +113,7 @@ class TerminalViewController: UIViewController {
 		replaceCommand("share", mangleFunctionName("shareFile"), true)
 		replaceCommand("pbcopy", mangleFunctionName("pbcopy"), true)
 		replaceCommand("pbpaste", mangleFunctionName("pbpaste"), true)
+		replaceCommand("cub", mangleFunctionName("cub"), true)
 
 		// Call reloadData for the added commands.
 		terminalView.autoCompleteManager.reloadData()
