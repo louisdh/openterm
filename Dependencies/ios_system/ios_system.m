@@ -302,10 +302,6 @@ static void initializeCommandList()
       @"grep"   : [NSArray arrayWithObjects:@"libtext.dylib", @"grep_main", @"0123456789A:B:C:D:EFGHIJMLOPSRUVZabcd:e:f:hilm:nopqrsuvwxXy", @"file", nil],
       @"egrep"  : [NSArray arrayWithObjects:@"libtext.dylib", @"grep_main", @"0123456789A:B:C:D:EFGHIJMLOPSRUVZabcd:e:f:hilm:nopqrsuvwxXy", @"file", nil],
       @"fgrep"  : [NSArray arrayWithObjects:@"libtext.dylib", @"grep_main", @"0123456789A:B:C:D:EFGHIJMLOPSRUVZabcd:e:f:hilm:nopqrsuvwxXy", @"file", nil],
-      // network commands:
-      @"ping"     : [NSArray arrayWithObjects:@"libnetwork_ios.dylib", @"ping_main", @"AaB:b:Cc:DdfG:g:h:I:i:k:K:Ll:M:m:noP:p:QqRrS:s:T:t:vW:z:", @"no", nil],
-      @"nc"       : [NSArray arrayWithObjects:@"libnetwork_ios.dylib", @"netcat_main", @"46AacDCb:dEhi:jFG:H:I:J:K:L:klMnN:Oop:rSs:T:tUuvw:X:x:z", @"no", nil],
-      @"nslookup" : [NSArray arrayWithObjects:@"libnetwork_ios.dylib", @"nslookup_main", @"", @"no", nil],
 #ifdef SIDELOADING
       // Scripts and programming languages. Might move outside of here at some point
       // lua
