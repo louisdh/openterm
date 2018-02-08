@@ -14,148 +14,147 @@ import TabView
 public func cub(argc: Int32, argv: UnsafeMutablePointer<UnsafeMutablePointer<Int8>?>?) -> Int32 {
 
 	let tabViewContainer = UIApplication.shared.keyWindow?.rootViewController as! TabViewContainerViewController<TerminalTabViewController>
-	
+
 	guard let activeVC = tabViewContainer.primaryTabViewController.visibleViewController as? TerminalViewController else {
 		return 0
 	}
-	
+
 	activeVC.terminalView.isExecutingScript = true
 	let executor = activeVC.terminalView.executor
-	
-    guard argc == 2 else {
-        fputs("Usage: cub script.cub\n", thread_stderr)
-        return 1
-    }
-    
-    guard let fileName = argv?[1] else {
-        fputs("Usage: cub script.cub\n", thread_stderr)
-        return 1
-    }
-    
-    let path = String(cString: fileName)
 
-    guard FileManager.default.fileExists(atPath: path) else {
-        fputs("Missing file \(path)\n", thread_stderr)
-        return 1
-    }
-    
-    let url = URL(fileURLWithPath: path)
+	guard argc == 2 else {
+		fputs("Usage: cub script.cub\n", thread_stderr)
+		return 1
+	}
 
-    guard let data = FileManager.default.contents(atPath: url.path) else {
-        fputs("Missing file \(path)\n", thread_stderr)
-        return 1
-    }
+	guard let fileName = argv?[1] else {
+		fputs("Usage: cub script.cub\n", thread_stderr)
+		return 1
+	}
 
-    guard let source = String.init(data: data, encoding: .utf8) else {
-        fputs("Missing file \(path)\n", thread_stderr)
-        return 1
-    }
-    
-    let runner = Runner(logDebug: true, logTime: false)
-    
-    runner.registerExternalFunction(name: "print", argumentNames: ["input"], returns: false) { (arguments, callback) in
-        
-        for (name, arg) in arguments {
-            fputs("\(arg)\n", thread_stdout)
-        }
-        
-        callback(nil)
-        return
-    }
+	let path = String(cString: fileName)
 
-    runner.registerExternalFunction(name: "exec", argumentNames: ["command"], returns: true) { (arguments, callback) in
+	guard FileManager.default.fileExists(atPath: path) else {
+		fputs("Missing file \(path)\n", thread_stderr)
+		return 1
+	}
 
-        var arguments = arguments
+	let url = URL(fileURLWithPath: path)
 
-        guard let command = arguments.removeValue(forKey: "command") else {
-            callback(.number(1))
-            return
-        }
+	guard let data = FileManager.default.contents(atPath: url.path) else {
+		fputs("Missing file \(path)\n", thread_stderr)
+		return 1
+	}
 
-        guard case let .string(commandStr) = command else {
-            callback(.number(1))
-            return
-        }
-        
-        print("run command: \(commandStr)")
+	guard let source = String.init(data: data, encoding: .utf8) else {
+		fputs("Missing file \(path)\n", thread_stderr)
+		return 1
+	}
 
-//        executor.dispatch(commandStr, callback: { (code) in
-//
-//            print("did run command: \(commandStr) -> \(code)")
-//
-//            DispatchQueue.main.async {
-//
-//                callback(.number(Double(code)))
-//            }
-//
-//        })
+	let runner = Runner(logDebug: true, logTime: false)
 
-    }
-    
-    runner.registerExternalFunction(name: "format", argumentNames: ["input", "arg"], returns: true) { (arguments, callback) in
-        
-        var arguments = arguments
-        
-        guard let input = arguments.removeValue(forKey: "input") else {
-            callback(.string(""))
-            return
-        }
-        
-        guard case let .string(inputStr) = input else {
-            callback(.string(""))
-            return
-        }
-        
-        var otherValues = arguments.values
-        
-        var varArgs = [CVarArg]()
-        
-        for value in otherValues {
-            
-            switch value {
-            case .bool(let b):
-                break
-            case .number(let n):
-                varArgs.append(n)
-            case .string(let str):
-                varArgs.append(str)
-            case .struct:
-                break
-            }
-            
-        }
-        
-        let output = String(format: inputStr, arguments: varArgs)
-        
-        callback(.string(output))
-        return
-    }
-    
-    print("run")
+	runner.registerExternalFunction(name: "print", argumentNames: ["input"], returns: false) { (arguments, callback) in
 
-    do {
-		
-        runner.executionFinishedCallback = {
-            
-            print("executionFinishedCallback")
-            
-            DispatchQueue.main.async {
-                
-                activeVC.terminalView.isExecutingScript = false
-//                activeVC.terminalView.isWaitingForCommand = false
-                
-//                activeVC.terminalView.commandExecutor(executor, didFinishDispatchWithExitCode: 0)
-//				activeVC.terminalView.commandE
-            }
-            
-        }
-        
-        try runner.run(source)
-        
-    } catch {
-        return 1
-    }
+		for (name, arg) in arguments {
+			fputs("\(arg)\n", thread_stdout)
+		}
 
-    
-    return 0
+		callback(nil)
+		return
+	}
+
+	runner.registerExternalFunction(name: "exec", argumentNames: ["command"], returns: true) { (arguments, callback) in
+
+		var arguments = arguments
+
+		guard let command = arguments.removeValue(forKey: "command") else {
+			callback(.number(1))
+			return
+		}
+
+		guard case let .string(commandStr) = command else {
+			callback(.number(1))
+			return
+		}
+
+		print("run command: \(commandStr)")
+
+		//        executor.dispatch(commandStr, callback: { (code) in
+		//
+		//            print("did run command: \(commandStr) -> \(code)")
+		//
+		//            DispatchQueue.main.async {
+		//
+		//                callback(.number(Double(code)))
+		//            }
+		//
+		//        })
+
+	}
+
+	runner.registerExternalFunction(name: "format", argumentNames: ["input", "arg"], returns: true) { (arguments, callback) in
+
+		var arguments = arguments
+
+		guard let input = arguments.removeValue(forKey: "input") else {
+			callback(.string(""))
+			return
+		}
+
+		guard case let .string(inputStr) = input else {
+			callback(.string(""))
+			return
+		}
+
+		var otherValues = arguments.values
+
+		var varArgs = [CVarArg]()
+
+		for value in otherValues {
+
+			switch value {
+			case .bool(let b):
+				break
+			case .number(let n):
+				varArgs.append(n)
+			case .string(let str):
+				varArgs.append(str)
+			case .struct:
+				break
+			}
+
+		}
+
+		let output = String(format: inputStr, arguments: varArgs)
+
+		callback(.string(output))
+		return
+	}
+
+	print("run")
+
+	do {
+
+		runner.executionFinishedCallback = {
+
+			print("executionFinishedCallback")
+
+			DispatchQueue.main.async {
+
+				activeVC.terminalView.isExecutingScript = false
+				//                activeVC.terminalView.isWaitingForCommand = false
+
+				//                activeVC.terminalView.commandExecutor(executor, didFinishDispatchWithExitCode: 0)
+				//				activeVC.terminalView.commandE
+			}
+
+		}
+
+		try runner.run(source)
+
+	} catch {
+		return 1
+	}
+
+	return 0
 }

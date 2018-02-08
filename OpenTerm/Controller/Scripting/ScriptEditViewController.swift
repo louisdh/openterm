@@ -14,15 +14,15 @@ import SavannaKit
 class ScriptEditViewController: UIViewController {
 
 	var script: Script
-    let textView: SyntaxTextView
-    let autoCompleteManager: AutoCompleteManager
-    let inputAssistantView: InputAssistantView
+	let textView: SyntaxTextView
+	let autoCompleteManager: AutoCompleteManager
+	let inputAssistantView: InputAssistantView
 
 	init(script: Script) {
 		self.script = script
-        self.textView = SyntaxTextView()
-        self.autoCompleteManager = AutoCompleteManager()
-        self.inputAssistantView = InputAssistantView()
+		self.textView = SyntaxTextView()
+		self.autoCompleteManager = AutoCompleteManager()
+		self.inputAssistantView = InputAssistantView()
 		super.init(nibName: nil, bundle: nil)
 		self.title = script.name
 	}
@@ -38,82 +38,82 @@ class ScriptEditViewController: UIViewController {
 
 		textView.delegate = self
 
-        // Set up auto complete manager
-        self.autoCompleteManager.delegate = self.inputAssistantView
-        self.autoCompleteManager.dataSource = self
+		// Set up auto complete manager
+		self.autoCompleteManager.delegate = self.inputAssistantView
+		self.autoCompleteManager.dataSource = self
 
-        // Set up input assistant and text view for auto completion
-        self.inputAssistantView.delegate = self
-        self.inputAssistantView.dataSource = self.autoCompleteManager
-//        self.textView.inputAccessoryView = self.inputAssistantView
-        self.inputAssistantView.tintColor = .lightGray
+		// Set up input assistant and text view for auto completion
+		self.inputAssistantView.delegate = self
+		self.inputAssistantView.dataSource = self.autoCompleteManager
+		//        self.textView.inputAccessoryView = self.inputAssistantView
+		self.inputAssistantView.tintColor = .lightGray
 
-        // Hide default undo/redo/etc buttons
-        textView.inputAssistantItem.leadingBarButtonGroups = []
-        textView.inputAssistantItem.trailingBarButtonGroups = []
+		// Hide default undo/redo/etc buttons
+		textView.inputAssistantItem.leadingBarButtonGroups = []
+		textView.inputAssistantItem.trailingBarButtonGroups = []
 
-        // Disable built-in autocomplete
-//        textView.autocorrectionType = .no
+		// Disable built-in autocomplete
+		//        textView.autocorrectionType = .no
 	}
 
 	override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
 
 		textView.becomeFirstResponder()
-        textView.text = script.value
+		textView.text = script.value
 	}
-    
+
 	private func save() {
-        // Save to disk
+		// Save to disk
 		script.value = textView.text
 	}
 
 }
 
 extension ScriptEditViewController: SyntaxTextViewDelegate {
-    
-    func didChangeText(_ syntaxTextView: SyntaxTextView) {
-        save()
-//        autoCompleteManager.reloadData()
-    }
-    
-    func lexerForSource(_ source: String) -> SavannaKit.Lexer {
-        return Cub.Lexer(input: source)
-    }
-    
+
+	func didChangeText(_ syntaxTextView: SyntaxTextView) {
+		save()
+		//        autoCompleteManager.reloadData()
+	}
+
+	func lexerForSource(_ source: String) -> SavannaKit.Lexer {
+		return Cub.Lexer(input: source)
+	}
+
 }
 
 extension ScriptEditViewController: UITextViewDelegate {
 
-    func textViewDidChange(_ textView: UITextView) {
-        save()
-        autoCompleteManager.reloadData()
-    }
+	func textViewDidChange(_ textView: UITextView) {
+		save()
+		autoCompleteManager.reloadData()
+	}
 }
 
 extension ScriptEditViewController: AutoCompleteManagerDataSource {
 
-    func allCommandsForAutoCompletion() -> [String] {
-        return ["+ new argument"] + self.script.argumentNames
-    }
+	func allCommandsForAutoCompletion() -> [String] {
+		return ["+ new argument"] + self.script.argumentNames
+	}
 
-    func completionsForProgram(_ command: String, _ currentArguments: [String]) -> [AutoCompleteManager.Completion] {
-        return []
-    }
+	func completionsForProgram(_ command: String, _ currentArguments: [String]) -> [AutoCompleteManager.Completion] {
+		return []
+	}
 
-    func availableCompletions(in completions: [AutoCompleteManager.Completion], forArguments arguments: [String]) -> [AutoCompleteManager.Completion] {
-        return completions
-    }
+	func availableCompletions(in completions: [AutoCompleteManager.Completion], forArguments arguments: [String]) -> [AutoCompleteManager.Completion] {
+		return completions
+	}
 }
 
 extension ScriptEditViewController: InputAssistantViewDelegate {
-    func inputAssistantView(_ inputAssistantView: InputAssistantView, didSelectSuggestionAtIndex index: Int) {
-        let suggestion = autoCompleteManager.completions[index]
+	func inputAssistantView(_ inputAssistantView: InputAssistantView, didSelectSuggestionAtIndex index: Int) {
+		let suggestion = autoCompleteManager.completions[index]
 
-//        if suggestion.name == "+ new argument" {
-//            textView.insertText("$<<argument>>")
-//        } else {
-//            textView.insertText("$<<\(suggestion.name)>>")
-//        }
-    }
+		//        if suggestion.name == "+ new argument" {
+		//            textView.insertText("$<<argument>>")
+		//        } else {
+		//            textView.insertText("$<<\(suggestion.name)>>")
+		//        }
+	}
 }

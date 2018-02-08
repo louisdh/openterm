@@ -36,10 +36,10 @@ class TerminalView: UIView {
 
 	weak var delegate: TerminalViewDelegate?
 
-    var isWaitingForCommand = false
+	var isWaitingForCommand = false
 
-    var isExecutingScript = false
-    
+	var isExecutingScript = false
+
 	init() {
 		super.init(frame: .zero)
 
