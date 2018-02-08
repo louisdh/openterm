@@ -132,7 +132,14 @@ class CommandExecutor {
 	// Send input to the running command's stdin.
 	func sendInput(_ input: String) {
 		guard self.state == .running, let data = input.data(using: .utf8) else { return }
-		stdin_pipe.fileHandleForWriting.write(data)
+		switch input {
+		case Parser.Code.endOfText.rawValue, Parser.Code.endOfTransmission.rawValue:
+			// Kill running process on CTRL+C or CTRL+D.
+			// No way to send different kill signals since ios_system/pthread are running in process.
+			ios_kill()
+		default:
+			stdin_pipe.fileHandleForWriting.write(data)
+		}
 	}
 
 	/// Take user-entered command, decide what to do with it, then return an executor command that will do the work.

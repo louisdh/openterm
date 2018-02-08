@@ -68,6 +68,7 @@ extension TerminalView {
 		switch autoCompleteManager.state {
 		case .executing:
 			guard let character = completion.data as? String else { return }
+			textView.insertText(character)
 			executor.sendInput(character)
 		default:
 			// Two options:
@@ -194,7 +195,7 @@ extension TerminalView: AutoCompleteManagerDataSource {
 
 	func completionsForExecution() -> [AutoCompleteManager.Completion] {
 		return [
-			.init("Stop", data: "\u{0003}") // Send an ETX (end of text) signal to the currently executing command
+			.init("Stop", data: Parser.Code.endOfText.rawValue) // Send an ETX (end of text) signal to the currently executing command
 		]
 	}
 

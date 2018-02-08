@@ -292,59 +292,11 @@ class TerminalViewController: UIViewController {
 
 	}
 
-	@objc func clearBufferCommand() {
-		terminalView.clearScreen()
-		terminalView.writePrompt()
-	}
-
-	@objc func selectCommandHome() {
-		let commandStartDifference = terminalView.textView.text.distance(from: terminalView.currentCommandStartIndex, to: terminalView.textView.text.endIndex)
-		if let commandStartPosition = terminalView.textView.position(from: terminalView.textView.endOfDocument, offset: -commandStartDifference) {
-			terminalView.textView.selectedTextRange = terminalView.textView.textRange(from: commandStartPosition, to: commandStartPosition)
-		}
-	}
-
-	@objc func selectCommandEnd() {
-		let endPosition = terminalView.textView.endOfDocument
-		terminalView.textView.selectedTextRange = terminalView.textView.textRange(from: endPosition, to: endPosition)
-	}
-
-	@objc func completeCommand() {
-		guard
-			let firstCompletion = terminalView.autoCompleteManager.completions.first?.name,
-			terminalView.currentCommand != firstCompletion
-			else { return }
-
-		let completed: String
-		if let lastCommand = terminalView.currentCommand.components(separatedBy: " ").last {
-			if lastCommand.isEmpty {
-				completed = terminalView.currentCommand + firstCompletion
-			} else {
-				completed = terminalView.currentCommand.replacingOccurrences(of: lastCommand, with: firstCompletion, options: .backwards)
-			}
-		} else {
-			completed = firstCompletion
-		}
-
-		terminalView.currentCommand = completed
-		terminalView.autoCompleteManager.reloadData()
-	}
-
 	override var keyCommands: [UIKeyCommand]? {
 		return [
 			// Navigation between commands
 			UIKeyCommand(input: UIKeyInputUpArrow, modifierFlags: UIKeyModifierFlags(rawValue: 0), action: #selector(selectPreviousCommand), discoverabilityTitle: "Previous command"),
 			UIKeyCommand(input: UIKeyInputDownArrow, modifierFlags: UIKeyModifierFlags(rawValue: 0), action: #selector(selectNextCommand), discoverabilityTitle: "Next command"),
-
-			// Clear
-			UIKeyCommand(input: "K", modifierFlags: .command, action: #selector(clearBufferCommand), discoverabilityTitle: "Clear Buffer"),
-
-			// Text selection, navigation
-			UIKeyCommand(input: "A", modifierFlags: .control, action: #selector(selectCommandHome), discoverabilityTitle: "Beginning of Line"),
-			UIKeyCommand(input: "E", modifierFlags: .control, action: #selector(selectCommandEnd), discoverabilityTitle: "End of Line"),
-
-			// Tab completion
-			UIKeyCommand(input: "\t", modifierFlags: [], action: #selector(completeCommand), discoverabilityTitle: "Complete")
 		]
 	}
 

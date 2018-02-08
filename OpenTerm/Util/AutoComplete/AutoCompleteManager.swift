@@ -106,7 +106,8 @@ class AutoCompleteManager {
 					self.state = .empty(commands: dataSource.allCommandsForAutoCompletion())
 				}
 			case .executing:
-				break
+				// If we got a new command, then we left the executing state.
+				self.state = .empty(commands: dataSource.allCommandsForAutoCompletion())
 			}
 
 			// Update the completions list, since the text changed.
