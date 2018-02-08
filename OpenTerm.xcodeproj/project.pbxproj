@@ -14,7 +14,7 @@
 		229EC3CF20245527004E76C6 /* ios_system.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 228541DC201FB78200B93589 /* ios_system.framework */; };
 		229EC3D020245527004E76C6 /* ios_system.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 228541DC201FB78200B93589 /* ios_system.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		22AC09DC202056D6006F7D8B /* libcurl.dylib in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 22AC09DB202056D6006F7D8B /* libcurl.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		22D56F8B200268E90090C1F6 /* BuildFile in Embed Frameworks */ = {isa = PBXBuildFile; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		22D56F8B200268E90090C1F6 /* (null) in Embed Frameworks */ = {isa = PBXBuildFile; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		22F5682A2020CA2E009850FD /* libshell.dylib in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 22F568242020CA2E009850FD /* libshell.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		22F5682B2020CA2E009850FD /* libssh_cmd.dylib in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 22F568252020CA2E009850FD /* libssh_cmd.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		22F5682C2020CA2E009850FD /* libawk.dylib in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 22F568272020CA2E009850FD /* libawk.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
@@ -89,7 +89,7 @@
 				22F5682C2020CA2E009850FD /* libawk.dylib in Embed Frameworks */,
 				22AC09DC202056D6006F7D8B /* libcurl.dylib in Embed Frameworks */,
 				228541D8201FB62C00B93589 /* libfiles.dylib in Embed Frameworks */,
-				22D56F8B200268E90090C1F6 /* BuildFile in Embed Frameworks */,
+				22D56F8B200268E90090C1F6 /* (null) in Embed Frameworks */,
 				229EC3D020245527004E76C6 /* ios_system.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
@@ -817,7 +817,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.silverfox.Terminal;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -843,7 +842,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.silverfox.Terminal;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
