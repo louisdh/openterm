@@ -26,6 +26,9 @@
 #define putchar(a) fputc(a, thread_stdout)
 #define getchar() fgetc(thread_stdin)
 #define getwchar() fgetwc(thread_stdin)
+// iswprint depends on the given locale, and setlocale() fails on iOS:
+#define iswprint(a) 1
+
 
 // Thread-local input and output streams
 extern __thread FILE* thread_stdin;

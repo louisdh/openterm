@@ -109,7 +109,7 @@ void initializeEnvironment() {
     // Add content of old PATH to this. PATH *is* defined in iOS, surprising as it may be.
     // I'm not going to erase it, so we just add ourselves.
     // Sometimes, we go through main several times, so make sure we only append to PATH once
-    NSString* checkingPath = [NSString stringWithCString:getenv("PATH") encoding:NSASCIIStringEncoding];
+    NSString* checkingPath = [NSString stringWithCString:getenv("PATH") encoding:NSUTF8StringEncoding];
     if (! [fullCommandPath isEqualToString:checkingPath]) {
         fullCommandPath = checkingPath;
     }
@@ -147,7 +147,7 @@ void initializeEnvironment() {
 static char* parseArgument(char* argument, char* command) {
     // expand all environment variables, convert "~" to $HOME (only if localFile)
     // we also pass the shell command for some specific behaviour (don't do this for that command)
-    NSString* argumentString = [NSString stringWithCString:argument encoding:NSASCIIStringEncoding];
+    NSString* argumentString = [NSString stringWithCString:argument encoding:NSUTF8StringEncoding];
     // 1) expand environment variables, + "~" (not wildcards ? and *)
     bool cannotExpand = false;
     while ([argumentString containsString:@"$"] && !cannotExpand) {
@@ -166,8 +166,8 @@ static char* parseArgument(char* argument, char* command) {
         const char* variable = getenv([variable_string UTF8String]);
         if (variable) {
             // Okay, so this one exists.
-            NSString* replacement_string = [NSString stringWithCString:variable encoding:NSASCIIStringEncoding];
-            variable_string = [[NSString stringWithCString:"$" encoding:NSASCIIStringEncoding] stringByAppendingString:variable_string];
+            NSString* replacement_string = [NSString stringWithCString:variable encoding:NSUTF8StringEncoding];
+            variable_string = [[NSString stringWithCString:"$" encoding:NSUTF8StringEncoding] stringByAppendingString:variable_string];
             argumentString = [argumentString stringByReplacingOccurrencesOfString:variable_string withString:replacement_string];
         } else cannotExpand = true; // found a variable we can't expand. stop trying for this argument
     }
@@ -180,7 +180,7 @@ static char* parseArgument(char* argument, char* command) {
             NSString* test_string = @"~";
             NSString* replacement_string;
             if (miniRoot == nil)
-                replacement_string = [NSString stringWithCString:(getenv("HOME")) encoding:NSASCIIStringEncoding];
+                replacement_string = [NSString stringWithCString:(getenv("HOME")) encoding:NSUTF8StringEncoding];
             else replacement_string = miniRoot;
             argumentString = [argumentString stringByReplacingOccurrencesOfString:test_string withString:replacement_string options:NULL range:NSMakeRange(0, 1)];
         }
@@ -192,22 +192,22 @@ static char* parseArgument(char* argument, char* command) {
         // This is something we need to avoid if the command is "scp" or "sftp"
         if ([argumentString containsString:@":~"]) {
             NSString* homeDir;
-            if (miniRoot == nil) homeDir = [NSString stringWithCString:(getenv("HOME")) encoding:NSASCIIStringEncoding];
+            if (miniRoot == nil) homeDir = [NSString stringWithCString:(getenv("HOME")) encoding:NSUTF8StringEncoding];
             else homeDir = miniRoot;
             // Only 1 possibility: ":~" (same as $HOME)
             if (homeDir.length > 0) {
                 if ([argumentString containsString:@":~/"]) {
                     NSString* test_string = @":~/";
-                    NSString* replacement_string = [[NSString stringWithCString:":" encoding:NSASCIIStringEncoding] stringByAppendingString:homeDir];
-                    replacement_string = [replacement_string stringByAppendingString:[NSString stringWithCString:"/" encoding:NSASCIIStringEncoding]];
+                    NSString* replacement_string = [[NSString stringWithCString:":" encoding:NSUTF8StringEncoding] stringByAppendingString:homeDir];
+                    replacement_string = [replacement_string stringByAppendingString:[NSString stringWithCString:"/" encoding:NSUTF8StringEncoding]];
                     argumentString = [argumentString stringByReplacingOccurrencesOfString:test_string withString:replacement_string];
                 } else if ([argumentString hasSuffix:@":~"]) {
                     NSString* test_string = @":~";
-                    NSString* replacement_string = [[NSString stringWithCString:":" encoding:NSASCIIStringEncoding] stringByAppendingString:homeDir];
+                    NSString* replacement_string = [[NSString stringWithCString:":" encoding:NSUTF8StringEncoding] stringByAppendingString:homeDir];
                     argumentString = [argumentString stringByReplacingOccurrencesOfString:test_string withString:replacement_string options:NULL range:NSMakeRange([argumentString length] - 2, 2)];
                 } else if ([argumentString hasSuffix:@":"]) {
                     NSString* test_string = @":";
-                    NSString* replacement_string = [[NSString stringWithCString:":" encoding:NSASCIIStringEncoding] stringByAppendingString:homeDir];
+                    NSString* replacement_string = [[NSString stringWithCString:":" encoding:NSUTF8StringEncoding] stringByAppendingString:homeDir];
                     argumentString = [argumentString stringByReplacingOccurrencesOfString:test_string withString:replacement_string options:NULL range:NSMakeRange([argumentString length] - 2, 2)];
                 }
             }
@@ -847,7 +847,7 @@ int ios_system(const char* inputCmd) {
             }
             // We go through the path, because that command may be a file in the path
             // i.e. user called /usr/local/bin/hg and it's ~/Library/bin/hg
-            NSString* checkingPath = [NSString stringWithCString:getenv("PATH") encoding:NSASCIIStringEncoding];
+            NSString* checkingPath = [NSString stringWithCString:getenv("PATH") encoding:NSUTF8StringEncoding];
             if (! [fullCommandPath isEqualToString:checkingPath]) {
                 fullCommandPath = checkingPath;
                 directoriesInPath = [fullCommandPath componentsSeparatedByString:@":"];
@@ -910,7 +910,7 @@ int ios_system(const char* inputCmd) {
         // and we have inserted the name of the script at the beginning, or it is a builtin command
         int (*function)(int ac, char** av) = NULL;
         if (commandList == nil) initializeCommandList();
-        NSString* commandName = [NSString stringWithCString:argv[0] encoding:NSASCIIStringEncoding];
+        NSString* commandName = [NSString stringWithCString:argv[0] encoding:NSUTF8StringEncoding];
         NSArray* commandStructure = [commandList objectForKey: commandName];
         void* handle = NULL;
         if (commandStructure != nil) {
