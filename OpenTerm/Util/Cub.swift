@@ -9,9 +9,19 @@
 import Foundation
 import Cub
 import ios_system
+import TabView
 
 public func cub(argc: Int32, argv: UnsafeMutablePointer<UnsafeMutablePointer<Int8>?>?) -> Int32 {
 
+	let tabViewContainer = UIApplication.shared.keyWindow?.rootViewController as! TabViewContainerViewController<TerminalTabViewController>
+	
+	guard let activeVC = tabViewContainer.primaryTabViewController.visibleViewController as? TerminalViewController else {
+		return 0
+	}
+	
+	activeVC.terminalView.isExecutingScript = true
+	let executor = activeVC.terminalView.executor
+	
     guard argc == 2 else {
         fputs("Usage: cub script.cub\n", thread_stderr)
         return 1
@@ -69,16 +79,16 @@ public func cub(argc: Int32, argv: UnsafeMutablePointer<UnsafeMutablePointer<Int
         
         print("run command: \(commandStr)")
 
-        executor.dispatch(commandStr, callback: { (code) in
-
-            print("did run command: \(commandStr) -> \(code)")
-
-            DispatchQueue.main.async {
-                
-                callback(.number(Double(code)))
-            }
-            
-        })
+//        executor.dispatch(commandStr, callback: { (code) in
+//
+//            print("did run command: \(commandStr) -> \(code)")
+//
+//            DispatchQueue.main.async {
+//
+//                callback(.number(Double(code)))
+//            }
+//
+//        })
 
     }
     
@@ -124,9 +134,7 @@ public func cub(argc: Int32, argv: UnsafeMutablePointer<UnsafeMutablePointer<Int
     print("run")
 
     do {
-        
-        activeVC.terminalView.isExecutingScript = true
-        
+		
         runner.executionFinishedCallback = {
             
             print("executionFinishedCallback")
@@ -136,8 +144,8 @@ public func cub(argc: Int32, argv: UnsafeMutablePointer<UnsafeMutablePointer<Int
                 activeVC.terminalView.isExecutingScript = false
 //                activeVC.terminalView.isWaitingForCommand = false
                 
-                activeVC.commandExecutor(executor, didFinishDispatchWithExitCode: 0)
-                
+//                activeVC.terminalView.commandExecutor(executor, didFinishDispatchWithExitCode: 0)
+//				activeVC.terminalView.commandE
             }
             
         }

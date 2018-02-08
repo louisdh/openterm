@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14087.3" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="S1O-t4-WGA">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -8,88 +8,14 @@
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
-        <capability name="Navigation items with more than one left or right bar item" minToolsVersion="7.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
-        <scene sceneID="tne-QT-ifu">
-            <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="OpenTerm" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SOJ-yb-JDf">
-                                <rect key="frame" x="0.0" y="64" width="375" height="603"/>
-                                <subviews>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GsK-49-eEc" customClass="TerminalView" customModule="OpenTerm" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="0.0" width="375" height="603"/>
-                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                    </view>
-                                </subviews>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <constraints>
-                                    <constraint firstItem="GsK-49-eEc" firstAttribute="top" secondItem="SOJ-yb-JDf" secondAttribute="top" id="BjW-a9-jH4"/>
-                                    <constraint firstAttribute="trailing" secondItem="GsK-49-eEc" secondAttribute="trailing" id="LFJ-fB-3hv"/>
-                                    <constraint firstAttribute="bottom" secondItem="GsK-49-eEc" secondAttribute="bottom" id="bOM-IP-ih8"/>
-                                    <constraint firstItem="GsK-49-eEc" firstAttribute="leading" secondItem="SOJ-yb-JDf" secondAttribute="leading" id="cE6-eQ-0TY"/>
-                                </constraints>
-                            </view>
-                        </subviews>
-                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <constraints>
-                            <constraint firstItem="SOJ-yb-JDf" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="3PS-bG-x8p"/>
-                            <constraint firstItem="SOJ-yb-JDf" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="9MG-0U-HlJ"/>
-                            <constraint firstItem="SOJ-yb-JDf" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="B2O-51-yjJ"/>
-                            <constraint firstItem="SOJ-yb-JDf" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="Zj6-Zp-0eb"/>
-                        </constraints>
-                        <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
-                    </view>
-                    <navigationItem key="navigationItem" id="JRv-Im-Tnt">
-                        <barButtonItem key="leftBarButtonItem" image="gear" id="OFd-er-Naj">
-                            <connections>
-                                <segue destination="dAz-aa-qtT" kind="presentation" modalPresentationStyle="formSheet" id="R0L-2q-dLN"/>
-                            </connections>
-                        </barButtonItem>
-                        <rightBarButtonItems>
-                            <barButtonItem title="Item" image="clock" id="u0V-tr-ngf">
-                                <connections>
-                                    <action selector="showHistory:" destination="BYZ-38-t0r" id="1tS-n5-l85"/>
-                                </connections>
-                            </barButtonItem>
-                            <barButtonItem image="folder" id="SEg-Dh-OWT">
-                                <connections>
-                                    <action selector="openFolder:" destination="BYZ-38-t0r" id="zGA-4q-tGD"/>
-                                </connections>
-                            </barButtonItem>
-                            <barButtonItem systemItem="bookmarks" id="Ppg-om-WUM">
-                                <connections>
-                                    <action selector="showHBookmarks:" destination="BYZ-38-t0r" id="MuN-j7-GI4"/>
-                                </connections>
-                            </barButtonItem>
-                            <barButtonItem systemItem="compose" id="8oj-SI-eX7">
-                                <connections>
-                                    <action selector="showScripts:" destination="BYZ-38-t0r" id="ui6-0d-Vo6"/>
-                                </connections>
-                            </barButtonItem>
-                        </rightBarButtonItems>
-                    </navigationItem>
-                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" barStyle="black" prompted="NO"/>
-                    <connections>
-                        <outlet property="contentWrapperView" destination="SOJ-yb-JDf" id="ScL-oT-6Te"/>
-                        <outlet property="terminalView" destination="GsK-49-eEc" id="hGV-35-shM"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="479.19999999999999" y="133.5832083958021"/>
-        </scene>
         <!--About OpenTerm-->
         <scene sceneID="zxZ-bs-AwC">
             <objects>
-                <tableViewController id="iJD-Lv-nas" customClass="SettingsViewController" customModule="OpenTerm" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="SettingsViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="iJD-Lv-nas" customClass="SettingsViewController" customModule="OpenTerm" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" indicatorStyle="white" dataMode="static" style="grouped" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" id="Q32-td-9ml">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -514,42 +440,6 @@ This project uses the open source ios_system project by Nicolas Holzschuch. This
             </objects>
             <point key="canvasLocation" x="1484" y="134"/>
         </scene>
-        <!--Navigation Controller-->
-        <scene sceneID="9Ak-gh-czG">
-            <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="S1O-t4-WGA" sceneMemberID="viewController">
-                    <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" barStyle="black" id="Yc0-cj-twH">
-                        <rect key="frame" x="0.0" y="20" width="375" height="44"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                    <nil name="viewControllers"/>
-                    <connections>
-                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="rootViewController" id="8zq-Cl-zei"/>
-                    </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="THE-Cv-jZo" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-503" y="134"/>
-        </scene>
-        <!--Navigation Controller-->
-        <scene sceneID="VGc-Rr-hiR">
-            <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="dAz-aa-qtT" sceneMemberID="viewController">
-                    <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" barStyle="black" id="otd-gU-HKd">
-                        <rect key="frame" x="0.0" y="20" width="375" height="44"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                    <nil name="viewControllers"/>
-                    <connections>
-                        <segue destination="iJD-Lv-nas" kind="relationship" relationship="rootViewController" id="RlZ-A2-aUE"/>
-                    </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="0lK-jA-c4A" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="479" y="909"/>
-        </scene>
         <!--Scripts-->
         <scene sceneID="Lu9-3r-2Ro">
             <objects>
@@ -625,9 +515,6 @@ This project uses the open source ios_system project by Nicolas Holzschuch. This
         </scene>
     </scenes>
     <resources>
-        <image name="clock" width="32" height="32"/>
-        <image name="folder" width="32" height="32"/>
-        <image name="gear" width="20" height="20"/>
         <namedColor name="Main Tint Color">
             <color red="0.0" green="0.85882352941176465" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>

@@ -4,6 +4,7 @@ PODS:
   - PanelKit (2.0.1)
   - SavannaKit (0.6.0)
   - SwiftLint (0.24.2)
+  - TabView (1.0.1)
 
 DEPENDENCIES:
   - Cub (~> 0.6)
@@ -11,6 +12,7 @@ DEPENDENCIES:
   - PanelKit (~> 2.0)
   - SavannaKit (~> 0.6)
   - SwiftLint
+  - TabView (~> 1.0)
 
 SPEC CHECKSUMS:
   Cub: 249c3cd02a996d65dff3a89813837e1f635cebd3
@@ -18,7 +20,8 @@ SPEC CHECKSUMS:
   PanelKit: d05cecac1ab39af375b56ff21c7b5a9915a3eb5b
   SavannaKit: 409b6f55cc282b9f2788357108b5379538e0520c
   SwiftLint: 2aa21b96c8d13396a051bc1cb659d2ce1e0075b0
+  TabView: b8337b549e4b0f070a76cab141e258fa66e01fd1
 
-PODFILE CHECKSUM: 80a259e84f26f0fd75ee6a942578d8906c555c70
+PODFILE CHECKSUM: 541616255e35f0ef7f1d2fc9ea790f7c66498694
 
 COCOAPODS: 1.4.0

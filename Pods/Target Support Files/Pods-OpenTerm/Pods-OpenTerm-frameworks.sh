@@ -138,12 +138,14 @@ if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework "${BUILT_PRODUCTS_DIR}/InputAssistant/InputAssistant.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/PanelKit/PanelKit.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/SavannaKit/SavannaKit.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/TabView/TabView.framework"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework "${BUILT_PRODUCTS_DIR}/Cub/Cub.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/InputAssistant/InputAssistant.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/PanelKit/PanelKit.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/SavannaKit/SavannaKit.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/TabView/TabView.framework"
 fi
 if [ "${COCOAPODS_PARALLEL_CODE_SIGN}" == "true" ]; then
   wait
