@@ -52,8 +52,6 @@ class ScriptEditViewController: UIViewController {
 		textView.inputAssistantItem.leadingBarButtonGroups = []
 		textView.inputAssistantItem.trailingBarButtonGroups = []
 
-		// Disable built-in autocomplete
-		//        textView.autocorrectionType = .no
 	}
 
 	override func viewDidAppear(_ animated: Bool) {
