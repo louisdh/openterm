@@ -49,6 +49,7 @@
 		BE3808601FD9BFB600393EB8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BE38085E1FD9BFB600393EB8 /* LaunchScreen.storyboard */; };
 		BE505066201E5ED900CDFC60 /* Share.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE505065201E5ED900CDFC60 /* Share.swift */; };
 		BE9275062013961D00BD2761 /* UserDefaultsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE9275052013961D00BD2761 /* UserDefaultsController.swift */; };
+		BEA14A69202CEE5800AB7351 /* Cub+SavannaKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEA14A68202CEE5800AB7351 /* Cub+SavannaKit.swift */; };
 		BEA499261FD9C4D7001B9B9D /* DocumentManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEA499251FD9C4D7001B9B9D /* DocumentManager.swift */; };
 		BEA4992C1FDC0918001B9B9D /* icon-320.png in Resources */ = {isa = PBXBuildFile; fileRef = BEA4992B1FDC0918001B9B9D /* icon-320.png */; };
 		BEA4992E1FDC305B001B9B9D /* KeyboardObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEA4992D1FDC305B001B9B9D /* KeyboardObserver.swift */; };
@@ -141,6 +142,7 @@
 		BE3808611FD9BFB600393EB8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		BE505065201E5ED900CDFC60 /* Share.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Share.swift; sourceTree = "<group>"; };
 		BE9275052013961D00BD2761 /* UserDefaultsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsController.swift; sourceTree = "<group>"; };
+		BEA14A68202CEE5800AB7351 /* Cub+SavannaKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Cub+SavannaKit.swift"; sourceTree = "<group>"; };
 		BEA499241FD9C46C001B9B9D /* OpenTerm.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = OpenTerm.entitlements; sourceTree = "<group>"; };
 		BEA499251FD9C4D7001B9B9D /* DocumentManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentManager.swift; sourceTree = "<group>"; };
 		BEA4992B1FDC0918001B9B9D /* icon-320.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-320.png"; sourceTree = "<group>"; };
@@ -241,6 +243,7 @@
 			children = (
 				3CA32101201FF6B100974B5F /* Script.swift */,
 				3CA3210820211D5600974B5F /* ScriptExecutorCommand.swift */,
+				BEA14A68202CEE5800AB7351 /* Cub+SavannaKit.swift */,
 			);
 			path = Scripting;
 			sourceTree = "<group>";
@@ -567,14 +570,18 @@
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-OpenTerm/Pods-OpenTerm-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/Cub/Cub.framework",
 				"${BUILT_PRODUCTS_DIR}/InputAssistant/InputAssistant.framework",
 				"${BUILT_PRODUCTS_DIR}/PanelKit/PanelKit.framework",
+				"${BUILT_PRODUCTS_DIR}/SavannaKit/SavannaKit.framework",
 				"${BUILT_PRODUCTS_DIR}/TabView/TabView.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Cub.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/InputAssistant.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/PanelKit.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SavannaKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TabView.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -610,6 +617,7 @@
 				3CA32102201FF6B100974B5F /* Script.swift in Sources */,
 				BEA499301FDC3B93001B9B9D /* TerminalView.swift in Sources */,
 				3CE57680202A529200760E43 /* TerminalTabViewController.swift in Sources */,
+				BEA14A69202CEE5800AB7351 /* Cub+SavannaKit.swift in Sources */,
 				F4602B49200A63FC009D0547 /* UserDefaults+UIColor.swift in Sources */,
 				28CDA426202444CC0055206D /* BookmarkViewController.swift in Sources */,
 				3CA32105201FFC1300974B5F /* ScriptEditViewController.swift in Sources */,
