@@ -262,7 +262,7 @@ extension TerminalView {
 extension TerminalView: ParserDelegate {
 
 	func parserDidEndTransmission(_ parser: Parser) {
-		
+
 		DispatchQueue.main.async {
 			self.writePrompt()
 		}
