@@ -11,6 +11,8 @@ import Cub
 import ios_system
 import TabView
 
+var executorCommand: CubCommandExecutor?
+
 public func cub(argc: Int32, argv: UnsafeMutablePointer<UnsafeMutablePointer<Int8>?>?) -> Int32 {
 
 	let tabViewContainer = UIApplication.shared.keyWindow?.rootViewController as! TabViewContainerViewController<TerminalTabViewController>
@@ -20,7 +22,7 @@ public func cub(argc: Int32, argv: UnsafeMutablePointer<UnsafeMutablePointer<Int
 	}
 
 	activeVC.terminalView.isExecutingScript = true
-	let executor = activeVC.terminalView.executor
+	let terminalView = activeVC.terminalView
 
 	guard argc == 2 else {
 		fputs("Usage: cub script.cub\n", thread_stderr)
@@ -53,13 +55,23 @@ public func cub(argc: Int32, argv: UnsafeMutablePointer<UnsafeMutablePointer<Int
 
 	let runner = Runner(logDebug: true, logTime: false)
 
-	runner.registerExternalFunction(name: "print", argumentNames: ["input"], returns: false) { (arguments, callback) in
+	runner.registerExternalFunction(name: "print", argumentNames: ["input"], returns: true) { (arguments, callback) in
 
-		for (name, arg) in arguments {
-			fputs("\(arg)\n", thread_stdout)
+		for (_, arg) in arguments {
+			
+			switch arg {
+			case .string(let str):
+				terminalView.performOnMain {
+					terminalView.appendText(NSAttributedString(string: str))
+				}
+			default:
+				break
+			}
+			
 		}
 
-		callback(nil)
+		Thread.sleep(forTimeInterval: 0.02)
+		_ = callback(.number(1))
 		return
 	}
 
@@ -68,88 +80,43 @@ public func cub(argc: Int32, argv: UnsafeMutablePointer<UnsafeMutablePointer<Int
 		var arguments = arguments
 
 		guard let command = arguments.removeValue(forKey: "command") else {
-			callback(.number(1))
+			_ = callback(.number(1))
 			return
 		}
 
 		guard case let .string(commandStr) = command else {
-			callback(.number(1))
+			_ = callback(.number(1))
 			return
 		}
 
-		print("run command: \(commandStr)")
-
-		//        executor.dispatch(commandStr, callback: { (code) in
-		//
-		//            print("did run command: \(commandStr) -> \(code)")
-		//
-		//            DispatchQueue.main.async {
-		//
-		//                callback(.number(Double(code)))
-		//            }
-		//
-		//        })
-
-	}
-
-	runner.registerExternalFunction(name: "format", argumentNames: ["input", "arg"], returns: true) { (arguments, callback) in
-
-		var arguments = arguments
-
-		guard let input = arguments.removeValue(forKey: "input") else {
-			callback(.string(""))
-			return
-		}
-
-		guard case let .string(inputStr) = input else {
-			callback(.string(""))
-			return
-		}
-
-		var otherValues = arguments.values
-
-		var varArgs = [CVarArg]()
-
-		for value in otherValues {
-
-			switch value {
-			case .bool(let b):
-				break
-			case .number(let n):
-				varArgs.append(n)
-			case .string(let str):
-				varArgs.append(str)
-			case .struct:
-				break
+		executorCommand = CubCommandExecutor(commandStr: commandStr, terminalView: terminalView, callback: {
+			
+			DispatchQueue.main.async {
+				
+				_ = callback(.number(1))
 			}
 
-		}
-
-		let output = String(format: inputStr, arguments: varArgs)
-
-		callback(.string(output))
-		return
+		})
+	
 	}
-
-	print("run")
 
 	do {
 
 		runner.executionFinishedCallback = {
 
-			print("executionFinishedCallback")
-
 			DispatchQueue.main.async {
+				
+				terminalView.stderrParser.delegate = terminalView
+				terminalView.stdoutParser.delegate = terminalView
+				
+				terminalView.executor.delegate = terminalView
+				
+				activeVC.terminalView.parserDidEndTransmission(activeVC.terminalView.stdoutParser)
 
-				activeVC.terminalView.isExecutingScript = false
-				//                activeVC.terminalView.isWaitingForCommand = false
-
-				//                activeVC.terminalView.commandExecutor(executor, didFinishDispatchWithExitCode: 0)
-				//				activeVC.terminalView.commandE
 			}
 
 		}
-
+			
 		try runner.run(source)
 
 	} catch {
@@ -157,4 +124,60 @@ public func cub(argc: Int32, argv: UnsafeMutablePointer<UnsafeMutablePointer<Int
 	}
 
 	return 0
+}
+
+class CubCommandExecutor: CommandExecutorDelegate, ParserDelegate {
+	
+	let callback: (() -> Void)
+	
+	let terminalView: TerminalView
+	
+	init(commandStr: String, terminalView: TerminalView, callback: @escaping (() -> Void)) {
+		
+		self.callback = callback
+		self.terminalView = terminalView
+		
+		terminalView.stderrParser.delegate = self
+		terminalView.stdoutParser.delegate = self
+
+		terminalView.executor.delegate = self
+
+		terminalView.executor.dispatch(commandStr)
+	}
+	
+	func commandExecutor(_ commandExecutor: CommandExecutor, receivedStdout stdout: Data) {
+		terminalView.stdoutParser.parse(stdout)
+	}
+	
+	func commandExecutor(_ commandExecutor: CommandExecutor, receivedStderr stderr: Data) {
+		terminalView.stderrParser.parse(stderr)
+	}
+	
+	func commandExecutor(_ commandExecutor: CommandExecutor, didChangeWorkingDirectory to: URL) {
+		
+	}
+	
+	func parser(_ parser: Parser, didReceiveString string: NSAttributedString) {
+		
+		terminalView.performOnMain {
+			self.terminalView.appendText(string)
+		}
+		
+	}
+	
+	func parserDidEndTransmission(_ parser: Parser) {
+		
+		terminalView.performOnMain {
+
+			self.terminalView.stderrParser.delegate = nil
+			self.terminalView.stdoutParser.delegate = nil
+			
+			self.terminalView.executor.delegate = nil
+			
+			self.callback()
+			
+		}
+		
+	}
+	
 }
