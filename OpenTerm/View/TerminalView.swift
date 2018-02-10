@@ -36,8 +36,6 @@ class TerminalView: UIView {
 
 	weak var delegate: TerminalViewDelegate?
 
-	private var isWaitingForCommand = false
-
 	init() {
 		super.init(frame: .zero)
 
@@ -192,7 +190,73 @@ class TerminalView: UIView {
 			appendText(newValue)
 		}
 	}
+}
 
+// MARK: Key commands
+extension TerminalView {
+
+	override var keyCommands: [UIKeyCommand]? {
+		return [
+			// Clear
+			UIKeyCommand(input: "K", modifierFlags: .command, action: #selector(clearBufferCommand), discoverabilityTitle: "Clear Buffer"),
+
+			// Stop
+			UIKeyCommand(input: "C", modifierFlags: .control, action: #selector(stopCurrentCommand), discoverabilityTitle: "Stop Running Command"),
+
+			// Text selection, navigation
+			UIKeyCommand(input: "A", modifierFlags: .control, action: #selector(selectCommandHome), discoverabilityTitle: "Beginning of Line"),
+			UIKeyCommand(input: "E", modifierFlags: .control, action: #selector(selectCommandEnd), discoverabilityTitle: "End of Line"),
+
+			// Tab completion
+			UIKeyCommand(input: "\t", modifierFlags: [], action: #selector(completeCommand), discoverabilityTitle: "Complete")
+		]
+	}
+
+	@objc func clearBufferCommand() {
+		clearScreen()
+		writePrompt()
+	}
+
+	@objc private func stopCurrentCommand() {
+		// Send CTRL+C character to running command
+		guard executor.state == .running else { return }
+		let character = Parser.Code.endOfText.rawValue
+		textView.insertText(character)
+		executor.sendInput(character)
+	}
+
+	@objc func selectCommandHome() {
+		let commandStartDifference = textView.text.distance(from: currentCommandStartIndex, to: textView.text.endIndex)
+		if let commandStartPosition = textView.position(from: textView.endOfDocument, offset: -commandStartDifference) {
+			textView.selectedTextRange = textView.textRange(from: commandStartPosition, to: commandStartPosition)
+		}
+	}
+
+	@objc func selectCommandEnd() {
+		let endPosition = textView.endOfDocument
+		textView.selectedTextRange = textView.textRange(from: endPosition, to: endPosition)
+	}
+
+	@objc func completeCommand() {
+		guard
+			let firstCompletion = autoCompleteManager.completions.first?.name,
+			currentCommand != firstCompletion
+			else { return }
+
+		let completed: String
+		if let lastCommand = currentCommand.components(separatedBy: " ").last {
+			if lastCommand.isEmpty {
+				completed = currentCommand + firstCompletion
+			} else {
+				completed = currentCommand.replacingOccurrences(of: lastCommand, with: firstCompletion, options: .backwards)
+			}
+		} else {
+			completed = firstCompletion
+		}
+
+		currentCommand = completed
+		autoCompleteManager.reloadData()
+	}
 }
 
 extension TerminalView: ParserDelegate {
@@ -220,6 +284,12 @@ extension TerminalView: CommandExecutorDelegate {
 	func commandExecutor(_ commandExecutor: CommandExecutor, didChangeWorkingDirectory to: URL) {
 		DispatchQueue.main.async {
 			self.delegate?.didChangeCurrentWorkingDirectory(to)
+		}
+	}
+
+	func commandExecutor(_ commandExecutor: CommandExecutor, stateDidChange newState: CommandExecutor.State) {
+		DispatchQueue.main.async {
+			self.updateAutoComplete()
 		}
 	}
 }
@@ -254,30 +324,32 @@ extension TerminalView: UITextViewDelegate {
 
 	func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
 
-		guard !isWaitingForCommand else {
-			return false
-		}
+		switch executor.state {
+		case .running:
+			executor.sendInput(text)
+			return true
+		case .idle:
+			let i = textView.text.distance(from: textView.text.startIndex, to: currentCommandStartIndex)
 
-		let i = textView.text.distance(from: textView.text.startIndex, to: currentCommandStartIndex)
-
-		if range.location < i {
-			return false
-		}
-
-		if text == "\n" {
-
-			let input = textView.text[currentCommandStartIndex..<textView.text.endIndex]
-
-			if input.isEmpty {
-				writePrompt()
-			} else {
-				newLine()
-				delegate?.didEnterCommand(String(input))
+			if range.location < i {
+				return false
 			}
-			return false
-		}
 
-		return true
+			if text == "\n" {
+
+				let input = textView.text[currentCommandStartIndex..<textView.text.endIndex]
+
+				if input.isEmpty {
+					writePrompt()
+				} else {
+					newLine()
+					delegate?.didEnterCommand(String(input))
+				}
+				return false
+			}
+
+			return true
+		}
 	}
 
 	func textViewDidChange(_ textView: UITextView) {

@@ -56,34 +56,46 @@ extension TerminalView {
 
 	/// Updates auto complete when current command changes
 	func updateAutoComplete() {
-		autoCompleteManager.currentCommand = self.currentCommand
+		switch executor.state {
+		case .running:
+			autoCompleteManager.commandState = .running
+		case .idle:
+			autoCompleteManager.commandState = .typing(command: self.currentCommand)
+		}
 	}
 
 	func insertCompletion(_ completion: AutoCompleteManager.Completion) {
-		// Two options:
-		// - There is a space at the end => insert full word
-		// - Complete current word
+		switch autoCompleteManager.state {
+		case .executing:
+			guard let character = completion.data as? String else { return }
+			textView.insertText(character)
+			executor.sendInput(character)
+		default:
+			// Two options:
+			// - There is a space at the end => insert full word
+			// - Complete current word
 
-		let currentCommand = self.currentCommand
-		if currentCommand.hasSuffix(" ") || currentCommand.hasSuffix("/") {
-			// This will be a new argument, or append to the end of a path. Just insert the text.
-			textView.insertText(completion.name)
-		} else {
-			// We need to complete the current argument
-			var components = currentCommand.components(separatedBy: CharacterSet.whitespaces)
-			if let lastComponent = components.popLast() {
-				// If the argument we are completing is a path, we must only replace the last part of the path
-				if lastComponent.contains("/") {
-					components.append(((lastComponent as NSString).deletingLastPathComponent as NSString).appendingPathComponent(completion.name))
-				} else {
-					components.append(completion.name)
+			let currentCommand = self.currentCommand
+			if currentCommand.hasSuffix(" ") || currentCommand.hasSuffix("/") {
+				// This will be a new argument, or append to the end of a path. Just insert the text.
+				textView.insertText(completion.name)
+			} else {
+				// We need to complete the current argument
+				var components = currentCommand.components(separatedBy: CharacterSet.whitespaces)
+				if let lastComponent = components.popLast() {
+					// If the argument we are completing is a path, we must only replace the last part of the path
+					if lastComponent.contains("/") {
+						components.append(((lastComponent as NSString).deletingLastPathComponent as NSString).appendingPathComponent(completion.name))
+					} else {
+						components.append(completion.name)
+					}
 				}
+				self.currentCommand = components.joined(separator: " ")
 			}
-			self.currentCommand = components.joined(separator: " ")
-		}
 
-		// Insert suffix at end
-		textView.insertText(completion.appendingSuffix)
+			// Insert suffix at end
+			textView.insertText(completion.appendingSuffix)
+		}
 	}
 
 	/// Dismiss the keyboard when the down arrow is tapped
@@ -179,6 +191,12 @@ extension TerminalView: AutoCompleteManagerDataSource {
 		completions += flags.map { AutoCompleteManager.Completion($0) }
 
 		return completions
+	}
+
+	func completionsForExecution() -> [AutoCompleteManager.Completion] {
+		return [
+			.init("Stop", data: Parser.Code.endOfText.rawValue) // Send an ETX (end of text) signal to the currently executing command
+		]
 	}
 
 	func availableCompletions(in completions: [AutoCompleteManager.Completion], forArguments arguments: [String]) -> [AutoCompleteManager.Completion] {

@@ -20,7 +20,12 @@ class Parser {
 	/// List of constants that are needed for parsing.
 	enum Code: String {
 		case escape = "\u{001B}"
-		// The "End of transmission" control code. When received by stdout pipe, the didFinishDispatchWithExitCode delegate method is called.
+
+		// The "End of text" control code. This is the equivalent of pressing CTRL+C
+		case endOfText = "\u{0003}"
+
+		// The "End of transmission" control code. This is the equivalent of pressing CTRL+D
+		// When received by stdout pipe, the didFinishDispatchWithExitCode delegate method is called.
 		case endOfTransmission = "\u{0004}"
 
 		var character: Character { return Character(rawValue) }
@@ -166,6 +171,7 @@ class Parser {
 				return (nil, true)
 			case .escape:
 				self.state = .escape
+			default: break
 			}
 		case .escape:
 			if let escapeCode = Code.EscapeCode.init(rawValue: str) {
