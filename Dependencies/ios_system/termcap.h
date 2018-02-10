@@ -39,7 +39,7 @@
 #undef  NCURSES_VERSION
 #define NCURSES_VERSION "5.7"
 
-#include <ncurses_dll.h>
+#include "ncurses_dll.h"
 
 #ifdef __cplusplus
 extern "C"
