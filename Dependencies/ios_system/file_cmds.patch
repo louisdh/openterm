@@ -1,6 +1,6 @@
 diff -Naur file_cmds-272/chflags/chflags.c file_cmds/chflags/chflags.c
 --- file_cmds-272/chflags/chflags.c	2010-03-19 04:52:40.000000000 +0100
-+++ file_cmds/chflags/chflags.c	2018-01-23 22:30:00.000000000 +0100
++++ file_cmds/chflags/chflags.c	2018-01-23 22:11:29.000000000 +0100
 @@ -45,18 +45,20 @@
  #include <sys/types.h>
  #include <sys/stat.h>
@@ -148,7 +148,7 @@ diff -Naur file_cmds-272/chflags/chflags.c file_cmds/chflags/chflags.c
  }
 diff -Naur file_cmds-272/chmod/chmod.c file_cmds/chmod/chmod.c
 --- file_cmds-272/chmod/chmod.c	2013-10-05 00:39:00.000000000 +0200
-+++ file_cmds/chmod/chmod.c	2018-01-23 22:30:00.000000000 +0100
++++ file_cmds/chmod/chmod.c	2018-01-23 22:11:29.000000000 +0100
 @@ -49,7 +49,7 @@
  #include <sys/types.h>
  #include <sys/stat.h>
@@ -487,7 +487,7 @@ diff -Naur file_cmds-272/chmod/chmod.c file_cmds/chmod/chmod.c
  	exit(1);
 diff -Naur file_cmds-272/chmod/chmod_acl.c file_cmds/chmod/chmod_acl.c
 --- file_cmds-272/chmod/chmod_acl.c	2015-08-04 22:32:26.000000000 +0200
-+++ file_cmds/chmod/chmod_acl.c	2018-01-23 22:30:00.000000000 +0100
++++ file_cmds/chmod/chmod_acl.c	2018-01-23 22:11:29.000000000 +0100
 @@ -30,7 +30,7 @@
   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
   * SUCH DAMAGE.
@@ -996,7 +996,7 @@ diff -Naur file_cmds-272/chmod/chmod_acl.c file_cmds/chmod/chmod_acl.c
  	}
 diff -Naur file_cmds-272/chown/chown.c file_cmds/chown/chown.c
 --- file_cmds-272/chown/chown.c	2013-10-05 00:39:00.000000000 +0200
-+++ file_cmds/chown/chown.c	2018-01-23 22:30:00.000000000 +0100
++++ file_cmds/chown/chown.c	2018-01-23 22:11:29.000000000 +0100
 @@ -50,7 +50,7 @@
  #include <sys/param.h>
  #include <sys/stat.h>
@@ -1198,7 +1198,7 @@ diff -Naur file_cmds-272/chown/chown.c file_cmds/chown/chown.c
  }
 diff -Naur file_cmds-272/cksum/cksum.c file_cmds/cksum/cksum.c
 --- file_cmds-272/cksum/cksum.c	2013-10-05 00:39:00.000000000 +0200
-+++ file_cmds/cksum/cksum.c	2018-01-23 22:30:00.000000000 +0100
++++ file_cmds/cksum/cksum.c	2018-01-23 22:11:29.000000000 +0100
 @@ -52,7 +52,7 @@
  
  #include <sys/types.h>
@@ -1283,7 +1283,7 @@ diff -Naur file_cmds-272/cksum/cksum.c file_cmds/cksum/cksum.c
  }
 diff -Naur file_cmds-272/cksum/crc32.c file_cmds/cksum/crc32.c
 --- file_cmds-272/cksum/crc32.c	2012-03-14 00:22:38.000000000 +0100
-+++ file_cmds/cksum/crc32.c	2018-01-23 22:30:00.000000000 +0100
++++ file_cmds/cksum/crc32.c	2018-01-23 22:11:29.000000000 +0100
 @@ -98,7 +98,7 @@
  uint32_t crc32_total = 0;
  
@@ -1295,7 +1295,7 @@ diff -Naur file_cmds-272/cksum/crc32.c file_cmds/cksum/crc32.c
      ssize_t nr;
 diff -Naur file_cmds-272/cksum/extern.h file_cmds/cksum/extern.h
 --- file_cmds-272/cksum/extern.h	2006-12-09 07:36:49.000000000 +0100
-+++ file_cmds/cksum/extern.h	2018-01-23 22:30:00.000000000 +0100
++++ file_cmds/cksum/extern.h	2018-01-23 22:11:29.000000000 +0100
 @@ -43,5 +43,5 @@
  void	psum2(char *, uint32_t, off_t);
  int	csum1(int, uint32_t *, off_t *);
@@ -1305,7 +1305,7 @@ diff -Naur file_cmds-272/cksum/extern.h file_cmds/cksum/extern.h
  __END_DECLS
 diff -Naur file_cmds-272/cksum/print.c file_cmds/cksum/print.c
 --- file_cmds-272/cksum/print.c	2006-12-09 07:36:49.000000000 +0100
-+++ file_cmds/cksum/print.c	2018-01-23 22:30:00.000000000 +0100
++++ file_cmds/cksum/print.c	2018-01-23 22:11:29.000000000 +0100
 @@ -46,30 +46,31 @@
  #include <stdint.h>
  
@@ -1349,7 +1349,7 @@ diff -Naur file_cmds-272/cksum/print.c file_cmds/cksum/print.c
  }
 diff -Naur file_cmds-272/compress/compress.c file_cmds/compress/compress.c
 --- file_cmds-272/compress/compress.c	2013-10-05 00:39:00.000000000 +0200
-+++ file_cmds/compress/compress.c	2018-01-23 22:30:00.000000000 +0100
++++ file_cmds/compress/compress.c	2018-01-23 22:11:29.000000000 +0100
 @@ -56,28 +56,31 @@
  #include <unistd.h>
  
@@ -1503,7 +1503,7 @@ diff -Naur file_cmds-272/compress/compress.c file_cmds/compress/compress.c
  }
 diff -Naur file_cmds-272/cp/cp.c file_cmds/cp/cp.c
 --- file_cmds-272/cp/cp.c	2017-04-17 19:33:52.000000000 +0200
-+++ file_cmds/cp/cp.c	2018-01-23 22:30:00.000000000 +0100
++++ file_cmds/cp/cp.c	2018-01-23 22:11:29.000000000 +0100
 @@ -62,7 +62,7 @@
  #include <sys/types.h>
  #include <sys/stat.h>
@@ -1902,7 +1902,7 @@ diff -Naur file_cmds-272/cp/cp.c file_cmds/cp/cp.c
  
 diff -Naur file_cmds-272/cp/extern.h file_cmds/cp/extern.h
 --- file_cmds-272/cp/extern.h	2017-04-17 19:33:52.000000000 +0200
-+++ file_cmds/cp/extern.h	2018-01-23 22:30:00.000000000 +0100
++++ file_cmds/cp/extern.h	2018-01-23 22:11:29.000000000 +0100
 @@ -37,12 +37,12 @@
  } PATH_T;
  
@@ -1929,7 +1929,7 @@ diff -Naur file_cmds-272/cp/extern.h file_cmds/cp/extern.h
  __END_DECLS
 diff -Naur file_cmds-272/cp/utils.c file_cmds/cp/utils.c
 --- file_cmds-272/cp/utils.c	2017-04-17 19:33:52.000000000 +0200
-+++ file_cmds/cp/utils.c	2018-01-23 22:30:00.000000000 +0100
++++ file_cmds/cp/utils.c	2018-01-23 22:11:29.000000000 +0100
 @@ -43,7 +43,7 @@
  #include <sys/mman.h>
  #endif
@@ -2360,7 +2360,7 @@ diff -Naur file_cmds-272/cp/utils.c file_cmds/cp/utils.c
  "target_directory");
 diff -Naur file_cmds-272/df/df.c file_cmds/df/df.c
 --- file_cmds-272/df/df.c	2015-05-13 02:57:59.000000000 +0200
-+++ file_cmds/df/df.c	2018-02-01 17:42:13.000000000 +0100
++++ file_cmds/df/df.c	2018-01-29 15:39:30.000000000 +0100
 @@ -61,7 +61,7 @@
  #include <sys/stat.h>
  #include <sys/mount.h>
@@ -2674,7 +2674,7 @@ diff -Naur file_cmds-272/df/df.c file_cmds/df/df.c
  	}
 diff -Naur file_cmds-272/df/vfslist.c file_cmds/df/vfslist.c
 --- file_cmds-272/df/vfslist.c	2013-10-05 00:39:00.000000000 +0200
-+++ file_cmds/df/vfslist.c	2018-01-23 22:30:00.000000000 +0100
++++ file_cmds/df/vfslist.c	2018-01-23 22:11:29.000000000 +0100
 @@ -40,9 +40,12 @@
    "$FreeBSD: src/sbin/mount/vfslist.c,v 1.4 1999/08/28 00:13:27 peter Exp $";
  #endif /* not lint */
@@ -2701,7 +2701,7 @@ diff -Naur file_cmds-272/df/vfslist.c file_cmds/df/vfslist.c
  	nextcp = strdup(fslist);
 diff -Naur file_cmds-272/du/du.c file_cmds/du/du.c
 --- file_cmds-272/du/du.c	2013-10-05 00:39:00.000000000 +0200
-+++ file_cmds/du/du.c	2018-01-23 22:30:00.000000000 +0100
++++ file_cmds/du/du.c	2018-01-23 22:11:29.000000000 +0100
 @@ -55,7 +55,7 @@
  #include <sys/stat.h>
  #include <sys/attr.h>
@@ -2993,7 +2993,7 @@ diff -Naur file_cmds-272/du/du.c file_cmds/du/du.c
  
 diff -Naur file_cmds-272/gzip/gzip.c file_cmds/gzip/gzip.c
 --- file_cmds-272/gzip/gzip.c	2016-07-29 20:21:04.000000000 +0200
-+++ file_cmds/gzip/gzip.c	2018-01-23 22:30:00.000000000 +0100
++++ file_cmds/gzip/gzip.c	2018-01-23 22:11:29.000000000 +0100
 @@ -68,9 +68,14 @@
  #ifdef __APPLE__
  #include <sys/attr.h>
@@ -3416,7 +3416,7 @@ diff -Naur file_cmds-272/gzip/gzip.c file_cmds/gzip/gzip.c
  
 diff -Naur file_cmds-272/ln/ln.c file_cmds/ln/ln.c
 --- file_cmds-272/ln/ln.c	2013-10-31 01:07:31.000000000 +0100
-+++ file_cmds/ln/ln.c	2018-01-23 22:30:00.000000000 +0100
++++ file_cmds/ln/ln.c	2018-01-23 22:11:29.000000000 +0100
 @@ -44,7 +44,7 @@
  #include <sys/param.h>
  #include <sys/stat.h>
@@ -3619,7 +3619,7 @@ diff -Naur file_cmds-272/ln/ln.c file_cmds/ln/ln.c
  	    "       link source_file target_file");
 diff -Naur file_cmds-272/ls/extern.h file_cmds/ls/extern.h
 --- file_cmds-272/ls/extern.h	2010-05-13 01:09:37.000000000 +0200
-+++ file_cmds/ls/extern.h	2018-01-23 22:30:00.000000000 +0100
++++ file_cmds/ls/extern.h	2018-01-23 22:11:29.000000000 +0100
 @@ -51,7 +51,7 @@
  void	 printlong(DISPLAY *);
  void	 printscol(DISPLAY *);
@@ -3631,7 +3631,7 @@ diff -Naur file_cmds-272/ls/extern.h file_cmds/ls/extern.h
  int	 prn_octal(const char *);
 diff -Naur file_cmds-272/ls/ls.c file_cmds/ls/ls.c
 --- file_cmds-272/ls/ls.c	2014-07-04 00:38:26.000000000 +0200
-+++ file_cmds/ls/ls.c	2018-01-23 22:30:00.000000000 +0100
++++ file_cmds/ls/ls.c	2018-02-10 15:10:19.000000000 +0100
 @@ -54,7 +54,7 @@
  #include <sys/ioctl.h>
  
@@ -3641,7 +3641,17 @@ diff -Naur file_cmds-272/ls/ls.c file_cmds/ls/ls.c
  #include <errno.h>
  #include <fts.h>
  #include <grp.h>
-@@ -73,12 +73,13 @@
+@@ -65,20 +65,22 @@
+ #include <stdlib.h>
+ #include <string.h>
+ #include <unistd.h>
++#include <TargetConditionals.h>
+ #ifdef COLORLS
+-#include <termcap.h>
++#include "termcap.h"
+ #include <signal.h>
+ #endif
+ #ifdef __APPLE__
  #include <sys/acl.h>
  #include <sys/xattr.h>
  #include <sys/param.h>
@@ -3657,7 +3667,7 @@ diff -Naur file_cmds-272/ls/ls.c file_cmds/ls/ls.c
  
  /*
   * Upward approximation of the maximum number of characters needed to
-@@ -95,44 +96,45 @@
+@@ -95,44 +97,45 @@
  static void (*printfcn)(DISPLAY *);
  static int (*sortfcn)(const FTSENT *, const FTSENT *);
  
@@ -3728,7 +3738,7 @@ diff -Naur file_cmds-272/ls/ls.c file_cmds/ls/ls.c
  
  char *ansi_bgcol;		/* ANSI sequence to set background colour */
  char *ansi_fgcol;		/* ANSI sequence to set foreground colour */
-@@ -141,10 +143,55 @@
+@@ -141,10 +144,55 @@
  char *enter_bold;		/* ANSI sequence to set color to bold mode */
  #endif
  
@@ -3785,7 +3795,7 @@ diff -Naur file_cmds-272/ls/ls.c file_cmds/ls/ls.c
  {
  	static char dot[] = ".", *dotav[] = {dot, NULL};
  	struct winsize win;
-@@ -157,15 +204,19 @@
+@@ -157,15 +205,19 @@
  #endif
  
  	if (argc < 1)
@@ -3808,7 +3818,7 @@ diff -Naur file_cmds-272/ls/ls.c file_cmds/ls/ls.c
  		    win.ws_col > 0)
  			termwidth = win.ws_col;
  		f_nonprint = 1;
-@@ -366,7 +417,7 @@
+@@ -366,7 +418,7 @@
  			break;
  		default:
  		case '?':
@@ -3817,26 +3827,72 @@ diff -Naur file_cmds-272/ls/ls.c file_cmds/ls/ls.c
  		}
  	}
  	argc -= optind;
-@@ -374,7 +425,8 @@
+@@ -374,25 +426,37 @@
  
  	/* Enabling of colours is conditional on the environment. */
  	if (getenv("CLICOLOR") &&
 -	    (isatty(STDOUT_FILENO) || getenv("CLICOLOR_FORCE")))
 +//	    (isatty(fileno(thread_stdout)) || getenv("CLICOLOR_FORCE")))
-+        ((fileno(thread_stdout) == fileno(stdout)) || getenv("CLICOLOR_FORCE")))
++        ((fileno(thread_stdout) == fileno(stdout)) || getenv("CLICOLOR_FORCE"))) {
  #ifdef COLORLS
- 		if (tgetent(termcapbuf, getenv("TERM")) == 1) {
- 			ansi_fgcol = tgetstr("AF", &bp);
-@@ -392,7 +444,7 @@
- 				f_color = 1;
- 		}
+-		if (tgetent(termcapbuf, getenv("TERM")) == 1) {
+-			ansi_fgcol = tgetstr("AF", &bp);
+-			ansi_bgcol = tgetstr("AB", &bp);
+-			attrs_off = tgetstr("me", &bp);
+-			enter_bold = tgetstr("md", &bp);
+-
+-			/* To switch colours off use 'op' if
+-			 * available, otherwise use 'oc', or
+-			 * don't do colours at all. */
+-			ansi_coloff = tgetstr("op", &bp);
+-			if (!ansi_coloff)
+-				ansi_coloff = tgetstr("oc", &bp);
+-			if (ansi_fgcol && ansi_bgcol && ansi_coloff)
+-				f_color = 1;
+-		}
++#ifndef TARGET_OS_IPHONE
++        if (tgetent(termcapbuf, getenv("TERM")) == 1) {
++            ansi_fgcol = tgetstr("AF", &bp);
++            ansi_bgcol = tgetstr("AB", &bp);
++            attrs_off = tgetstr("me", &bp);
++            enter_bold = tgetstr("md", &bp);
++            
++            /* To switch colours off use 'op' if
++             * available, otherwise use 'oc', or
++             * don't do colours at all. */
++            ansi_coloff = tgetstr("op", &bp);
++            if (!ansi_coloff)
++                ansi_coloff = tgetstr("oc", &bp);
++            if (ansi_fgcol && ansi_bgcol && ansi_coloff)
++                f_color = 1;
++        }
++#else /* TARGET_OS_IPHONE */
++        ansi_fgcol = "\033[3" ; // tgetstr("AF", &bp);
++        ansi_bgcol = "\033[4" ; // tgetstr("AB", &bp);
++        attrs_off = "\033[0m"; // tgetstr("me", &bp);
++        enter_bold = "\033[1m"; // tgetstr("md", &bp);
++        ansi_coloff = "\033[39;49m"; // tgetstr("op", &bp);
++        if (ansi_fgcol && ansi_bgcol && ansi_coloff)
++            f_color = 1;
++#endif
++    }
  #else
 -		(void)fprintf(stderr, "Color support not compiled in.\n");
 +    (void)fprintf(thread_stderr, "Color support not compiled in.\n");
  #endif /*COLORLS*/
  
  #ifdef COLORLS
-@@ -488,10 +540,10 @@
+@@ -402,7 +466,9 @@
+ 		 * column number will be incremented incorrectly
+ 		 * for "stty oxtabs" mode.
+ 		 */
++#ifndef TARGET_OS_IPHONE
+ 		f_notabs = 1;
++#endif
+ 		(void)signal(SIGINT, colorquit);
+ 		(void)signal(SIGQUIT, colorquit);
+ 		parsecolors(getenv("LSCOLORS"));
+@@ -488,10 +554,10 @@
  		traverse(argc, argv, fts_options);
  	else
  		traverse(1, dotav, fts_options);
@@ -3849,7 +3905,7 @@ diff -Naur file_cmds-272/ls/ls.c file_cmds/ls/ls.c
  
  /*
   * Traverse() walks the logical directory structure specified by the argv list
-@@ -507,8 +559,11 @@
+@@ -507,8 +573,11 @@
  	int ch_options, error;
  
  	if ((ftsp =
@@ -3863,7 +3919,7 @@ diff -Naur file_cmds-272/ls/ls.c file_cmds/ls/ls.c
  
  	display(NULL, fts_children(ftsp, 0));
  	if (f_listdir) {
-@@ -525,14 +580,16 @@
+@@ -525,14 +594,16 @@
  	while ((p = fts_read(ftsp)) != NULL)
  		switch (p->fts_info) {
  		case FTS_DC:
@@ -3882,7 +3938,7 @@ diff -Naur file_cmds-272/ls/ls.c file_cmds/ls/ls.c
  			rval = 1;
  			break;
  		case FTS_D:
-@@ -548,9 +605,9 @@
+@@ -548,9 +619,9 @@
  			 * directory with its name.
  			 */
  			if (output)
@@ -3894,7 +3950,7 @@ diff -Naur file_cmds-272/ls/ls.c file_cmds/ls/ls.c
  				output = 1;
  			}
  			chp = fts_children(ftsp, ch_options);
-@@ -569,7 +626,8 @@
+@@ -569,7 +640,8 @@
  		case FTS_SLNONE:	/* Same as default unless Unix conformance */
  			if (COMPAT_MODE("bin/ls", "Unix2003")) {
  				if ((options & FTS_LOGICAL)!=0) {	/* -L was specified */
@@ -3904,7 +3960,7 @@ diff -Naur file_cmds-272/ls/ls.c file_cmds/ls/ls.c
  					rval = 1;
  				}
  			}
-@@ -581,8 +639,11 @@
+@@ -581,8 +653,11 @@
  	fts_close(ftsp);
  	errno = error;
  
@@ -3918,7 +3974,7 @@ diff -Naur file_cmds-272/ls/ls.c file_cmds/ls/ls.c
  }
  
  /*
-@@ -640,8 +701,11 @@
+@@ -640,8 +715,11 @@
  
  		/* Fill-in "::" as "0:0:0" for the sake of scanf. */
  		jinitmax = initmax2 = malloc(strlen(initmax) * 2 + 2);
@@ -3932,7 +3988,7 @@ diff -Naur file_cmds-272/ls/ls.c file_cmds/ls/ls.c
  		if (*initmax == ':')
  			strcpy(initmax2, "0:"), initmax2 += 2;
  		else
-@@ -713,8 +777,8 @@
+@@ -713,8 +791,8 @@
  	flags = NULL;
  	for (cur = list, entries = 0; cur; cur = cur->fts_link) {
  		if (cur->fts_info == FTS_ERR || cur->fts_info == FTS_NS) {
@@ -3943,7 +3999,7 @@ diff -Naur file_cmds-272/ls/ls.c file_cmds/ls/ls.c
  			cur->fts_number = NO_PRINT;
  			rval = 1;
  			continue;
-@@ -778,8 +842,11 @@
+@@ -778,8 +856,11 @@
  						free(flags);
  						flags = strdup("-");
  					}
@@ -3957,7 +4013,7 @@ diff -Naur file_cmds-272/ls/ls.c file_cmds/ls/ls.c
  					flen = strlen(flags);
  					if (flen > (size_t)maxflags)
  						maxflags = flen;
-@@ -790,7 +857,11 @@
+@@ -790,7 +871,11 @@
  				
  				if ((np = calloc(1, sizeof(NAMES) + lattrlen +
  				    ulen + glen + flen + 4)) == NULL)
@@ -3972,7 +4028,7 @@ diff -Naur file_cmds-272/ls/ls.c file_cmds/ls/ls.c
  				(void)strcpy(np->user, user);
 diff -Naur file_cmds-272/ls/ls.h file_cmds/ls/ls.h
 --- file_cmds-272/ls/ls.h	2014-06-09 22:03:59.000000000 +0200
-+++ file_cmds/ls/ls.h	2018-01-23 22:30:00.000000000 +0100
++++ file_cmds/ls/ls.h	2018-01-23 22:11:29.000000000 +0100
 @@ -39,32 +39,32 @@
  
  #define NO_PRINT	1
@@ -4031,7 +4087,7 @@ diff -Naur file_cmds-272/ls/ls.h file_cmds/ls/ls.h
  #include <sys/acl.h>
 diff -Naur file_cmds-272/ls/print.c file_cmds/ls/print.c
 --- file_cmds-272/ls/print.c	2016-09-28 00:43:20.000000000 +0200
-+++ file_cmds/ls/print.c	2018-02-01 17:42:17.000000000 +0100
++++ file_cmds/ls/print.c	2018-02-10 15:15:49.000000000 +0100
 @@ -56,12 +56,12 @@
  #include <uuid/uuid.h>
  #endif
@@ -4047,7 +4103,14 @@ diff -Naur file_cmds-272/ls/print.c file_cmds/ls/print.c
  #include <stdio.h>
  #include <stdlib.h>
  #include <string.h>
-@@ -75,13 +75,15 @@
+@@ -69,19 +69,22 @@
+ #include <unistd.h>
+ #ifdef COLORLS
+ #include <ctype.h>
+-#include <termcap.h>
++#include "termcap.h"
+ #include <signal.h>
+ #endif
  #include <stdint.h>		/* intmax_t */
  #include <assert.h>
  #ifdef __APPLE__ 
@@ -4060,12 +4123,13 @@ diff -Naur file_cmds-272/ls/print.c file_cmds/ls/print.c
  
  #include "ls.h"
  #include "extern.h"
++#include <TargetConditionals.h>
 +#include "ios_error.h"
 +
  
  static int	printaname(FTSENT *, u_long, u_long);
  static void	printlink(FTSENT *);
-@@ -131,7 +133,7 @@
+@@ -131,7 +134,7 @@
  	assert(dp);
  	if (COMPAT_MODE("bin/ls", "Unix2003") && (dp->list != NULL)) {
  		if (dp->list->fts_level != FTS_ROOTLEVEL && (f_longform || f_size))
@@ -4074,7 +4138,7 @@ diff -Naur file_cmds-272/ls/print.c file_cmds/ls/print.c
  	}
  
  	for (p = dp->list; p; p = p->fts_link) {
-@@ -209,7 +211,9 @@
+@@ -209,7 +212,9 @@
  	name = (char *) malloc(MAXNAMETAG);
  	
  	if (NULL == name) {
@@ -4085,7 +4149,7 @@ diff -Naur file_cmds-272/ls/print.c file_cmds/ls/print.c
  	}
  	
  	if (f_numericonly) {
-@@ -281,7 +285,7 @@
+@@ -281,7 +286,7 @@
  			type = "unknown";
  		}
  
@@ -4094,7 +4158,7 @@ diff -Naur file_cmds-272/ls/print.c file_cmds/ls/print.c
  		    index,
  		    name,
  		    acl_get_flag_np(flags, ACL_ENTRY_INHERITED) ? " inherited" : "",
-@@ -295,14 +299,14 @@
+@@ -295,14 +300,14 @@
  				continue;
  			if (!(acl_perms[i].flags & (isdir ? ACL_PERM_DIR : ACL_PERM_FILE)))
  				continue;
@@ -4111,7 +4175,7 @@ diff -Naur file_cmds-272/ls/print.c file_cmds/ls/print.c
  		}
  			
  		(void)putchar('\n');
-@@ -322,7 +326,7 @@
+@@ -322,7 +327,7 @@
  #endif
  
  	if (dp->list->fts_level != FTS_ROOTLEVEL && (f_longform || f_size))
@@ -4120,7 +4184,7 @@ diff -Naur file_cmds-272/ls/print.c file_cmds/ls/print.c
  
  	for (p = dp->list; p; p = p->fts_link) {
  		if (IS_NOPRINT(p))
-@@ -330,12 +334,12 @@
+@@ -330,12 +335,12 @@
  		sp = p->fts_statp;
  		if (f_inode) 
  #if _DARWIN_FEATURE_64_BIT_INODE
@@ -4136,7 +4200,7 @@ diff -Naur file_cmds-272/ls/print.c file_cmds/ls/print.c
  			    dp->s_block, (u_int64_t)howmany(sp->st_blocks, blocksize));
  		strmode(sp->st_mode, buf);
  		np = p->fts_pointer;
-@@ -345,54 +349,54 @@
+@@ -345,54 +350,54 @@
  #endif /* __APPLE__ */
  		if (f_group && f_owner) {	/* means print neither */
  #ifdef __APPLE__
@@ -4203,7 +4267,7 @@ diff -Naur file_cmds-272/ls/print.c file_cmds/ls/print.c
  			    8 - dp->s_size, "", dp->s_size, (u_int64_t)sp->st_size);
  		else
  			printsize(dp->s_size, sp->st_size);
-@@ -433,7 +437,7 @@
+@@ -433,7 +438,7 @@
  printstream(DISPLAY *dp)
  {
  	FTSENT *p;
@@ -4212,7 +4276,7 @@ diff -Naur file_cmds-272/ls/print.c file_cmds/ls/print.c
  	int chcnt;
  
  	for (p = dp->list, chcnt = 0; p; p = p->fts_link) {
-@@ -446,7 +450,7 @@
+@@ -446,7 +451,7 @@
  		}
  		chcnt += printaname(p, dp->s_inode, dp->s_block);
  		if (p->fts_link) {
@@ -4221,7 +4285,7 @@ diff -Naur file_cmds-272/ls/print.c file_cmds/ls/print.c
  			chcnt += 2;
  		}
  	}
-@@ -457,7 +461,7 @@
+@@ -457,7 +462,7 @@
  void
  printcol(DISPLAY *dp)
  {
@@ -4230,7 +4294,7 @@ diff -Naur file_cmds-272/ls/print.c file_cmds/ls/print.c
  	static FTSENT **array;
  	static int lastentries = -1;
  	FTSENT *p;
-@@ -485,7 +489,8 @@
+@@ -485,7 +490,8 @@
  	if ((lastentries == -1) || (dp->entries > lastentries)) {
  		lastentries = dp->entries;
  		if ((array = realloc(array, dp->entries * sizeof(FTSENT *))) == NULL) {
@@ -4240,7 +4304,7 @@ diff -Naur file_cmds-272/ls/print.c file_cmds/ls/print.c
  			printscol(dp);
  			return;
  		}
-@@ -515,7 +520,7 @@
+@@ -515,7 +521,7 @@
  
  	assert(dp->list);
  	if (dp->list->fts_level != FTS_ROOTLEVEL && (f_longform || f_size))
@@ -4249,7 +4313,7 @@ diff -Naur file_cmds-272/ls/print.c file_cmds/ls/print.c
  
  	base = 0;
  	for (row = 0; row < numrows; ++row) {
-@@ -561,12 +566,12 @@
+@@ -561,12 +567,12 @@
  	chcnt = 0;
  	if (f_inode)
  #if _DARWIN_FEATURE_64_BIT_INODE
@@ -4265,7 +4329,7 @@ diff -Naur file_cmds-272/ls/print.c file_cmds/ls/print.c
  		    (int)sizefield, (u_int64_t)howmany(sp->st_blocks, blocksize));
  #ifdef COLORLS
  	if (f_color)
-@@ -614,7 +619,7 @@
+@@ -614,7 +620,7 @@
  		/* mmm dd  yyyy || dd mmm  yyyy */
  		format = d_first ? "%e %b  %Y " : "%b %e  %Y ";
  	strftime(longstring, sizeof(longstring), format, localtime(&ftime));
@@ -4274,7 +4338,7 @@ diff -Naur file_cmds-272/ls/print.c file_cmds/ls/print.c
  }
  
  static int
-@@ -668,7 +673,8 @@
+@@ -668,25 +674,34 @@
  {
  	char tmp = c;
  
@@ -4284,7 +4348,34 @@ diff -Naur file_cmds-272/ls/print.c file_cmds/ls/print.c
  	return 0;
  }
  
-@@ -767,7 +773,7 @@
+ static void
+ printcolor(Colors c)
+ {
+-	char *ansiseq;
++	char ansiseq[10];
+ 
+ 	if (colors[c].bold)
+ 		tputs(enter_bold, 1, putch);
+ 
+ 	if (colors[c].num[0] != -1) {
++#ifndef TARGET_OS_IPHONE
+ 		ansiseq = tgoto(ansi_fgcol, 0, colors[c].num[0]);
++#else
++        sprintf(ansiseq, "%s%dm", ansi_fgcol,colors[c].num[0]);
++#endif
+ 		if (ansiseq)
+ 			tputs(ansiseq, 1, putch);
+ 	}
+ 	if (colors[c].num[1] != -1) {
++#ifndef TARGET_OS_IPHONE
+ 		ansiseq = tgoto(ansi_bgcol, 0, colors[c].num[1]);
++#else
++        sprintf(ansiseq, "%s%dm", ansi_bgcol,colors[c].num[1]);
++#endif
+ 		if (ansiseq)
+ 			tputs(ansiseq, 1, putch);
+ 	}
+@@ -767,7 +782,7 @@
  			if (c[j] >= '0' && c[j] <= '7') {
  				colors[i].num[j] = c[j] - '0';
  				if (!legacy_warn) {
@@ -4293,7 +4384,7 @@ diff -Naur file_cmds-272/ls/print.c file_cmds/ls/print.c
  					    "warn: LSCOLORS should use "
  					    "characters a-h instead of 0-9 ("
  					    "see the manual page)\n");
-@@ -781,7 +787,7 @@
+@@ -781,7 +796,7 @@
  			} else if (tolower((unsigned char)c[j] == 'x'))
  				colors[i].num[j] = -1;
  			else {
@@ -4302,7 +4393,7 @@ diff -Naur file_cmds-272/ls/print.c file_cmds/ls/print.c
  				    "error: invalid character '%c' in LSCOLORS"
  				    " env var\n", c[j]);
  				colors[i].num[j] = -1;
-@@ -796,7 +802,8 @@
+@@ -796,7 +811,8 @@
  	endcolor(sig);
  
  	(void)signal(sig, SIG_DFL);
@@ -4312,7 +4403,7 @@ diff -Naur file_cmds-272/ls/print.c file_cmds/ls/print.c
  }
  
  #endif /* COLORLS */
-@@ -814,11 +821,11 @@
+@@ -814,11 +830,11 @@
  		(void)snprintf(name, sizeof(name),
  		    "%s/%s", p->fts_parent->fts_accpath, p->fts_name);
  	if ((lnklen = readlink(name, path, sizeof(path) - 1)) == -1) {
@@ -4326,7 +4417,7 @@ diff -Naur file_cmds-272/ls/print.c file_cmds/ls/print.c
  	(void)printname(path);
  }
  
-@@ -831,7 +838,7 @@
+@@ -831,7 +847,7 @@
  
      humanize_number(buf, sizeof(buf), (int64_t)bytes, "",
  		    HN_AUTOSCALE, HN_B | HN_NOSPACE | HN_DECIMAL);
@@ -4338,7 +4429,7 @@ diff -Naur file_cmds-272/ls/print.c file_cmds/ls/print.c
  }
 diff -Naur file_cmds-272/ls/util.c file_cmds/ls/util.c
 --- file_cmds-272/ls/util.c	2008-03-12 21:31:12.000000000 +0100
-+++ file_cmds/ls/util.c	2018-01-23 22:30:00.000000000 +0100
++++ file_cmds/ls/util.c	2018-01-23 22:11:29.000000000 +0100
 @@ -42,7 +42,7 @@
  #include <sys/stat.h>
  
@@ -4379,7 +4470,7 @@ diff -Naur file_cmds-272/ls/util.c file_cmds/ls/util.c
  #else
 diff -Naur file_cmds-272/mkdir/mkdir.c file_cmds/mkdir/mkdir.c
 --- file_cmds-272/mkdir/mkdir.c	2013-10-05 00:39:00.000000000 +0200
-+++ file_cmds/mkdir/mkdir.c	2018-01-23 22:30:00.000000000 +0100
++++ file_cmds/mkdir/mkdir.c	2018-01-23 22:11:29.000000000 +0100
 @@ -49,7 +49,7 @@
  #include <sys/types.h>
  #include <sys/stat.h>
@@ -4479,7 +4570,7 @@ diff -Naur file_cmds-272/mkdir/mkdir.c file_cmds/mkdir/mkdir.c
  }
 diff -Naur file_cmds-272/mv/mv.c file_cmds/mv/mv.c
 --- file_cmds-272/mv/mv.c	2015-08-04 22:32:26.000000000 +0200
-+++ file_cmds/mv/mv.c	2018-01-23 22:30:00.000000000 +0100
++++ file_cmds/mv/mv.c	2018-01-23 22:11:29.000000000 +0100
 @@ -55,7 +55,7 @@
  #include <sys/stat.h>
  #include <sys/mount.h>
@@ -4860,7 +4951,7 @@ diff -Naur file_cmds-272/mv/mv.c file_cmds/mv/mv.c
  	exit(EX_USAGE);
 diff -Naur file_cmds-272/rm/rm.c file_cmds/rm/rm.c
 --- file_cmds-272/rm/rm.c	2016-09-16 18:43:23.000000000 +0200
-+++ file_cmds/rm/rm.c	2018-01-23 22:30:00.000000000 +0100
++++ file_cmds/rm/rm.c	2018-01-23 22:11:29.000000000 +0100
 @@ -51,7 +51,7 @@
  #include <sys/param.h>
  #include <sys/mount.h>
@@ -5149,7 +5240,7 @@ diff -Naur file_cmds-272/rm/rm.c file_cmds/rm/rm.c
  	exit(EX_USAGE);
 diff -Naur file_cmds-272/rmdir/rmdir.c file_cmds/rmdir/rmdir.c
 --- file_cmds-272/rmdir/rmdir.c	2013-10-05 00:39:00.000000000 +0200
-+++ file_cmds/rmdir/rmdir.c	2018-01-23 22:30:00.000000000 +0100
++++ file_cmds/rmdir/rmdir.c	2018-01-23 22:11:29.000000000 +0100
 @@ -46,23 +46,26 @@
  #include <sys/cdefs.h>
  __RCSID("$FreeBSD: src/bin/rmdir/rmdir.c,v 1.13 2002/06/30 05:15:03 obrien Exp $");
@@ -5211,7 +5302,7 @@ diff -Naur file_cmds-272/rmdir/rmdir.c file_cmds/rmdir/rmdir.c
  }
 diff -Naur file_cmds-272/stat/stat.c file_cmds/stat/stat.c
 --- file_cmds-272/stat/stat.c	2014-02-11 01:17:24.000000000 +0100
-+++ file_cmds/stat/stat.c	2018-01-23 22:30:00.000000000 +0100
++++ file_cmds/stat/stat.c	2018-01-23 22:11:29.000000000 +0100
 @@ -58,7 +58,7 @@
  #include <sys/stat.h>
  
@@ -5442,7 +5533,7 @@ diff -Naur file_cmds-272/stat/stat.c file_cmds/stat/stat.c
  	}
 diff -Naur file_cmds-272/touch/touch.c file_cmds/touch/touch.c
 --- file_cmds-272/touch/touch.c	2013-10-05 00:39:00.000000000 +0200
-+++ file_cmds/touch/touch.c	2018-01-23 22:30:00.000000000 +0100
++++ file_cmds/touch/touch.c	2018-01-30 13:58:44.000000000 +0100
 @@ -49,7 +49,7 @@
  #include <sys/stat.h>
  #include <sys/time.h>
