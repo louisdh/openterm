@@ -19,6 +19,7 @@ protocol AutoCompleteManagerDataSource: class {
 	func allCommandsForAutoCompletion() -> [String]
 	func completionsForProgram(_ command: String, _ currentArguments: [String]) -> [AutoCompleteManager.Completion]
 	func availableCompletions(in completions: [AutoCompleteManager.Completion], forArguments arguments: [String]) -> [AutoCompleteManager.Completion]
+	func completionsForExecution() -> [AutoCompleteManager.Completion]
 }
 
 /// Class that takes the current command and parses it into various states of auto completion,
@@ -51,6 +52,14 @@ class AutoCompleteManager {
 
 		/// The user has entered a command. A series of options are displayed.
 		case command(program: String, arguments: [String], completions: [Completion])
+
+		/// There is a command being executed
+		case executing(completions: [Completion])
+	}
+
+	enum CommandState {
+		case typing(command: String)
+		case running
 	}
 
 	/// The current state, based on the current command.
@@ -59,9 +68,20 @@ class AutoCompleteManager {
 			delegate?.autoCompleteManagerDidChangeState()
 		}
 	}
+	var commandState: CommandState {
+		didSet {
+			switch commandState {
+			case .typing(let command):
+				self.currentCommand = command
+			case .running:
+				self.state = .executing(completions: dataSource?.completionsForExecution() ?? [])
+				self.updateCompletions()
+			}
+		}
+	}
 
 	/// The current command text entered by the user.
-	var currentCommand: String = "" {
+	private var currentCommand: String = "" {
 		didSet {
 			guard let dataSource = self.dataSource else { return }
 
@@ -85,6 +105,9 @@ class AutoCompleteManager {
 					// No program anymore, go back to empty state
 					self.state = .empty(commands: dataSource.allCommandsForAutoCompletion())
 				}
+			case .executing:
+				// If we got a new command, then we left the executing state.
+				self.state = .empty(commands: dataSource.allCommandsForAutoCompletion())
 			}
 
 			// Update the completions list, since the text changed.
@@ -108,6 +131,7 @@ class AutoCompleteManager {
 	/// Create a new auto complete manager. Starts in an empty state.
 	init() {
 		self.state = .empty(commands: [])
+		self.commandState = .typing(command: "")
 	}
 
 	/// Reload state & completions from the data source.
@@ -119,6 +143,8 @@ class AutoCompleteManager {
 				self.state = .empty(commands: dataSource.allCommandsForAutoCompletion())
 			case .command(let program, let arguments, _):
 				self.state = .command(program: program, arguments: arguments, completions: dataSource.completionsForProgram(program, arguments))
+			case .executing:
+				self.state = .executing(completions: dataSource.completionsForExecution())
 			}
 		} else {
 			self.state = .empty(commands: [])
@@ -134,6 +160,8 @@ class AutoCompleteManager {
 			self.completions = completions.filter { $0 != currentCommand && $0.hasPrefix(currentCommand) }.map { Completion($0) }
 		case .command(_, let currentArguments, let completions):
 			self.completions = dataSource?.availableCompletions(in: completions, forArguments: currentArguments) ?? []
+		case .executing(let completions):
+			self.completions = completions
 		}
 	}
 }

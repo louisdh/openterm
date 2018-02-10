@@ -101,6 +101,10 @@ extension ScriptEditViewController: AutoCompleteManagerDataSource {
 		return []
 	}
 
+	func completionsForExecution() -> [AutoCompleteManager.Completion] {
+		return []
+	}
+
 	func availableCompletions(in completions: [AutoCompleteManager.Completion], forArguments arguments: [String]) -> [AutoCompleteManager.Completion] {
 		return completions
 	}

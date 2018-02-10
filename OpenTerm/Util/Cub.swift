@@ -21,7 +21,6 @@ public func cub(argc: Int32, argv: UnsafeMutablePointer<UnsafeMutablePointer<Int
 		return 0
 	}
 
-	activeVC.terminalView.isExecutingScript = true
 	let terminalView = activeVC.terminalView
 
 	guard argc == 2 else {
@@ -154,6 +153,10 @@ class CubCommandExecutor: CommandExecutorDelegate, ParserDelegate {
 	}
 	
 	func commandExecutor(_ commandExecutor: CommandExecutor, didChangeWorkingDirectory to: URL) {
+		
+	}
+	
+	func commandExecutor(_ commandExecutor: CommandExecutor, stateDidChange newState: CommandExecutor.State) {
 		
 	}
 	
