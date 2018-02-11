@@ -175,7 +175,7 @@ enum ANSIFontState: Int {
 
 struct ANSITextState {
 	var foregroundColor: UIColor = UserDefaultsController.shared.terminalTextColor
-	var backgroundColor: UIColor = UserDefaultsController.shared.terminalBackgroundColor
+	var backgroundColor: UIColor = .clear
 	var isUnderlined: Bool = false
 	var isStrikethrough: Bool = false
 	var font: UIFont = ANSITextState.font(fromTraits: [])

@@ -28,8 +28,6 @@ class TerminalView: UIView {
 
 	let keyboardObserver = KeyboardObserver()
 
-	var stdoutParser = Parser()
-	var stderrParser = Parser()
 	var currentCommandStartIndex: String.Index! {
 		didSet { self.updateAutoComplete() }
 	}
@@ -58,10 +56,8 @@ class TerminalView: UIView {
 	}
 
 	private func setup() {
-
-		stdoutParser.delegate = self
-		stderrParser.delegate = self
 		executor.delegate = self
+		textView.buffer.delegate = self
 
 		textView.translatesAutoresizingMaskIntoConstraints = false
 		self.addSubview(textView)
@@ -158,8 +154,7 @@ class TerminalView: UIView {
 	func clearScreen() {
 		currentCommandStartIndex = nil
 		textView.text = ""
-		stdoutParser.reset()
-		stderrParser.reset()
+		textView.buffer.reset()
 	}
 
 	@discardableResult
@@ -195,26 +190,23 @@ class TerminalView: UIView {
 
 }
 
-extension TerminalView: ParserDelegate {
+extension TerminalView: TerminalBufferDelegate {
 
-	func parserDidEndTransmission(_ parser: Parser) {
+	func terminalBufferDidReceiveETX() {
 		DispatchQueue.main.async {
 			self.writePrompt()
 		}
 	}
 
-	func parser(_ parser: Parser, didReceiveString string: NSAttributedString) {
-		self.writeOutput(string)
-	}
 }
 
 extension TerminalView: CommandExecutorDelegate {
 
 	func commandExecutor(_ commandExecutor: CommandExecutor, receivedStdout stdout: Data) {
-		stdoutParser.parse(stdout)
+		self.textView.buffer.add(stdout: stdout)
 	}
 	func commandExecutor(_ commandExecutor: CommandExecutor, receivedStderr stderr: Data) {
-		stderrParser.parse(stderr)
+		self.textView.buffer.add(stderr: stderr)
 	}
 
 	func commandExecutor(_ commandExecutor: CommandExecutor, didChangeWorkingDirectory to: URL) {
@@ -272,6 +264,7 @@ extension TerminalView: UITextViewDelegate {
 				writePrompt()
 			} else {
 				newLine()
+				self.textView.buffer.moveCursorToEnd()
 				delegate?.didEnterCommand(String(input))
 			}
 			return false
