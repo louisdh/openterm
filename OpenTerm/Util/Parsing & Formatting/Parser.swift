@@ -174,6 +174,8 @@ class Parser {
 	/// This method is called for each UTF-8 character that is received.
 	/// It should perform state changes based on that character, then
 	/// return an attributed string that renders the character
+	//
+	// swiftlint:disable cyclomatic_complexity
 	private func handle(_ character: Character) -> Bool {
 		// Create a string with the given character
 		let str = String.init(character)
