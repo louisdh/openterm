@@ -18,6 +18,9 @@ class TerminalTextView: UITextView {
 
 		super.init(frame: .zero, textContainer: buffer.textContainer)
 
+		// Show characters such as ^C
+		layoutManager.showsControlCharacters = true
+
 		autocorrectionType = .no
 		smartDashesType = .no
 		smartQuotesType = .no
