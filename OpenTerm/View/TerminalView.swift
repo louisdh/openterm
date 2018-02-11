@@ -104,9 +104,8 @@ class TerminalView: UIView {
 		let text = NSMutableAttributedString.init(attributedString: text)
 		OutputSanitizer.sanitize(text.mutableString)
 
-		let new = NSMutableAttributedString(attributedString: textView.attributedText ?? NSAttributedString())
-		new.append(text)
-		textView.attributedText = new
+		textView.textStorage.append(text)
+		textView.selectedTextRange = textView.textRange(from: textView.endOfDocument, to: textView.endOfDocument)
 
 		let rect = textView.caretRect(for: textView.endOfDocument)
 		textView.scrollRectToVisible(rect, animated: true)
@@ -319,7 +318,6 @@ extension TerminalView: UITextViewDelegate {
 		switch executor.state {
 		case .running:
 			executor.sendInput(text)
-			return true
 		case .idle:
 			let i = textView.text.distance(from: textView.text.startIndex, to: currentCommandStartIndex)
 
@@ -338,9 +336,11 @@ extension TerminalView: UITextViewDelegate {
 					self.textView.buffer.moveCursorToEnd()
 					delegate?.didEnterCommand(String(input))
 				}
+				// Don't enter the \n character
+				return false
 			}
-			return true
 		}
+		return true
 	}
 
 	func textViewDidChange(_ textView: UITextView) {

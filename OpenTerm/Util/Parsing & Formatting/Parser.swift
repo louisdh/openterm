@@ -42,6 +42,10 @@ class Parser {
 	/// List of constants that are needed for parsing.
 	enum Code: String {
 		case escape = "\u{1B}"
+
+		// The "End of text" control code. It is entered by CTRL+C.
+		case endOfText = "\u{03}"
+
 		// The "End of transmission" control code. Is used to indicate end-of-file on the terminal.
 		case endOfTransmission = "\u{04}"
 
@@ -184,7 +188,7 @@ class Parser {
 				return false
 			}
 			switch code {
-			case .endOfTransmission:
+			case .endOfText, .endOfTransmission:
 				// Ended transmission, return immediately.
 				return true
 			case .escape:
