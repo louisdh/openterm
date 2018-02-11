@@ -129,7 +129,7 @@
 		3CA32104201FFC1300974B5F /* ScriptEditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScriptEditViewController.swift; sourceTree = "<group>"; };
 		3CA3210820211D5600974B5F /* ScriptExecutorCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScriptExecutorCommand.swift; sourceTree = "<group>"; };
 		3CA3210A20212D4200974B5F /* CommandExecutionContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommandExecutionContext.swift; sourceTree = "<group>"; };
-		3CD59E62202EFE17002298B4 /* TerminalCursor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TerminalCursor.swift; path = /Volumes/Development/OpenSource/Forks/terminal/OpenTerm/Util/Terminal/TerminalCursor.swift; sourceTree = "<absolute>"; };
+		3CD59E62202EFE17002298B4 /* TerminalCursor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TerminalCursor.swift; sourceTree = "<group>"; };
 		3CD59E66202FDEBA002298B4 /* TerminalCursorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TerminalCursorTests.swift; sourceTree = "<group>"; };
 		3CD59E6820301329002298B4 /* TerminalBufferTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TerminalBufferTests.swift; sourceTree = "<group>"; };
 		3CD59E6A20301588002298B4 /* Dispatch+Custom.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Dispatch+Custom.swift"; sourceTree = "<group>"; };
