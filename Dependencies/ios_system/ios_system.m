@@ -122,7 +122,7 @@ void initializeEnvironment() {
     setenv("APPDIR", [[NSBundle mainBundle] resourcePath].UTF8String, 1);
     setenv("TERM", "xterm", 1); // 1 = override existing value
     setenv("TMPDIR", NSTemporaryDirectory().UTF8String, 0); // tmp directory
-    setenv("CLICOLOR", "", 0);
+    setenv("CLICOLOR", "1", 1);
     setenv("LSCOLORS", "ExFxBxDxCxegedabagacad", 0); // colors for ls on black background
     
     // We can't write in $HOME so we need to set the position of config files:
