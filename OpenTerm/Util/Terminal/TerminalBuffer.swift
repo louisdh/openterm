@@ -105,38 +105,42 @@ class TerminalBuffer {
 }
 
 extension TerminalBuffer: ParserDelegate {
+	// The methods below are performOnMain because:
+	// Parser delegates are called on the Parser's thread
+	// TerminalBufferTests call these methods from the main thread, and expect them to happen synchronously.
+
 	func parser(_ parser: Parser, didReceiveString string: NSAttributedString) {
-		DispatchQueue.main.async {
+		DispatchQueue.performOnMain {
 			self.insert(string)
 		}
 	}
 	func parserDidReceiveCarriageReturn(_ parser: Parser) {
-		DispatchQueue.main.async {
+		DispatchQueue.performOnMain {
 			self.cursor.move(.beginningOfLine, in: self.storage)
 		}
 	}
 	func parserDidReceiveNewLine(_ parser: Parser) {
-		DispatchQueue.main.async {
+		DispatchQueue.performOnMain {
 			self.storage.append(NSAttributedString.init(string: "\n"))
-			self.cursor.move(.down, in: self.storage)
 			self.cursor.move(.beginningOfLine, in: self.storage)
+			self.cursor.move(.down, in: self.storage)
 		}
 	}
 	func parserDidReceiveBackspace(_ parser: Parser) {
-		DispatchQueue.main.async {
+		DispatchQueue.performOnMain {
 			// TODO: Is this correct? Should we also modify storage at all?
 			self.cursor.move(.left, in: self.storage)
 		}
 	}
 	func parser(_ parser: Parser, didMoveCursorInDirection direction: TerminalCursor.Direction, count: Int) {
-		DispatchQueue.main.async {
+		DispatchQueue.performOnMain {
 			for _ in 0..<count {
 				self.cursor.move(direction, in: self.storage)
 			}
 		}
 	}
 	func parser(_ parser: Parser, didMoveCursorTo position: Int, onAxis axis: TerminalCursor.Axis) {
-		DispatchQueue.main.async {
+		DispatchQueue.performOnMain {
 			self.cursor.set(axis, to: position, in: self.storage)
 		}
 	}

@@ -89,15 +89,6 @@ class TerminalView: UIView {
 
 	}
 
-	/// Performs the given block on the main thread, without dispatching if already there.
-	private func performOnMain(_ block: @escaping () -> Void) {
-		if Thread.isMainThread {
-			block()
-		} else {
-			DispatchQueue.main.async(execute: block)
-		}
-	}
-
 	private func appendText(_ text: NSAttributedString) {
 		dispatchPrecondition(condition: .onQueue(.main))
 
@@ -127,13 +118,13 @@ class TerminalView: UIView {
 
 	// Appends the given string to the output, and updates the command start index.
 	func writeOutput(_ string: String) {
-		performOnMain {
+		DispatchQueue.performOnMain {
 			self.appendText(string)
 			self.currentCommandStartIndex = self.textView.text.endIndex
 		}
 	}
 	func writeOutput(_ string: NSAttributedString) {
-		performOnMain {
+		DispatchQueue.performOnMain {
 			self.appendText(string)
 			self.currentCommandStartIndex = self.textView.text.endIndex
 		}

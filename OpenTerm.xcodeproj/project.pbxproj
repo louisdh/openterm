@@ -34,6 +34,8 @@
 		3CA3210B20212D4200974B5F /* CommandExecutionContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CA3210A20212D4200974B5F /* CommandExecutionContext.swift */; };
 		3CD59E63202EFE18002298B4 /* TerminalCursor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CD59E62202EFE17002298B4 /* TerminalCursor.swift */; };
 		3CD59E67202FDEBA002298B4 /* TerminalCursorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CD59E66202FDEBA002298B4 /* TerminalCursorTests.swift */; };
+		3CD59E6920301329002298B4 /* TerminalBufferTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CD59E6820301329002298B4 /* TerminalBufferTests.swift */; };
+		3CD59E6B20301588002298B4 /* Dispatch+Custom.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CD59E6A20301588002298B4 /* Dispatch+Custom.swift */; };
 		3CE5764320225E1B00760E43 /* HistoryManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CE5764220225E1B00760E43 /* HistoryManager.swift */; };
 		3CE5764820226A1500760E43 /* ANSITextState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CE5764720226A1500760E43 /* ANSITextState.swift */; };
 		3CE57680202A529200760E43 /* TerminalTabViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C905FC42025CAEC0084BA63 /* TerminalTabViewController.swift */; };
@@ -129,6 +131,8 @@
 		3CA3210A20212D4200974B5F /* CommandExecutionContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommandExecutionContext.swift; sourceTree = "<group>"; };
 		3CD59E62202EFE17002298B4 /* TerminalCursor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TerminalCursor.swift; path = /Volumes/Development/OpenSource/Forks/terminal/OpenTerm/Util/Terminal/TerminalCursor.swift; sourceTree = "<absolute>"; };
 		3CD59E66202FDEBA002298B4 /* TerminalCursorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TerminalCursorTests.swift; sourceTree = "<group>"; };
+		3CD59E6820301329002298B4 /* TerminalBufferTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TerminalBufferTests.swift; sourceTree = "<group>"; };
+		3CD59E6A20301588002298B4 /* Dispatch+Custom.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Dispatch+Custom.swift"; sourceTree = "<group>"; };
 		3CE5764220225E1B00760E43 /* HistoryManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryManager.swift; sourceTree = "<group>"; };
 		3CE5764720226A1500760E43 /* ANSITextState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ANSITextState.swift; sourceTree = "<group>"; };
 		3CE5769D202A7EC500760E43 /* Parser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Parser.swift; sourceTree = "<group>"; };
@@ -408,6 +412,7 @@
 				BEA499251FD9C4D7001B9B9D /* DocumentManager.swift */,
 				BE9275052013961D00BD2761 /* UserDefaultsController.swift */,
 				3C905FC920265BC60084BA63 /* StoreReviewPrompter.swift */,
+				3CD59E6A20301588002298B4 /* Dispatch+Custom.swift */,
 			);
 			path = Util;
 			sourceTree = "<group>";
@@ -418,6 +423,7 @@
 				BEC75BFC202B716600216462 /* OpenTermTests.swift */,
 				BEC75BFE202B716600216462 /* Info.plist */,
 				3CD59E66202FDEBA002298B4 /* TerminalCursorTests.swift */,
+				3CD59E6820301329002298B4 /* TerminalBufferTests.swift */,
 			);
 			path = OpenTermTests;
 			sourceTree = "<group>";
@@ -641,6 +647,7 @@
 				3CE576AA202E61DE00760E43 /* TerminalBuffer.swift in Sources */,
 				3C2E4374201EF67C00E4254A /* TerminalView+AutoComplete.swift in Sources */,
 				BEECFF391FFEC187009608B3 /* SettingsViewController.swift in Sources */,
+				3CD59E6B20301588002298B4 /* Dispatch+Custom.swift in Sources */,
 				F456629E200B9BC500C574AA /* ColorDisplayView.swift in Sources */,
 				BE165408201909040067EC92 /* xCallBackUrl.swift in Sources */,
 				3CD59E63202EFE18002298B4 /* TerminalCursor.swift in Sources */,
@@ -669,6 +676,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3CD59E6920301329002298B4 /* TerminalBufferTests.swift in Sources */,
 				BEC75BFD202B716600216462 /* OpenTermTests.swift in Sources */,
 				3CD59E67202FDEBA002298B4 /* TerminalCursorTests.swift in Sources */,
 			);
