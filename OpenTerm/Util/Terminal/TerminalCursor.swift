@@ -47,15 +47,15 @@ struct TerminalCursor {
 		case .down:
 			let nextNewLine = self.indexAfterNextNewline(from: offset, in: string)
 
-			// Calculate our new offset. If it goes past the end, this will be nil
+			// Calculate our new offset. If it goes past the end, this will be nil, and we do nothing
 			if let newOffset = string.index(nextNewLine, offsetBy: x, limitedBy: string.endIndex) {
-				self.offset = string.distance(from: string.startIndex, to: newOffset)
-			} else {
-				self.offset = string.count
-				// Since we couldn't go a full line down, x will change
-				self.x = string.distance(from: nextNewLine, to: string.endIndex)
+				let distance = string.distance(from: string.startIndex, to: newOffset)
+				if distance != self.offset {
+					// Only move if offset changed.
+					self.offset = distance
+					self.y += 1
+				}
 			}
-			self.y += 1
 		case .left:
 			let previousNewLine = self.indexAfterPreviousNewline(from: offset, in: string)
 			// Only move left until we hit a newline

@@ -33,6 +33,7 @@
 		3CA3210920211D5600974B5F /* ScriptExecutorCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CA3210820211D5600974B5F /* ScriptExecutorCommand.swift */; };
 		3CA3210B20212D4200974B5F /* CommandExecutionContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CA3210A20212D4200974B5F /* CommandExecutionContext.swift */; };
 		3CD59E63202EFE18002298B4 /* TerminalCursor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CD59E62202EFE17002298B4 /* TerminalCursor.swift */; };
+		3CD59E67202FDEBA002298B4 /* TerminalCursorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CD59E66202FDEBA002298B4 /* TerminalCursorTests.swift */; };
 		3CE5764320225E1B00760E43 /* HistoryManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CE5764220225E1B00760E43 /* HistoryManager.swift */; };
 		3CE5764820226A1500760E43 /* ANSITextState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CE5764720226A1500760E43 /* ANSITextState.swift */; };
 		3CE57680202A529200760E43 /* TerminalTabViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C905FC42025CAEC0084BA63 /* TerminalTabViewController.swift */; };
@@ -127,6 +128,7 @@
 		3CA3210820211D5600974B5F /* ScriptExecutorCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScriptExecutorCommand.swift; sourceTree = "<group>"; };
 		3CA3210A20212D4200974B5F /* CommandExecutionContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommandExecutionContext.swift; sourceTree = "<group>"; };
 		3CD59E62202EFE17002298B4 /* TerminalCursor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TerminalCursor.swift; path = /Volumes/Development/OpenSource/Forks/terminal/OpenTerm/Util/Terminal/TerminalCursor.swift; sourceTree = "<absolute>"; };
+		3CD59E66202FDEBA002298B4 /* TerminalCursorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TerminalCursorTests.swift; sourceTree = "<group>"; };
 		3CE5764220225E1B00760E43 /* HistoryManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryManager.swift; sourceTree = "<group>"; };
 		3CE5764720226A1500760E43 /* ANSITextState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ANSITextState.swift; sourceTree = "<group>"; };
 		3CE5769D202A7EC500760E43 /* Parser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Parser.swift; sourceTree = "<group>"; };
@@ -415,6 +417,7 @@
 			children = (
 				BEC75BFC202B716600216462 /* OpenTermTests.swift */,
 				BEC75BFE202B716600216462 /* Info.plist */,
+				3CD59E66202FDEBA002298B4 /* TerminalCursorTests.swift */,
 			);
 			path = OpenTermTests;
 			sourceTree = "<group>";
@@ -667,6 +670,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				BEC75BFD202B716600216462 /* OpenTermTests.swift in Sources */,
+				3CD59E67202FDEBA002298B4 /* TerminalCursorTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
