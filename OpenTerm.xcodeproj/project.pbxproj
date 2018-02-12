@@ -36,6 +36,7 @@
 		3CD59E67202FDEBA002298B4 /* TerminalCursorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CD59E66202FDEBA002298B4 /* TerminalCursorTests.swift */; };
 		3CD59E6920301329002298B4 /* TerminalBufferTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CD59E6820301329002298B4 /* TerminalBufferTests.swift */; };
 		3CD59E6B20301588002298B4 /* Dispatch+Custom.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CD59E6A20301588002298B4 /* Dispatch+Custom.swift */; };
+		3CD59E6D20311978002298B4 /* ParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CD59E6C20311978002298B4 /* ParserTests.swift */; };
 		3CE5764320225E1B00760E43 /* HistoryManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CE5764220225E1B00760E43 /* HistoryManager.swift */; };
 		3CE5764820226A1500760E43 /* ANSITextState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CE5764720226A1500760E43 /* ANSITextState.swift */; };
 		3CE57680202A529200760E43 /* TerminalTabViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C905FC42025CAEC0084BA63 /* TerminalTabViewController.swift */; };
@@ -133,6 +134,7 @@
 		3CD59E66202FDEBA002298B4 /* TerminalCursorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TerminalCursorTests.swift; sourceTree = "<group>"; };
 		3CD59E6820301329002298B4 /* TerminalBufferTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TerminalBufferTests.swift; sourceTree = "<group>"; };
 		3CD59E6A20301588002298B4 /* Dispatch+Custom.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Dispatch+Custom.swift"; sourceTree = "<group>"; };
+		3CD59E6C20311978002298B4 /* ParserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParserTests.swift; sourceTree = "<group>"; };
 		3CE5764220225E1B00760E43 /* HistoryManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryManager.swift; sourceTree = "<group>"; };
 		3CE5764720226A1500760E43 /* ANSITextState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ANSITextState.swift; sourceTree = "<group>"; };
 		3CE5769D202A7EC500760E43 /* Parser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Parser.swift; sourceTree = "<group>"; };
@@ -424,6 +426,7 @@
 				BEC75BFE202B716600216462 /* Info.plist */,
 				3CD59E66202FDEBA002298B4 /* TerminalCursorTests.swift */,
 				3CD59E6820301329002298B4 /* TerminalBufferTests.swift */,
+				3CD59E6C20311978002298B4 /* ParserTests.swift */,
 			);
 			path = OpenTermTests;
 			sourceTree = "<group>";
@@ -676,6 +679,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3CD59E6D20311978002298B4 /* ParserTests.swift in Sources */,
 				3CD59E6920301329002298B4 /* TerminalBufferTests.swift in Sources */,
 				BEC75BFD202B716600216462 /* OpenTermTests.swift in Sources */,
 				3CD59E67202FDEBA002298B4 /* TerminalCursorTests.swift in Sources */,

@@ -56,7 +56,7 @@ class TerminalBufferTests: XCTestCase {
 
 		receiveString(string)
 
-		XCTAssert(bufferContents == string, "Buffer should equal the received string")
+		XCTAssertEqual(bufferContents, string, "Buffer should equal the received string")
 	}
 
 	func testStringsWithNewLine() {
@@ -67,7 +67,7 @@ class TerminalBufferTests: XCTestCase {
 		newLine()
 		receiveString(line2)
 
-		XCTAssert(bufferContents == line1 + "\n" + line2, "Buffer should equal the text sent in order")
+		XCTAssertEqual(bufferContents, line1 + "\n" + line2, "Buffer should equal the text sent in order")
 	}
 
 	func testStringsWithCarriageReturn() {
@@ -79,7 +79,7 @@ class TerminalBufferTests: XCTestCase {
 		carriageReturn()
 		receiveString(line2)
 
-		XCTAssert(bufferContents == line2 + line1pt2, "Buffer should equal the second line + leftover first line")
+		XCTAssertEqual(bufferContents, line2 + line1pt2, "Buffer should equal the second line + leftover first line")
 	}
 
 }

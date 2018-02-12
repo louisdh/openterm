@@ -29,10 +29,10 @@ private let colors: [(r: Int, g: Int, b: Int)] = [
 	(0x67, 0x67, 0xFF), /* Blue    */
 	(0xFF, 0x67, 0xFF), /* Magenta */
 	(0x67, 0xFF, 0xFF), /* Cyan    */
-	(0xFF, 0xFF, 0xFF), /* White   */
+	(0xFF, 0xFF, 0xFF)  /* White   */
 ]
 
-func indexedColor(atIndex index: Int) -> UIColor {
+private func indexedColor(atIndex index: Int) -> UIColor {
 	guard index >= 0 && index <= 255 else { fatalError("Index out of bounds.") }
 	let r, g, b: Int
 	if index < 16 {
@@ -54,7 +54,7 @@ func indexedColor(atIndex index: Int) -> UIColor {
 	return UIColor(red: CGFloat(r) / 255, green: CGFloat(g) / 255, blue: CGFloat(b) / 255, alpha: 1)
 }
 
-func customColor(codes: [Int]) -> (color: UIColor, readCount: Int) {
+private func customColor(codes: [Int]) -> (color: UIColor, readCount: Int) {
 	// Two supported cases:
 	// - 5;n => 8-bit 0-255 color
 	// - 2;r;g;b => RGB color
@@ -82,7 +82,7 @@ func customColor(codes: [Int]) -> (color: UIColor, readCount: Int) {
 	}
 }
 
-enum ANSIForegroundColor: Int {
+private enum ANSIForegroundColor: Int {
 	case `default` = 39
 	case black = 30
 	case red = 31
@@ -119,7 +119,7 @@ enum ANSIForegroundColor: Int {
 	}
 }
 
-enum ANSIBackgroundColor: Int {
+private enum ANSIBackgroundColor: Int {
 	case `default` = 49
 	case black = 40
 	case red = 41
@@ -156,7 +156,7 @@ enum ANSIBackgroundColor: Int {
 	}
 }
 
-enum ANSIFontState: Int {
+private enum ANSIFontState: Int {
 	case bold = 1
 	case noBold = 21
 
@@ -222,18 +222,26 @@ struct ANSITextState {
 			let code = codes[index]
 			var readCount = 1
 
-			// Reset code = reset all state
-			if code == 0 { reset() }
-
+			if code == 0 {
+				// Reset code = reset all state
+				reset()
+			} else if let foregroundColor = ANSIForegroundColor.init(rawValue: code) {
 				// Foreground color
-			else if let foregroundColor = ANSIForegroundColor.init(rawValue: code) { self.foregroundColor = foregroundColor.color }
-			else if code == ANSIForegroundColor.custom { let result = customColor(codes: Array(codes.suffix(from: index + 1))); readCount += result.readCount; foregroundColor = result.color }
-
+				self.foregroundColor = foregroundColor.color
+			} else if code == ANSIForegroundColor.custom {
+				// Custom foreground color
+				let result = customColor(codes: Array(codes.suffix(from: index + 1)))
+				readCount += result.readCount
+				foregroundColor = result.color
+			} else if let backgroundColor = ANSIBackgroundColor.init(rawValue: code) {
 				// Background color
-			else if let backgroundColor = ANSIBackgroundColor.init(rawValue: code) { self.backgroundColor = backgroundColor.color }
-			else if code == ANSIBackgroundColor.custom { let result = customColor(codes: Array(codes.suffix(from: index + 1))); readCount += result.readCount; backgroundColor = result.color }
-
-			else if let fontState = ANSIFontState.init(rawValue: code) {
+				self.backgroundColor = backgroundColor.color
+			} else if code == ANSIBackgroundColor.custom {
+				// Custom background color
+				let result = customColor(codes: Array(codes.suffix(from: index + 1)))
+				readCount += result.readCount
+				backgroundColor = result.color
+			} else if let fontState = ANSIFontState.init(rawValue: code) {
 				switch fontState {
 				case .bold: fontTraits.insert(.traitBold)
 				case .noBold: fontTraits.remove(.traitBold)
