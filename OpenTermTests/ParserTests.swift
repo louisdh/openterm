@@ -73,26 +73,32 @@ class ParserTests: XCTestCase {
 		parser.parse(Parser.Code.endOfTransmission.rawValue.data(using: .utf8)!)
 	}
 
-	func testBasicText() {
-		let str = "hello world"
-
-		send(str)
-		end()
-
-		// Each character should be received in a message
+	private var receivedString: String {
 		var receivedStr = ""
 		for method in parserDelegate.receivedMethods {
 			switch method {
 			case .string(let str):
 				receivedStr += str.string
+			case .newLine:
+				receivedStr += "\n"
+			case .carriageReturn:
+				receivedStr += "\r"
 			case .endTransmission:
 				break
 			default:
 				XCTFail("Unexpected method called on parser delegate")
 			}
 		}
+		return receivedStr
+	}
 
-		XCTAssertEqual(str, receivedStr, "Received string should equal sent string")
+	func testBasicText() {
+		let str = "hello world"
+
+		send(str)
+		end()
+
+		XCTAssertEqual(str, receivedString, "Received string should equal sent string")
 	}
 
 	func testTextWithNewLine() {
@@ -101,20 +107,15 @@ class ParserTests: XCTestCase {
 		send(str)
 		end()
 
-		var receivedStr = ""
-		for method in parserDelegate.receivedMethods {
-			switch method {
-			case .string(let str):
-				receivedStr += str.string
-			case .newLine:
-				receivedStr += "\n"
-			case .endTransmission:
-				break
-			default:
-				XCTFail("Unexpected method called on parser delegate")
-			}
-		}
+		XCTAssertEqual(str, receivedString, "Received string should equal sent string")
+	}
 
-		XCTAssertEqual(str, receivedStr, "Received string should equal sent string")
+	func testSanitizedOutput() {
+		let str = DocumentManager.shared.activeDocumentsFolderURL.path
+
+		send(str)
+		end()
+
+		XCTAssertEqual(receivedString, "~")
 	}
 }
