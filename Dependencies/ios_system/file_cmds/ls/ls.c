@@ -65,8 +65,9 @@ __RCSID("$FreeBSD: src/bin/ls/ls.c,v 1.66 2002/09/21 01:28:36 wollman Exp $");
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <TargetConditionals.h>
 #ifdef COLORLS
-#include <termcap.h>
+#include "termcap.h"
 #include <signal.h>
 #endif
 #ifdef __APPLE__
@@ -426,23 +427,34 @@ ls_main(int argc, char *argv[])
 	/* Enabling of colours is conditional on the environment. */
 	if (getenv("CLICOLOR") &&
 //	    (isatty(fileno(thread_stdout)) || getenv("CLICOLOR_FORCE")))
-        ((fileno(thread_stdout) == fileno(stdout)) || getenv("CLICOLOR_FORCE")))
+        ((fileno(thread_stdout) == fileno(stdout)) || getenv("CLICOLOR_FORCE"))) {
 #ifdef COLORLS
-		if (tgetent(termcapbuf, getenv("TERM")) == 1) {
-			ansi_fgcol = tgetstr("AF", &bp);
-			ansi_bgcol = tgetstr("AB", &bp);
-			attrs_off = tgetstr("me", &bp);
-			enter_bold = tgetstr("md", &bp);
-
-			/* To switch colours off use 'op' if
-			 * available, otherwise use 'oc', or
-			 * don't do colours at all. */
-			ansi_coloff = tgetstr("op", &bp);
-			if (!ansi_coloff)
-				ansi_coloff = tgetstr("oc", &bp);
-			if (ansi_fgcol && ansi_bgcol && ansi_coloff)
-				f_color = 1;
-		}
+#ifndef TARGET_OS_IPHONE
+        if (tgetent(termcapbuf, getenv("TERM")) == 1) {
+            ansi_fgcol = tgetstr("AF", &bp);
+            ansi_bgcol = tgetstr("AB", &bp);
+            attrs_off = tgetstr("me", &bp);
+            enter_bold = tgetstr("md", &bp);
+            
+            /* To switch colours off use 'op' if
+             * available, otherwise use 'oc', or
+             * don't do colours at all. */
+            ansi_coloff = tgetstr("op", &bp);
+            if (!ansi_coloff)
+                ansi_coloff = tgetstr("oc", &bp);
+            if (ansi_fgcol && ansi_bgcol && ansi_coloff)
+                f_color = 1;
+        }
+#else /* TARGET_OS_IPHONE */
+        ansi_fgcol = "\033[3" ; // tgetstr("AF", &bp);
+        ansi_bgcol = "\033[4" ; // tgetstr("AB", &bp);
+        attrs_off = "\033[0m"; // tgetstr("me", &bp);
+        enter_bold = "\033[1m"; // tgetstr("md", &bp);
+        ansi_coloff = "\033[39;49m"; // tgetstr("op", &bp);
+        if (ansi_fgcol && ansi_bgcol && ansi_coloff)
+            f_color = 1;
+#endif
+    }
 #else
     (void)fprintf(thread_stderr, "Color support not compiled in.\n");
 #endif /*COLORLS*/
@@ -454,7 +466,9 @@ ls_main(int argc, char *argv[])
 		 * column number will be incremented incorrectly
 		 * for "stty oxtabs" mode.
 		 */
+#ifndef TARGET_OS_IPHONE
 		f_notabs = 1;
+#endif
 		(void)signal(SIGINT, colorquit);
 		(void)signal(SIGQUIT, colorquit);
 		parsecolors(getenv("LSCOLORS"));

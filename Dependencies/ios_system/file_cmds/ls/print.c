@@ -69,7 +69,7 @@ __RCSID("$FreeBSD: src/bin/ls/print.c,v 1.57 2002/08/29 14:29:09 keramida Exp $"
 #include <unistd.h>
 #ifdef COLORLS
 #include <ctype.h>
-#include <termcap.h>
+#include "termcap.h"
 #include <signal.h>
 #endif
 #include <stdint.h>		/* intmax_t */
@@ -82,6 +82,7 @@ __RCSID("$FreeBSD: src/bin/ls/print.c,v 1.57 2002/08/29 14:29:09 keramida Exp $"
 
 #include "ls.h"
 #include "extern.h"
+#include <TargetConditionals.h>
 #include "ios_error.h"
 
 
@@ -681,18 +682,26 @@ writech(int c)
 static void
 printcolor(Colors c)
 {
-	char *ansiseq;
+	char ansiseq[10];
 
 	if (colors[c].bold)
 		tputs(enter_bold, 1, putch);
 
 	if (colors[c].num[0] != -1) {
+#ifndef TARGET_OS_IPHONE
 		ansiseq = tgoto(ansi_fgcol, 0, colors[c].num[0]);
+#else
+        sprintf(ansiseq, "%s%dm", ansi_fgcol,colors[c].num[0]);
+#endif
 		if (ansiseq)
 			tputs(ansiseq, 1, putch);
 	}
 	if (colors[c].num[1] != -1) {
+#ifndef TARGET_OS_IPHONE
 		ansiseq = tgoto(ansi_bgcol, 0, colors[c].num[1]);
+#else
+        sprintf(ansiseq, "%s%dm", ansi_bgcol,colors[c].num[1]);
+#endif
 		if (ansiseq)
 			tputs(ansiseq, 1, putch);
 	}

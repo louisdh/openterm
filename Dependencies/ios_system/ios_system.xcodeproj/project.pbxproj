@@ -21,6 +21,7 @@
 		226378951FDB3EE400AE8827 /* ls.h in Headers */ = {isa = PBXBuildFile; fileRef = 226378351FDB3EE200AE8827 /* ls.h */; };
 		226378A81FDB3EE400AE8827 /* chmod_acl.h in Headers */ = {isa = PBXBuildFile; fileRef = 2263784D1FDB3EE300AE8827 /* chmod_acl.h */; };
 		226378B21FDB3EE400AE8827 /* zopen.h in Headers */ = {isa = PBXBuildFile; fileRef = 226378591FDB3EE300AE8827 /* zopen.h */; };
+		227F87DB202F40C2001751C6 /* libncurses.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 227F87DA202F40C2001751C6 /* libncurses.tbd */; };
 		228541B4201F988E00B93589 /* humanize_number.c in Sources */ = {isa = PBXBuildFile; fileRef = 226378411FDB3EE300AE8827 /* humanize_number.c */; };
 		228541B5201F989400B93589 /* chflags.c in Sources */ = {isa = PBXBuildFile; fileRef = 226378141FDB3EE200AE8827 /* chflags.c */; };
 		228541B6201F989900B93589 /* chmod.c in Sources */ = {isa = PBXBuildFile; fileRef = 2263784B1FDB3EE300AE8827 /* chmod.c */; };
@@ -40,10 +41,10 @@
 		228541C4201F98BA00B93589 /* futimens.c in Sources */ = {isa = PBXBuildFile; fileRef = 2263785B1FDB3EE300AE8827 /* futimens.c */; };
 		228541C5201F98BA00B93589 /* gzip.c in Sources */ = {isa = PBXBuildFile; fileRef = 2263785F1FDB3EE300AE8827 /* gzip.c */; };
 		228541C6201F98BF00B93589 /* ln.c in Sources */ = {isa = PBXBuildFile; fileRef = 2263783F1FDB3EE300AE8827 /* ln.c */; };
-		228541C7201F98C400B93589 /* cmp.c in Sources */ = {isa = PBXBuildFile; fileRef = 226378311FDB3EE200AE8827 /* cmp.c */; };
-		228541C8201F98C700B93589 /* ls.c in Sources */ = {isa = PBXBuildFile; fileRef = 226378341FDB3EE200AE8827 /* ls.c */; };
-		228541C9201F98CA00B93589 /* print.c in Sources */ = {isa = PBXBuildFile; fileRef = 226378361FDB3EE200AE8827 /* print.c */; settings = {COMPILER_FLAGS = "-I libinfo/membership.subproj/"; }; };
-		228541CA201F98CA00B93589 /* util.c in Sources */ = {isa = PBXBuildFile; fileRef = 226378371FDB3EE200AE8827 /* util.c */; };
+		228541C7201F98C400B93589 /* cmp.c in Sources */ = {isa = PBXBuildFile; fileRef = 226378311FDB3EE200AE8827 /* cmp.c */; settings = {COMPILER_FLAGS = "-DCOLORLS"; }; };
+		228541C8201F98C700B93589 /* ls.c in Sources */ = {isa = PBXBuildFile; fileRef = 226378341FDB3EE200AE8827 /* ls.c */; settings = {COMPILER_FLAGS = "-DCOLORLS"; }; };
+		228541C9201F98CA00B93589 /* print.c in Sources */ = {isa = PBXBuildFile; fileRef = 226378361FDB3EE200AE8827 /* print.c */; settings = {COMPILER_FLAGS = "-I libinfo/membership.subproj/ -DCOLORLS"; }; };
+		228541CA201F98CA00B93589 /* util.c in Sources */ = {isa = PBXBuildFile; fileRef = 226378371FDB3EE200AE8827 /* util.c */; settings = {COMPILER_FLAGS = "-DCOLORLS"; }; };
 		228541CB201F98CE00B93589 /* mkdir.c in Sources */ = {isa = PBXBuildFile; fileRef = 226378241FDB3EE200AE8827 /* mkdir.c */; };
 		228541CC201F98D200B93589 /* mv.c in Sources */ = {isa = PBXBuildFile; fileRef = 226378101FDB3EE100AE8827 /* mv.c */; };
 		228541CD201F98D600B93589 /* rm.c in Sources */ = {isa = PBXBuildFile; fileRef = 226378201FDB3EE200AE8827 /* rm.c */; };
@@ -779,6 +780,7 @@
 		2263785B1FDB3EE300AE8827 /* futimens.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = futimens.c; sourceTree = "<group>"; };
 		2263785F1FDB3EE300AE8827 /* gzip.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = gzip.c; sourceTree = "<group>"; };
 		226378721FDB3EE300AE8827 /* chown.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = chown.c; sourceTree = "<group>"; };
+		227F87DA202F40C2001751C6 /* libncurses.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libncurses.tbd; path = usr/lib/libncurses.tbd; sourceTree = SDKROOT; };
 		228541AB201F986300B93589 /* libfiles.dylib */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libfiles.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		228541E3201FC05000B93589 /* libtar.dylib */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libtar.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		22908AA3201FC7B4002AFBA7 /* libcurl.dylib */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libcurl.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -833,6 +835,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				227F87DB202F40C2001751C6 /* libncurses.tbd in Frameworks */,
 				22F567CA2020B83A009850FD /* ios_system.framework in Frameworks */,
 				228541D6201F998F00B93589 /* libbz2.tbd in Frameworks */,
 			);
@@ -947,6 +950,7 @@
 		223497AB1FD6CF7A007ED1A9 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				227F87DA202F40C2001751C6 /* libncurses.tbd */,
 				22C728D72023810600889A27 /* libz.tbd */,
 				22C728D220237EE700889A27 /* libcrypto.a */,
 				22C728D020237EDC00889A27 /* libssl.a */,
