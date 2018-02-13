@@ -16,7 +16,7 @@ public func shareFile(argc: Int32, argv: UnsafeMutablePointer<UnsafeMutablePoint
 
 	// share text from stdin when present
 	var bytes = [Int8]()
-	while true {
+	while stdin != thread_stdin {
 		var byte: Int8 = 0
 		let count = read(fileno(thread_stdin), &byte, 1)
 		guard count == 1 else { break }
