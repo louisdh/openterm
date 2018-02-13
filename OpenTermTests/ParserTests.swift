@@ -68,10 +68,16 @@ class ParserTests: XCTestCase {
 		parser.parse(text.data(using: .utf8)!)
 	}
 
+	private func end() {
+		// Must send end of transmission when we are done, since that will flush the pending text out of the parser
+		parser.parse(Parser.Code.endOfTransmission.rawValue.data(using: .utf8)!)
+	}
+
 	func testBasicText() {
 		let str = "hello world"
 
 		send(str)
+		end()
 
 		// Each character should be received in a message
 		var receivedStr = ""
@@ -79,6 +85,8 @@ class ParserTests: XCTestCase {
 			switch method {
 			case .string(let str):
 				receivedStr += str.string
+			case .endTransmission:
+				break
 			default:
 				XCTFail("Unexpected method called on parser delegate")
 			}
@@ -91,6 +99,7 @@ class ParserTests: XCTestCase {
 		let str = "hello\nworld"
 
 		send(str)
+		end()
 
 		var receivedStr = ""
 		for method in parserDelegate.receivedMethods {
@@ -99,6 +108,8 @@ class ParserTests: XCTestCase {
 				receivedStr += str.string
 			case .newLine:
 				receivedStr += "\n"
+			case .endTransmission:
+				break
 			default:
 				XCTFail("Unexpected method called on parser delegate")
 			}

@@ -111,10 +111,7 @@ class Parser {
 	private var pendingString = NSMutableAttributedString()
 
 	func parse(_ data: Data) {
-		let didEnd = self.decodeUTF8(fromData: data, buffer: &dataBuffer)
-		if didEnd {
-			self.delegate?.parserDidEndTransmission(self)
-		}
+		self.decodeUTF8(fromData: data, buffer: &dataBuffer)
 	}
 
 	func reset() {
@@ -132,11 +129,11 @@ class Parser {
 		pendingString = NSMutableAttributedString()
 	}
 
-	private func decodeUTF8(fromData data: Data, buffer: inout Data) -> Bool {
+	private func decodeUTF8(fromData data: Data, buffer: inout Data) {
 		let data = buffer + data
 
 		// Parse what we can from the previous leftover and the new data.
-		let (leftover, didEnd) = self.decodeUTF8(fromData: data)
+		let leftover = self.decodeUTF8(fromData: data)
 
 		// There are two reasons we could get leftover data:
 		// - An invalid character was found in the middle of the string
@@ -151,8 +148,6 @@ class Parser {
 		} else {
 			buffer = Data()
 		}
-
-		return didEnd
 	}
 
 	/// Decode UTF-8 string from the given data.
@@ -160,7 +155,7 @@ class Parser {
 	/// which is necessary since data can come in arbitrarily-sized chunks of bytes, with characters split
 	/// across multiple chunks.
 	/// The first time decoding fails, all of the rest of the data will be returned.
-	private func decodeUTF8(fromData data: Data) -> (remaining: Data, didEnd: Bool) {
+	private func decodeUTF8(fromData data: Data) -> Data {
 		let byteArray = [UInt8](data)
 
 		var utf8Decoder = UTF8()
@@ -177,8 +172,7 @@ class Parser {
 			}
 		}
 
-		let remaining = Data.init(bytes: byteArray.suffix(from: decodedByteCount))
-		return (remaining, didEnd)
+		return Data.init(bytes: byteArray.suffix(from: decodedByteCount))
 	}
 
 	/// This method is called for each UTF-8 character that is received.
@@ -205,6 +199,7 @@ class Parser {
 			switch code {
 			case .endOfText, .endOfTransmission:
 				// Ended transmission, return immediately.
+				self.delegate?.parserDidEndTransmission(self)
 				return true
 			case .escape:
 				self.state = .escape
