@@ -108,12 +108,6 @@ class TerminalViewController: UIViewController {
 
 		NotificationCenter.default.addObserver(self, selector: #selector(applicationDidEnterBackground), name: .UIApplicationDidEnterBackground, object: nil)
 
-		initializeEnvironment()
-		replaceCommand("open-url", mangleFunctionName("openUrl"), true)
-		replaceCommand("share", mangleFunctionName("shareFile"), true)
-		replaceCommand("pbcopy", mangleFunctionName("pbcopy"), true)
-		replaceCommand("pbpaste", mangleFunctionName("pbpaste"), true)
-
 		// Call reloadData for the added commands.
 		terminalView.autoCompleteManager.reloadData()
 
@@ -165,13 +159,6 @@ class TerminalViewController: UIViewController {
 		super.traitCollectionDidChange(previousTraitCollection)
 
 		self.overflowState = self.traitCollection.horizontalSizeClass == .compact ? .compact : .expanded
-	}
-
-	private func mangleFunctionName(_ functionName: String) -> String {
-		// This works because all functions have the same signature:
-		// (argc: Int32, argv: UnsafeMutablePointer<UnsafeMutablePointer<Int8>?>?) -> Int32
-		// The first part is the class name: _T0 + length + name. To change if not "OpenTerm"
-		return "_T08OpenTerm" + String(functionName.count) + functionName + "s5Int32VAD4argc_SpySpys4Int8VGSgGSg4argvtF"
 	}
 
 	func setSSLCertIfNeeded() {
