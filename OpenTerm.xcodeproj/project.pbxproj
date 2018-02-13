@@ -185,6 +185,7 @@
 				1C81BE5620225C3800D07301 /* Clipboard.swift */,
 				BE165407201909030067EC92 /* xCallBackUrl.swift */,
 				BE505065201E5ED900CDFC60 /* Share.swift */,
+				BEA14A66202CE5D300AB7351 /* Cub.swift */,
 			);
 			path = Commands;
 			sourceTree = "<group>";
@@ -359,7 +360,6 @@
 		BEA8E28F2001346D00002475 /* Util */ = {
 			isa = PBXGroup;
 			children = (
-				BEA14A66202CE5D300AB7351 /* Cub.swift */,
 				3CE576442022607000760E43 /* Parsing & Formatting */,
 				3C406E1B2020987B005F97C4 /* AutoComplete */,
 				3C406E1820207CDA005F97C4 /* Execution */,
