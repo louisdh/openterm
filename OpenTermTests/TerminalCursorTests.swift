@@ -33,17 +33,13 @@ class TerminalCursorTests: XCTestCase {
 		let str = "hello"
 		storage.append(NSAttributedString.init(string: str))
 
-		for _ in 0..<str.count {
-			cursor.move(.right, in: storage)
-		}
+		cursor.move(.right(distance: str.utf16.count), in: storage)
 
 		XCTAssertEqual(cursor.x, str.count, "Cursor moved the number of times requested")
 		XCTAssertEqual(cursor.y, 0, "Cursor didn't move vertically")
 		XCTAssertEqual(cursor.offset, str.count, "Offset == end of string")
 
-		for _ in 0..<str.count {
-			cursor.move(.left, in: storage)
-		}
+		cursor.move(.left(distance: str.utf16.count), in: storage)
 
 		XCTAssertEqual(cursor.x, 0, "Cursor moved back to beginning")
 		XCTAssertEqual(cursor.y, 0, "Cursor didn't move vertically")
@@ -54,7 +50,7 @@ class TerminalCursorTests: XCTestCase {
 
 		let x = cursor.x
 		let offset = cursor.offset
-		cursor.move(.left, in: storage)
+		cursor.move(.left(distance: 1), in: storage)
 
 		XCTAssertEqual(cursor.x, x, "Cursor didn't move")
 		XCTAssertEqual(cursor.offset, offset, "Cursor didn't move")
@@ -67,15 +63,13 @@ class TerminalCursorTests: XCTestCase {
 
 		storage.append(NSAttributedString.init(string: line1))
 		// Move to end of line1
-		for _ in 0..<line1.count {
-			cursor.move(.right, in: storage)
-		}
+		cursor.move(.right(distance: line1.utf16.count), in: storage)
 
 		XCTAssertEqual(cursor.x, line1.count, "Cursor should be at the end of the first line")
 		XCTAssertEqual(cursor.y, 0, "Cursor should be on the first line")
 
 		storage.append(NSAttributedString.init(string: "\n" + line2))
-		cursor.move(.down, in: storage)
+		cursor.move(.down(distance: 1), in: storage)
 		XCTAssertEqual(cursor.x, line1.count, "Cursor didn't move horizontally")
 		XCTAssertEqual(cursor.y, 1, "Cursor moved down a row")
 	}
@@ -92,13 +86,13 @@ class TerminalCursorTests: XCTestCase {
 	}
 
 	func testMoveOutOfEmptyString() {
-		cursor.move(.right, in: storage)
+		cursor.move(.right(distance: 1), in: storage)
 		XCTAssert(cursor.x == 0 && cursor.y == 0, "Cursor should not move if out of bounds")
-		cursor.move(.left, in: storage)
+		cursor.move(.left(distance: 1), in: storage)
 		XCTAssert(cursor.x == 0 && cursor.y == 0, "Cursor should not move if out of bounds")
-//		cursor.move(.up, in: storage)
+//		cursor.move(.up(distance: 1), in: storage)
 //		XCTAssert(cursor.y == 0, "Cursor should not move if out of bounds")
-		cursor.move(.down, in: storage)
+		cursor.move(.down(distance: 1), in: storage)
 		XCTAssert(cursor.y == 0 && cursor.y == 0, "Cursor should not move if out of bounds")
 	}
 
@@ -106,10 +100,9 @@ class TerminalCursorTests: XCTestCase {
 		let string = "hello\nworld\ntest\nstring"
 
 		storage.append(NSAttributedString.init(string: string))
-		cursor.move(.right, in: storage)
-		cursor.move(.right, in: storage)
+		cursor.move(.right(distance: 2), in: storage)
 
-		cursor.move(.down, in: storage)
+		cursor.move(.down(distance: 1), in: storage)
 
 		XCTAssertEqual(cursor.x, 2, "Cursor should have moved right 2")
 		XCTAssertEqual(cursor.y, 1, "Cursor should have moved down 1")

@@ -96,7 +96,7 @@ class TerminalView: UIView {
 		OutputSanitizer.sanitize(text.mutableString)
 
 		textView.textStorage.append(text)
-		textView.selectedTextRange = textView.textRange(from: textView.endOfDocument, to: textView.endOfDocument)
+		self.textView.buffer.moveCursorToEnd()
 
 		let rect = textView.caretRect(for: textView.endOfDocument)
 		textView.scrollRectToVisible(rect, animated: true)
@@ -246,10 +246,14 @@ extension TerminalView {
 
 extension TerminalView: TerminalBufferDelegate {
 
-	func terminalBufferDidReceiveETX() {
-		DispatchQueue.main.async {
-			self.writePrompt()
+	func terminalBuffer(_ buffer: TerminalBuffer, cursorDidChange cursor: TerminalCursor) {
+		if let position = textView.position(from: textView.beginningOfDocument, offset: cursor.offset) {
+			textView.selectedTextRange = textView.textRange(from: position, to: position)
 		}
+	}
+
+	func terminalBufferDidReceiveETX() {
+		self.writePrompt()
 	}
 
 }
@@ -309,6 +313,10 @@ extension TerminalView: UITextViewDelegate {
 		switch executor.state {
 		case .running:
 			executor.sendInput(text)
+			if let data = text.data(using: .utf8) {
+				self.textView.buffer.add(stdin: data)
+			}
+			return false
 		case .idle:
 			let i = textView.text.distance(from: textView.text.startIndex, to: currentCommandStartIndex)
 
@@ -324,14 +332,13 @@ extension TerminalView: UITextViewDelegate {
 					writePrompt()
 				} else {
 					newLine()
-					self.textView.buffer.moveCursorToEnd()
 					delegate?.didEnterCommand(String(input))
 				}
 				// Don't enter the \n character
 				return false
 			}
+			return true
 		}
-		return true
 	}
 
 	func textViewDidChange(_ textView: UITextView) {

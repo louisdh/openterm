@@ -34,7 +34,7 @@ class ParserTests: XCTestCase {
 			case carriageReturn
 			case newLine
 			case backspace
-			case cursorMove(direction: TerminalCursor.Direction, count: Int)
+			case cursorMove(direction: TerminalCursor.Direction)
 			case cursorSet(position: Int, axis: TerminalCursor.Axis)
 			case endTransmission
 		}
@@ -53,8 +53,8 @@ class ParserTests: XCTestCase {
 		func parserDidReceiveBackspace(_ parser: Parser) {
 			receivedMethods.append(.backspace)
 		}
-		func parser(_ parser: Parser, didMoveCursorInDirection direction: TerminalCursor.Direction, count: Int) {
-			receivedMethods.append(.cursorMove(direction: direction, count: count))
+		func parser(_ parser: Parser, didMoveCursorInDirection direction: TerminalCursor.Direction) {
+			receivedMethods.append(.cursorMove(direction: direction))
 		}
 		func parser(_ parser: Parser, didMoveCursorTo position: Int, onAxis axis: TerminalCursor.Axis) {
 			receivedMethods.append(.cursorSet(position: position, axis: axis))

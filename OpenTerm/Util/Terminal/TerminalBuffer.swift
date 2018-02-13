@@ -10,6 +10,9 @@ import UIKit
 
 protocol TerminalBufferDelegate: class {
 
+	/// When the cursor moves, this method will be called.
+	func terminalBuffer(_ buffer: TerminalBuffer, cursorDidChange cursor: TerminalCursor)
+
 	/// An End of Text message was received, which means the current command finished.
 	func terminalBufferDidReceiveETX()
 }
@@ -35,8 +38,13 @@ class TerminalBuffer {
 
 	private let stdoutParser: Parser
 	private let stderrParser: Parser
+	private let stdinParser: Parser
 
-	private var cursor: TerminalCursor
+	private var cursor: TerminalCursor {
+		didSet {
+			delegate?.terminalBuffer(self, cursorDidChange: cursor)
+		}
+	}
 
 	init() {
 		storage = NSTextStorage()
@@ -45,6 +53,7 @@ class TerminalBuffer {
 
 		stdoutParser = Parser()
 		stderrParser = Parser()
+		stdinParser = Parser()
 
 		cursor = .zero
 
@@ -53,12 +62,14 @@ class TerminalBuffer {
 
 		stdoutParser.delegate = self
 		stderrParser.delegate = self
+		stdinParser.delegate = self
 	}
 
 	/// Reset the state of the parsers & the cursor position
 	func reset() {
 		stdoutParser.reset()
 		stderrParser.reset()
+		stdinParser.reset()
 		cursor = .zero
 	}
 
@@ -77,6 +88,11 @@ class TerminalBuffer {
 		stderrParser.parse(stderr)
 	}
 
+	/// Add raw data from stdin
+	func add(stdin: Data) {
+		stdinParser.parse(stdin)
+	}
+
 	/// Insert the given attributed string into the storage after the current cursor position.
 	/// Characters after the cursor position that are in the way are replaced by the contents of the string.
 	/// The attributed string is expected to not contain control characters or newlines.
@@ -84,6 +100,7 @@ class TerminalBuffer {
 	private func insert(_ attributedString: NSAttributedString) {
 		// Get cursor position as distance from start
 		let insertionPoint = cursor.offset
+		let insertionLength = attributedString.string.utf16.count
 		assert(insertionPoint <= storage.length, "Insertion point must be within the storage's size")
 
 		// Get the distance from the cursor to the end of the string
@@ -93,14 +110,12 @@ class TerminalBuffer {
 		// It starts at the insertion point, and has length of whichever one is smaller:
 		// - The length of the inserted string
 		// - The distance from the insertion point to the end
-		let range = NSRange.init(location: insertionPoint, length: min(distanceToEnd, attributedString.length))
+		let range = NSRange.init(location: insertionPoint, length: min(distanceToEnd, insertionLength))
 
 		self.storage.replaceCharacters(in: range, with: attributedString)
 
 		// Move cursor right by the number of characters in the inserted string
-		for _ in 0..<attributedString.string.count {
-			self.cursor.move(.right, in: self.storage)
-		}
+		self.cursor.move(.right(distance: insertionLength), in: self.storage)
 	}
 }
 
@@ -123,20 +138,18 @@ extension TerminalBuffer: ParserDelegate {
 		DispatchQueue.performOnMain {
 			self.storage.append(NSAttributedString.init(string: "\n"))
 			self.cursor.move(.beginningOfLine, in: self.storage)
-			self.cursor.move(.down, in: self.storage)
+			self.cursor.move(.down(distance: 1), in: self.storage)
 		}
 	}
 	func parserDidReceiveBackspace(_ parser: Parser) {
 		DispatchQueue.performOnMain {
 			// TODO: Is this correct? Should we also modify storage at all?
-			self.cursor.move(.left, in: self.storage)
+			self.cursor.move(.left(distance: 1), in: self.storage)
 		}
 	}
-	func parser(_ parser: Parser, didMoveCursorInDirection direction: TerminalCursor.Direction, count: Int) {
+	func parser(_ parser: Parser, didMoveCursorInDirection direction: TerminalCursor.Direction) {
 		DispatchQueue.performOnMain {
-			for _ in 0..<count {
-				self.cursor.move(direction, in: self.storage)
-			}
+			self.cursor.move(direction, in: self.storage)
 		}
 	}
 	func parser(_ parser: Parser, didMoveCursorTo position: Int, onAxis axis: TerminalCursor.Axis) {
@@ -145,6 +158,17 @@ extension TerminalBuffer: ParserDelegate {
 		}
 	}
 	func parserDidEndTransmission(_ parser: Parser) {
-		delegate?.terminalBufferDidReceiveETX()
+		DispatchQueue.performOnMain {
+			self.delegate?.terminalBufferDidReceiveETX()
+		}
+	}
+}
+
+extension TerminalBuffer: CustomDebugStringConvertible {
+
+	var debugDescription: String {
+		let lines = storage.string.components(separatedBy: .newlines)
+		let currentLine = lines[cursor.y]
+		return "length: \(storage.string.count), lines: \(lines.count), cursor: \(cursor.debugDescription), current line: \(currentLine)"
 	}
 }

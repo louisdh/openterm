@@ -26,7 +26,7 @@ protocol ParserDelegate: class {
 	func parserDidReceiveBackspace(_ parser: Parser)
 
 	/// The cursor was moved in the given direction, `count` number of times.
-	func parser(_ parser: Parser, didMoveCursorInDirection direction: TerminalCursor.Direction, count: Int)
+	func parser(_ parser: Parser, didMoveCursorInDirection direction: TerminalCursor.Direction)
 
 	/// The cursor was moved to a given position (0..<width) on the given x/y axis
 	func parser(_ parser: Parser, didMoveCursorTo position: Int, onAxis axis: TerminalCursor.Axis)
@@ -249,23 +249,23 @@ class Parser {
 						// Put the parameters into the text state, which updates its attributes.
 						textState.parse(escapeCodes: parameters)
 					case .cursorUp:
-						self.delegate?.parser(self, didMoveCursorInDirection: .up, count: intValue)
+						self.delegate?.parser(self, didMoveCursorInDirection: .up(distance: intValue))
 					case .cursorDown:
-						self.delegate?.parser(self, didMoveCursorInDirection: .down, count: intValue)
+						self.delegate?.parser(self, didMoveCursorInDirection: .down(distance: intValue))
 					case .cursorForward:
-						self.delegate?.parser(self, didMoveCursorInDirection: .right, count: intValue)
+						self.delegate?.parser(self, didMoveCursorInDirection: .right(distance: intValue))
 					case .cursorBack:
-						self.delegate?.parser(self, didMoveCursorInDirection: .left, count: intValue)
+						self.delegate?.parser(self, didMoveCursorInDirection: .left(distance: intValue))
 					case .cursorNextLine:
 						// Moves cursor to beginning of the line n (default 1) lines down
 						// Combine the beginning of line and down directions to achieve this
-						self.delegate?.parser(self, didMoveCursorInDirection: .beginningOfLine, count: 1)
-						self.delegate?.parser(self, didMoveCursorInDirection: .down, count: intValue)
+						self.delegate?.parser(self, didMoveCursorInDirection: .beginningOfLine)
+						self.delegate?.parser(self, didMoveCursorInDirection: .down(distance: intValue))
 					case .cursorPreviousLine:
 						// Moves cursor to beginning of the line n (default 1) lines up
 						// Combine the beginning of line and up directions to achieve this
-						self.delegate?.parser(self, didMoveCursorInDirection: .beginningOfLine, count: 1)
-						self.delegate?.parser(self, didMoveCursorInDirection: .up, count: intValue)
+						self.delegate?.parser(self, didMoveCursorInDirection: .beginningOfLine)
+						self.delegate?.parser(self, didMoveCursorInDirection: .up(distance: intValue))
 					case .cursorHorizontalAbsolute:
 						// Cursor should move to the intValue'th column.
 						// Delegate value is 0-based, and this is 1-based, so subtract 1.

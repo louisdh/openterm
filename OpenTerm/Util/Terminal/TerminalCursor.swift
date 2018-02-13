@@ -25,7 +25,7 @@ struct TerminalCursor {
 	static let zero = TerminalCursor(x: 0, y: 0, offset: 0)
 
 	enum Direction {
-		case up, down, left, right, beginningOfLine, endOfString
+		case up(distance: Int), down(distance: Int), left(distance: Int), right(distance: Int), beginningOfLine, endOfString
 	}
 	enum Axis {
 		case x, y
@@ -39,42 +39,47 @@ struct TerminalCursor {
 	mutating func move(_ direction: Direction, in storage: NSTextStorage) {
 		dispatchPrecondition(condition: .onQueue(.main))
 
-		let string = storage.string
+		let storedString = storage.string
+		let string = storedString.utf16
 		let offset = string.index(string.startIndex, offsetBy: self.offset)
 		switch direction {
 		case .up:
 			fatalError("Not implemented")
-		case .down:
-			let nextNewLine = self.indexAfterNextNewline(from: offset, in: string)
+		case .down(let distance):
+
+			// Find index after newline `distance` times.
+			var nextNewLine: String.Index = self.indexAfterPreviousNewline(from: offset, in: storedString)
+			for _ in 0..<distance {
+				nextNewLine = self.indexAfterNextNewline(from: nextNewLine, in: storedString)
+			}
 
 			// Calculate our new offset. If it goes past the end, this will be nil, and we do nothing
-			if let newOffset = string.index(nextNewLine, offsetBy: x, limitedBy: string.endIndex) {
-				let distance = string.distance(from: string.startIndex, to: newOffset)
-				if distance != self.offset {
+			if let newOffsetIndex = string.index(nextNewLine, offsetBy: x, limitedBy: string.endIndex) {
+				let newOffset = string.distance(from: string.startIndex, to: newOffsetIndex)
+				if newOffset != self.offset {
 					// Only move if offset changed.
-					self.offset = distance
-					self.y += 1
+					self.offset = newOffset
+					self.y += distance
 				}
 			}
-		case .left:
-			let previousNewLine = self.indexAfterPreviousNewline(from: offset, in: string)
+		case .left(let distance):
 			// Only move left until we hit a newline
-			if offset > previousNewLine {
-				self.x -= 1
-				self.offset -= 1
+			if distance <= self.x {
+				self.x -= distance
+				self.offset -= distance
 			}
-		case .right:
-			let nextNewLine = self.indexOfNextNewline(from: offset, in: string)
+		case .right(let distance):
+			let nextNewLine = self.indexOfNextNewline(from: offset, in: storedString)
 			// Only move right until we hit a newline
-			if offset < nextNewLine {
-				self.x += 1
-				self.offset += 1
+			if string.index(offset, offsetBy: distance) <= nextNewLine {
+				self.x += distance
+				self.offset += distance
 			}
 		case .beginningOfLine:
 			self.x = 0
-			self.offset = string.distance(from: string.startIndex, to: self.indexAfterPreviousNewline(from: offset, in: string))
+			self.offset = string.distance(from: string.startIndex, to: self.indexAfterPreviousNewline(from: offset, in: storedString))
 		case .endOfString:
-			let components = string.components(separatedBy: newlineCharacterSet)
+			let components = storedString.components(separatedBy: newlineCharacterSet)
 			self.offset = string.count
 			self.y = components.count - 1
 			self.x = components.last?.count ?? 0
@@ -85,13 +90,13 @@ struct TerminalCursor {
 	mutating func set(_ axis: Axis, to position: Int, in storage: NSTextStorage) {
 		dispatchPrecondition(condition: .onQueue(.main))
 
-		let string = storage.string
+		let string = storage.string.utf16
 		let offset = string.index(string.startIndex, offsetBy: self.offset)
 
 		switch axis {
 		case .x:
-			let beginningOfLine = self.indexAfterPreviousNewline(from: offset, in: string)
-			let endOfLine = self.indexOfNextNewline(from: offset, in: string)
+			let beginningOfLine = self.indexAfterPreviousNewline(from: offset, in: storage.string)
+			let endOfLine = self.indexOfNextNewline(from: offset, in: storage.string)
 			let lineLength = string.distance(from: beginningOfLine, to: endOfLine)
 			if position <= lineLength {
 				self.x = position
@@ -104,9 +109,9 @@ struct TerminalCursor {
 
 	/// How far is the current x position from the next newline character?
 	func distanceToEndOfLine(in storage: NSTextStorage) -> Int {
-		let string = storage.string
+		let string = storage.string.utf16
 		let offset = string.index(string.startIndex, offsetBy: self.offset)
-		let index = self.indexOfNextNewline(from: offset, in: string)
+		let index = self.indexOfNextNewline(from: offset, in: storage.string)
 		let distance = string.distance(from: offset, to: index)
 		return distance
 	}
@@ -143,5 +148,12 @@ struct TerminalCursor {
 	private func rangeOfNextNewline(from currentPosition: String.Index, in string: String) -> Range<String.Index>? {
 		// Find the next newline, starting at current position and going forwards.
 		return string.rangeOfCharacter(from: newlineCharacterSet, options: [], range: currentPosition..<string.endIndex)
+	}
+}
+
+extension TerminalCursor: CustomDebugStringConvertible {
+
+	var debugDescription: String {
+		return "x: \(x), y: \(y), offset: \(offset)"
 	}
 }
