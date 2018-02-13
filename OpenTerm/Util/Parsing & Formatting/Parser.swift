@@ -108,6 +108,7 @@ class Parser {
 	private var textState: ANSITextState = ANSITextState()
 	private var state: State = .normal
 	private var dataBuffer = Data()
+	private var pendingString = NSMutableAttributedString()
 
 	func parse(_ data: Data) {
 		let didEnd = self.decodeUTF8(fromData: data, buffer: &dataBuffer)
@@ -120,6 +121,15 @@ class Parser {
 		textState.reset()
 		state = .normal
 		dataBuffer = Data()
+		pendingString = NSMutableAttributedString()
+	}
+
+	/// Until a newline, control, or other character is found or the text ends, the text that comes in is appended to the pendingString.
+	/// This method sanitizes that string, sends it to the delegate, and clears its contents.
+	private func flushPendingString() {
+		OutputSanitizer.sanitize(pendingString.mutableString)
+		self.delegate?.parser(self, didReceiveString: pendingString)
+		pendingString = NSMutableAttributedString()
 	}
 
 	private func decodeUTF8(fromData data: Data, buffer: inout Data) -> Bool {
@@ -184,11 +194,14 @@ class Parser {
 		switch self.state {
 		case .normal:
 			guard let code = Code.init(rawValue: str) else {
-				// While in normal mode, unless we found a code, we should return a string using the current
+				// While in normal mode, unless we found a code, we should generate a string using the current
 				// textState's attributes.
-				self.delegate?.parser(self, didReceiveString: NSAttributedString.init(string: str, attributes: textState.attributes))
+				pendingString.append(NSAttributedString.init(string: str, attributes: textState.attributes))
 				return false
 			}
+			// If there is a code, flush whatever plain text we found out to the delegate, since codes can possibly interact with previously outputted strings.
+			self.flushPendingString()
+
 			switch code {
 			case .endOfText, .endOfTransmission:
 				// Ended transmission, return immediately.
