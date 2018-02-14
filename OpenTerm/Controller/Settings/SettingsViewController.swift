@@ -63,17 +63,18 @@ class SettingsViewController: UITableViewController {
 	}
 
 	func updateView() {
+		let userDefaults = UserDefaults.terminalDefaults
 
-		let fontSize = UserDefaultsController.shared.terminalFontSize
+		let fontSize: Int = userDefaults[.terminalFontSize]
 		fontSizeStepper.value = Double(fontSize)
 		fontSizeLabel.text = String(fontSize)
 		fontSizeStepper.minimumValue = 8
 		fontSizeStepper.maximumValue = 32
 
-		terminalTextColorView.backgroundColor = UserDefaultsController.shared.terminalTextColor
-		terminalBackgroundColorView.backgroundColor = UserDefaultsController.shared.terminalBackgroundColor
+		terminalTextColorView.backgroundColor = userDefaults[.terminalTextColor]
+		terminalBackgroundColorView.backgroundColor = userDefaults[.terminalBackgroundColor]
 
-		useDarkKeyboardSwitch.isOn = UserDefaultsController.shared.userDarkKeyboardInTerminal
+		useDarkKeyboardSwitch.isOn = userDefaults[.useDarkKeyboardInTerminal]
 
 	}
 
@@ -81,7 +82,7 @@ class SettingsViewController: UITableViewController {
 
 		let newFontSize = Int(sender.value)
 
-		UserDefaultsController.shared.terminalFontSize = newFontSize
+		UserDefaults.terminalDefaults[.terminalFontSize] = newFontSize
 		fontSizeLabel.text = String(newFontSize)
 		NotificationCenter.default.post(name: .appearanceDidChange, object: nil)
 
@@ -89,7 +90,7 @@ class SettingsViewController: UITableViewController {
 
 	@IBAction func useDarkKeyboardSwitchDidChange(_ sender: UISwitch) {
 
-		UserDefaultsController.shared.userDarkKeyboardInTerminal = useDarkKeyboardSwitch.isOn
+		UserDefaults.terminalDefaults[.useDarkKeyboardInTerminal] = useDarkKeyboardSwitch.isOn
 
 		NotificationCenter.default.post(name: .appearanceDidChange, object: nil)
 
@@ -150,8 +151,8 @@ class SettingsViewController: UITableViewController {
 
 			let setColor: (UIColor) -> Void
 			switch indexPath.row {
-			case 1: setColor = { UserDefaultsController.shared.terminalTextColor = $0 }
-			case 2: setColor = { UserDefaultsController.shared.terminalBackgroundColor = $0 }
+			case 1: setColor = { UserDefaults.terminalDefaults[.terminalTextColor] = $0 }
+			case 2: setColor = { UserDefaults.terminalDefaults[.terminalBackgroundColor] = $0 }
 			default: return
 			}
 

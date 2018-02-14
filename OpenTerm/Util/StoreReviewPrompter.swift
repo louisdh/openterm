@@ -13,7 +13,7 @@ class StoreReviewPrompter {
 
 	static func promptIfNeeded() {
 		if HistoryManager.history.count < 5 { return }
-		guard let lastPrompt = UserDefaultsController.shared.lastStoreReviewPrompt else { return prompt() }
+		guard let lastPrompt: Date = UserDefaults.terminalDefaults[.lastStoreReviewPrompt] else { return prompt() }
 		let day: TimeInterval = 86400
 		if Date().timeIntervalSince(lastPrompt) > day * 7 {
 			prompt()
@@ -22,6 +22,6 @@ class StoreReviewPrompter {
 
 	private static func prompt() {
 		SKStoreReviewController.requestReview()
-		UserDefaultsController.shared.lastStoreReviewPrompt = Date()
+		UserDefaults.terminalDefaults[.lastStoreReviewPrompt] = Date()
 	}
 }

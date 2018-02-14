@@ -9,67 +9,107 @@
 import Foundation
 import UIKit
 
-class UserDefaultsController {
+extension UserDefaults {
 
-	static let shared = UserDefaultsController(userDefaults: .standard)
+	// These keys represent the values that OpenTerm saves in UserDefaults.
+	// Their string representation is sent to UserDefaults.
+	enum Key: String {
+		case terminalFontSize
+		case terminalTextColor
+		case terminalBackgroundColor
+		case useDarkKeyboardInTerminal
+		case lastStoreReviewPrompt
 
-	let userDefaults: UserDefaults
+		// If the key should have a default value, return that here.
+		var defaultValue: Any? {
+			switch self {
+			case .terminalFontSize:
+				return 14
+			case .terminalTextColor:
+				return NSKeyedArchiver.archivedData(withRootObject: UIColor.defaultMainTintColor)
+			case .terminalBackgroundColor:
+				return NSKeyedArchiver.archivedData(withRootObject: UIColor.panelBackgroundColor)
+			case .useDarkKeyboardInTerminal:
+				return true
+			case .lastStoreReviewPrompt:
+				return nil
+			}
+		}
 
-	init(userDefaults: UserDefaults) {
-		self.userDefaults = userDefaults
+		// Hopefully some newer version of swift adds this :(
+		static let all: [Key] = [
+			.terminalFontSize,
+			.terminalTextColor,
+			.terminalBackgroundColor,
+			.useDarkKeyboardInTerminal
+		]
 	}
 
-	func registerDefaults() {
-		userDefaults.register(defaults: [
-			"terminalFontSize": 14,
-			"terminalTextColor": NSKeyedArchiver.archivedData(withRootObject: UIColor.defaultMainTintColor),
-			"terminalBackgroundColor": NSKeyedArchiver.archivedData(withRootObject: UIColor.panelBackgroundColor),
-			"userDarkKeyboardInTerminal": true]
-		)
-	}
+	/// User defaults for storing terminal preferences.
+	/// When accessing this for the first time, the default values are registered.
+	static let terminalDefaults: UserDefaults = {
+		let defaults = UserDefaults.standard
+		// Map each key to its default value, insert into a dictionary, then register those defaults.
+		defaults.register(defaults: .init(uniqueKeysWithValues: UserDefaults.Key.all.flatMap { key in
+			if let defaultValue = key.defaultValue {
+				return (key.rawValue, defaultValue)
+			} else {
+				return nil
+			}
+		}))
+		return defaults
+	}()
 
-	var terminalTextColor: UIColor {
+	/// Access the value for the given key.
+	/// When getting, the object will be force cast to whatever return type you tell the type system it will have.
+	subscript<T> (key: Key) -> T {
 		get {
-			return userDefaults.color(forKey: "terminalTextColor") ?? UIColor.defaultMainTintColor
+			guard let value = self.object(forKey: key.rawValue) as? T else {
+				fatalError("Invalid type for user default with key: \(key.rawValue).")
+			}
+			return value
 		}
 		set {
-			userDefaults.set(newValue, forKey: "terminalTextColor")
-			userDefaults.synchronize()
+			self.set(newValue, forKey: key.rawValue)
 		}
 	}
 
-	var terminalBackgroundColor: UIColor {
+}
+
+// Color extensions. Use NSKeyedArchiver to store and retrieve colors in UserDefaults.
+// To make sure the default subscript doesn't handle the value,
+// both optional and non-optional UIColor subscripts are overridden.
+extension UserDefaults {
+	subscript(key: Key) -> UIColor? {
 		get {
-			return userDefaults.color(forKey: "terminalBackgroundColor") ?? UIColor.panelBackgroundColor
+			guard
+				let data = data(forKey: key.rawValue),
+				let color = NSKeyedUnarchiver.unarchiveObject(with: data) as? UIColor
+				else {
+					return nil
+			}
+			return color
 		}
 		set {
-			userDefaults.set(newValue, forKey: "terminalBackgroundColor")
-			userDefaults.synchronize()
+			guard let value = newValue else {
+				set(Any?.none, forKey: key.rawValue)
+				return
+			}
+
+			let data = NSKeyedArchiver.archivedData(withRootObject: value)
+			set(data, forKey: key.rawValue)
 		}
 	}
-
-	var terminalFontSize: Int {
+	subscript(key: Key) -> UIColor {
 		get {
-			return userDefaults.integer(forKey: "terminalFontSize")
+			guard let color: UIColor = self[key] else {
+				fatalError("Unable to find color with key: \(key.rawValue)")
+			}
+			return color
 		}
 		set {
-			userDefaults.set(newValue, forKey: "terminalFontSize")
-			userDefaults.synchronize()
+			let optionalValue: UIColor? = newValue
+			self[key] = optionalValue
 		}
-	}
-
-	var userDarkKeyboardInTerminal: Bool {
-		get {
-			return userDefaults.bool(forKey: "userDarkKeyboardInTerminal")
-		}
-		set {
-			userDefaults.set(newValue, forKey: "userDarkKeyboardInTerminal")
-			userDefaults.synchronize()
-		}
-	}
-
-	var lastStoreReviewPrompt: Date? {
-		get { return userDefaults.object(forKey: "lastStoreReviewPrompt") as? Date }
-		set { userDefaults.set(newValue, forKey: "lastStoreReviewPrompt") }
 	}
 }
