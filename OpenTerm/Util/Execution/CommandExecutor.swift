@@ -59,12 +59,14 @@ class CommandExecutor {
 	private let stdin_pipe = Pipe()
 	private let stdout_pipe = Pipe()
 	private let stderr_pipe = Pipe()
-	fileprivate let stdin_file: UnsafeMutablePointer<FILE>
+
+	// Files for pipes, passed to ios_system
+	private let stdin_file: UnsafeMutablePointer<FILE>
 	private let stdout_file: UnsafeMutablePointer<FILE>
 	private let stderr_file: UnsafeMutablePointer<FILE>
 
 	/// Context from commands run by this executor
-	private var context = CommandExecutionContext()
+	var context = CommandExecutionContext()
 
 	init() {
 		self.currentWorkingDirectory = DocumentManager.shared.activeDocumentsFolderURL
@@ -117,9 +119,10 @@ class CommandExecutor {
 			// Save return code into the context
 			self.context[.status] = "\(returnCode)"
 
-			// Write the end code to stdout_pipe
-			// TODO: Also need to send to stderr?
-			self.stdout_pipe.fileHandleForWriting.write(Parser.Code.endOfTransmission.rawValue.data(using: .utf8)!)
+			// Write the end code to stdout and stderr
+			let etx = Parser.Code.endOfTransmission.rawValue.data(using: .utf8)!
+			self.stdout_pipe.fileHandleForWriting.write(etx)
+			self.stderr_pipe.fileHandleForWriting.write(etx)
 
 			stdin = push_stdin
 			stdout = push_stdout

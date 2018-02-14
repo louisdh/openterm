@@ -39,6 +39,10 @@ protocol ParserDelegate: class {
 /// It reads the data by character and performs actions based on control codes, including applying colors.
 /// For more information about escape codes, see https://en.wikipedia.org/wiki/ANSI_escape_code
 class Parser {
+	enum ParserType {
+		case stdout, stderr, stdin
+	}
+
 	/// List of constants that are needed for parsing.
 	enum Code: String {
 		case escape = "\u{1B}"
@@ -105,10 +109,15 @@ class Parser {
 	}
 
 	weak var delegate: ParserDelegate?
+	let type: ParserType
 	private var textState: ANSITextState = ANSITextState()
 	private var state: State = .normal
 	private var dataBuffer = Data()
 	private var pendingString = NSMutableAttributedString()
+
+	init(type: ParserType) {
+		self.type = type
+	}
 
 	func parse(_ data: Data) {
 		self.decodeUTF8(fromData: data, buffer: &dataBuffer)

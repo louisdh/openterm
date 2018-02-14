@@ -51,9 +51,9 @@ class TerminalBuffer {
 		layoutManager = NSLayoutManager()
 		textContainer = NSTextContainer()
 
-		stdoutParser = Parser()
-		stderrParser = Parser()
-		stdinParser = Parser()
+		stdoutParser = Parser(type: .stdout)
+		stderrParser = Parser(type: .stderr)
+		stdinParser = Parser(type: .stdin)
 
 		cursor = .zero
 
@@ -158,6 +158,8 @@ extension TerminalBuffer: ParserDelegate {
 		}
 	}
 	func parserDidEndTransmission(_ parser: Parser) {
+		// TODO: Only send ETX delegate method when both stdout and stderr parsers end transmission.
+		if parser.type != .stdout { return }
 		DispatchQueue.performOnMain {
 			self.delegate?.terminalBufferDidReceiveETX()
 		}

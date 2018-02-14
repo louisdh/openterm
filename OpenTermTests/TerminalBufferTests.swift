@@ -18,7 +18,7 @@ class TerminalBufferTests: XCTestCase {
 	// Passing delegate methods from a parser require a Parser parameter. Pass an empty one in to get it to compile.
 	// If the TerminalBuffer ever reads stuff about the parser (it currently does not), this will need a better implementation
 	// Such as to make the TerminalBuffer's parser non-private
-	let dummyParser = Parser()
+	let dummyParser = Parser(type: .stdout)
 
 	override func setUp() {
 		super.setUp()

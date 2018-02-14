@@ -16,7 +16,7 @@ class ParserTests: XCTestCase {
 	override func setUp() {
 		super.setUp()
 
-		parser = Parser()
+		parser = Parser(type: .stdout)
 		parserDelegate = TestParserDelegate()
 		parser.delegate = parserDelegate
 	}
