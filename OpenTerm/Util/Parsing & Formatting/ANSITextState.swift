@@ -181,7 +181,9 @@ struct ANSITextState {
 	var font: UIFont = ANSITextState.font(fromTraits: [])
 	var fontTraits: UIFontDescriptorSymbolicTraits = [] {
 		didSet {
-			self.font = ANSITextState.font(fromTraits: fontTraits)
+			if fontTraits != oldValue {
+				self.font = ANSITextState.font(fromTraits: fontTraits)
+			}
 		}
 	}
 

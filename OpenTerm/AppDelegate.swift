@@ -23,7 +23,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		replaceCommand("share", mangleFunctionName("shareFile"), true)
 		replaceCommand("pbcopy", mangleFunctionName("pbcopy"), true)
 		replaceCommand("pbpaste", mangleFunctionName("pbpaste"), true)
-		replaceCommand("shell", mangleFunctionName("shell"), true)
 
 		window = UIWindow(frame: UIScreen.main.bounds)
 		window?.rootViewController = TabViewContainerViewController<TerminalTabViewController>(theme: TabViewThemeDark())
