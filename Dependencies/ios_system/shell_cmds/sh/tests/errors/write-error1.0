@@ -1,3 +1,0 @@
-# $FreeBSD: head/bin/sh/tests/errors/write-error1.0 244924 2013-01-01 12:48:24Z jilles $
-
-! echo >&- 2>/dev/null
