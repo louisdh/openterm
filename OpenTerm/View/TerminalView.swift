@@ -133,9 +133,6 @@ class TerminalView: UIView {
 
 	// Appends the given string to the output, and updates the command start index.
 	func writeOutput(_ string: String) {
-		var formattedString = string.formattedAttributedString(withTextState: &self.currentTextState)
-		formattedString = formattedString.withFilesAsLinks(currentDirectory: executor.currentWorkingDirectory.path)
-		
 		performOnMain {
 			self.appendText(string)
 			self.currentCommandStartIndex = self.textView.text.endIndex
