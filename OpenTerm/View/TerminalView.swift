@@ -139,8 +139,10 @@ class TerminalView: UIView {
 		}
 	}
 	func writeOutput(_ string: NSAttributedString) {
+		let withLinks = string.withFilesAsLinks(currentDirectory: executor.currentWorkingDirectory.path)
+
 		performOnMain {
-			self.appendText(string)
+			self.appendText(withLinks)
 			self.currentCommandStartIndex = self.textView.text.endIndex
 		}
 	}
