@@ -6,7 +6,37 @@
 //  Copyright © 2018 Silver Fox. All rights reserved.
 //
 
-import Foundation
+import UIKit
+
+extension URL {
+	// Return URL in the same directory as this one that does not exist, by appending -1 or -2 to part of filename before .ext
+	// The original url might be returned if there is nothing at this location.
+	public func unused() -> URL {
+		let manager = FileManager.default
+		if !manager.fileExists(atPath: path) { return self }
+		
+		let directory = self.deletingLastPathComponent()
+		let ext = self.pathExtension
+
+		// remove anything from - and to the end
+		var basename = self.deletingPathExtension().lastPathComponent
+		if let range = basename.range(of: "-", options: .backwards) {
+			basename.removeSubrange(range.lowerBound ... basename.endIndex)
+		}
+		
+		// keep counting up until we have unused filename
+		var index = 1
+		while true {
+			let filename = "\(basename)-\(index).\(ext)"
+			let url = directory.appendingPathComponent(filename)
+			if !manager.fileExists(atPath: url.path) {
+				return url
+			}
+			
+			index += 1;
+		}
+	}
+}
 
 extension NSAttributedString {
 	public func withFilesAsLinks(currentDirectory: String) -> NSAttributedString {
@@ -43,7 +73,7 @@ extension NSAttributedString {
                     found = range.lowerBound == pos
                     if found {
                         // mark as link
-                        let url = URL(fileURLWithPath: manager.currentDirectoryPath).appendingPathComponent(filename)
+                        let url = URL(fileURLWithPath: currentDirectory).appendingPathComponent(filename)
                         let attrs = [NSAttributedStringKey.link: url,
                                      NSAttributedStringKey.underlineStyle: 1] as [NSAttributedStringKey : Any]
                         let nsRange = NSRange(location: range.lowerBound.encodedOffset,
@@ -103,6 +133,20 @@ func relative(filename: String, to directory: String) -> String {
 	if head.relativePath != "." {
 		result = head.appendingPathComponent(tail.relativePath).relativePath
 	}
-	// TODO: skip leading ./
+	
+	// skip leading ./
+	if let cwdPrefix = result.range(of: "./", options: .anchored) {
+		result.removeSubrange(cwdPrefix)
+	}
+
 	return result
+}
+
+extension UITextView {
+	func range(_ textRange: UITextRange) -> NSRange {
+		let start = offset(from: beginningOfDocument, to: textRange.start)
+		let end = offset(from: textRange.start, to: textRange.end)
+		let range = NSRange(location: start, length: end - start)
+		return range
+	}
 }

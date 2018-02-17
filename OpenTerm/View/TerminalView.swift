@@ -265,8 +265,16 @@ extension TerminalView: UITextDragDelegate {
 				
 				let dragItem = UIDragItem(itemProvider: provider)
 				
-				// TODO: We want to set url from attributtedText directory 
-				// dragItem.localObject = url
+				
+				// We want to set url from attributtedText directory
+				textView.attributedText.enumerateAttribute(.link, in: textView.range(dragRequest.dragRange), options: [],
+														   using: { (link, _, _) in
+					if link is String {
+						dragItem.localObject = URL(string: link! as! String)
+					} else if(link is URL) {
+						dragItem.localObject = link! as! URL
+					}
+				})
 				
 				// use label of dragged text as preview
 				dragItem.previewProvider = { return self.previewForDrag(dragRequest: dragRequest) }
@@ -304,18 +312,55 @@ extension TerminalView : UITextPasteDelegate {
 	func textPasteConfigurationSupporting(_ textPasteConfigurationSupporting: UITextPasteConfigurationSupporting,
 										  transform item: UITextPasteItem) {
 		
-		let uti = item.itemProvider.registeredTypeIdentifiers.first ?? (kUTTypeFileURL as String)
-		item.itemProvider.loadInPlaceFileRepresentation(forTypeIdentifier: uti,
-														completionHandler: { url, _, error in
-			// default behaviour on error or non-file URL
-			guard url?.isFileURL ?? false else {
-				item.setDefaultResult()
+		// try to pick result from localObject
+		if let localUrl: URL = item.localObject as! URL? {
+			let currentDirectory = self.executor.currentWorkingDirectory.path
+			let result = relative(filename: localUrl.path, to: currentDirectory)
+			item.setResult(string: result)
+			return
+		}
+
+		// we want to paste as the first public type
+		for uti in item.itemProvider.registeredTypeIdentifiers {
+			if uti.hasPrefix("public.") {
+				paste(item: item, uti:uti)
 				return
 			}
+			
+		}
+		
+		// we only get to this point if there are no public types
+		let uti = item.itemProvider.registeredTypeIdentifiers.first ?? (kUTTypeFileURL as String)
+		paste(item: item, uti:uti)
+	}
+	
+	private func paste(item: UITextPasteItem, uti: String) {
+		item.itemProvider.loadInPlaceFileRepresentation(forTypeIdentifier: uti,
+														completionHandler: { url, inPlace, error in
 															
-			let currentDirectory = self.executor.currentWorkingDirectory.path
-			let result = relative(filename: url!.path, to: currentDirectory)
-			item.setResult(string: result)
+			guard let url = url else { return }
+															
+				if inPlace {
+					let _ = url.startAccessingSecurityScopedResource()
+					let currentDirectory = self.executor.currentWorkingDirectory.path
+					let result = relative(filename: url.path, to: currentDirectory)
+					item.setResult(string: result)
+					url.stopAccessingSecurityScopedResource()
+				} else {
+					// make sure we have /tmp/drop folder
+					let tempFolder = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("drop")
+					try? FileManager.default.createDirectory(at: tempFolder, withIntermediateDirectories: true)
+																
+					// copy to /tmp/drop folder
+					let filename = url.lastPathComponent
+					let tempUrl = tempFolder.appendingPathComponent(filename).unused()
+					do {
+						try FileManager.default.copyItem(at: url, to: tempUrl)
+						item.setResult(string: tempUrl.path)
+					} catch {
+						NSLog("Unable to create temp file: \(error)")
+					}
+				}
 		})
 	}
 }
