@@ -25,6 +25,9 @@ class TerminalTextView: UITextView {
 
 	private func setup() {
 
+		// Show characters such as ^C
+		layoutManager.showsControlCharacters = true
+
 		autocorrectionType = .no
 		smartDashesType = .no
 		smartQuotesType = .no

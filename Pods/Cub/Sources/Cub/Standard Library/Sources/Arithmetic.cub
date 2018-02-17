@@ -1,0 +1,134 @@
+//
+//  Arithmetic.cub
+//  Cub Standard Library
+//
+
+func abs(x) returns {
+	if x < 0 {
+		return x * -1
+	}
+	
+	return x
+}
+
+func min(a, b) returns {
+	if a < b {
+		return a
+	}
+	
+	return b
+}
+
+func max(a, b) returns {
+	if a > b {
+		return a
+	}
+	
+	return b
+}
+
+func isPositive(x) returns {
+	return x > 0
+}
+
+func isNegative(x) returns {
+	return x < 0
+}
+
+func isEven(x) returns {
+	return mod(x, 2) == 0
+}
+
+func isUneven(x) returns {
+	return !isEven(x)
+}
+
+/// Root `n` of `x`
+func root(n, x) returns {
+	return x ^ (1 / n)
+}
+
+/// Square root of `x`
+func sqrt(x) returns {
+	return root(2, x)
+}
+
+/// Cube root of `x`
+func cbrt(x) returns {
+	return root(3, x)
+}
+
+/// x is dividend
+/// y is divisor
+/// returns remainder
+func rem(x, y) returns {
+	
+	y = abs(y)
+	
+	if isPositive(x) {
+		
+		while x >= y {
+			x -= y
+		}
+		
+	} else {
+		
+		while x <= (-1 * y) {
+			x += y
+		}
+		
+	}
+	
+	return x
+}
+
+/// x is dividend
+/// y is divisor
+/// returns modules
+func mod(x, y) returns {
+	
+	if y == 0 || abs(y) > abs(x) {
+		return x
+	}
+	
+	y = abs(y)
+	
+	if isPositive(x) {
+		
+		while x >= y {
+			x -= y
+		}
+		
+	} else {
+		
+		while x <= y {
+			if x >= 0 {
+				break
+			}
+			
+			x += y
+		}
+		
+	}
+	
+	return x
+}
+
+func floor(x) returns {
+	return x - mod(x, 1)
+}
+
+//func ceil(x) returns {
+//	// TODO
+//	return x
+//}
+
+// TODO: fix for negative numbers!
+// e.g. round(-2.423) should give -2
+func round(x) returns {
+	if x < 0.0 {
+		return floor(x - 0.5)
+	} else {
+		return floor(x + 0.5)
+	}
+}

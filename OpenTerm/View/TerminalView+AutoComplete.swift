@@ -56,34 +56,46 @@ extension TerminalView {
 
 	/// Updates auto complete when current command changes
 	func updateAutoComplete() {
-		autoCompleteManager.currentCommand = self.currentCommand
+		switch executor.state {
+		case .running:
+			autoCompleteManager.commandState = .running
+		case .idle:
+			autoCompleteManager.commandState = .typing(command: self.currentCommand)
+		}
 	}
 
 	func insertCompletion(_ completion: AutoCompleteManager.Completion) {
-		// Two options:
-		// - There is a space at the end => insert full word
-		// - Complete current word
+		switch autoCompleteManager.state {
+		case .executing:
+			guard let character = completion.data as? String else { return }
+			textView.insertText(character)
+			executor.sendInput(character)
+		default:
+			// Two options:
+			// - There is a space at the end => insert full word
+			// - Complete current word
 
-		let currentCommand = self.currentCommand
-		if currentCommand.hasSuffix(" ") || currentCommand.hasSuffix("/") {
-			// This will be a new argument, or append to the end of a path. Just insert the text.
-			textView.insertText(completion.name)
-		} else {
-			// We need to complete the current argument
-			var components = currentCommand.components(separatedBy: CharacterSet.whitespaces)
-			if let lastComponent = components.popLast() {
-				// If the argument we are completing is a path, we must only replace the last part of the path
-				if lastComponent.contains("/") {
-					components.append(((lastComponent as NSString).deletingLastPathComponent as NSString).appendingPathComponent(completion.name))
-				} else {
-					components.append(completion.name)
+			let currentCommand = self.currentCommand
+			if currentCommand.hasSuffix(" ") || currentCommand.hasSuffix("/") {
+				// This will be a new argument, or append to the end of a path. Just insert the text.
+				textView.insertText(completion.name)
+			} else {
+				// We need to complete the current argument
+				var components = currentCommand.components(separatedBy: CharacterSet.whitespaces)
+				if let lastComponent = components.popLast() {
+					// If the argument we are completing is a path, we must only replace the last part of the path
+					if lastComponent.contains("/") {
+						components.append(((lastComponent as NSString).deletingLastPathComponent as NSString).appendingPathComponent(completion.name))
+					} else {
+						components.append(completion.name)
+					}
 				}
+				self.currentCommand = components.joined(separator: " ")
 			}
-			self.currentCommand = components.joined(separator: " ")
-		}
 
-		// Insert suffix at end
-		textView.insertText(completion.appendingSuffix)
+			// Insert suffix at end
+			textView.insertText(completion.appendingSuffix)
+		}
 	}
 
 	/// Dismiss the keyboard when the down arrow is tapped
@@ -141,7 +153,7 @@ extension TerminalView: AutoCompleteManagerDataSource {
 		// depending on if the command can touch those things.
 		let commandTypes = CommandTypes.forCommand(command)
 
-		let currentURL = DocumentManager.shared.currentDirectoryURL
+		let currentURL = executor.currentWorkingDirectory
 		if let last = currentArguments.last, !last.isEmpty {
 			// If we are in the middle of typing an argument, typically there are no completions available.
 			// However, if that argument being typed is a path, we should show the contents of the deepest folder in the path.
@@ -181,6 +193,12 @@ extension TerminalView: AutoCompleteManagerDataSource {
 		return completions
 	}
 
+	func completionsForExecution() -> [AutoCompleteManager.Completion] {
+		return [
+			.init("Stop", data: Parser.Code.endOfText.rawValue) // Send an ETX (end of text) signal to the currently executing command
+		]
+	}
+
 	func availableCompletions(in completions: [AutoCompleteManager.Completion], forArguments arguments: [String]) -> [AutoCompleteManager.Completion] {
 		guard let lastArgument = arguments.last else { return completions }
 
@@ -190,7 +208,7 @@ extension TerminalView: AutoCompleteManagerDataSource {
 		// If we're in the middle of typing a path, special filtering rules apply
 		if lastArgument.contains("/") {
 			// Get the on-disk url of the path being typed
-			let appendedURL = DocumentManager.shared.currentDirectoryURL.appendingPathComponent(lastArgument)
+			let appendedURL = executor.currentWorkingDirectory.appendingPathComponent(lastArgument)
 
 			// Find completions that are inside the appendedURL, and who's names are partially typed.
 			// Only completions with `data` set to a URL are considered.
@@ -223,7 +241,7 @@ extension TerminalView: AutoCompleteManagerDataSource {
 		if !showFolders && !showFiles { return [] }
 
 		do {
-			let contents = try DocumentManager.shared.fileManager.contentsOfDirectory(at: executor.currentWorkingDirectory, includingPropertiesForKeys: [.isDirectoryKey], options: .skipsHiddenFiles)
+			let contents = try DocumentManager.shared.fileManager.contentsOfDirectory(at: directory, includingPropertiesForKeys: [.isDirectoryKey], options: .skipsHiddenFiles)
 			return try contents.flatMap { url in
 				let resourceValues = try url.resourceValues(forKeys: [.isDirectoryKey])
 				let isDirectory = resourceValues.isDirectory ?? false

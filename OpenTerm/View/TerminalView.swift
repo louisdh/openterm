@@ -13,6 +13,7 @@ import MobileCoreServices
 protocol TerminalViewDelegate: class {
 
 	func didEnterCommand(_ command: String)
+	func commandDidEnd()
 	func didChangeCurrentWorkingDirectory(_ workingDirectory: URL)
 
 }
@@ -28,14 +29,13 @@ class TerminalView: UIView {
 
 	let keyboardObserver = KeyboardObserver()
 
-	var currentTextState = ANSITextState()
+	var stdoutParser = Parser()
+	var stderrParser = Parser()
 	var currentCommandStartIndex: String.Index! {
 		didSet { self.updateAutoComplete() }
 	}
 
 	weak var delegate: TerminalViewDelegate?
-
-	private var isWaitingForCommand = false
 
 	init() {
 		super.init(frame: .zero)
@@ -58,6 +58,8 @@ class TerminalView: UIView {
 
 	private func setup() {
 
+		stdoutParser.delegate = self
+		stderrParser.delegate = self
 		executor.delegate = self
 
 		textView.translatesAutoresizingMaskIntoConstraints = false
@@ -104,6 +106,9 @@ class TerminalView: UIView {
 	private func appendText(_ text: NSAttributedString) {
 		dispatchPrecondition(condition: .onQueue(.main))
 
+		let text = NSMutableAttributedString.init(attributedString: text)
+		OutputSanitizer.sanitize(text.mutableString)
+
 		let new = NSMutableAttributedString(attributedString: textView.attributedText ?? NSAttributedString())
 		new.append(text)
 		textView.attributedText = new
@@ -132,14 +137,19 @@ class TerminalView: UIView {
 		formattedString = formattedString.withFilesAsLinks(currentDirectory: executor.currentWorkingDirectory.path)
 		
 		performOnMain {
-			self.appendText(formattedString)
+			self.appendText(string)
+			self.currentCommandStartIndex = self.textView.text.endIndex
+		}
+	}
+	func writeOutput(_ string: NSAttributedString) {
+		performOnMain {
+			self.appendText(string)
 			self.currentCommandStartIndex = self.textView.text.endIndex
 		}
 	}
 
 	// Moves the cursor to a new line, if it's not already
 	func newLine() {
-		currentTextState.reset()
 		if !textView.text.hasSuffix("\n") && !textView.text.isEmpty {
 			appendText("\n")
 		}
@@ -150,7 +160,8 @@ class TerminalView: UIView {
 	func clearScreen() {
 		currentCommandStartIndex = nil
 		textView.text = ""
-		currentTextState.reset()
+		stdoutParser.reset()
+		stderrParser.reset()
 	}
 
 	@discardableResult
@@ -183,35 +194,107 @@ class TerminalView: UIView {
 			appendText(newValue)
 		}
 	}
-
 }
 
-extension TerminalView: CommandExecutorDelegate {
+// MARK: Key commands
+extension TerminalView {
 
-	func commandExecutor(_ commandExecutor: CommandExecutor, receivedStdout stdout: String) {
-		self.writeOutput(sanitizeOutput(stdout))
+	override var keyCommands: [UIKeyCommand]? {
+		return [
+			// Clear
+			UIKeyCommand(input: "K", modifierFlags: .command, action: #selector(clearBufferCommand), discoverabilityTitle: "Clear Buffer"),
+
+			// Stop
+			UIKeyCommand(input: "C", modifierFlags: .control, action: #selector(stopCurrentCommand), discoverabilityTitle: "Stop Running Command"),
+
+			// Text selection, navigation
+			UIKeyCommand(input: "A", modifierFlags: .control, action: #selector(selectCommandHome), discoverabilityTitle: "Beginning of Line"),
+			UIKeyCommand(input: "E", modifierFlags: .control, action: #selector(selectCommandEnd), discoverabilityTitle: "End of Line"),
+
+			// Tab completion
+			UIKeyCommand(input: "\t", modifierFlags: [], action: #selector(completeCommand), discoverabilityTitle: "Complete")
+		]
 	}
-	func commandExecutor(_ commandExecutor: CommandExecutor, receivedStderr stderr: String) {
-		self.writeOutput(sanitizeOutput(stderr))
+
+	@objc func clearBufferCommand() {
+		clearScreen()
+		writePrompt()
 	}
-	func commandExecutor(_ commandExecutor: CommandExecutor, didFinishDispatchWithExitCode exitCode: Int32) {
+
+	@objc private func stopCurrentCommand() {
+		// Send CTRL+C character to running command
+		guard executor.state == .running else { return }
+		let character = Parser.Code.endOfText.rawValue
+		textView.insertText(character)
+		executor.sendInput(character)
+	}
+
+	@objc func selectCommandHome() {
+		let commandStartDifference = textView.text.distance(from: currentCommandStartIndex, to: textView.text.endIndex)
+		if let commandStartPosition = textView.position(from: textView.endOfDocument, offset: -commandStartDifference) {
+			textView.selectedTextRange = textView.textRange(from: commandStartPosition, to: commandStartPosition)
+		}
+	}
+
+	@objc func selectCommandEnd() {
+		let endPosition = textView.endOfDocument
+		textView.selectedTextRange = textView.textRange(from: endPosition, to: endPosition)
+	}
+
+	@objc func completeCommand() {
+		guard
+			let firstCompletion = autoCompleteManager.completions.first?.name,
+			currentCommand != firstCompletion
+			else { return }
+
+		let completed: String
+		if let lastCommand = currentCommand.components(separatedBy: " ").last {
+			if lastCommand.isEmpty {
+				completed = currentCommand + firstCompletion
+			} else {
+				completed = currentCommand.replacingOccurrences(of: lastCommand, with: firstCompletion, options: .backwards)
+			}
+		} else {
+			completed = firstCompletion
+		}
+
+		currentCommand = completed
+		autoCompleteManager.reloadData()
+	}
+}
+
+extension TerminalView: ParserDelegate {
+
+	func parserDidEndTransmission(_ parser: Parser) {
 		DispatchQueue.main.async {
 			self.writePrompt()
 		}
 	}
+
+	func parser(_ parser: Parser, didReceiveString string: NSAttributedString) {
+		self.writeOutput(string)
+	}
+}
+
+extension TerminalView: CommandExecutorDelegate {
+
+	func commandExecutor(_ commandExecutor: CommandExecutor, receivedStdout stdout: Data) {
+		stdoutParser.parse(stdout)
+	}
+	func commandExecutor(_ commandExecutor: CommandExecutor, receivedStderr stderr: Data) {
+		stderrParser.parse(stderr)
+	}
+
 	func commandExecutor(_ commandExecutor: CommandExecutor, didChangeWorkingDirectory to: URL) {
 		DispatchQueue.main.async {
 			self.delegate?.didChangeCurrentWorkingDirectory(to)
 		}
 	}
 
-	func sanitizeOutput(_ output: String) -> String {
-		var output = output
-		// Replace $HOME with "~"
-		output = output.replacingOccurrences(of: DocumentManager.shared.activeDocumentsFolderURL.path, with: "~")
-		// Sometimes, fileManager adds /private in front of the directory
-		output = output.replacingOccurrences(of: "/private", with: "")
-		return output
+	func commandExecutor(_ commandExecutor: CommandExecutor, stateDidChange newState: CommandExecutor.State) {
+		DispatchQueue.main.async {
+			self.updateAutoComplete()
+		}
 	}
 }
 
@@ -383,30 +466,32 @@ extension TerminalView: UITextViewDelegate {
 
 	func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
 
-		guard !isWaitingForCommand else {
-			return false
-		}
+		switch executor.state {
+		case .running:
+			executor.sendInput(text)
+			return true
+		case .idle:
+			let i = textView.text.distance(from: textView.text.startIndex, to: currentCommandStartIndex)
 
-		let i = textView.text.distance(from: textView.text.startIndex, to: currentCommandStartIndex)
-
-		if range.location < i {
-			return false
-		}
-
-		if text == "\n" {
-
-			let input = textView.text[currentCommandStartIndex..<textView.text.endIndex]
-
-			if input.isEmpty {
-				writePrompt()
-			} else {
-				newLine()
-				delegate?.didEnterCommand(String(input))
+			if range.location < i {
+				return false
 			}
-			return false
-		}
 
-		return true
+			if text == "\n" {
+
+				let input = textView.text[currentCommandStartIndex..<textView.text.endIndex]
+
+				if input.isEmpty {
+					writePrompt()
+				} else {
+					newLine()
+					delegate?.didEnterCommand(String(input))
+				}
+				return false
+			}
+
+			return true
+		}
 	}
 
 	func textViewDidChange(_ textView: UITextView) {

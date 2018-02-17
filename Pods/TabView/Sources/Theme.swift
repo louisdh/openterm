@@ -58,7 +58,7 @@ open class TabViewThemeLight: TabViewTheme {
     public var barTitleColor: UIColor = .black
     public var barTintColor: UIColor = .init(white: 1, alpha: 1)
     public var barBlurStyle: UIBlurEffectStyle = .light
-    public var separatorColor: UIColor = .init(white: 0.5, alpha: 0.2)
+    public var separatorColor: UIColor = .init(white: 0.7, alpha: 1)
     public var tabCloseButtonColor: UIColor = .white
     public var tabCloseButtonBackgroundColor: UIColor = .init(white: 175/255, alpha: 1)
     public var tabBackgroundDeselectedColor: UIColor = .init(white: 0.6, alpha: 0.3)
@@ -75,7 +75,7 @@ open class TabViewThemeDark: TabViewTheme {
     public var barTitleColor: UIColor = .white
     public var barTintColor: UIColor = .init(white: 0.2, alpha: 1)
     public var barBlurStyle: UIBlurEffectStyle = .dark
-    public var separatorColor: UIColor = .init(white: 0, alpha: 0.6)
+    public var separatorColor: UIColor = .init(white: 0.15, alpha: 1)
     public var tabCloseButtonColor: UIColor = .init(white: 50/255, alpha: 1)
     public var tabCloseButtonBackgroundColor: UIColor = .init(white: 0.8, alpha: 1)
     public var tabBackgroundDeselectedColor: UIColor = .init(white: 0.4, alpha: 0.3)

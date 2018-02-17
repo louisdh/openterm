@@ -91,38 +91,6 @@ class BookmarkManager {
 		}
 	}
 
-	/// Determines the current directory and saves the corresponding path as
-	/// bookmark.
-	///
-	/// - Parameter sender: The view controller that asks to save the current directory. (Might be used to display alerts.)
-	func saveBookmarkForCurrentDirectory(sender: UIViewController) {
-
-		// Get the path of the current directory and create the corresponding URL.
-		let currentDirectoryPath = DocumentManager.shared.fileManager.currentDirectoryPath
-		let currentDirectoryURL = URL(fileURLWithPath: currentDirectoryPath)
-
-		//  If saving the URL fails, we show an alert with the error.
-		do {
-			try self.saveBookmarkURL(url: currentDirectoryURL)
-		} catch {
-
-			//  We inform the user that the bookmark could not be saved.
-			let alertController = UIAlertController(title: "Could not save bookmark.",
-													message: error.localizedDescription,
-													preferredStyle: .alert)
-
-			let cancelAction = UIAlertAction(title: "Cancel",
-											 style: .cancel,
-											 handler: nil)
-
-			alertController.addAction(cancelAction)
-
-			sender.present(alertController,
-						   animated: true,
-						   completion: nil)
-		}
-	}
-
 	/// Saves the passed url as a bookmark.
 	///
 	/// - Parameter url: The url to be saved as a bookmark.
