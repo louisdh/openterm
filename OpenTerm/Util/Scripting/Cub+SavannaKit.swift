@@ -21,7 +21,7 @@ extension Cub.TokenType: SavannaKit.TokenType {
 		case .shortHandAdd, .shortHandDiv, .shortHandMul, .shortHandPow, .shortHandSub:
 			return .plain
 
-		case .equals, .notEqual, .dot, .ignoreableToken, .parensOpen, .parensClose, .curlyOpen, .curlyClose, .comma:
+		case .equals, .notEqual, .dot, .ignoreableToken, .parensOpen, .parensClose, .curlyOpen, .curlyClose, .comma, .squareBracketOpen, .squareBracketClose:
 			return .plain
 
 		case .comparatorEqual, .comparatorLessThan, .comparatorGreaterThan, .comparatorLessThanEqual, .comparatorGreaterThanEqual:
@@ -30,7 +30,7 @@ extension Cub.TokenType: SavannaKit.TokenType {
 		case .other:
 			return .plain
 
-		case .break, .continue, .function, .if, .else, .while, .for, .do, .times, .return, .returns, .repeat, .true, .false, .struct:
+		case .break, .continue, .function, .if, .else, .while, .for, .do, .times, .return, .returns, .repeat, .true, .false, .struct, .guard, .in, .nil:
 			return .keyword
 
 		case .string:
