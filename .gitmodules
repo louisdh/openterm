@@ -1,0 +1,4 @@
+[submodule "Dependencies/ios_system"]
+	path = Dependencies/ios_system
+	url = https://github.com/holzschu/ios_system.git
+	branch = master

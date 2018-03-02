@@ -42,7 +42,9 @@ Commands included:
 | unsetenv   | uptime     | wc         | whoami     |
 
 ## Dependencies
-This project uses a modified version of [ios_system](https://github.com/holzschu/ios_system), which requires OpenSSL. For convenience both of these are included in the `Dependencies` folder.
+This project uses a modified version of [ios_system](https://github.com/holzschu/ios_system), which requires OpenSSL.
+
+To set up dependencies, run `bootstrap.sh`.
 
 ## Running
 Open `OpenTerm.xcworkspace`, change the bundle identifier to an identifier linked to your Apple developer account in order to run. Build using the `OpenTerm` scheme. 
