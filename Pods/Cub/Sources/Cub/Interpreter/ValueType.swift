@@ -11,9 +11,10 @@ import Foundation
 public enum ValueType: Equatable {
 
 	case number(NumberType)
-	case `struct`([Int : ValueType])
+	case `struct`([Int: ValueType])
 	case bool(Bool)
 	case string(String)
+	case array([ValueType])
 
 }
 
@@ -55,7 +56,16 @@ public extension ValueType {
 		
 		case let .string(val):
 			return val
-		
+			
+		case let .array(val):
+			
+			var descr = "["
+
+			descr += val.map({ $0.description(with: ctx) }).joined(separator: ", ")
+			
+			descr += "]"
+			
+			return descr
 		}
 
 	}
@@ -77,6 +87,10 @@ public func ==(lhs: ValueType, rhs: ValueType) -> Bool {
 	}
 	
 	if case let ValueType.string(l) = lhs, case let ValueType.string(r) = rhs {
+		return l == r
+	}
+	
+	if case let ValueType.array(l) = lhs, case let ValueType.array(r) = rhs {
 		return l == r
 	}
 

@@ -1,5 +1,11 @@
 <p align="center">
-<img src="readme-resources/hero.png" style="max-height: 300px;" alt="SavannaKit">
+  <a href="https://github.com/louisdh/lioness">Lioness</a> &bull;
+  <a href="https://github.com/louisdh/cub">Cub</a> &bull;
+  <b> SavannaKit </b>
+</p>
+
+<p align="center">
+<img src="readme-resources/hero@2x.png" alt="SavannaKit">
 </p>
 
 <p align="center">
@@ -24,10 +30,10 @@ This project includes `SyntaxTextView`, a cross-platform Text View with syntax h
 The following examples show syntax highlighting for [the Lioness programming language](https://github.com/louisdh/lioness).
 
 ### iOS
-![iOS Example](readme-resources/example_ios.png)
+<img src="readme-resources/example_ios.png" alt="iOS Example"/>
 
 ### macOS
-![macOS Example](readme-resources/example_mac.png)
+<img src="readme-resources/example_mac.png" alt="macOS Example"/>
 
 ## License
 

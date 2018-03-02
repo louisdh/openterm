@@ -3,7 +3,7 @@
 //  Cub
 //
 //  Created by Louis D'hauwe on 15/10/2016.
-//  Copyright © 2016 - 2017 Silver Fox. All rights reserved.
+//  Copyright © 2016 - 2018 Silver Fox. All rights reserved.
 //
 
 import Foundation
@@ -39,7 +39,7 @@ public class Runner {
 
 	public var delegate: RunnerDelegate?
 
-	let compiler: BytecodeCompiler
+	public let compiler: BytecodeCompiler
 	
 	public var executionFinishedCallback: (() -> Void)?
 
@@ -75,13 +75,17 @@ public class Runner {
 
 		if useStdLib {
 
-			let stdLib = try StdLib().stdLibCode()
+			let stdLib = StdLib()
+			
+			stdLib.registerExternalFunctions(self)
+			
+			let stdLibCode = try stdLib.stdLibCode()
 
-			guard let compiledStdLib = compileLionessSourceCode(stdLib) else {
+			guard let compiledStdLib = compileCubSourceCode(stdLibCode) else {
 				throw RunnerError.stdlibFailed
 			}
 
-			guard let compiledSource = compileLionessSourceCode(source) else {
+			guard let compiledSource = compileCubSourceCode(source) else {
 				throw RunnerError.runFailed
 			}
 
@@ -89,7 +93,7 @@ public class Runner {
 
 		} else {
 
-			guard let compiledSource = compileLionessSourceCode(source) else {
+			guard let compiledSource = compileCubSourceCode(source) else {
 				throw RunnerError.runFailed
 			}
 
@@ -100,6 +104,11 @@ public class Runner {
 		let executionBytecode = bytecode.map { $0.executionInstruction }
 
 		let interpreter = try BytecodeInterpreter(bytecode: executionBytecode)
+		
+		for (id, callback) in externalFunctions {
+			interpreter.registerExternalFunction(id: id, callback: callback)
+		}
+		
 		try interpreter.interpret()
 
 		guard let reg = compiler.getCompiledRegister(for: varName) else {
@@ -125,9 +134,13 @@ public class Runner {
 
 		let startTime = CFAbsoluteTimeGetCurrent()
 
-		let stdLib = try StdLib().stdLibCode()
-
-		guard let compiledStdLib = compileLionessSourceCode(stdLib) else {
+		let stdLib = StdLib()
+		
+		stdLib.registerExternalFunctions(self)
+		
+		let stdLibCode = try stdLib.stdLibCode()
+		
+		guard let compiledStdLib = compileCubSourceCode(stdLibCode) else {
 			throw RunnerError.stdlibFailed
 		}
 
@@ -137,7 +150,7 @@ public class Runner {
 			logSourceCode(source)
 		}
 
-		guard let compiledSource = compileLionessSourceCode(source) else {
+		guard let compiledSource = compileCubSourceCode(source) else {
 			throw RunnerError.runFailed
 		}
 
@@ -145,7 +158,7 @@ public class Runner {
 
 		let interpretStartTime = CFAbsoluteTimeGetCurrent()
 
-		interpret(fullBytecode)
+		try interpret(fullBytecode)
 
 		if logTime {
 
@@ -173,7 +186,7 @@ public class Runner {
 			logSourceCode(source)
 		}
 
-		guard let compiledSource = compileLionessSourceCode(source) else {
+		guard let compiledSource = compileCubSourceCode(source) else {
 			throw RunnerError.runFailed
 		}
 
@@ -181,7 +194,7 @@ public class Runner {
 
 		let interpretStartTime = CFAbsoluteTimeGetCurrent()
 
-		interpret(fullBytecode)
+		try interpret(fullBytecode)
 
 		if logDebug {
 
@@ -208,7 +221,7 @@ public class Runner {
 		return ast
 	}
 	
-	func compileLionessSourceCode(_ source: String) -> BytecodeBody? {
+	func compileCubSourceCode(_ source: String) -> BytecodeBody? {
 
 		guard let ast = parseAST(source) else {
 			return nil
@@ -222,13 +235,13 @@ public class Runner {
 
 	}
 
-	private func runLionessSourceCode(_ source: String) {
+	private func runCubSourceCode(_ source: String) throws {
 
-		guard let bytecode = compileLionessSourceCode(source) else {
+		guard let bytecode = compileCubSourceCode(source) else {
 			return
 		}
 
-		interpret(bytecode)
+		try interpret(bytecode)
 
 	}
 
@@ -352,58 +365,46 @@ public class Runner {
 
 	var interpreter: BytecodeInterpreter?
 
-	private func interpret(_ bytecode: BytecodeBody) {
+	private func interpret(_ bytecode: BytecodeBody) throws {
 
 		if logDebug {
 			logTitle("Start bytecode interpreter")
 		}
 
-		do {
-
-			let executionBytecode = bytecode.map { $0.executionInstruction }
-
-			let interpreter = try BytecodeInterpreter(bytecode: executionBytecode)
-
-			for (id, callback) in externalFunctions {
-				interpreter.registerExternalFunction(id: id, callback: callback)
-			}
-			
-			interpreter.executionFinishedCallback = executionFinishedCallback
-			
-			self.interpreter = interpreter
-
-			try interpreter.interpret()
-
-			if logDebug {
-				logInterpreter(interpreter)
-			}
-
-		} catch {
-
-			if logDebug {
-
-				log("pc trace:")
-
-				if let interpreter = interpreter {
-					for pc in interpreter.pcTrace {
-						log(bytecode[pc].description)
-					}
-				}
-
-				log("\n")
-
-				log(error)
-
-			}
-
+		let executionBytecode = bytecode.map { $0.executionInstruction }
+		
+		let interpreter = try BytecodeInterpreter(bytecode: executionBytecode)
+		
+		for (id, callback) in externalFunctions {
+			interpreter.registerExternalFunction(id: id, callback: callback)
+		}
+		
+		interpreter.executionFinishedCallback = executionFinishedCallback
+		
+		self.interpreter = interpreter
+		
+		try interpreter.interpret()
+		
+		if logDebug {
+			logInterpreter(interpreter)
 		}
 
+	}
+	
+	func printTrace(_ bytecode: BytecodeBody) {
+		
+		if let interpreter = interpreter {
+			for pc in interpreter.pcTrace {
+				log(bytecode[pc].description)
+			}
+		}
+		
 	}
 
 	// MARK: -
 	// MARK: Logging
 
-	private func logInterpreter(_ interpreter: BytecodeInterpreter) {
+	func logInterpreter(_ interpreter: BytecodeInterpreter) {
 
 		log("Stack at end of execution:\n\(interpreter.stack)\n")
 

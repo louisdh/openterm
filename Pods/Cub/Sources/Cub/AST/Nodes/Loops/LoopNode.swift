@@ -3,7 +3,7 @@
 //  Cub
 //
 //  Created by Louis D'hauwe on 09/12/2016.
-//  Copyright © 2016 - 2017 Silver Fox. All rights reserved.
+//  Copyright © 2016 - 2018 Silver Fox. All rights reserved.
 //
 
 import Foundation
