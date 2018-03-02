@@ -3,14 +3,14 @@
 //  Cub
 //
 //  Created by Louis D'hauwe on 04/10/2016.
-//  Copyright © 2016 - 2017 Silver Fox. All rights reserved.
+//  Copyright © 2016 - 2018 Silver Fox. All rights reserved.
 //
 
 import Foundation
 
 public class Lexer {
 
-	private static let keywordTokens: [String: TokenType] = [
+	static let keywordTokens: [String: TokenType] = [
 		"func": .function,
 		"while": .while,
 		"for": .for,
@@ -25,7 +25,10 @@ public class Lexer {
 		"repeat": .repeat,
 		"return": .return,
 		"returns": .returns,
-		"struct": .struct
+		"struct": .struct,
+		"guard": .guard,
+		"in": .in,
+		"nil": .nil
 	]
 
 	/// Currently only works for 1 char tokens
@@ -34,6 +37,8 @@ public class Lexer {
 		")": .parensClose,
 		"{": .curlyOpen,
 		"}": .curlyClose,
+		"[": .squareBracketOpen,
+		"]": .squareBracketClose,
 		",": .comma,
 		".": .dot,
 		"!": .booleanNot,

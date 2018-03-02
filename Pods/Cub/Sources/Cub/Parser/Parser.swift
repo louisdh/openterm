@@ -3,7 +3,7 @@
 //  Cub
 //
 //  Created by Louis D'hauwe on 04/10/2016.
-//  Copyright © 2016 - 2017 Silver Fox. All rights reserved.
+//  Copyright © 2016 - 2018 Silver Fox. All rights reserved.
 //
 
 import Foundation
@@ -37,17 +37,8 @@ public class Parser {
 
 		while index < tokens.count {
 
-			if shouldParseAssignment() {
-
-				let assign = try parseAssignment()
-				nodes.append(assign)
-
-			} else {
-
-				let expr = try parseExpression()
-				nodes.append(expr)
-
-			}
+			let expr = try parseExpression()
+			nodes.append(expr)
 
 		}
 
@@ -67,7 +58,7 @@ public class Parser {
 
 	// TODO: Refactor operators and their precedence
 
-	private let operatorPrecedence: [String : Int] = [
+	private let operatorPrecedence: [String: Int] = [
 		"+": 20,
 		"-": 20,
 		"*": 40,
@@ -240,7 +231,7 @@ public class Parser {
 	}
 
 	@discardableResult
-	private func popCurrentToken(andExpect type: TokenType, _ tokenString: String? = nil) throws  -> Token {
+	private func popCurrentToken(andExpect type: TokenType, _ tokenString: String? = nil) throws -> Token {
 
 		guard let currentToken = popCurrentToken() else {
 			throw error(.unexpectedToken)
@@ -260,50 +251,8 @@ public class Parser {
 
 	}
 
-	// MARK: - Parsing look ahead
-
-	/// Look ahead to check if assignment should be parsed
-	private func shouldParseAssignment() -> Bool {
-
-		guard let currentToken = peekCurrentToken(), case .identifier = currentToken.type else {
-			return false
-		}
-
-		var i = 1
-		var expectDot = true
-
-		while let nextToken = peekToken(offset: i) {
-
-			if case .equals = nextToken.type {
-				return true
-			}
-
-			if expectDot {
-
-				guard case .dot = nextToken.type else {
-					return false
-				}
-
-			} else {
-
-				guard case .identifier = nextToken.type else {
-					return false
-				}
-
-			}
-
-			expectDot = !expectDot
-
-			i += 1
-
-		}
-
-		return false
-
-	}
-
 	// MARK: - Parsing
-
+	
 	private func parseAssignment() throws -> AssignmentNode {
 
 		guard let currentToken = popCurrentToken() else {
@@ -314,26 +263,11 @@ public class Parser {
 			throw error(.unexpectedToken)
 		}
 
-		let varNode = try parseVariable(with: varName)
-
-		try popCurrentToken(andExpect: .equals, "=")
-
-		let expr = try parseExpression()
-
-		do {
-			
-			let assign = try AssignmentNode(variable: varNode, value: expr)
-			return assign
-			
-		} catch let error as AssignmentNodeValidationError {
-			
-			throw self.error(.invalidAssignmentValue(value: error.invalidValueType))
-			
-		} catch {
-		
+		guard let assignmentNode = try parseVariable(with: varName) as? AssignmentNode else {
 			throw self.error(.unexpectedToken)
-
 		}
+
+		return assignmentNode
 	}
 
 	private func parseNumber() throws -> NumberNode {
@@ -366,9 +300,37 @@ public class Parser {
 	private func parseExpression() throws -> ASTNode {
 
 		let node = try parsePrimary()
+		
+		if node is AssignmentNode {
+			return node
+		}
 
-		// Handles short hand operators (e.g. "+=")
-		if let currentToken = peekCurrentToken(), let op = getOperator(forShortHandToken: currentToken.type) {
+		if let currentToken = peekCurrentToken(), case .equals = currentToken.type {
+
+			// Handle assignment
+			
+			try popCurrentToken(andExpect: .equals, "=")
+			
+			let expr = try parsePrimary()
+			
+			do {
+				
+				let assign = try AssignmentNode(variable: node, value: expr)
+				return assign
+				
+			} catch let error as AssignmentNodeValidationError {
+				
+				throw self.error(.invalidAssignmentValue(value: error.invalidValueType))
+				
+			} catch {
+				
+				throw self.error(.unexpectedToken)
+				
+			}
+			
+		} else if let currentToken = peekCurrentToken(), let op = getOperator(forShortHandToken: currentToken.type) {
+
+			// Handle short hand operators (e.g. "+=")
 
 			guard node is VariableNode || node is StructMemberNode else {
 				throw error(.expectedVariable)
@@ -396,7 +358,6 @@ public class Parser {
 		let expr = try parseBinaryOp(node)
 
 		return expr
-
 	}
 
 	private func parseParensExpr() throws -> ASTNode {
@@ -454,6 +415,32 @@ public class Parser {
 
 		let varNode = VariableNode(name: name)
 
+		if let currentToken = peekCurrentToken(), case .equals = currentToken.type {
+
+			// Handle assignment
+			
+			try popCurrentToken(andExpect: .equals, "=")
+			
+			let expr = try parsePrimary()
+			
+			let binaryOp = try parseBinaryOp(expr)
+			
+			do {
+				
+				let assign = try AssignmentNode(variable: varNode, value: binaryOp)
+				return assign
+				
+			} catch let error as AssignmentNodeValidationError {
+				
+				throw self.error(.invalidAssignmentValue(value: error.invalidValueType))
+				
+			} catch {
+				
+				throw self.error(.unexpectedToken)
+				
+			}
+		}
+		
 		if let currentToken = peekCurrentToken(), case .dot = currentToken.type {
 
 			var members = [String]()
@@ -498,6 +485,47 @@ public class Parser {
 
 			return returnNode
 
+		}
+		
+		if let currentToken = peekCurrentToken(), case .squareBracketOpen = currentToken.type {
+
+			var members = [ASTNode]()
+			
+			while let currentToken = peekCurrentToken(), case .squareBracketOpen = currentToken.type {
+				
+				try popCurrentToken(andExpect: .squareBracketOpen, "[")
+				
+				let member = try parsePrimary()
+				
+				try popCurrentToken(andExpect: .squareBracketClose, "]")
+
+				members.append(member)
+				
+			}
+			
+			var memberNode: ArraySubscriptNode?
+			
+			while !members.isEmpty {
+				
+				let member = members.removeFirst()
+				
+				if let prevMemberNode = memberNode {
+					
+					memberNode = ArraySubscriptNode(variable: prevMemberNode, name: member)
+					
+				} else {
+					
+					memberNode = ArraySubscriptNode(variable: varNode, name: member)
+					
+				}
+				
+			}
+			
+			guard let returnNode = memberNode else {
+				throw error(.unexpectedToken)
+			}
+			
+			return returnNode
 		}
 
 		return varNode
@@ -563,6 +591,9 @@ public class Parser {
 			case .identifier:
 				return try parseIdentifier()
 
+			case .squareBracketOpen:
+				return try parseArray()
+			
 			case .number:
 				return try parseNumber()
 			
@@ -686,10 +717,45 @@ public class Parser {
 		return doStatement
 	}
 
-	private func parseForStatement() throws -> ForStatementNode {
+	private func parseForStatement() throws -> ASTNode {
 
 		let forToken = try popCurrentToken(andExpect: .for)
+		
+		if let peekCurrentToken = peekCurrentToken(), case .identifier = peekCurrentToken.type,
+			let peekNextToken = peekNextToken(), case .in = peekNextToken.type {
+			
+			guard let currentToken = popCurrentToken() else {
+				throw self.error(.unexpectedToken)
+			}
+			
+			guard case .identifier(let name) = currentToken.type else {
+				throw self.error(.unexpectedToken)
+			}
+			
+			let varNode = VariableNode(name: name)
 
+			try popCurrentToken(andExpect: .in, "in")
+			
+			let arrayExpression = try parseExpression()
+			
+			let body = try parseBodyWithCurlies()
+			
+			let forStatement: ForInLoopNode
+			
+			do {
+				
+				forStatement = try ForInLoopNode(iteratorVarNode: varNode, arrayNode: arrayExpression, body: body)
+				
+			} catch {
+				
+				throw self.error(.illegalStatement, token: forToken)
+				
+			}
+			
+			return forStatement
+			
+		}
+		
 		let assignment = try parseAssignment()
 
 		try popCurrentToken(andExpect: .comma, ",")
@@ -794,17 +860,8 @@ public class Parser {
 				break
 			}
 
-			if shouldParseAssignment() {
-
-				let assign = try parseAssignment()
-				nodes.append(assign)
-
-			} else {
-
-				let expr = try parseExpression()
-				nodes.append(expr)
-
-			}
+			let expr = try parseExpression()
+			nodes.append(expr)
 
 		}
 
@@ -949,6 +1006,43 @@ public class Parser {
 		return FunctionNode(prototype: prototype, body: body)
 	}
 
+	private func parseArray() throws -> ArrayNode {
+		
+		try popCurrentToken(andExpect: .squareBracketOpen, "[")
+		
+		var arguments = [ASTNode]()
+		
+		if let currentToken = peekCurrentToken(), case .squareBracketClose = currentToken.type {
+			
+		} else {
+			
+			while true {
+				
+				let argument = try parseExpression()
+				arguments.append(argument)
+				
+				if let currentToken = peekCurrentToken(), case .squareBracketClose = currentToken.type {
+					break
+				}
+				
+				guard let commaToken = popCurrentToken() else {
+					throw error(.unexpectedToken)
+				}
+				
+				guard case .comma = commaToken.type else {
+					throw error(.expectedArgumentList)
+				}
+				
+			}
+		
+
+		}
+
+		try popCurrentToken(andExpect: .squareBracketClose, "]")
+
+		return try ArrayNode(values: arguments)
+	}
+	
 	private func parseStruct() throws -> StructNode {
 
 		try popCurrentToken(andExpect: .struct)

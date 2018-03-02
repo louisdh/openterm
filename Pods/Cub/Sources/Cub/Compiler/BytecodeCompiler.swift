@@ -3,7 +3,7 @@
 //  Cub
 //
 //  Created by Louis D'hauwe on 07/10/2016.
-//  Copyright © 2016 - 2017 Silver Fox. All rights reserved.
+//  Copyright © 2016 - 2018 Silver Fox. All rights reserved.
 //
 
 import Foundation
@@ -47,7 +47,7 @@ public class BytecodeCompiler {
 
 	private var structMemberIndex: Int
 
-	private var structMemberMap: [String : Int]
+	private var structMemberMap: [String: Int]
 
 	private let scopeTreeRoot: ScopeNode
 

@@ -3,7 +3,7 @@
 //  Cub
 //
 //  Created by Louis D'hauwe on 09/10/2016.
-//  Copyright © 2016 - 2017 Silver Fox. All rights reserved.
+//  Copyright © 2016 - 2018 Silver Fox. All rights reserved.
 //
 
 import Foundation
@@ -125,10 +125,9 @@ public class BytecodeInterpreter {
 		
 	}
 	
-	func resume() throws {
+	func resume() {
 		
 		isPaused = false
-		try interpret()
 		
 	}
 	
@@ -137,10 +136,11 @@ public class BytecodeInterpreter {
 	/// - Throws: InterpreterError
 	public func interpret() throws {
 
-		while pc < bytecode.count {
+		while true {
 			
 			if isPaused {
-				return
+				Thread.sleep(forTimeInterval: 0.001)
+				continue
 			}
 
 			pcTrace.append(pc)
@@ -153,7 +153,7 @@ public class BytecodeInterpreter {
 				}
 				
 			} else {
-				break
+				continue
 			}
 
 		}
@@ -264,6 +264,21 @@ public class BytecodeInterpreter {
 			case .privateVirtualEnd:
 				newPc = try executePrivateVirtualEnd(instruction, pc: pc)
 
+			case .arrayInit:
+				newPc = try executeArrayInit(instruction, pc: pc)
+			
+			case .arraySet:
+				newPc = try executeArraySet(instruction, pc: pc)
+			
+			case .arrayUpdate:
+				newPc = try executeArrayUpdate(instruction, pc: pc)
+			
+			case .arrayGet:
+				newPc = try executeArrayGet(instruction, pc: pc)
+			
+			case .sizeOf:
+				newPc = try sizeOf(instruction, pc: pc)
+
 		}
 
 		return newPc
@@ -300,6 +315,24 @@ public class BytecodeInterpreter {
 		case let (.string(n1), .string(n2)):
 			try stack.push(.string("\(n1)\(n2)"))
 
+		case let (.array(a1), .array(a2)):
+			var array = a1
+			array.append(contentsOf: a2)
+			
+			try stack.push(.array(array))
+			
+		case let (.array(a1), a2):
+			var array = a1
+			array.append(a2)
+			
+			try stack.push(.array(array))
+
+		case let (a1, .array(a2)):
+			var array = a2
+			array.insert(a1, at: 0)
+			
+			try stack.push(.array(array))
+			
 		default:
 			throw error(.unexpectedArgument)
 		}
@@ -591,8 +624,8 @@ public class BytecodeInterpreter {
 					
 					self.pc += 1
 					
-					try self.resume()
-					
+					self.resume()
+
 					return true
 					
 				} catch {
@@ -765,17 +798,162 @@ public class BytecodeInterpreter {
 
 		return try virtualInvokeStack.pop()
 	}
+	
+	private func executeArrayInit(_ instruction: BytecodeExecutionInstruction, pc: Int) throws -> Int {
+		
+		guard let arg = instruction.arguments.first, case let .index(size) = arg else {
+			throw error(.unexpectedArgument)
+		}
+		
+		let newArray = ValueType.array([ValueType](repeating: .number(0), count: size))
+		
+		try stack.push(newArray)
+		
+		return pc + 1
+	}
+	
+	private func executeArraySet(_ instruction: BytecodeExecutionInstruction, pc: Int) throws -> Int {
+		
+		guard let arg = instruction.arguments.first, case let .index(i) = arg else {
+			throw error(.unexpectedArgument)
+		}
+		
+		let newValue = try stack.pop()
+		
+		guard case let ValueType.array(v) = try stack.pop() else {
+			throw error(.unexpectedArgument)
+		}
+		
+		var newArray = v
+		
+		guard i >= 0 && i < newArray.count else {
+			throw error(.arrayOutOfBounds)
+		}
+		
+		newArray[i] = newValue
+		
+		try stack.push(.array(newArray))
+		
+		return pc + 1
+	}
+	
+	private func executeArrayUpdate(_ instruction: BytecodeExecutionInstruction, pc: Int) throws -> Int {
+		
+		let v2 = try stack.pop()
+
+		let index = try popNumber()
+		let i = Int(index)
+		
+		let updateValue = try stack.pop()
+
+		if case let ValueType.array(v) = v2 {
+			
+			var newArray = v
+			
+			guard i >= 0 && i < newArray.count else {
+				throw error(.arrayOutOfBounds)
+			}
+			
+			newArray[i] = updateValue
+			
+			try stack.push(.array(newArray))
+			
+		} else if case let ValueType.string(v) = v2 {
+
+			guard case let .string(insertString) = updateValue else {
+				throw error(.unexpectedArgument)
+			}
+			
+			guard i >= 0 && i < v.count else {
+				throw error(.arrayOutOfBounds)
+			}
+			
+			let newString = String(v.prefix(i)) + insertString + String(v.dropFirst(i + 1))
+			
+			try stack.push(.string(newString))
+			
+		} else {
+			
+			throw error(.unexpectedArgument)
+
+		}
+		
+		return pc + 1
+	}
+	
+	private func executeArrayGet(_ instruction: BytecodeExecutionInstruction, pc: Int) throws -> Int {
+		
+		guard case let ValueType.number(i) = try stack.pop() else {
+			throw error(.unexpectedArgument)
+		}
+		
+		let v2 = try stack.pop()
+		if case let ValueType.array(v) = v2 {
+
+			guard let memberValue = v[safe: Int(i)] else {
+				throw error(.arrayOutOfBounds)
+			}
+			
+			try stack.push(memberValue)
+		
+		} else if case let ValueType.string(v) = v2 {
+
+			guard i >= 0 && Int(i) < v.count else {
+				throw error(.arrayOutOfBounds)
+			}
+			
+			let memberValue = v[v.index(v.startIndex, offsetBy: Int(i))]
+
+			try stack.push(.string(String(memberValue)))
+			
+		} else {
+			
+			throw error(.unexpectedArgument)
+
+		}
+		
+		return pc + 1
+	}
+	
+	private func sizeOf(_ instruction: BytecodeExecutionInstruction, pc: Int) throws -> Int {
+
+		let value = try stack.pop()
+		
+		let size: NumberType
+		
+		switch value {
+		case .array(let array):
+			size = NumberType(array.count)
+			
+		case .bool:
+			size = 1
+			
+		case .number(let number):
+			size = number
+			
+		case .string(let string):
+			size = NumberType(string.count)
+			
+		case .struct(let stru):
+			size = NumberType(stru.count)
+
+		}
+		
+		try stack.push(.number(size))
+		
+		return pc + 1
+	}
 
 	// MARK: - Structs
 
 	/// Get updated dictionary for given dictionary, updating with newValue at keyPath.
 	/// Recursively traverses dictionary tree to update a value, then reconstructs the dictionary.
 	/// E.g.
-	/// dict = [0 : [1 : 4.0]]
+	/// dict = [0: [1: 4.0]]
 	/// keyPath = [1, 0]
 	/// newValue = 8.0
-	/// -> [0 : [1 : 8.0]]
-	private func updatedDict(for dict: [Int : ValueType], keyPath: [Int], newValue: ValueType, isReconstructing: Bool = false, trace: [[Int : ValueType]] = [], keyPathPassed: [Int] = []) throws -> [Int : ValueType] {
+	/// -> [0: [1: 8.0]]
+	private func updatedDict(for dict: [Int: ValueType], keyPath: [Int], newValue: ValueType, isReconstructing: Bool = false, trace: [[Int: ValueType]] = [], keyPathPassed: [Int] = []) throws -> [Int: ValueType] {
 
 		var trace = trace
 		var keyPathPassed = keyPathPassed
