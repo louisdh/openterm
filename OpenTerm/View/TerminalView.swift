@@ -103,6 +103,11 @@ class TerminalView: UIView {
 	}
 
 	func appendText(_ text: NSAttributedString) {
+		
+		if text.string.isEmpty {
+			return
+		}
+		
 		dispatchPrecondition(condition: .onQueue(.main))
 
 		let text = NSMutableAttributedString(attributedString: text)
