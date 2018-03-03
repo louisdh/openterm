@@ -13,11 +13,13 @@ public struct FunctionPrototypeNode: ASTNode {
 	public let name: String
 	public let argumentNames: [String]
 	public let returns: Bool
+	public let range: Range<Int>?
 
-	public init(name: String, argumentNames: [String] = [], returns: Bool = false) {
+	public init(name: String, argumentNames: [String] = [], returns: Bool = false, range: Range<Int>?) {
 		self.name = name
 		self.argumentNames = argumentNames
 		self.returns = returns
+		self.range = range
 	}
 
 	// TODO: make ASTNode protocol without compile function? (and make one with compile func)

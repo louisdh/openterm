@@ -13,3 +13,22 @@ public enum RunnerError: Error {
 	case stdlibFailed
 	case runFailed
 }
+
+extension RunnerError: DisplayableError {
+	
+	public func description(inSource source: String) -> String {
+		
+		switch self {
+		case .registerNotFound:
+			return "Register not found."
+			
+		case .stdlibFailed:
+			return "An internal error in the standard library occurred."
+			
+		case .runFailed:
+			return "An unknown error occurred."
+		}
+		
+	}
+	
+}

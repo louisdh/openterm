@@ -280,7 +280,7 @@ public class Parser {
 			throw error(.unexpectedToken)
 		}
 
-		return NumberNode(value: value)
+		return NumberNode(value: value, range: currentToken.range)
 	}
 	
 	private func parseString() throws -> StringNode {
@@ -293,7 +293,7 @@ public class Parser {
 			throw error(.unexpectedToken)
 		}
 		
-		return StringNode(value: value)
+		return StringNode(value: value, range: currentToken.range)
 	}
 	
 	/// Expression can be a binary/bool op, member
@@ -315,7 +315,7 @@ public class Parser {
 			
 			do {
 				
-				let assign = try AssignmentNode(variable: node, value: expr)
+				let assign = try AssignmentNode(variable: node, value: expr, range: currentToken.range)
 				return assign
 				
 			} catch let error as AssignmentNodeValidationError {
@@ -344,12 +344,12 @@ public class Parser {
 			let operation: BinaryOpNode
 
 			do {
-				operation = try BinaryOpNode(op: op, lhs: node, rhs: expr)
+				operation = try BinaryOpNode(op: op, lhs: node, rhs: expr, range: currentToken.range)
 			} catch {
 				throw self.error(.illegalBinaryOperation, token: currentToken)
 			}
 
-			let assignment = try AssignmentNode(variable: node, value: operation)
+			let assignment = try AssignmentNode(variable: node, value: operation, range: currentToken.range)
 
 			return assignment
 
@@ -383,7 +383,7 @@ public class Parser {
 
 			let expr = try parseParensExpr()
 
-			return try BinaryOpNode(op: "!", lhs: expr)
+			return try BinaryOpNode(op: "!", lhs: expr, range: currentToken.range)
 
 		} else {
 
@@ -405,7 +405,7 @@ public class Parser {
 
 			}
 
-			return try BinaryOpNode(op: "!", lhs: lhs)
+			return try BinaryOpNode(op: "!", lhs: lhs, range: currentToken.range)
 
 		}
 
@@ -413,7 +413,7 @@ public class Parser {
 
 	private func parseVariable(with name: String) throws -> ASTNode {
 
-		let varNode = VariableNode(name: name)
+		let varNode = VariableNode(name: name, range: peekCurrentToken()?.range)
 
 		if let currentToken = peekCurrentToken(), case .equals = currentToken.type {
 
@@ -427,7 +427,7 @@ public class Parser {
 			
 			do {
 				
-				let assign = try AssignmentNode(variable: varNode, value: binaryOp)
+				let assign = try AssignmentNode(variable: varNode, value: binaryOp, range: currentToken.range)
 				return assign
 				
 			} catch let error as AssignmentNodeValidationError {
@@ -469,11 +469,11 @@ public class Parser {
 
 				if let prevMemberNode = memberNode {
 
-					memberNode = StructMemberNode(variable: prevMemberNode, name: member)
+					memberNode = StructMemberNode(variable: prevMemberNode, name: member, range: currentToken.range)
 
 				} else {
 
-					memberNode = StructMemberNode(variable: varNode, name: member)
+					memberNode = StructMemberNode(variable: varNode, name: member, range: currentToken.range)
 
 				}
 
@@ -511,11 +511,11 @@ public class Parser {
 				
 				if let prevMemberNode = memberNode {
 					
-					memberNode = ArraySubscriptNode(variable: prevMemberNode, name: member)
+					memberNode = ArraySubscriptNode(variable: prevMemberNode, name: member, range: currentToken.range)
 					
 				} else {
 					
-					memberNode = ArraySubscriptNode(variable: varNode, name: member)
+					memberNode = ArraySubscriptNode(variable: varNode, name: member, range: currentToken.range)
 					
 				}
 				
@@ -576,7 +576,7 @@ public class Parser {
 		}
 
 		popCurrentToken()
-		return CallNode(callee: name, arguments: arguments)
+		return CallNode(callee: name, arguments: arguments, range: currentToken.range)
 	}
 
 	/// Primary can be seen as the start of an operation 
@@ -649,14 +649,14 @@ public class Parser {
 
 		try popCurrentToken(andExpect: .continue)
 
-		return ContinueNode()
+		return ContinueNode(range: peekCurrentToken()?.range)
 	}
 
 	private func parseBreak() throws -> BreakLoopNode {
 
 		try popCurrentToken(andExpect: .break)
 
-		return BreakLoopNode()
+		return BreakLoopNode(range: peekCurrentToken()?.range)
 	}
 
 	private func parseIfStatement() throws -> ConditionalStatementNode {
@@ -674,19 +674,19 @@ public class Parser {
 			if let currentToken = peekCurrentToken(), case .if = currentToken.type {
 
 				let ifStatement = try parseIfStatement()
-				let elseBody = BodyNode(nodes: [ifStatement])
+				let elseBody = BodyNode(nodes: [ifStatement], range: currentToken.range)
 
-				return ConditionalStatementNode(condition: condition, body: body, elseBody: elseBody)
+				return ConditionalStatementNode(condition: condition, body: body, elseBody: elseBody, range: currentToken.range)
 
 			}
 
 			let elseBody = try parseBodyWithCurlies()
 
-			return ConditionalStatementNode(condition: condition, body: body, elseBody: elseBody)
+			return ConditionalStatementNode(condition: condition, body: body, elseBody: elseBody, range: currentToken.range)
 
 		} else {
 
-			return ConditionalStatementNode(condition: condition, body: body)
+			return ConditionalStatementNode(condition: condition, body: body, range: peekCurrentToken()?.range)
 
 		}
 
@@ -706,7 +706,7 @@ public class Parser {
 
 		do {
 
-			doStatement = try DoStatementNode(amount: amount, body: body)
+			doStatement = try DoStatementNode(amount: amount, body: body, range: peekCurrentToken()?.range)
 
 		} catch {
 
@@ -732,7 +732,7 @@ public class Parser {
 				throw self.error(.unexpectedToken)
 			}
 			
-			let varNode = VariableNode(name: name)
+			let varNode = VariableNode(name: name, range: currentToken.range)
 
 			try popCurrentToken(andExpect: .in, "in")
 			
@@ -744,7 +744,7 @@ public class Parser {
 			
 			do {
 				
-				forStatement = try ForInLoopNode(iteratorVarNode: varNode, arrayNode: arrayExpression, body: body)
+				forStatement = try ForInLoopNode(iteratorVarNode: varNode, arrayNode: arrayExpression, body: body, range: currentToken.range)
 				
 			} catch {
 				
@@ -772,7 +772,7 @@ public class Parser {
 
 		do {
 
-			forStatement = try ForStatementNode(assignment: assignment, condition: condition, interval: interval, body: body)
+			forStatement = try ForStatementNode(assignment: assignment, condition: condition, interval: interval, body: body, range: peekCurrentToken()?.range)
 
 		} catch {
 
@@ -795,7 +795,7 @@ public class Parser {
 
 		}
 
-		return ReturnNode(value: expr)
+		return ReturnNode(value: expr, range: peekCurrentToken()?.range)
 	}
 
 	private func parseWhileStatement() throws -> WhileStatementNode {
@@ -809,7 +809,7 @@ public class Parser {
 		let whileStatement: WhileStatementNode
 
 		do {
-			whileStatement = try WhileStatementNode(condition: condition, body: body)
+			whileStatement = try WhileStatementNode(condition: condition, body: body, range: peekCurrentToken()?.range)
 		} catch {
 			throw self.error(.illegalStatement, token: whileToken)
 		}
@@ -830,7 +830,7 @@ public class Parser {
 		let whileStatement: RepeatWhileStatementNode
 
 		do {
-			whileStatement = try RepeatWhileStatementNode(condition: condition, body: body)
+			whileStatement = try RepeatWhileStatementNode(condition: condition, body: body, range: peekCurrentToken()?.range)
 		} catch {
 			throw self.error(.illegalStatement, token: whileToken)
 		}
@@ -865,7 +865,7 @@ public class Parser {
 
 		}
 
-		return BodyNode(nodes: nodes)
+		return BodyNode(nodes: nodes, range: peekCurrentToken()?.range)
 
 	}
 
@@ -878,12 +878,12 @@ public class Parser {
 
 		if case .true = currentToken.type {
 			popCurrentToken()
-			return BooleanNode(bool: true)
+			return BooleanNode(bool: true, range: currentToken.range)
 		}
 
 		if case .false = currentToken.type {
 			popCurrentToken()
-			return BooleanNode(bool: false)
+			return BooleanNode(bool: false, range: currentToken.range)
 		}
 
 		throw error(.unexpectedToken)
@@ -934,7 +934,7 @@ public class Parser {
 			}
 
 			do {
-				lhs = try BinaryOpNode(op: op, lhs: lhs, rhs: rhs)
+				lhs = try BinaryOpNode(op: op, lhs: lhs, rhs: rhs, range: token.range)
 			} catch {
 				throw self.error(.illegalBinaryOperation, token: token)
 			}
@@ -990,7 +990,7 @@ public class Parser {
 
 		try popCurrentToken(andExpect: .curlyOpen, "{")
 
-		return FunctionPrototypeNode(name: name, argumentNames: argumentNames, returns: returns)
+		return FunctionPrototypeNode(name: name, argumentNames: argumentNames, returns: returns, range: idToken.range)
 	}
 
 	private func parseFunction() throws -> FunctionNode {
@@ -1003,7 +1003,7 @@ public class Parser {
 
 		try popCurrentToken(andExpect: .curlyClose, "}")
 
-		return FunctionNode(prototype: prototype, body: body)
+		return FunctionNode(prototype: prototype, body: body, range: peekCurrentToken()?.range)
 	}
 
 	private func parseArray() throws -> ArrayNode {
@@ -1040,7 +1040,7 @@ public class Parser {
 
 		try popCurrentToken(andExpect: .squareBracketClose, "]")
 
-		return try ArrayNode(values: arguments)
+		return try ArrayNode(values: arguments, range: peekCurrentToken()?.range)
 	}
 	
 	private func parseStruct() throws -> StructNode {
@@ -1076,11 +1076,11 @@ public class Parser {
 			}
 		}
 
-		let prototype = try StructPrototypeNode(name: name, members: members)
+		let prototype = try StructPrototypeNode(name: name, members: members, range: idToken.range)
 
 		try popCurrentToken(andExpect: .curlyClose, "}")
 
-		return StructNode(prototype: prototype)
+		return StructNode(prototype: prototype, range: idToken.range)
 	}
 
 	// MARK: -

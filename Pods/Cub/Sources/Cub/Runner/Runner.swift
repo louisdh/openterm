@@ -55,8 +55,8 @@ public class Runner {
 	
 	public func registerExternalFunction(name: String, argumentNames: [String], returns: Bool, callback: @escaping ExternalFunc) {
 
-		let prototype = FunctionPrototypeNode(name: name, argumentNames: argumentNames, returns: returns)
-		let node = FunctionNode(prototype: prototype, body: BodyNode(nodes: []))
+		let prototype = FunctionPrototypeNode(name: name, argumentNames: argumentNames, returns: returns, range: nil)
+		let node = FunctionNode(prototype: prototype, body: BodyNode(nodes: [], range: nil), range: nil)
 		let id = compiler.getFunctionId(for: node)
 		
 		externalFunctions[id] = (argumentNames, callback)
@@ -81,21 +81,17 @@ public class Runner {
 			
 			let stdLibCode = try stdLib.stdLibCode()
 
-			guard let compiledStdLib = compileCubSourceCode(stdLibCode) else {
+			guard let compiledStdLib = try? compileCubSourceCode(stdLibCode) else {
 				throw RunnerError.stdlibFailed
 			}
 
-			guard let compiledSource = compileCubSourceCode(source) else {
-				throw RunnerError.runFailed
-			}
+			let compiledSource = try compileCubSourceCode(source)
 
 			bytecode = compiledStdLib + compiledSource
 
 		} else {
 
-			guard let compiledSource = compileCubSourceCode(source) else {
-				throw RunnerError.runFailed
-			}
+			let compiledSource = try compileCubSourceCode(source)
 
 			bytecode = compiledSource
 
@@ -140,7 +136,7 @@ public class Runner {
 		
 		let stdLibCode = try stdLib.stdLibCode()
 		
-		guard let compiledStdLib = compileCubSourceCode(stdLibCode) else {
+		guard let compiledStdLib = try? compileCubSourceCode(stdLibCode) else {
 			throw RunnerError.stdlibFailed
 		}
 
@@ -150,9 +146,7 @@ public class Runner {
 			logSourceCode(source)
 		}
 
-		guard let compiledSource = compileCubSourceCode(source) else {
-			throw RunnerError.runFailed
-		}
+		let compiledSource = try compileCubSourceCode(source)
 
 		let fullBytecode = compiledStdLib + compiledSource
 
@@ -186,9 +180,7 @@ public class Runner {
 			logSourceCode(source)
 		}
 
-		guard let compiledSource = compileCubSourceCode(source) else {
-			throw RunnerError.runFailed
-		}
+		let compiledSource = try compileCubSourceCode(source)
 
 		let fullBytecode = compiledSource
 
@@ -212,34 +204,22 @@ public class Runner {
 
 	// MARK: -
 	
-	func parseAST(_ source: String) -> [ASTNode]? {
-		
-		guard let ast = (runLexer |> parseTokens)(source) else {
-			return nil
-		}
-		
-		return ast
+	func parseAST(_ source: String) throws -> [ASTNode] {
+		return try (runLexer |> parseTokens)(source)
 	}
 	
-	func compileCubSourceCode(_ source: String) -> BytecodeBody? {
+	func compileCubSourceCode(_ source: String) throws -> BytecodeBody {
 
-		guard let ast = parseAST(source) else {
-			return nil
-		}
+		let ast = try parseAST(source)
 
-		guard let bytecode = compileToBytecode(ast: ast) else {
-			return nil
-		}
-
+		let bytecode = try compileToBytecode(ast: ast)
+		
 		return bytecode
-
 	}
 
 	private func runCubSourceCode(_ source: String) throws {
 
-		guard let bytecode = compileCubSourceCode(source) else {
-			return
-		}
+		let bytecode = try compileCubSourceCode(source)
 
 		try interpret(bytecode)
 
@@ -293,7 +273,7 @@ public class Runner {
 	
 	// MARK: -
 
-	private func parseTokens(_ tokens: [Token]) -> [ASTNode]? {
+	private func parseTokens(_ tokens: [Token]) throws -> [ASTNode] {
 
 		if logDebug {
 			logTitle("Start parser")
@@ -301,66 +281,34 @@ public class Runner {
 
 		let parser = Parser(tokens: tokens)
 
-		var ast: [ASTNode]? = nil
-
-		do {
-
-			ast = try parser.parse()
-
-			if logDebug {
-
-				log("Parsed AST:")
-
-				if let ast = ast {
-					for a in ast {
-						log(a.description)
-					}
-				}
-
+		let ast = try parser.parse()
+		
+		if logDebug {
+			
+			log("Parsed AST:")
+			
+			for a in ast {
+				log(a.description)
 			}
-
-			return ast
-
-		} catch {
-
-			if logDebug {
-				log(error)
-			}
-
-			return nil
-
+			
 		}
-
+		
+		return ast
 	}
 
-	private func compileToBytecode(ast: [ASTNode]) -> BytecodeBody? {
+	private func compileToBytecode(ast: [ASTNode]) throws -> BytecodeBody {
 
 		if logDebug {
 			logTitle("Start bytecode compiler")
 		}
 
-		do {
-
-			let bytecode = try compiler.compile(ast)
-
-			if logDebug {
-				logBytecode(bytecode)
-			}
-
-			return bytecode
-
-		} catch {
-
-			if logDebug {
-
-				log(error)
-
-			}
-
-			return nil
-
+		let bytecode = try compiler.compile(ast)
+		
+		if logDebug {
+			logBytecode(bytecode)
 		}
-
+		
+		return bytecode
 	}
 
 	var interpreter: BytecodeInterpreter?

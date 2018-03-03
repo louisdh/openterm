@@ -11,7 +11,7 @@ import Foundation
 public extension BytecodeInstruction {
 
 	var executionInstruction: BytecodeExecutionInstruction {
-		return BytecodeExecutionInstruction(label: label, type: type, arguments: arguments)
+		return BytecodeExecutionInstruction(label: label, type: type, arguments: arguments, range: range)
 	}
 
 }
@@ -21,16 +21,20 @@ public extension BytecodeInstruction {
 /// This eliminates reference counting which leads to improved performance.
 public struct BytecodeExecutionInstruction {
 
+	/// The range of the instruction in the original source code
+	let range: Range<Int>?
+	
 	let label: Int
 
 	let type: BytecodeInstructionType
 
 	let arguments: [InstructionArgumentType]
 
-	init(label: Int, type: BytecodeInstructionType, arguments: [InstructionArgumentType] = []) {
+	init(label: Int, type: BytecodeInstructionType, arguments: [InstructionArgumentType] = [], range: Range<Int>?) {
 		self.label = label
 		self.type = type
 		self.arguments = arguments
+		self.range = range
 	}
 
 }

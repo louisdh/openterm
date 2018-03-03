@@ -11,17 +11,19 @@ import Foundation
 public struct ArrayNode: ASTNode {
 	
 	public let values: [ASTNode]
-	
-	public init(values: [ASTNode]) throws {
+	public let range: Range<Int>?
+
+	public init(values: [ASTNode], range: Range<Int>?) throws {
 		
 		self.values = values
+		self.range = range
 	}
 	
 	public func compile(with ctx: BytecodeCompiler, in parent: ASTNode?) throws -> BytecodeBody {
 		
 		var bytecode = BytecodeBody()
 		
-		let initInstr = BytecodeInstruction(label: ctx.nextIndexLabel(), type: .arrayInit, arguments: [.index(values.count)], comment: "init array")
+		let initInstr = BytecodeInstruction(label: ctx.nextIndexLabel(), type: .arrayInit, arguments: [.index(values.count)], comment: "init array", range: range)
 		bytecode.append(initInstr)
 		
 		var i = 0
@@ -31,7 +33,7 @@ public struct ArrayNode: ASTNode {
 			let valueBytecode = try value.compile(with: ctx, in: parent)
 			bytecode.append(contentsOf: valueBytecode)
 
-			let instr = BytecodeInstruction(label: ctx.nextIndexLabel(), type: .arraySet, arguments: [.index(i)], comment: "set \(i)")
+			let instr = BytecodeInstruction(label: ctx.nextIndexLabel(), type: .arraySet, arguments: [.index(i)], comment: "set \(i)", range: range)
 			bytecode.append(instr)
 			
 			i += 1

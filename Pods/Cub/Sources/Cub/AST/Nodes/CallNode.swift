@@ -13,17 +13,21 @@ public struct CallNode: ASTNode {
 
 	public let callee: String
 	public let arguments: [ASTNode]
-
-	public init(callee: String, arguments: [ASTNode]) {
+	public let range: Range<Int>?
+	
+	public init(callee: String, arguments: [ASTNode], range: Range<Int>?) {
 		self.callee = callee
 		self.arguments = arguments
+		self.range = range
 	}
 
 	public func compile(with ctx: BytecodeCompiler, in parent: ASTNode?) throws -> BytecodeBody {
 
 		var bytecode = BytecodeBody()
 
-		let id = try ctx.getCallFunctionId(for: callee)
+		guard let id = try? ctx.getCallFunctionId(for: callee) else {
+			throw compileError(.functionNotFound(callee))
+		}
 
 		for arg in arguments {
 
@@ -32,11 +36,11 @@ public struct CallNode: ASTNode {
 
 		}
 
-		let invokeInstruction = BytecodeInstruction(label: ctx.nextIndexLabel(), type: .invokeVirtual, arguments: [.index(id)], comment: "\(callee)")
+		let invokeInstruction = BytecodeInstruction(label: ctx.nextIndexLabel(), type: .invokeVirtual, arguments: [.index(id)], comment: "\(callee)", range: range)
 		bytecode.append(invokeInstruction)
 
 		if try isResultUnused(with: ctx, in: parent) {
-			let popInstr = BytecodeInstruction(label: ctx.nextIndexLabel(), type: .pop, comment: "pop unused function result")
+			let popInstr = BytecodeInstruction(label: ctx.nextIndexLabel(), type: .pop, comment: "pop unused function result", range: range)
 			bytecode.append(popInstr)
 		}
 
@@ -45,9 +49,13 @@ public struct CallNode: ASTNode {
 
 	private func isResultUnused(with ctx: BytecodeCompiler, in parent: ASTNode?) throws -> Bool {
 
-		guard try ctx.doesFunctionReturn(for: callee) else {
-			// No result
-			return false
+		do {
+			guard try ctx.doesFunctionReturn(for: callee) else {
+				// No result
+				return false
+			}
+		} catch {
+			throw compileError(.functionNotFound(callee))
 		}
 
 		guard let parent = parent else {

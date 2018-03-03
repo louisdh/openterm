@@ -10,15 +10,17 @@ import Foundation
 
 public struct BreakLoopNode: ASTNode {
 
+	public let range: Range<Int>?
+	
 	public func compile(with ctx: BytecodeCompiler, in parent: ASTNode?) throws -> BytecodeBody {
 
 		let label = ctx.nextIndexLabel()
 
 		guard let breakLabel = ctx.peekLoopHeader() else {
-			throw CompileError.unexpectedCommand
+			throw compileError(.unexpectedCommand)
 		}
 
-		return [BytecodeInstruction(label: label, type: .goto, arguments: [.index(breakLabel)], comment: "break")]
+		return [BytecodeInstruction(label: label, type: .goto, arguments: [.index(breakLabel)], comment: "break", range: range)]
 
 	}
 

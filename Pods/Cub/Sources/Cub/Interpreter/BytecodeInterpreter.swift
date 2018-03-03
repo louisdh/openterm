@@ -1182,8 +1182,9 @@ public class BytecodeInterpreter {
 
 	// MARK: -
 
-	private func error(_ type: InterpreterError) -> Error {
-		return type
+	private func error(_ type: InterpreterErrorType) -> InterpreterError {
+
+		return InterpreterError(type: type, range: bytecode[safe: pc]?.range)
 	}
 
 }

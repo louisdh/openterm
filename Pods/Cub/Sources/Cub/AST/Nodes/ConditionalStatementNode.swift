@@ -13,11 +13,13 @@ public struct ConditionalStatementNode: ASTNode {
 	public let condition: ASTNode
 	public let body: BodyNode
 	public let elseBody: BodyNode?
+	public let range: Range<Int>?
 
-	public init(condition: ASTNode, body: BodyNode, elseBody: BodyNode? = nil) {
+	public init(condition: ASTNode, body: BodyNode, elseBody: BodyNode? = nil, range: Range<Int>?) {
 		self.condition = condition
 		self.body = body
 		self.elseBody = elseBody
+		self.range = range
 	}
 
 	public func compile(with ctx: BytecodeCompiler, in parent: ASTNode?) throws -> BytecodeBody {
@@ -39,7 +41,7 @@ public struct ConditionalStatementNode: ASTNode {
 		let goToEndLabel = ctx.nextIndexLabel()
 
 		let peekNextLabel = ctx.peekNextIndexLabel()
-		let ifeq = BytecodeInstruction(label: ifeqLabel, type: .ifFalse, arguments: [.index(peekNextLabel)])
+		let ifeq = BytecodeInstruction(label: ifeqLabel, type: .ifFalse, arguments: [.index(peekNextLabel)], range: range)
 		bytecode.append(ifeq)
 
 		if let elseBody = elseBody {
@@ -52,7 +54,7 @@ public struct ConditionalStatementNode: ASTNode {
 		bytecode.append(contentsOf: bodyBytecode)
 
 		if let elseBody = elseBody, elseBody.nodes.count > 0 {
-			let goToEnd = BytecodeInstruction(label: goToEndLabel, type: .goto, arguments: [.index(ctx.peekNextIndexLabel())])
+			let goToEnd = BytecodeInstruction(label: goToEndLabel, type: .goto, arguments: [.index(ctx.peekNextIndexLabel())], range: range)
 			bytecode.append(goToEnd)
 		}
 

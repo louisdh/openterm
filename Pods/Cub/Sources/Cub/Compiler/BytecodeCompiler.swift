@@ -315,7 +315,7 @@ public class BytecodeCompiler {
 				comment = nil
 			}
 			
-			let instr = BytecodeInstruction(label: label, type: .registerClear, arguments: [.index(reg)], comment: comment)
+			let instr = BytecodeInstruction(label: label, type: .registerClear, arguments: [.index(reg)], comment: comment, range: nil)
 			instructions.append(instr)
 
 		}
@@ -425,7 +425,7 @@ public class BytecodeCompiler {
 		let name = functionNode.prototype.name
 
 		guard let functionMapped = currentScopeNode.deepFunctionMap()[name] else {
-			throw error(.functionNotFound)
+			throw error(.functionNotFound(name))
 		}
 
 		return functionMapped.exitId
@@ -439,7 +439,7 @@ public class BytecodeCompiler {
 			return functionMapped.id
 		}
 
-		throw error(.functionNotFound)
+		throw error(.functionNotFound(functionName))
 	}
 
 	func doesFunctionReturn(for functionName: String) throws -> Bool {
@@ -448,7 +448,7 @@ public class BytecodeCompiler {
 			return functionMapped.returns
 		}
 
-		throw error(.functionNotFound)
+		throw error(.functionNotFound(functionName))
 
 	}
 
@@ -459,8 +459,8 @@ public class BytecodeCompiler {
 
 	// MARK: -
 
-	private func error(_ type: CompileError) -> Error {
-		return type
+	private func error(_ type: CompileErrorType) -> CompileError {
+		return CompileError(type: type, range: nil)
 	}
 
 }
