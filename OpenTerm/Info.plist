@@ -16,9 +16,11 @@
 			</array>
 			<key>CFBundleTypeName</key>
 			<string>File</string>
+			<key>LSHandlerRank</key>
+			<string>Alternate</string>
 			<key>LSItemContentTypes</key>
 			<array>
-				<string>public.image</string>
+				<string>public.item</string>
 			</array>
 		</dict>
 	</array>
@@ -62,7 +64,7 @@
 			<key>NSUbiquitousContainerName</key>
 			<string>OpenTerm</string>
 			<key>NSUbiquitousContainerSupportedFolderLevels</key>
-			<string>0</string>
+			<string>Any</string>
 		</dict>
 	</dict>
 	<key>UIFileSharingEnabled</key>
