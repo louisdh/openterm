@@ -10,9 +10,19 @@ DEPENDENCIES:
   - Cub (~> 0.6)
   - InputAssistant (~> 1.0)
   - PanelKit (~> 2.0)
-  - SavannaKit (~> 0.6)
+  - SavannaKit (from `https://github.com/louisdh/SavannaKit.git`, branch `master`)
   - SwiftLint
   - TabView (~> 1.0)
+
+EXTERNAL SOURCES:
+  SavannaKit:
+    :branch: master
+    :git: https://github.com/louisdh/SavannaKit.git
+
+CHECKOUT OPTIONS:
+  SavannaKit:
+    :commit: 2493bea90ac05850812deff49c8812744921da2a
+    :git: https://github.com/louisdh/SavannaKit.git
 
 SPEC CHECKSUMS:
   Cub: 912eeac7325ef2a4a22689baad314f0573164849
@@ -22,6 +32,6 @@ SPEC CHECKSUMS:
   SwiftLint: e14651157288e9e01d6e1a71db7014fb5744a8ea
   TabView: b8337b549e4b0f070a76cab141e258fa66e01fd1
 
-PODFILE CHECKSUM: 541616255e35f0ef7f1d2fc9ea790f7c66498694
+PODFILE CHECKSUM: a0e9a2d99fcfa55fd7570491202fd2c24efa65ab
 
 COCOAPODS: 1.4.0

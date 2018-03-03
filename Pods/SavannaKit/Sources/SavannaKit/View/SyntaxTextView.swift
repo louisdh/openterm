@@ -33,7 +33,7 @@ public class SyntaxTextView: View {
 
 	let textView: InnerTextView
 	
-	var contentTextView: TextView {
+	public var contentTextView: TextView {
 		return textView
 	}
 	
