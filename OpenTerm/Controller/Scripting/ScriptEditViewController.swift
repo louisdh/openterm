@@ -45,7 +45,7 @@ class ScriptEditViewController: UIViewController {
 		// Set up input assistant and text view for auto completion
 		self.inputAssistantView.delegate = self
 		self.inputAssistantView.dataSource = self.autoCompleteManager
-		//        self.textView.inputAccessoryView = self.inputAssistantView
+		self.textView.contentTextView.inputAccessoryView = self.inputAssistantView
 		self.inputAssistantView.tintColor = .lightGray
 
 		// Hide default undo/redo/etc buttons
@@ -54,11 +54,16 @@ class ScriptEditViewController: UIViewController {
 
 	}
 
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
+		
+		textView.text = script.value
+	}
+	
 	override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
 
 		textView.becomeFirstResponder()
-		textView.text = script.value
 	}
 
 	private func save() {
