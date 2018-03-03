@@ -20,221 +20,6 @@ private enum InitMethod {
 	case frame(CGRect)
 }
 
-#if os(macOS)
-
-	private class TextViewWrapperView: View {
-		
-		var textView: InnerTextView?
-		
-		override public func draw(_ rect: CGRect) {
-
-			guard let textView = textView else {
-				return
-			}
-		
-			let contentHeight = textView.enclosingScrollView!.documentView!.bounds.height
-			
-			let yOffset = self.bounds.height - contentHeight
-			
-			var paragraphs: [Paragraph]
-			
-			if let cached = textView.cachedParagraphs {
-				
-				paragraphs = cached
-				
-			} else {
-				
-				paragraphs = generateParagraphs(for: textView, flipRects: true)
-				textView.cachedParagraphs = paragraphs
-			
-			}
-			
-			paragraphs = offsetParagrahps(paragraphs, for: textView, yOffset: yOffset)
-
-			let components = textView.text.components(separatedBy: .newlines)
-			
-			let count = components.count
-			
-			let maxNumberOfDigits = "\(count)".count
-			
-			textView.updateGutterWidth(for: maxNumberOfDigits)
-			
-			Color.black.setFill()
-			
-			let gutterRect = CGRect(x: 0, y: 0, width: textView.gutterWidth, height: rect.height)
-			let path = BezierPath(rect: gutterRect)
-			path.fill()
-			
-			
-			drawLineNumbers(paragraphs, in: self.bounds, for: textView)
-			
-		}
-		
-	}
-	
-#endif
-
-extension TextView {
-	
-	func paragraphRectForRange(range: NSRange) -> CGRect {
-		
-		var nsRange = range
-		
-		let layoutManager: NSLayoutManager
-		let textContainer: NSTextContainer
-		#if os(macOS)
-			layoutManager = self.layoutManager!
-			textContainer = self.textContainer!
-		#else
-			layoutManager = self.layoutManager
-			textContainer = self.textContainer
-		#endif
-		
-		nsRange = layoutManager.glyphRange(forCharacterRange: nsRange, actualCharacterRange: nil)
-		
-		var sectionRect = layoutManager.boundingRect(forGlyphRange: nsRange, in: textContainer)
-		
-		// FIXME: don't use this hack
-		// This gets triggered for the final paragraph in a textview if the next line is empty (so the last paragraph ends with a newline)
-		if sectionRect.origin.x == 0 {
-			sectionRect.size.height -= 22
-		}
-		
-		sectionRect.origin.x = 0
-		
-		return sectionRect
-	}
-	
-}
-
-func generateParagraphs(for textView: InnerTextView, flipRects: Bool = false) -> [Paragraph] {
-
-	let range = NSRange(location: 0, length: textView.text.count)
-	
-	var paragraphs = [Paragraph]()
-	var i = 0
-	
-	(textView.text as NSString).enumerateSubstrings(in: range, options: [.byParagraphs]) { (paragraphContent, paragraphRange, enclosingRange, stop) in
-		
-		i += 1
-		
-		let rect = textView.paragraphRectForRange(range: paragraphRange)
-		
-		let paragraph = Paragraph(rect: rect, number: i)
-		paragraphs.append(paragraph)
-		
-	}
-	
-	if textView.text.isEmpty || textView.text.hasSuffix("\n") {
-		
-		var rect: CGRect
-		
-		#if os(macOS)
-			let gutterWidth = textView.textContainerInset.width
-		#else
-			let gutterWidth = textView.textContainerInset.left
-		#endif
-		
-		let lineHeight: CGFloat = 22
-		
-		if let last = paragraphs.last {
-			
-			rect = CGRect(x: 0, y: last.rect.origin.y + last.rect.height, width: gutterWidth, height: lineHeight)
-			
-		} else {
-			
-			rect = CGRect(x: 0, y: 0, width: gutterWidth, height: lineHeight)
-			
-		}
-		
-		
-		i += 1
-		let endParagraph = Paragraph(rect: rect, number: i)
-		paragraphs.append(endParagraph)
-		
-	}
-	
-	
-	if flipRects {
-		
-		paragraphs = paragraphs.map { (p) -> Paragraph in
-			
-			var p = p
-			p.rect.origin.y = textView.bounds.height - p.rect.height - p.rect.origin.y
-			
-			return p
-		}
-		
-	}
-	
-	return paragraphs
-}
-
-func offsetParagrahps(_ paragraphs: [Paragraph], for textView: InnerTextView, yOffset: CGFloat = 0) -> [Paragraph] {
-
-	var paragraphs = paragraphs
-	
-	#if os(macOS)
-		
-		if let yOffset = textView.enclosingScrollView?.contentView.bounds.origin.y {
-			
-			paragraphs = paragraphs.map { (p) -> Paragraph in
-				
-				var p = p
-				p.rect.origin.y += yOffset
-				
-				return p
-			}
-		}
-		
-		
-	#endif
-	
-
-	
-	paragraphs = paragraphs.map { (p) -> Paragraph in
-		
-		var p = p
-		p.rect.origin.y += yOffset
-		return p
-	}
-	
-	return paragraphs
-}
-
-func drawLineNumbers(_ paragraphs: [Paragraph], in rect: CGRect, for textView: InnerTextView) {
-
-	for paragraph in paragraphs {
-		
-		guard paragraph.rect.intersects(rect) else {
-			continue
-		}
-		
-		let attr = paragraph.attributedString(for: textView.theme)
-		
-		var drawRect = paragraph.rect
-		
-		let gutterWidth = textView.gutterWidth
-		
-		
-		let drawSize = attr.size()
-		
-		drawRect.origin.x = gutterWidth - drawSize.width - 4
-		
-		#if os(macOS)
-			drawRect.origin.y -= 22 - drawSize.height
-		#else
-			drawRect.origin.y += 22 - drawSize.height
-		#endif
-		drawRect.size.width = drawSize.width
-
-		attr.draw(in: drawRect)
-		
-	}
-	
-}
-
-
 public protocol SyntaxTextViewDelegate: class {
 	
 	func didChangeText(_ syntaxTextView: SyntaxTextView)
@@ -243,15 +28,20 @@ public protocol SyntaxTextViewDelegate: class {
 	
 }
 
+@IBDesignable
 public class SyntaxTextView: View {
 
-	fileprivate let textView: InnerTextView
+	let textView: InnerTextView
+	
+	var contentTextView: TextView {
+		return textView
+	}
 	
 	public weak var delegate: SyntaxTextViewDelegate?
 	
 	#if os(macOS)
 	
-	fileprivate let wrapperView = TextViewWrapperView()
+	let wrapperView = TextViewWrapperView()
 
 	#endif
 	
@@ -336,7 +126,7 @@ public class SyntaxTextView: View {
 			
 			scrollView.translatesAutoresizingMaskIntoConstraints = false
 
-			self.addSubview(scrollView)
+			addSubview(scrollView)
 			
 			addSubview(wrapperView)
 
@@ -368,6 +158,9 @@ public class SyntaxTextView: View {
 			textView.isVerticallyResizable = true
 			textView.isHorizontallyResizable = false
 			textView.autoresizingMask = .width
+			textView.isEditable = true
+			textView.isAutomaticQuoteSubstitutionEnabled = false
+			textView.allowsUndo = true
 			
 			textView.textContainer?.containerSize = NSSize(width: self.bounds.width, height: .greatestFiniteMagnitude)
 			textView.textContainer?.widthTracksTextView = true
@@ -399,7 +192,11 @@ public class SyntaxTextView: View {
 		textView.keyboardType = .default
 		textView.autocorrectionType = .no
 		textView.spellCheckingType = .no
-		
+			
+		if #available(iOS 11.0, *) {
+			textView.smartQuotesType = .no
+		}
+			
 		textView.keyboardAppearance = .dark
 		
 		
@@ -458,7 +255,33 @@ public class SyntaxTextView: View {
 	
 	#endif
 
+//	#if os(iOS)
+//
+//		override public func draw(_ rect: CGRect) {
+//
+//			let textView = self.textView
+//
+//			let components = textView.text.components(separatedBy: .newlines)
+//
+//			let count = components.count
+//
+//			let maxNumberOfDigits = "\(count)".count
+//
+//			textView.updateGutterWidth(for: maxNumberOfDigits)
+//
+//			Color.black.setFill()
+//
+//			let gutterRect = CGRect(x: 0, y: 0, width: textView.gutterWidth, height: bounds.height)
+//			let path = BezierPath(rect: gutterRect)
+//			path.fill()
+//
+//
+//			super.draw(rect)
+//		}
+//
+//	#endif
 	
+	@IBInspectable
 	public var text: String {
 		get {
 			#if os(macOS)
@@ -472,9 +295,15 @@ public class SyntaxTextView: View {
 				textView.layer?.isOpaque = true
 
 				textView.string = newValue
+				
+				self.didUpdateText()
+				
 			#else
 				textView.text = newValue
+				textView.setNeedsDisplay()
+				self.didUpdateText()
 			#endif
+			
 		}
 	}
 	
@@ -568,55 +397,3 @@ public class SyntaxTextView: View {
 	}
 	
 }
-
-#if os(macOS)
-	
-	extension SyntaxTextView: NSTextViewDelegate {
-		
-		public func textDidChange(_ notification: Notification) {
-			guard let textView = notification.object as? NSTextView, textView == self.textView else {
-				return
-			}
-
-			self.textView.invalidateCachedParagraphs()
-			
-			if let delegate = delegate {
-				colorTextView(lexerForSource: { (source) -> Lexer in
-					return delegate.lexerForSource(source)
-				})
-			}
-			
-			wrapperView.setNeedsDisplay(wrapperView.bounds)
-			self.delegate?.didChangeText(self)
-
-		}
-		
-	}
-	
-#endif
-
-#if os(iOS)
-
-	extension SyntaxTextView: UITextViewDelegate {
-		
-		public func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
-			
-			return true
-		}
-		
-		public func textViewDidChange(_ textView: UITextView) {
-			
-			self.textView.invalidateCachedParagraphs()
-			textView.setNeedsDisplay()
-			
-			if let delegate = delegate {
-				colorTextView(lexerForSource: { (source) -> Lexer in
-					return delegate.lexerForSource(source)
-				})
-			}
-		
-		}
-		
-	}
-
-#endif
