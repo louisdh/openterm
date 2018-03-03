@@ -58,13 +58,8 @@ public func cub(argc: Int32, argv: UnsafeMutablePointer<UnsafeMutablePointer<Int
 
 		for (_, arg) in arguments {
 			
-			switch arg {
-			case .string(let str):
-				terminalView.performOnMain {
-					terminalView.appendText(str)
-				}
-			default:
-				break
+			terminalView.performOnMain {
+				terminalView.appendText(arg.description(with: runner.compiler))
 			}
 			
 		}
