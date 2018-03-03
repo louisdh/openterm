@@ -10,6 +10,8 @@ import Foundation
 
 public struct BinaryOpNode: ASTNode {
 
+	public let range: Range<Int>?
+
 	// TODO: add BinaryOpType enum
 	
 	static var opTypes: [String: BytecodeInstructionType] {
@@ -36,27 +38,29 @@ public struct BinaryOpNode: ASTNode {
 	/// Can be nil, e.g. for 'not' operation
 	public let rhs: ASTNode?
 
-	public init(op: String, lhs: ASTNode, rhs: ASTNode? = nil) throws {
+	public init(op: String, lhs: ASTNode, rhs: ASTNode? = nil, range: Range<Int>?) throws {
 		self.op = op
-
-		guard lhs.isValidBinaryOpNode else {
-			throw CompileError.unexpectedCommand
-		}
-
-		if let rhs = rhs {
-			guard rhs.isValidBinaryOpNode else {
-				throw CompileError.unexpectedCommand
-			}
-		}
+		self.range = range
 
 		guard let type = BinaryOpNode.opTypes[op] else {
-			throw CompileError.unexpectedBinaryOperator
+			throw BinaryOpNode.compileError(.unexpectedBinaryOperator, range: range)
 		}
 
 		self.opInstructionType = type
 
 		self.lhs = lhs
 		self.rhs = rhs
+		
+		guard lhs.isValidBinaryOpNode else {
+			throw compileError(.unexpectedCommand)
+		}
+		
+		if let rhs = rhs {
+			guard rhs.isValidBinaryOpNode else {
+				throw compileError(.unexpectedCommand)
+			}
+		}
+		
 	}
 
 	public func compile(with ctx: BytecodeCompiler, in parent: ASTNode?) throws -> BytecodeBody {
@@ -100,7 +104,7 @@ public struct BinaryOpNode: ASTNode {
 		}
 		
 		// FIXME: comment "op" is wrong for ">" and ">="
-		let operation = BytecodeInstruction(label: label, type: opInstructionType, comment: comment)
+		let operation = BytecodeInstruction(label: label, type: opInstructionType, comment: comment, range: range)
 
 		bytecode.append(operation)
 

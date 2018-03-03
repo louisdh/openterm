@@ -12,9 +12,11 @@ import Foundation
 public struct BodyNode: ASTNode {
 
 	public let nodes: [ASTNode]
+	public let range: Range<Int>?
 
-	public init(nodes: [ASTNode]) {
+	public init(nodes: [ASTNode], range: Range<Int>?) {
 		self.nodes = nodes
+		self.range = range
 	}
 
 	public func compile(with ctx: BytecodeCompiler, in parent: ASTNode?) throws -> BytecodeBody {

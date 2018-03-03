@@ -12,10 +12,12 @@ public struct StructMemberNode: ASTNode {
 
 	public let variable: ASTNode
 	public let name: String
+	public let range: Range<Int>?
 
-	public init(variable: ASTNode, name: String) {
+	public init(variable: ASTNode, name: String, range: Range<Int>?) {
 		self.variable = variable
 		self.name = name
+		self.range = range
 	}
 
 	public func compile(with ctx: BytecodeCompiler, in parent: ASTNode?) throws -> BytecodeBody {
@@ -24,10 +26,10 @@ public struct StructMemberNode: ASTNode {
 		bytecode.append(contentsOf: try variable.compile(with: ctx, in: self))
 
 		guard let id = ctx.getStructMemberId(for: name) else {
-			throw CompileError.unexpectedCommand
+			throw compileError(.unexpectedCommand)
 		}
 
-		let getInstr = BytecodeInstruction(label: ctx.nextIndexLabel(), type: .structGet, arguments: [.index(id)], comment: "get \(name)")
+		let getInstr = BytecodeInstruction(label: ctx.nextIndexLabel(), type: .structGet, arguments: [.index(id)], comment: "get \(name)", range: range)
 		bytecode.append(getInstr)
 
 		return bytecode

@@ -12,21 +12,25 @@ public struct BooleanNode: ASTNode {
 
 	/// Either 0 (false) or 1 (true)
 	public let value: UInt8
+	
+	public let range: Range<Int>?
 
 	public var boolValue: Bool {
 		return value == 1
 	}
 
-	public init?(value: UInt8) {
+	public init?(value: UInt8, range: Range<Int>?) {
 
 		if value != 0 && value != 1 {
 			return nil
 		}
 
 		self.value = value
+		self.range = range
+
 	}
 
-	public init(bool: Bool) {
+	public init(bool: Bool, range: Range<Int>?) {
 
 		if bool == true {
 
@@ -37,13 +41,15 @@ public struct BooleanNode: ASTNode {
 			self.value = 0
 
 		}
+		
+		self.range = range
 
 	}
 
 	public func compile(with ctx: BytecodeCompiler, in parent: ASTNode?) throws -> BytecodeBody {
 
 		let label = ctx.nextIndexLabel()
-		return [BytecodeInstruction(label: label, type: .pushConst, arguments: [.value(.bool(boolValue))])]
+		return [BytecodeInstruction(label: label, type: .pushConst, arguments: [.value(.bool(boolValue))], range: range)]
 
 	}
 

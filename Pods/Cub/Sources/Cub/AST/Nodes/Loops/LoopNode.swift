@@ -34,10 +34,10 @@ extension LoopNode {
 
 		let loopEndLabel = ctx.peekNextIndexLabel()
 
-		let skipExitInstruction = BytecodeInstruction(label: skipExitInstrLabel, type: .goto, arguments: [.index(loopScopeStart)], comment: "skip exit instruction")
+		let skipExitInstruction = BytecodeInstruction(label: skipExitInstrLabel, type: .goto, arguments: [.index(loopScopeStart)], comment: "skip exit instruction", range: range)
 		bytecode.append(skipExitInstruction)
 
-		let exitLoopInstruction = BytecodeInstruction(label: exitLoopInstrLabel, type: .goto, arguments: [.index(loopEndLabel)], comment: "exit loop")
+		let exitLoopInstruction = BytecodeInstruction(label: exitLoopInstrLabel, type: .goto, arguments: [.index(loopEndLabel)], comment: "exit loop", range: range)
 		bytecode.append(exitLoopInstruction)
 
 		bytecode.append(contentsOf: compiledLoop)

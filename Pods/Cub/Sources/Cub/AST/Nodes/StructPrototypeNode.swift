@@ -13,14 +13,17 @@ public struct StructPrototypeNode: ASTNode {
 	public let name: String
 	public let members: [String]
 
-	public init(name: String, members: [String]) throws {
+	public let range: Range<Int>?
 
-		guard members.count > 0 else {
-			throw CompileError.emptyStruct
-		}
+	public init(name: String, members: [String], range: Range<Int>?) throws {
 
 		self.name = name
 		self.members = members
+		self.range = range
+		
+		guard members.count > 0 else {
+			throw compileError(.emptyStruct)
+		}
 	}
 
 	public func compile(with ctx: BytecodeCompiler, in parent: ASTNode?) throws -> BytecodeBody {

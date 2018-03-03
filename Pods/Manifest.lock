@@ -1,5 +1,5 @@
 PODS:
-  - Cub (0.7.0)
+  - Cub (0.7.1)
   - InputAssistant (1.0.1)
   - PanelKit (2.0.1)
   - SavannaKit (0.6.1)
@@ -15,7 +15,7 @@ DEPENDENCIES:
   - TabView (~> 1.0)
 
 SPEC CHECKSUMS:
-  Cub: 5aca6c3661d6ca37b9b9b13f430a6a027f478be1
+  Cub: 912eeac7325ef2a4a22689baad314f0573164849
   InputAssistant: b5ddd7fc23e38eaabdeaef115f6f7b023fb5dfc0
   PanelKit: d05cecac1ab39af375b56ff21c7b5a9915a3eb5b
   SavannaKit: 1625d8d7e8ab888216c1824e301613fdcdd924be
