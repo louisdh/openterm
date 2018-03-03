@@ -52,7 +52,7 @@ public func cub(argc: Int32, argv: UnsafeMutablePointer<UnsafeMutablePointer<Int
 		return 1
 	}
 
-	let runner = Runner(logDebug: true, logTime: false)
+	let runner = Runner(logDebug: false, logTime: false)
 
 	runner.registerExternalFunction(name: "print", argumentNames: ["input"], returns: true) { (arguments, callback) in
 
@@ -61,7 +61,7 @@ public func cub(argc: Int32, argv: UnsafeMutablePointer<UnsafeMutablePointer<Int
 			switch arg {
 			case .string(let str):
 				terminalView.performOnMain {
-					terminalView.appendText(NSAttributedString(string: str))
+					terminalView.appendText(str)
 				}
 			default:
 				break

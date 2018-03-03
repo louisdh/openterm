@@ -105,7 +105,7 @@ class TerminalView: UIView {
 	func appendText(_ text: NSAttributedString) {
 		dispatchPrecondition(condition: .onQueue(.main))
 
-		let text = NSMutableAttributedString.init(attributedString: text)
+		let text = NSMutableAttributedString(attributedString: text)
 		OutputSanitizer.sanitize(text.mutableString)
 
 		let new = NSMutableAttributedString(attributedString: textView.attributedText ?? NSAttributedString())
@@ -117,7 +117,8 @@ class TerminalView: UIView {
 		self.textView.isScrollEnabled = false
 		self.textView.isScrollEnabled = true
 	}
-	private func appendText(_ text: String) {
+	
+	func appendText(_ text: String) {
 		dispatchPrecondition(condition: .onQueue(.main))
 
 		appendText(NSAttributedString(string: text, attributes: [.foregroundColor: textView.textColor ?? .black, .font: textView.font!]))
