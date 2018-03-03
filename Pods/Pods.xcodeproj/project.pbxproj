@@ -7,142 +7,145 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0011DE00FF2D15C1EEFE3AB0FD2D1D61 /* InputAssistant-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 8E7CC721C225E4AA61F1BE9B9EC2D4B6 /* InputAssistant-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		006E7D2B666EF8B0FDB8C19E09B32E90 /* PanelViewController+Keyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40644FF2203B6CDAA6551AFA7B40902F /* PanelViewController+Keyboard.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		0242772430E2B7534170C481B2E69273 /* TabView-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 404F6AEE47CF7572932C020D256F7998 /* TabView-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		03B250EFD86E8BDD408FB7A7D76F2933 /* BodyNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5D677EEE9003A83CBFC6AB27372BBC4 /* BodyNode.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		03B6C04F48AD2355FCB0FDA85021A871 /* NavigationItemObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = E32AE28C7C1B73FDA1DCCF4795428DB5 /* NavigationItemObserver.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		0011DE00FF2D15C1EEFE3AB0FD2D1D61 /* InputAssistant-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 14DF1DCE75424AFD1D076F5632347A54 /* InputAssistant-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		002AA73442890E52EB407B811E06347A /* NSTextView+UIKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AD6657527F8066A4066AC1948105CB0 /* NSTextView+UIKit.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		006E7D2B666EF8B0FDB8C19E09B32E90 /* PanelViewController+Keyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 296AF0293D81ADB96AA43FA43236A411 /* PanelViewController+Keyboard.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		0242772430E2B7534170C481B2E69273 /* TabView-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = E1E74AEF92A7EC80DFC694E94A8DE62D /* TabView-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		024FE4A249BCA505F2B1A92914EF2CD3 /* String+Range.swift in Sources */ = {isa = PBXBuildFile; fileRef = 157E1697301FF338C1BF8FDCCB36F141 /* String+Range.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		03B250EFD86E8BDD408FB7A7D76F2933 /* BodyNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = A067D6B1DCAAF98792F0A3E82D92D281 /* BodyNode.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		03B6C04F48AD2355FCB0FDA85021A871 /* NavigationItemObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 016F6AB08F641B5279F58AA07BAC7F7E /* NavigationItemObserver.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
 		04E3446DAAE282688CE1FF447D128B09 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6604A7D69453B4569E4E4827FB9155A9 /* Foundation.framework */; };
-		06ABB362DC0D664ED95EB8CE5B218DCA /* ResizeStart.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3FED23C9FEBDF8DFB993924FF6FE4E2 /* ResizeStart.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		0F571FD3149B190124B88521F638B9FE /* AutoCompletor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0910A0A2817090C8DED91404DF8F13FF /* AutoCompletor.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		101351F1D06A6568B9E464B3F6966114 /* PanelViewController+States.swift in Sources */ = {isa = PBXBuildFile; fileRef = 434E3C4C73630767FD33FBA695441D26 /* PanelViewController+States.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		103858C578EEE39CBB807792749BFBCF /* TabViewTabCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D11FC82F3FCC9951DECE4E50BE0E6076 /* TabViewTabCollectionView.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		107AD2FFB4E75ABE5AF226A17292A940 /* ASTNode+Validation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 623638586C57BD88E6B0E4C3CABDF45F /* ASTNode+Validation.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		06ABB362DC0D664ED95EB8CE5B218DCA /* ResizeStart.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD9CD8C3D88A2B1D6058412B71AF5F9E /* ResizeStart.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		0F571FD3149B190124B88521F638B9FE /* AutoCompletor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 649A65111483629878BF53415E02C68E /* AutoCompletor.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		101351F1D06A6568B9E464B3F6966114 /* PanelViewController+States.swift in Sources */ = {isa = PBXBuildFile; fileRef = CECB3E4D8F860D6B0AED573409BF995F /* PanelViewController+States.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		103858C578EEE39CBB807792749BFBCF /* TabViewTabCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19FA78833AE794E6D0EA7EB768C0A250 /* TabViewTabCollectionView.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		107AD2FFB4E75ABE5AF226A17292A940 /* ASTNode+Validation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E201C105E300B401EDE5D48679B3367 /* ASTNode+Validation.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
 		10C0E72BD401AA29CA97CD20B2CD68CA /* Pods-OpenTerm-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 079239F1990FA46BF3E341FBBDBCAB62 /* Pods-OpenTerm-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		116300FA727FE9B2B17E4449813DD9E2 /* PanelContentDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F6F8CF5889D22DD627D5770C845548F /* PanelContentDelegate.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		14CB249151077801B257A0A7834AB91A /* InputAssistant-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = B9F3C10F46315701F6752C44D5AAC608 /* InputAssistant-dummy.m */; };
-		1A696AA5BF6CA650C59EDAD6AA8F200A /* TabViewContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D04A65E36D07532DD524E4BC99BD9A8 /* TabViewContainerViewController.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		1D271AF532CE3F623A9495AD368ADB4A /* PanelManager+AutoLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B201A21AE1E697EE5E2796F1FA2CE8C /* PanelManager+AutoLayout.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		1DB7332E170D75814A35A4465ABB3220 /* StructNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD5281D9AEF53BECD44953D8FAB8873F /* StructNode.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		116300FA727FE9B2B17E4449813DD9E2 /* PanelContentDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B67FF7DDC1868F1A93AE7E03FDA062A /* PanelContentDelegate.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		14CB249151077801B257A0A7834AB91A /* InputAssistant-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = AF9EFF592C98A91F61B3A35DC53E5A29 /* InputAssistant-dummy.m */; };
+		1A696AA5BF6CA650C59EDAD6AA8F200A /* TabViewContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 703C698666C11115838837867E85E3CA /* TabViewContainerViewController.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		1D271AF532CE3F623A9495AD368ADB4A /* PanelManager+AutoLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C32F4925EDF727B17A3631D6B12E12F /* PanelManager+AutoLayout.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		1DB7332E170D75814A35A4465ABB3220 /* StructNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8494A515DD0EB4D26D1187A02D632A64 /* StructNode.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
 		1FF3D680E80ACADCF1CFE16247B0B0AB /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6604A7D69453B4569E4E4827FB9155A9 /* Foundation.framework */; };
-		21EB687538B1D07F73DBFF284D31A190 /* PanelManager+Pinning.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1C30E96DF88272CF4B39F63131A3F07 /* PanelManager+Pinning.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		22007B46710DEE7B124BE49E1FAD7C88 /* Cub-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BE5CDE0F10743DB17BC99C12A2CF39E /* Cub-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		2414E12BA3DA414E20F20DB86A737954 /* PanelContentDelegate+Default.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFBFDBACAA0DAFB492E270206A1DC0A4 /* PanelContentDelegate+Default.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		27C5859BED9B662CA2A3D15DEA4D3F21 /* Counter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6918D952A0C34807DA763927EC4EFB02 /* Counter.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		28155CA25E54F09A449DF7597EAF257A /* WhileStatementNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 115A0F726CE0AB0038A88C72C291522F /* WhileStatementNode.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		28212935EA8FBD0FBDD63CCBC171D84F /* StringNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C6CE73D9397FFB3255787E61CA1A43B /* StringNode.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		29DEAEBF9B8CD05AE02DBC44E8EF02B7 /* PanelManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3037229CB1B241093EAE3EF85A0FA538 /* PanelManager.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		2E67B09D5A8EDBCC9C1A6E1DBC12D9CF /* BytecodeInstruction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65880FFEC7CEB0B8A8315AB84A910576 /* BytecodeInstruction.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		308499D8A8B7909BE1509B1ED4856875 /* Parser.swift in Sources */ = {isa = PBXBuildFile; fileRef = A451546A91E740C4DAB3E493B99C1A2D /* Parser.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		312E65D9A1E92F726D342B8F6E95111F /* CallNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE69D521E194CE1A5CA5662FE757108C /* CallNode.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		31B6D27C4AC160E6A64C7E7F25B2ACC0 /* InnerTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC90463B785AF35710B792E59660FC70 /* InnerTextView.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		328DACD4132069118E1E2D4ABFC26F89 /* ArrayNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 241B5BD346DE151FE096A0FC11405784 /* ArrayNode.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		3297898FF7D837C523935694756E9065 /* BytecodeInstructionType.swift in Sources */ = {isa = PBXBuildFile; fileRef = C197EC1920D91A824589497A4846620B /* BytecodeInstructionType.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		32D2750C66A66B5BD1FBFB71C3C437F7 /* PanelViewController+Appearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1475E083802B261C899E9DAB55D64819 /* PanelViewController+Appearance.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		21EB687538B1D07F73DBFF284D31A190 /* PanelManager+Pinning.swift in Sources */ = {isa = PBXBuildFile; fileRef = 186027376D91A16CEE0361041174AEA5 /* PanelManager+Pinning.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		22007B46710DEE7B124BE49E1FAD7C88 /* Cub-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = D1CEEE8D9D94ADFF12D334B7F1DD4378 /* Cub-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2414E12BA3DA414E20F20DB86A737954 /* PanelContentDelegate+Default.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5926B4D6E81B98FA520FC897C279340A /* PanelContentDelegate+Default.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		27C5859BED9B662CA2A3D15DEA4D3F21 /* Counter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08740412F7EAFF0D5AAA96C8F57DFC81 /* Counter.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		28155CA25E54F09A449DF7597EAF257A /* WhileStatementNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6DEBAE3E62923820546A7CB2CADD3DB /* WhileStatementNode.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		28212935EA8FBD0FBDD63CCBC171D84F /* StringNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3C3AF0D861B923A9BE8EFD5C47D21C8 /* StringNode.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		29DEAEBF9B8CD05AE02DBC44E8EF02B7 /* PanelManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA46BF3B10C9261E68C6E8736B9C11DF /* PanelManager.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		2E67B09D5A8EDBCC9C1A6E1DBC12D9CF /* BytecodeInstruction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 220B4D6B6020D317A095183753F36006 /* BytecodeInstruction.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		308499D8A8B7909BE1509B1ED4856875 /* Parser.swift in Sources */ = {isa = PBXBuildFile; fileRef = F95C9100F20B89DC9FE7D80FA5B7353C /* Parser.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		312E65D9A1E92F726D342B8F6E95111F /* CallNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC3B61E15044C54977F025E89D500152 /* CallNode.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		328DACD4132069118E1E2D4ABFC26F89 /* ArrayNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61DCA3AA4C3CA599070F307F7FB02ACB /* ArrayNode.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		3297898FF7D837C523935694756E9065 /* BytecodeInstructionType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 221DFACEDDD542B776600292B9AAEA99 /* BytecodeInstructionType.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		32D2750C66A66B5BD1FBFB71C3C437F7 /* PanelViewController+Appearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E04466C2503F0BFD68443850BCE177A /* PanelViewController+Appearance.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
 		32DF20F5C1A4A450231161EF694ED0E2 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6604A7D69453B4569E4E4827FB9155A9 /* Foundation.framework */; };
-		339CB531B5E7C0C2BADFC127CB586861 /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = 507B7F36AF9BF48CCFF8A8A8F3318624 /* Config.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		33FA0D34AD6E1C39E3FEAB1D186EC1DC /* BlockBarButtonItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14207A42E92AB15F8368707189A804B0 /* BlockBarButtonItem.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		35898F19FEC40D5550262C2CDE5564EA /* PanelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2D49EE5CD142D3031E312492D4454C4 /* PanelViewController.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		37663B83CB7982110DF7A1A9C2D485D1 /* PanelViewController+Resize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 945ABEC8952126FDB15E27FC05D0656D /* PanelViewController+Resize.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		3802D2FA879DFD46A1D7CAFBF6E46903 /* InstructionArgumentType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 830680ED9B2FFFC71213F55FA3C88722 /* InstructionArgumentType.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		3C533722658205CAE1D969AB0939AC4A /* InterpreterError.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5B1778FFDCA46C0E3BB72378016F613 /* InterpreterError.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		436B71F5F55C9E03C78484B20EB73C0D /* ASTVisualizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD21C3545C12F8ED5E5BC737B382DE87 /* ASTVisualizer.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		46AF7370CD670C5824B1DC32BFB7A39D /* PanelContentDelegate+Navigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = B203E663FA7CFEAD30F4DDC951C044EA /* PanelContentDelegate+Navigation.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		4874A8764D1095E71E6D640CAA60DDB5 /* VariableNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A84094728B4D6462BC7AAC42D6D5803 /* VariableNode.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		48B9DBC766E8A674B8EB092F6AE27B0C /* BlockGestureRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ACC10B714932705C624E964314D14BB /* BlockGestureRecognizer.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		4AC1C09D2BB2E6F2FA176F68C904D628 /* TabViewBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DE8171772BD92C1F641CE19B77FDC17 /* TabViewBar.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		4AC97CDAF82292F4D2B0EAB0066A3AA9 /* UnpinningMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DBBD9768DC6D723C7DCA26871965F04 /* UnpinningMetadata.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		4D1AA29717CF10D4B433C928B32BCF77 /* PanelManager+Dragging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DC8153D77EFB4F028582336B8EE1382 /* PanelManager+Dragging.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		4EDEBE698CAABB9CF2C993FAE8E6F72E /* ASTChildNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3508B5480A311B07FF5442B404AC6ADE /* ASTChildNode.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		4F191D11B012A093D6F497E3246E317B /* NSTextView+UIKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = A25BC50EDD66ABB2A1CF25A75968C2F1 /* NSTextView+UIKit.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		504200AEFEF1921810C2E845DD0A032C /* BytecodeCompiler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76D1DE5B618AB28165C78523FB4E77D1 /* BytecodeCompiler.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		50F8BD37C9D92BA705F600AB30821294 /* PanelNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7F3A0B7564CC67F6C8BB39B63C8535E /* PanelNavigationController.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		5167ED9DD9CE3567AF3FED2CDB7E9460 /* Stack.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0B949ADA1BCD00F79D6644D1BE53666 /* Stack.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		51E25E4B0A582EC02416DE0E2D8B317E /* PanelFloatingState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11388BE0754E87616E9F9B19FD5E1786 /* PanelFloatingState.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		541DBFE3DE90F5D58F53D620E447FA08 /* ParseError.swift in Sources */ = {isa = PBXBuildFile; fileRef = F75CDDED9A921DF369E5ED0A61375EF2 /* ParseError.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		547513C6C06A5EF53F86B1540E29EC0D /* BytecodeInstructionError.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7EFEC2C47FCD31F231BC95DE7B84EC4 /* BytecodeInstructionError.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		5553DA181602F38506612E00E8C6FE62 /* TabViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C566EB921FBC8AEFC71ACD94DB642B5 /* TabViewController.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		562E5980EA546964266250E580A97423 /* PinnedPosition.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA33B3FC12A988DB1E530A6D557485DC /* PinnedPosition.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		5C91237F8FF21824C5813190C3C6EF39 /* Paragraph.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE50889147234132522CBBCDF18A79E2 /* Paragraph.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		5CDB25512F58809551A6B0CD0B2691CD /* AssociatedObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 063FB4D82D744EA797B8BF2BEEFE672D /* AssociatedObject.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		5E798F96EA98C4CD13952063FBCD9F7E /* Lexer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0749F56D905887A381458B11970944D1 /* Lexer.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		5EAC3F5B41D55DF680205F738B9DC119 /* TokenType.swift in Sources */ = {isa = PBXBuildFile; fileRef = B01A5DD654C2400891F4404592A02CFB /* TokenType.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		5F74E46707E57085D99D1464D9FC1071 /* BreakLoopNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5B768AA00C44FCDC0D178139BFB6EA1 /* BreakLoopNode.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		6108E2FB23A143676ED2B078149EFFEC /* UIBarButtonItem+View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A5A544E351B2B9A037065A95E231381 /* UIBarButtonItem+View.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		63F754CDBA53F1BA01A4284581B6E408 /* CGRect+Center.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CC08EADFADC74EAD5D9715A77FD12ED /* CGRect+Center.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		66931B6AF62712272B745E3CCA007436 /* PanelManager+Offscreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79D2B6698C2EF5FF3A834D2CB026B790 /* PanelManager+Offscreen.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		339CB531B5E7C0C2BADFC127CB586861 /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = E63C75600FBCE3E0D9ABED28008708A3 /* Config.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		33FA0D34AD6E1C39E3FEAB1D186EC1DC /* BlockBarButtonItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = D56C98DC46398553F1CCE22B8D9B7AC2 /* BlockBarButtonItem.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		35898F19FEC40D5550262C2CDE5564EA /* PanelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B6F16C6BAA91EA8A4B9F65EC73D5BC7 /* PanelViewController.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		37663B83CB7982110DF7A1A9C2D485D1 /* PanelViewController+Resize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88539C2D49630630085B8829744B3E2B /* PanelViewController+Resize.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		3802D2FA879DFD46A1D7CAFBF6E46903 /* InstructionArgumentType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BE13ADE4E32013C16F6EFFCAE06FC40 /* InstructionArgumentType.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		3C533722658205CAE1D969AB0939AC4A /* InterpreterError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8676C69D8BEB1CE33AD86526F2A95035 /* InterpreterError.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		46AF7370CD670C5824B1DC32BFB7A39D /* PanelContentDelegate+Navigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91E12F964DB92C4159F0FF5EF3EF37D5 /* PanelContentDelegate+Navigation.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		4874A8764D1095E71E6D640CAA60DDB5 /* VariableNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC18FFDBBAD74AF1CA1E6E244E4E35D5 /* VariableNode.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		48B9DBC766E8A674B8EB092F6AE27B0C /* BlockGestureRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25506D20169442D67D75A31B66A2B46D /* BlockGestureRecognizer.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		4AC1C09D2BB2E6F2FA176F68C904D628 /* TabViewBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D9E813FBD3F9B895D7A21D6C6100E17 /* TabViewBar.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		4AC97CDAF82292F4D2B0EAB0066A3AA9 /* UnpinningMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4241A3129E54EDE868DD51B25518E4D4 /* UnpinningMetadata.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		4D1AA29717CF10D4B433C928B32BCF77 /* PanelManager+Dragging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6889E48D4E90C42523FAF36E76FA0EAA /* PanelManager+Dragging.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		4EDEBE698CAABB9CF2C993FAE8E6F72E /* ASTChildNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFADB4AD7683E0F094A8FCD080170DE /* ASTChildNode.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		504200AEFEF1921810C2E845DD0A032C /* BytecodeCompiler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9992D2C32729B06EAE684347CD0573F6 /* BytecodeCompiler.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		50F8BD37C9D92BA705F600AB30821294 /* PanelNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0FC3B81BFE0D08E632BF8E54F5600E8 /* PanelNavigationController.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		5167ED9DD9CE3567AF3FED2CDB7E9460 /* Stack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E58596ABA76293EC50FB048F18ABFBE /* Stack.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		51E25E4B0A582EC02416DE0E2D8B317E /* PanelFloatingState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B965C9FFC3AE96AF07AB53F22B0DD86 /* PanelFloatingState.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		541DBFE3DE90F5D58F53D620E447FA08 /* ParseError.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE089DA1F9C148F3B29D23434D04A5CC /* ParseError.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		547513C6C06A5EF53F86B1540E29EC0D /* BytecodeInstructionError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49BB1EC4BBE68C8CEA29E6A0786D323A /* BytecodeInstructionError.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		5553DA181602F38506612E00E8C6FE62 /* TabViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21FA0FCE04600FBC9C7F3A6F07EE1F49 /* TabViewController.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		55AD024D388789090B1D039600ADE36D /* SyntaxTextView+TextViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E85EA655ABDD898B82CB67C2D82EAA2 /* SyntaxTextView+TextViewDelegate.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		562E5980EA546964266250E580A97423 /* PinnedPosition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833BEDFB7D6CC3BE0F2500622BD43024 /* PinnedPosition.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		5CDB25512F58809551A6B0CD0B2691CD /* AssociatedObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B35856B0E070137DCF8F01BBDBBACCA /* AssociatedObject.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		5F74E46707E57085D99D1464D9FC1071 /* BreakLoopNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DE699991DE0793728402ECE4AC65837 /* BreakLoopNode.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		6108E2FB23A143676ED2B078149EFFEC /* UIBarButtonItem+View.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2126CC552F902FF90870D32679059C6 /* UIBarButtonItem+View.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		610AAAB1210CBADD8B64F918B68F25F0 /* Lexer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D46D026EE6663F5F19AC5554EE6792 /* Lexer.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		63F754CDBA53F1BA01A4284581B6E408 /* CGRect+Center.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C6604A1C0BFD19693E7C125973B7E41 /* CGRect+Center.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		66931B6AF62712272B745E3CCA007436 /* PanelManager+Offscreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = E90EC41EF84F7E1D0D487F22692EED84 /* PanelManager+Offscreen.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
 		688B7319C7B0F7BAC7848560C68B0477 /* Pods-OpenTerm-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 327EBFEB3E92C355E01010F07F26D986 /* Pods-OpenTerm-dummy.m */; };
-		68A0AA9D5F4AC811593D91F4A8F53AED /* Types.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE3531252C68962C03F71DE9982E0D51 /* Types.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		6CE47BD8216E91DC9DCEF1642456ACE3 /* TabViewTabCollectionViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CCF4324727A81559763C3F34F6293D6 /* TabViewTabCollectionViewLayout.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		6D9C136F36801CFFECC74A02B687E086 /* InternalVariableNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 198429C8337CA67FD5C325687818505E /* InternalVariableNode.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		6FFD9C49598CC059AA66143A178C1E90 /* UIViewController+Popover.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37E9838E649548A0E641A8156596D0C5 /* UIViewController+Popover.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		756FC2F77E582AD150C3A54A0098439F /* Token.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56FDDB2C9F73B710E42AD6B72641E06A /* Token.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		75896A11C613E62D9394576F0B7C83DA /* PanelManager+Floating.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11D57358AEC0CA39AE1399C1C3D815E7 /* PanelManager+Floating.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		6CE47BD8216E91DC9DCEF1642456ACE3 /* TabViewTabCollectionViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 600038C72B3419EDB9357B5710832F2A /* TabViewTabCollectionViewLayout.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		6D9C136F36801CFFECC74A02B687E086 /* InternalVariableNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DE3EC1A4B9BFFD8F2064A4BBA9336B4 /* InternalVariableNode.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		6FFD9C49598CC059AA66143A178C1E90 /* UIViewController+Popover.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2CBFB98A43C962EFCA7A46F940DD6C6 /* UIViewController+Popover.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		75896A11C613E62D9394576F0B7C83DA /* PanelManager+Floating.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3532B4B2634167E9D0BC38349AA80232 /* PanelManager+Floating.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
 		75A7CE923E2FE950B2A670977E9D8CE6 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6604A7D69453B4569E4E4827FB9155A9 /* Foundation.framework */; };
 		761405C9BD2AFEEA335205716AFF68D6 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6604A7D69453B4569E4E4827FB9155A9 /* Foundation.framework */; };
-		7693DBD484AF456FEF53C7FC725F1C6A /* StdLib.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53DCD6153B22F3C4DA5125C8A0C578A5 /* StdLib.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		774EDF9FBD96F5844D253A6A85566096 /* LoopNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDD5C1BA7382E670FEA039792CF1B772 /* LoopNode.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		78108123A0F9E6BF41D357FD6CAFC465 /* String+Range.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6247E9AA25A15CB241B3215D0C98DB6 /* String+Range.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		78399B689B924E1B8A6219725636B0BA /* FunctionPrototypeNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F54695ACE2BBD534B07ABEBD3959732 /* FunctionPrototypeNode.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		79CACB934903BCFDFF4E0B6C859C126A /* PanelManager+Expose.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08C4B0D9464D7D92A3ACD223B62454F1 /* PanelManager+Expose.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		7AD5E406C0EF51633AB1FEE2C5D21ACB /* ForStatementNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38A25713E52F2FBCCA91525CA0D94A8C /* ForStatementNode.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		7AF95F50CF9FA54895888884083FAA1E /* StructMemberNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 035A2E4908B0DAE1A03B79472D6D440B /* StructMemberNode.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		7CD8F047D9C4DDCC8E241E0E9F14912E /* ReturnNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 462B5318B39EFF4A749F5E71463E49B3 /* ReturnNode.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		7EF3E05025F5013754B7C52332F30B69 /* PanelManager+Default.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8181649B3B3901D8656E9718AD355012 /* PanelManager+Default.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		811217E22127FB5C8845AF8F063FF4D4 /* BytecodeDescriptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2775D2E272D394DC0662522165DBEAEC /* BytecodeDescriptor.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		82C64572F71AA8391DA90820ED14447E /* BytecodeExecutionInstruction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BFF15B631D3FFA366BD88F56EA1E05B /* BytecodeExecutionInstruction.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		84793739F0C5E29813D3E956F6A04D9F /* Graphics.cub in Resources */ = {isa = PBXBuildFile; fileRef = E2FD361923FA465CB93A3405FC0432BA /* Graphics.cub */; };
-		847A57D2E55E86EA5295A502D18826C9 /* TokenType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99011FC738E2F105FCCE2269D1D55D44 /* TokenType.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		84C05EE95D23DC2174C250D193C1902F /* SyntaxTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A5EC4A1BFAF9144A1D36FD38CB19FB1 /* SyntaxTextView.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		857B93A54BE18F25A9B618D5BC556D46 /* ScopeNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = C05E66466281CD24DEA3D1A47D14E6AC /* ScopeNode.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		858C57343E84A0B74720E46E5869E130 /* SavannaKit-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 7E84B79B6C636202168969E1772CA6FF /* SavannaKit-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		879F86464687F6476090C8E277B800AB /* PanelKit-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = A97E9687198968F049D4FAE501262DFA /* PanelKit-dummy.m */; };
-		886305747930E937533E2C020547A736 /* Runner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63D828F5574634B8AB2FCCEFA53DCC3F /* Runner.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		8B00D60ED2CC4AB1450255AD7AA9929F /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4304CC186AC9A2DB0B1B210ABA773DB7 /* Constants.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		8E0CABCB66D113DDD231451E4F4DD0A5 /* RepeatWhileStatementNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6444B78536677823111B953716109D3 /* RepeatWhileStatementNode.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		925CA98088E836CD4072297B59AEDE0D /* Token.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63E0F2E349485AE6C63737B06BF9C4D3 /* Token.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		9636344768BC4DADCBCE639C17CC1EFF /* ASTNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 019E7E34608D537FE137608C5F55B979 /* ASTNode.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		9BBDAF044C3EA237F8CE1EEBA9BB02FF /* SyntaxColorTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5012759E007359866A434E53B8ECF5B0 /* SyntaxColorTheme.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		9BD3B0C133179AE80871980DAB26EAF0 /* ContinueNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C387DFD1DAFFDB7048145825E2106F1 /* ContinueNode.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		9C41843DFCA604F1B20F56FD0DE67E80 /* Array+Safe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 555726CEDCF476E26EEF0A90125A9CB1 /* Array+Safe.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		9F790F9B821173D6191EBBEA8128B2DC /* PanelState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65DC0B2EFBB900824094FF1F29915E20 /* PanelState.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		A19320DA556C5CFE244ECB3073C41391 /* AssignmentNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5920BBB49D5682749DEE0C5BD9AAB07 /* AssignmentNode.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		A565959AE08283D7B853EAC6CBBA9CB6 /* PanelKit-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = E06A8EF716A345AEF856867508DA0CB4 /* PanelKit-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		AAA7735FF956AA5C79988108969ECBE5 /* PanelManager+State.swift in Sources */ = {isa = PBXBuildFile; fileRef = 074FDC8008ADB979B6040926A1F22CF8 /* PanelManager+State.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		AB8DDD2FE311A0D9BAFE62FD5708781D /* SavannaKit-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B203B5805287AB142A81C50034D431A /* SavannaKit-dummy.m */; };
-		AEB71A6BD682F31E156B54B930C2E447 /* InputAssistantCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9D44C002FADFA30C52AB577483ADB02 /* InputAssistantCollectionView.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		AEE11609AC13B43D890BDE9F183EF51B /* NumberNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB2F88B437E917B136A64E75842D2ADE /* NumberNode.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		AF01E00A0B4C1363A705CDB2EBADB058 /* PanelStateCoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5CA457C513A445D04F22DB5D64D1395 /* PanelStateCoder.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		AF684A6864CDFCA5F4F34AFFA441C25A /* ForInLoopNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA7018D72E96D86199D720AAA18B2EAB /* ForInLoopNode.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		B11B3C6BF1766E83957534197A2652DC /* ASTNodeDescriptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895E1A6ABF7259B7FC559CB16ADB4D95 /* ASTNodeDescriptor.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		B42CB01C99B0702BA2BBD02DA383A2D8 /* PanelViewController+Offscreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34C67AF23A75A8EB4967DFD66F4478EA /* PanelViewController+Offscreen.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		B57A9A66432D7230352AF2040D41FE9E /* CompileError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EB4B4C8F6274F6D06BC52F042792DDB /* CompileError.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		BDCD427490CAF5C6BE35CDE3316A2325 /* Arithmetic.cub in Resources */ = {isa = PBXBuildFile; fileRef = E0B8ABC413E44024887AEFA380D28D53 /* Arithmetic.cub */; };
-		BE65DE78D59824ED7A03F00A1DA7A55E /* DoStatementNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5CD25CD7D257B7EF2E27E7A933FB133 /* DoStatementNode.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		BF453675ADA185366D42583D12CD89FD /* BooleanNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 421A39159C3B7DFC0180B4D3119458F9 /* BooleanNode.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		7693DBD484AF456FEF53C7FC725F1C6A /* StdLib.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3B0E437A418EE8561DDD57A67CAF3E9 /* StdLib.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		774EDF9FBD96F5844D253A6A85566096 /* LoopNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C276C123776ED0F18D3783B9D5A0525 /* LoopNode.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		77748CB35AAA0A9C7204FD651E0BD090 /* TokenType.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB8657B163DEF3F7A9DF7BF14A63FAF6 /* TokenType.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		78399B689B924E1B8A6219725636B0BA /* FunctionPrototypeNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE9CF5F7A49B0FCFF255D2554A3180F /* FunctionPrototypeNode.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		79CACB934903BCFDFF4E0B6C859C126A /* PanelManager+Expose.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFEB70474226885F9AFF9D95C9FD96F3 /* PanelManager+Expose.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		7AD5E406C0EF51633AB1FEE2C5D21ACB /* ForStatementNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F58D0F6C890BAF6F7098C5F6C7C2857 /* ForStatementNode.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		7AF95F50CF9FA54895888884083FAA1E /* StructMemberNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = D20A16A00128EDBDFCF59B926C999A10 /* StructMemberNode.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		7CD8F047D9C4DDCC8E241E0E9F14912E /* ReturnNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F902B756C20A4D7C4CA55A7522AA59A /* ReturnNode.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		7D499D07E830E26D528B9DF4C50A27AA /* SyntaxTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCD09D6605B154310FFFC2162CAB044E /* SyntaxTextView.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		7EF3E05025F5013754B7C52332F30B69 /* PanelManager+Default.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934A4E68F35ABB118A0197A0A6976096 /* PanelManager+Default.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		7FE886FCD42ADA8B33D982188593BF13 /* Paragraphs.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1F212BC38032B1D4F731199B168AC74 /* Paragraphs.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		811217E22127FB5C8845AF8F063FF4D4 /* BytecodeDescriptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19D256B7602F39567E5E339FBB920B6 /* BytecodeDescriptor.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		82C64572F71AA8391DA90820ED14447E /* BytecodeExecutionInstruction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DBC2275FB9113D7677268021703BCB0 /* BytecodeExecutionInstruction.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		84793739F0C5E29813D3E956F6A04D9F /* Graphics.cub in Resources */ = {isa = PBXBuildFile; fileRef = 7CAD3BC8444159E60B94E5C79547F91C /* Graphics.cub */; };
+		847A57D2E55E86EA5295A502D18826C9 /* TokenType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9255961917087D7EA975555F0FFDF7AC /* TokenType.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		848A468712BE43DCCECCECD1F06E51DD /* ASTVisualizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C332256B8B6DB2FECBBBF52CF1B0F15 /* ASTVisualizer.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		857B93A54BE18F25A9B618D5BC556D46 /* ScopeNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA50269776EC637DCA78920A76E29380 /* ScopeNode.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		858C57343E84A0B74720E46E5869E130 /* SavannaKit-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 4830F100F3102305A5094CD3A405664F /* SavannaKit-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		879F86464687F6476090C8E277B800AB /* PanelKit-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = D8D15F4A866AEF98BFF0DDA197B68032 /* PanelKit-dummy.m */; };
+		886305747930E937533E2C020547A736 /* Runner.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAC7223FE804E44F0391371879AF852E /* Runner.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		8B00D60ED2CC4AB1450255AD7AA9929F /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = A314FAEC016CC7F427E7A0572A2D896A /* Constants.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		8E0CABCB66D113DDD231451E4F4DD0A5 /* RepeatWhileStatementNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78EABD855F29398F47710DA10DADA8CD /* RepeatWhileStatementNode.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		925CA98088E836CD4072297B59AEDE0D /* Token.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52E3EA26B92B0F6521459E03DA7C6859 /* Token.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		9636344768BC4DADCBCE639C17CC1EFF /* ASTNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B0A375411F584AB60BB652E929A32EF /* ASTNode.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		9AB56FA7E1EAF4B9FCC50365ACB9142F /* Types.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42638B62D517C8A6C1EEE21BC5A9CAB1 /* Types.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		9BD3B0C133179AE80871980DAB26EAF0 /* ContinueNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD6CAC9A8982ACBF9A4486D1EEA083F9 /* ContinueNode.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		9C3FF6F7A3A9EF81E1475D2BE76918E6 /* InnerTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4FD341348580D459D6AD5E705206F36 /* InnerTextView.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		9C41843DFCA604F1B20F56FD0DE67E80 /* Array+Safe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89DA7BF50A98BFDA83B3EB874286FE45 /* Array+Safe.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		9DE425111C1BE7F29ADE713A8AD4C73E /* SyntaxColorTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7445216358B5B7DC51F23AFF88A3321 /* SyntaxColorTheme.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		9F790F9B821173D6191EBBEA8128B2DC /* PanelState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FC2FDA085FAE9D4DC5579CEF5ED82D7 /* PanelState.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		A19320DA556C5CFE244ECB3073C41391 /* AssignmentNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727EB597063FD4605813E353022C24A5 /* AssignmentNode.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		A42DE6CE648A6859FD75D4A4959EE3DC /* Paragraph.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54CD0F16986FFE6A9E77016068824FC2 /* Paragraph.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		A565959AE08283D7B853EAC6CBBA9CB6 /* PanelKit-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = F5D278BD82B3F733663DD4B22C559EE6 /* PanelKit-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		AAA7735FF956AA5C79988108969ECBE5 /* PanelManager+State.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AB93E4DD6B3F097464E52122F24B30F /* PanelManager+State.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		ACBB05A0CB9909D998242B3608AC6980 /* SavannaKit-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 8FA9571393302CA993961043BA858F50 /* SavannaKit-dummy.m */; };
+		AEB71A6BD682F31E156B54B930C2E447 /* InputAssistantCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59C38B3E1F5F64A409194973868FE1CC /* InputAssistantCollectionView.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		AEE11609AC13B43D890BDE9F183EF51B /* NumberNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1AC9EA39F3EE28138699FB1D671802B /* NumberNode.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		AF01E00A0B4C1363A705CDB2EBADB058 /* PanelStateCoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 157C472E3823FB6CB92E716B8B7866D0 /* PanelStateCoder.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		AF684A6864CDFCA5F4F34AFFA441C25A /* ForInLoopNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6710226CF05C80001CB6919C65B64191 /* ForInLoopNode.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		B11B3C6BF1766E83957534197A2652DC /* ASTNodeDescriptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0F74F6425FD297E5EBD3B5348A70574 /* ASTNodeDescriptor.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		B42CB01C99B0702BA2BBD02DA383A2D8 /* PanelViewController+Offscreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB7BCE1A7EA3D57AEBAC4FCD180DE45 /* PanelViewController+Offscreen.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		B57A9A66432D7230352AF2040D41FE9E /* CompileError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BD88FAA5B0059A34247B338E5AC3738 /* CompileError.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		B88773097EF8CB10D28D2A7E24F2E2CB /* Token.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA127F7B78D506AEFB794A71823B456A /* Token.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		B96906D6633A4A660A9AF4905EF3DC04 /* TextViewWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08F1D43D98C692182D87662D04D2E224 /* TextViewWrapperView.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		BDCD427490CAF5C6BE35CDE3316A2325 /* Arithmetic.cub in Resources */ = {isa = PBXBuildFile; fileRef = 862B613EAEFB2195D9E859E4B4EE6349 /* Arithmetic.cub */; };
+		BE65DE78D59824ED7A03F00A1DA7A55E /* DoStatementNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 817D201CDA395C254F9AC9CFA3634D21 /* DoStatementNode.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		BF453675ADA185366D42583D12CD89FD /* BooleanNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0D621FB99D195F7215868D705FD7E81 /* BooleanNode.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
 		C4A90D1F99876908E685666829409670 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6604A7D69453B4569E4E4827FB9155A9 /* Foundation.framework */; };
-		C60A9C9E3C63C145D23B2903FE9FC4AA /* InputAssistantView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA78B4DFC68B651AA25BD49D408617EC /* InputAssistantView.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		CCF58BCA6BC2B83EC63D8418E4FC2817 /* LogLevel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 275499C5248B3347C0DFF82A4C1F262C /* LogLevel.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		D0CA2F041B76BAD8E7E1392381DA73A5 /* NSLayoutConstraint+Custom.swift in Sources */ = {isa = PBXBuildFile; fileRef = 647F8FB1C1C63CA1750D4CEEBE96E32F /* NSLayoutConstraint+Custom.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		D0F25DD85CC8BF804AF604A03855E143 /* PanelManager+Closing.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6F9D963C25F5FAAAB496EEE8106DBED /* PanelManager+Closing.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		D3CC8777CCCB697C8E514E0150A8C4D4 /* ValueType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ACF6116B5F9BBBDCBD9FC3D44AF5BCC /* ValueType.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		D7CF02C7B867E6C75F8373F75FF01735 /* PanelPinnedMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EE95F0517B4C2347742121C2C93D009 /* PanelPinnedMetadata.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		DA4A267F701E37A7D0296B09DF73BEB9 /* ArraySubscriptNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA3D98A9EEA234B40C0112B01B381AFD /* ArraySubscriptNode.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		DB62948F3931C439F8AE3AB7F1889BC0 /* PanelPinSide.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7A2C9EF6D2C343AEC5F7CF5B9442A86 /* PanelPinSide.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		DD8B1BBE611F6A0B2DEB2C75336808B9 /* BytecodeInterpreter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51DB77EC756926554367C6EFBF9A28A2 /* BytecodeInterpreter.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		E0101656B5154B50676845963CD65267 /* PanelViewController+Dragging.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE057435564715894CA42119246418FC /* PanelViewController+Dragging.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		E0CD0F1A80A012B8AAB5151C490CB5A6 /* StructPrototypeNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AA1E7C22A00DD9F5C9E9C4F228ED03B /* StructPrototypeNode.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		E71B97F50352B775C7CBE0280D20EA0A /* Cub-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F169CADCE86749480BF65E84B89B55C /* Cub-dummy.m */; };
-		E8AA3B237B4275FEB849553A56B72ABA /* CornerHandleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0157A949BA6994F6382FBD8C35508617 /* CornerHandleView.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		EADB06A8C9DAE354ADF11ABE0D7F168E /* TabView-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = A05906A6706A92D6F971C568AB14E667 /* TabView-dummy.m */; };
-		ED3124CD81DD0B0CD5AA5E9800CCD3F9 /* ParseErrorType.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3705A765B500FDCE5CF4774706D0B1E /* ParseErrorType.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		ED8AB30848A039A9F65B12BB33A41ADD /* FunctionNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBE23D5CF03D4613EE89A3EB5B9F3C53 /* FunctionNode.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		F099CAC8070A2B20CAA7E2CBCE798BCF /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B788C1101B0C3F44FAC9356309BC76A /* Theme.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		F21B377827658951B534B2F111A9A036 /* BinaryOpNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4B9D2E5410F2CAD1E30EDFAE6CE9ACA /* BinaryOpNode.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		F5ABCE5BAF676AEFFBFCF2CF266BC453 /* RunnerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC4E060496427EEAA02F208BA6702FDB /* RunnerDelegate.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		F7866CF1537B6948CE339FF8AD54C803 /* Lexer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AC90C74E9952D9C279507AA7A9F6E50 /* Lexer.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		F9488313C95D19B3186EEF469770FA10 /* RunnerError.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB75AFA10F223131FC927FD80B713CFB /* RunnerError.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		FBA12E34F82E80D0A103807A7924AFCB /* ConditionalStatementNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0948759FD8A9609CEA81426B5865D6 /* ConditionalStatementNode.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		C60A9C9E3C63C145D23B2903FE9FC4AA /* InputAssistantView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F8CFBBA49E58672444F9B02762B73B7 /* InputAssistantView.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		CCF58BCA6BC2B83EC63D8418E4FC2817 /* LogLevel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4196CF8A76D4D32E12B6DB07058582B /* LogLevel.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		D0CA2F041B76BAD8E7E1392381DA73A5 /* NSLayoutConstraint+Custom.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41AA8308238460F723182784E9AE593B /* NSLayoutConstraint+Custom.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		D0F25DD85CC8BF804AF604A03855E143 /* PanelManager+Closing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CB773DAA807DA5F5238CBD158806543 /* PanelManager+Closing.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		D3CC8777CCCB697C8E514E0150A8C4D4 /* ValueType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716FA39B3498F3E5D6BB9767B3AD1740 /* ValueType.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		D7CF02C7B867E6C75F8373F75FF01735 /* PanelPinnedMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EC67B07831CF8EDD430CD2354C01DB /* PanelPinnedMetadata.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		DA4A267F701E37A7D0296B09DF73BEB9 /* ArraySubscriptNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3652EF36F3EF60280EB8D27CA44CDA1 /* ArraySubscriptNode.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		DB62948F3931C439F8AE3AB7F1889BC0 /* PanelPinSide.swift in Sources */ = {isa = PBXBuildFile; fileRef = 601B04887BC64341C2147D5C3EA1A5A8 /* PanelPinSide.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		DD8B1BBE611F6A0B2DEB2C75336808B9 /* BytecodeInterpreter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 458DEABCCA1E5CF74E6F77A919283B9C /* BytecodeInterpreter.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		E0101656B5154B50676845963CD65267 /* PanelViewController+Dragging.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF047E9478F075853338B089B2245ABE /* PanelViewController+Dragging.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		E0CD0F1A80A012B8AAB5151C490CB5A6 /* StructPrototypeNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89FC54A520FD61B9A3C63E3A4B25DBD2 /* StructPrototypeNode.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		E71B97F50352B775C7CBE0280D20EA0A /* Cub-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = A42831CC66D5194CE5A61EBD6AEA08C6 /* Cub-dummy.m */; };
+		E8AA3B237B4275FEB849553A56B72ABA /* CornerHandleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F25DE3C84DDCAE7E2B92DF69E9295B42 /* CornerHandleView.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		EADB06A8C9DAE354ADF11ABE0D7F168E /* TabView-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = BE4E22E42F574E69B30F1AF814347B52 /* TabView-dummy.m */; };
+		ED3124CD81DD0B0CD5AA5E9800CCD3F9 /* ParseErrorType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97C81BCA92D0118A9DAB6B3375374988 /* ParseErrorType.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		ED8AB30848A039A9F65B12BB33A41ADD /* FunctionNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ADD4328B0E508FF331C1C80D0F41C55 /* FunctionNode.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		F099CAC8070A2B20CAA7E2CBCE798BCF /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22EAD0EEA4DE1697936635EBD69D5D6A /* Theme.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		F21B377827658951B534B2F111A9A036 /* BinaryOpNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66D0A81282EBC8FE3A16513AB36C55F0 /* BinaryOpNode.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		F5ABCE5BAF676AEFFBFCF2CF266BC453 /* RunnerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E59E7830F0BE9A418C6479000034DA1 /* RunnerDelegate.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		F7866CF1537B6948CE339FF8AD54C803 /* Lexer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1904F27DF01B53DDAB7D9FD03323E3D2 /* Lexer.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		F9488313C95D19B3186EEF469770FA10 /* RunnerError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A9EA74BA875CAAAE83E1FDC2FAFFEA7 /* RunnerError.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		FBA12E34F82E80D0A103807A7924AFCB /* ConditionalStatementNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6701ADE40786B12401654956CE01352D /* ConditionalStatementNode.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -185,171 +188,174 @@
 
 /* Begin PBXFileReference section */
 		00645443524FE52682D7FB0F08CC8DC4 /* Pods-OpenTerm-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-OpenTerm-acknowledgements.markdown"; sourceTree = "<group>"; };
-		0157A949BA6994F6382FBD8C35508617 /* CornerHandleView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CornerHandleView.swift; path = PanelKit/View/CornerHandleView.swift; sourceTree = "<group>"; };
-		019E7E34608D537FE137608C5F55B979 /* ASTNode.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ASTNode.swift; path = Sources/Cub/AST/ASTNode.swift; sourceTree = "<group>"; };
-		035A2E4908B0DAE1A03B79472D6D440B /* StructMemberNode.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = StructMemberNode.swift; path = Sources/Cub/AST/Nodes/StructMemberNode.swift; sourceTree = "<group>"; };
+		016F6AB08F641B5279F58AA07BAC7F7E /* NavigationItemObserver.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NavigationItemObserver.swift; path = Sources/Internal/Util/NavigationItemObserver.swift; sourceTree = "<group>"; };
 		041E3739B4F210C772980BA918072A57 /* Pods_OpenTerm.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_OpenTerm.framework; path = "Pods-OpenTerm.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
 		0431B76D87A9598A6F23F3393AB4FC58 /* Cub.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Cub.framework; path = Cub.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		0570E05CA29BA2FCA3C5F57A24A3138A /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		063FB4D82D744EA797B8BF2BEEFE672D /* AssociatedObject.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AssociatedObject.swift; path = PanelKit/Model/AssociatedObject.swift; sourceTree = "<group>"; };
-		0749F56D905887A381458B11970944D1 /* Lexer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Lexer.swift; path = Sources/SavannaKit/Model/Lexer.swift; sourceTree = "<group>"; };
-		074FDC8008ADB979B6040926A1F22CF8 /* PanelManager+State.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "PanelManager+State.swift"; path = "PanelKit/PanelManager/PanelManager+State.swift"; sourceTree = "<group>"; };
 		079239F1990FA46BF3E341FBBDBCAB62 /* Pods-OpenTerm-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-OpenTerm-umbrella.h"; sourceTree = "<group>"; };
-		08C4B0D9464D7D92A3ACD223B62454F1 /* PanelManager+Expose.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "PanelManager+Expose.swift"; path = "PanelKit/PanelManager/PanelManager+Expose.swift"; sourceTree = "<group>"; };
-		0910A0A2817090C8DED91404DF8F13FF /* AutoCompletor.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AutoCompletor.swift; path = "Sources/Cub/Completion Suggestions/AutoCompletor.swift"; sourceTree = "<group>"; };
-		0ACF6116B5F9BBBDCBD9FC3D44AF5BCC /* ValueType.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ValueType.swift; path = Sources/Cub/Interpreter/ValueType.swift; sourceTree = "<group>"; };
-		11388BE0754E87616E9F9B19FD5E1786 /* PanelFloatingState.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PanelFloatingState.swift; path = PanelKit/Model/PanelFloatingState.swift; sourceTree = "<group>"; };
-		115A0F726CE0AB0038A88C72C291522F /* WhileStatementNode.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = WhileStatementNode.swift; path = Sources/Cub/AST/Nodes/Loops/WhileStatementNode.swift; sourceTree = "<group>"; };
-		11D57358AEC0CA39AE1399C1C3D815E7 /* PanelManager+Floating.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "PanelManager+Floating.swift"; path = "PanelKit/PanelManager/PanelManager+Floating.swift"; sourceTree = "<group>"; };
-		14207A42E92AB15F8368707189A804B0 /* BlockBarButtonItem.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = BlockBarButtonItem.swift; path = PanelKit/Utils/BlockBarButtonItem.swift; sourceTree = "<group>"; };
-		1475E083802B261C899E9DAB55D64819 /* PanelViewController+Appearance.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "PanelViewController+Appearance.swift"; path = "PanelKit/Controller/PanelViewController+Appearance.swift"; sourceTree = "<group>"; };
-		198429C8337CA67FD5C325687818505E /* InternalVariableNode.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = InternalVariableNode.swift; path = Sources/Cub/AST/Nodes/InternalVariableNode.swift; sourceTree = "<group>"; };
-		1A5EC4A1BFAF9144A1D36FD38CB19FB1 /* SyntaxTextView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SyntaxTextView.swift; path = Sources/SavannaKit/View/SyntaxTextView.swift; sourceTree = "<group>"; };
-		1BFF15B631D3FFA366BD88F56EA1E05B /* BytecodeExecutionInstruction.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = BytecodeExecutionInstruction.swift; path = Sources/Cub/Bytecode/BytecodeExecutionInstruction.swift; sourceTree = "<group>"; };
-		1C387DFD1DAFFDB7048145825E2106F1 /* ContinueNode.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ContinueNode.swift; path = Sources/Cub/AST/Nodes/Loops/ContinueNode.swift; sourceTree = "<group>"; };
-		1EE95F0517B4C2347742121C2C93D009 /* PanelPinnedMetadata.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PanelPinnedMetadata.swift; path = PanelKit/Model/PanelPinnedMetadata.swift; sourceTree = "<group>"; };
-		1F6F8CF5889D22DD627D5770C845548F /* PanelContentDelegate.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PanelContentDelegate.swift; path = PanelKit/PanelContentDelegate/PanelContentDelegate.swift; sourceTree = "<group>"; };
-		241B5BD346DE151FE096A0FC11405784 /* ArrayNode.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ArrayNode.swift; path = Sources/Cub/AST/Nodes/ArrayNode.swift; sourceTree = "<group>"; };
-		275499C5248B3347C0DFF82A4C1F262C /* LogLevel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = LogLevel.swift; path = PanelKit/Model/LogLevel.swift; sourceTree = "<group>"; };
-		2775D2E272D394DC0662522165DBEAEC /* BytecodeDescriptor.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = BytecodeDescriptor.swift; path = Sources/Cub/Bytecode/BytecodeDescriptor.swift; sourceTree = "<group>"; };
-		2B201A21AE1E697EE5E2796F1FA2CE8C /* PanelManager+AutoLayout.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "PanelManager+AutoLayout.swift"; path = "PanelKit/PanelManager/PanelManager+AutoLayout.swift"; sourceTree = "<group>"; };
-		2C566EB921FBC8AEFC71ACD94DB642B5 /* TabViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TabViewController.swift; path = Sources/TabViewController.swift; sourceTree = "<group>"; };
-		2CC08EADFADC74EAD5D9715A77FD12ED /* CGRect+Center.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "CGRect+Center.swift"; path = "PanelKit/Utils/CGRect+Center.swift"; sourceTree = "<group>"; };
-		2F54695ACE2BBD534B07ABEBD3959732 /* FunctionPrototypeNode.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FunctionPrototypeNode.swift; path = Sources/Cub/AST/Nodes/FunctionPrototypeNode.swift; sourceTree = "<group>"; };
-		3037229CB1B241093EAE3EF85A0FA538 /* PanelManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PanelManager.swift; path = PanelKit/PanelManager/PanelManager.swift; sourceTree = "<group>"; };
+		08740412F7EAFF0D5AAA96C8F57DFC81 /* Counter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Counter.swift; path = Sources/Cub/Interpreter/Counter.swift; sourceTree = "<group>"; };
+		08F1D43D98C692182D87662D04D2E224 /* TextViewWrapperView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TextViewWrapperView.swift; path = Sources/SavannaKit/View/TextViewWrapperView.swift; sourceTree = "<group>"; };
+		0A9EA74BA875CAAAE83E1FDC2FAFFEA7 /* RunnerError.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = RunnerError.swift; path = Sources/Cub/Runner/RunnerError.swift; sourceTree = "<group>"; };
+		0B67FF7DDC1868F1A93AE7E03FDA062A /* PanelContentDelegate.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PanelContentDelegate.swift; path = PanelKit/PanelContentDelegate/PanelContentDelegate.swift; sourceTree = "<group>"; };
+		0B726F2D8B71C183773C59C08A78DD35 /* SavannaKit.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = SavannaKit.xcconfig; sourceTree = "<group>"; };
+		0BE13ADE4E32013C16F6EFFCAE06FC40 /* InstructionArgumentType.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = InstructionArgumentType.swift; path = Sources/Cub/Bytecode/InstructionArgumentType.swift; sourceTree = "<group>"; };
+		0CE44D19498F0BA4F1DA79F0EE737266 /* InputAssistant.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = InputAssistant.modulemap; sourceTree = "<group>"; };
+		0F58D0F6C890BAF6F7098C5F6C7C2857 /* ForStatementNode.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ForStatementNode.swift; path = Sources/Cub/AST/Nodes/Loops/ForStatementNode.swift; sourceTree = "<group>"; };
+		0FC2FDA085FAE9D4DC5579CEF5ED82D7 /* PanelState.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PanelState.swift; path = "PanelKit/State Restoration/PanelState.swift"; sourceTree = "<group>"; };
+		14DF1DCE75424AFD1D076F5632347A54 /* InputAssistant-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "InputAssistant-umbrella.h"; sourceTree = "<group>"; };
+		157C472E3823FB6CB92E716B8B7866D0 /* PanelStateCoder.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PanelStateCoder.swift; path = "PanelKit/State Restoration/PanelStateCoder.swift"; sourceTree = "<group>"; };
+		157E1697301FF338C1BF8FDCCB36F141 /* String+Range.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "String+Range.swift"; path = "Sources/SavannaKit/Util/String+Range.swift"; sourceTree = "<group>"; };
+		16EC67B07831CF8EDD430CD2354C01DB /* PanelPinnedMetadata.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PanelPinnedMetadata.swift; path = PanelKit/Model/PanelPinnedMetadata.swift; sourceTree = "<group>"; };
+		186027376D91A16CEE0361041174AEA5 /* PanelManager+Pinning.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "PanelManager+Pinning.swift"; path = "PanelKit/PanelManager/PanelManager+Pinning.swift"; sourceTree = "<group>"; };
+		1904F27DF01B53DDAB7D9FD03323E3D2 /* Lexer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Lexer.swift; path = Sources/Cub/Lexer/Lexer.swift; sourceTree = "<group>"; };
+		19FA78833AE794E6D0EA7EB768C0A250 /* TabViewTabCollectionView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TabViewTabCollectionView.swift; path = Sources/Internal/TabCollectionView/TabViewTabCollectionView.swift; sourceTree = "<group>"; };
+		1B6F16C6BAA91EA8A4B9F65EC73D5BC7 /* PanelViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PanelViewController.swift; path = PanelKit/Controller/PanelViewController.swift; sourceTree = "<group>"; };
+		1BD88FAA5B0059A34247B338E5AC3738 /* CompileError.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CompileError.swift; path = Sources/Cub/Compiler/CompileError.swift; sourceTree = "<group>"; };
+		1C32F4925EDF727B17A3631D6B12E12F /* PanelManager+AutoLayout.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "PanelManager+AutoLayout.swift"; path = "PanelKit/PanelManager/PanelManager+AutoLayout.swift"; sourceTree = "<group>"; };
+		1DBC2275FB9113D7677268021703BCB0 /* BytecodeExecutionInstruction.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = BytecodeExecutionInstruction.swift; path = Sources/Cub/Bytecode/BytecodeExecutionInstruction.swift; sourceTree = "<group>"; };
+		1E201C105E300B401EDE5D48679B3367 /* ASTNode+Validation.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "ASTNode+Validation.swift"; path = "Sources/Cub/AST/ASTNode+Validation.swift"; sourceTree = "<group>"; };
+		1F5D281BA6449760266D6419581EA34F /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		1F902B756C20A4D7C4CA55A7522AA59A /* ReturnNode.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ReturnNode.swift; path = Sources/Cub/AST/Nodes/ReturnNode.swift; sourceTree = "<group>"; };
+		21FA0FCE04600FBC9C7F3A6F07EE1F49 /* TabViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TabViewController.swift; path = Sources/TabViewController.swift; sourceTree = "<group>"; };
+		220B4D6B6020D317A095183753F36006 /* BytecodeInstruction.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = BytecodeInstruction.swift; path = Sources/Cub/Bytecode/BytecodeInstruction.swift; sourceTree = "<group>"; };
+		221DFACEDDD542B776600292B9AAEA99 /* BytecodeInstructionType.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = BytecodeInstructionType.swift; path = Sources/Cub/Bytecode/BytecodeInstructionType.swift; sourceTree = "<group>"; };
+		22EAD0EEA4DE1697936635EBD69D5D6A /* Theme.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Theme.swift; path = Sources/Theme.swift; sourceTree = "<group>"; };
+		23E5B3677CB9062D16C6E671DE094B2C /* InputAssistant-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "InputAssistant-prefix.pch"; sourceTree = "<group>"; };
+		25506D20169442D67D75A31B66A2B46D /* BlockGestureRecognizer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = BlockGestureRecognizer.swift; path = PanelKit/Model/BlockGestureRecognizer.swift; sourceTree = "<group>"; };
+		296AF0293D81ADB96AA43FA43236A411 /* PanelViewController+Keyboard.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "PanelViewController+Keyboard.swift"; path = "PanelKit/Controller/PanelViewController+Keyboard.swift"; sourceTree = "<group>"; };
+		2C332256B8B6DB2FECBBBF52CF1B0F15 /* ASTVisualizer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ASTVisualizer.swift; path = Sources/SavannaKit/ASTVisualizer.swift; sourceTree = "<group>"; };
+		2CFADB4AD7683E0F094A8FCD080170DE /* ASTChildNode.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ASTChildNode.swift; path = Sources/Cub/AST/ASTChildNode.swift; sourceTree = "<group>"; };
+		2D9E813FBD3F9B895D7A21D6C6100E17 /* TabViewBar.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TabViewBar.swift; path = Sources/Internal/TabViewBar.swift; sourceTree = "<group>"; };
+		2E59E7830F0BE9A418C6479000034DA1 /* RunnerDelegate.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = RunnerDelegate.swift; path = Sources/Cub/Runner/RunnerDelegate.swift; sourceTree = "<group>"; };
+		2F8CFBBA49E58672444F9B02762B73B7 /* InputAssistantView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = InputAssistantView.swift; path = Sources/InputAssistantView.swift; sourceTree = "<group>"; };
 		327EBFEB3E92C355E01010F07F26D986 /* Pods-OpenTerm-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-OpenTerm-dummy.m"; sourceTree = "<group>"; };
-		34C67AF23A75A8EB4967DFD66F4478EA /* PanelViewController+Offscreen.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "PanelViewController+Offscreen.swift"; path = "PanelKit/Controller/PanelViewController+Offscreen.swift"; sourceTree = "<group>"; };
-		3508B5480A311B07FF5442B404AC6ADE /* ASTChildNode.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ASTChildNode.swift; path = Sources/Cub/AST/ASTChildNode.swift; sourceTree = "<group>"; };
-		37E9838E649548A0E641A8156596D0C5 /* UIViewController+Popover.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "UIViewController+Popover.swift"; path = "PanelKit/Utils/UIViewController+Popover.swift"; sourceTree = "<group>"; };
-		38A25713E52F2FBCCA91525CA0D94A8C /* ForStatementNode.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ForStatementNode.swift; path = Sources/Cub/AST/Nodes/Loops/ForStatementNode.swift; sourceTree = "<group>"; };
-		3A0612C30447D192160A26D8B2C82161 /* TabView-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "TabView-prefix.pch"; sourceTree = "<group>"; };
+		3532B4B2634167E9D0BC38349AA80232 /* PanelManager+Floating.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "PanelManager+Floating.swift"; path = "PanelKit/PanelManager/PanelManager+Floating.swift"; sourceTree = "<group>"; };
+		37729043DEAADCBCCA9F227EDF0A1D22 /* Cub.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = Cub.xcconfig; sourceTree = "<group>"; };
+		3ADD4328B0E508FF331C1C80D0F41C55 /* FunctionNode.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FunctionNode.swift; path = Sources/Cub/AST/Nodes/FunctionNode.swift; sourceTree = "<group>"; };
 		3AEA7E0D40BE51900DD2EA0F8DC9EFAF /* Pods-OpenTerm-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-OpenTerm-frameworks.sh"; sourceTree = "<group>"; };
-		3EB557C2A1C536B7A37D549EB20DFB0E /* PanelKit-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "PanelKit-prefix.pch"; sourceTree = "<group>"; };
-		404F6AEE47CF7572932C020D256F7998 /* TabView-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "TabView-umbrella.h"; sourceTree = "<group>"; };
-		40644FF2203B6CDAA6551AFA7B40902F /* PanelViewController+Keyboard.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "PanelViewController+Keyboard.swift"; path = "PanelKit/Controller/PanelViewController+Keyboard.swift"; sourceTree = "<group>"; };
-		421A39159C3B7DFC0180B4D3119458F9 /* BooleanNode.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = BooleanNode.swift; path = Sources/Cub/AST/Nodes/BooleanNode.swift; sourceTree = "<group>"; };
-		4304CC186AC9A2DB0B1B210ABA773DB7 /* Constants.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Constants.swift; path = PanelKit/Model/Constants.swift; sourceTree = "<group>"; };
-		434E3C4C73630767FD33FBA695441D26 /* PanelViewController+States.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "PanelViewController+States.swift"; path = "PanelKit/Controller/PanelViewController+States.swift"; sourceTree = "<group>"; };
+		3B5FD3339CFD9060078754A5C18CDA67 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		3B965C9FFC3AE96AF07AB53F22B0DD86 /* PanelFloatingState.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PanelFloatingState.swift; path = PanelKit/Model/PanelFloatingState.swift; sourceTree = "<group>"; };
+		3DE9CF5F7A49B0FCFF255D2554A3180F /* FunctionPrototypeNode.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FunctionPrototypeNode.swift; path = Sources/Cub/AST/Nodes/FunctionPrototypeNode.swift; sourceTree = "<group>"; };
+		3E85EA655ABDD898B82CB67C2D82EAA2 /* SyntaxTextView+TextViewDelegate.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "SyntaxTextView+TextViewDelegate.swift"; path = "Sources/SavannaKit/View/SyntaxTextView+TextViewDelegate.swift"; sourceTree = "<group>"; };
+		41AA8308238460F723182784E9AE593B /* NSLayoutConstraint+Custom.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "NSLayoutConstraint+Custom.swift"; path = "Sources/Internal/Extension/NSLayoutConstraint+Custom.swift"; sourceTree = "<group>"; };
+		4241A3129E54EDE868DD51B25518E4D4 /* UnpinningMetadata.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = UnpinningMetadata.swift; path = PanelKit/Model/UnpinningMetadata.swift; sourceTree = "<group>"; };
+		42638B62D517C8A6C1EEE21BC5A9CAB1 /* Types.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Types.swift; path = Sources/SavannaKit/Util/Types.swift; sourceTree = "<group>"; };
 		44601854AC6FCEB69E4174755F12B589 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		4603BF8C672526BAE4E6AB1841917F48 /* SavannaKit.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = SavannaKit.modulemap; sourceTree = "<group>"; };
-		462B5318B39EFF4A749F5E71463E49B3 /* ReturnNode.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ReturnNode.swift; path = Sources/Cub/AST/Nodes/ReturnNode.swift; sourceTree = "<group>"; };
+		458DEABCCA1E5CF74E6F77A919283B9C /* BytecodeInterpreter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = BytecodeInterpreter.swift; path = Sources/Cub/Interpreter/BytecodeInterpreter.swift; sourceTree = "<group>"; };
 		471826DF72E501BE56A5EA645923BF87 /* Pods-OpenTerm-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-OpenTerm-acknowledgements.plist"; sourceTree = "<group>"; };
-		4A5A544E351B2B9A037065A95E231381 /* UIBarButtonItem+View.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "UIBarButtonItem+View.swift"; path = "Sources/Internal/Extension/UIBarButtonItem+View.swift"; sourceTree = "<group>"; };
-		4DBBD9768DC6D723C7DCA26871965F04 /* UnpinningMetadata.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = UnpinningMetadata.swift; path = PanelKit/Model/UnpinningMetadata.swift; sourceTree = "<group>"; };
-		4DE8171772BD92C1F641CE19B77FDC17 /* TabViewBar.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TabViewBar.swift; path = Sources/Internal/TabViewBar.swift; sourceTree = "<group>"; };
-		5012759E007359866A434E53B8ECF5B0 /* SyntaxColorTheme.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SyntaxColorTheme.swift; path = Sources/SavannaKit/Model/SyntaxColorTheme.swift; sourceTree = "<group>"; };
-		507B7F36AF9BF48CCFF8A8A8F3318624 /* Config.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Config.swift; path = Sources/Cub/Config.swift; sourceTree = "<group>"; };
-		51DB77EC756926554367C6EFBF9A28A2 /* BytecodeInterpreter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = BytecodeInterpreter.swift; path = Sources/Cub/Interpreter/BytecodeInterpreter.swift; sourceTree = "<group>"; };
-		53DCD6153B22F3C4DA5125C8A0C578A5 /* StdLib.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = StdLib.swift; path = "Sources/Cub/Standard Library/StdLib.swift"; sourceTree = "<group>"; };
-		555726CEDCF476E26EEF0A90125A9CB1 /* Array+Safe.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "Array+Safe.swift"; path = "Sources/Cub/Array+Safe.swift"; sourceTree = "<group>"; };
-		56C320549C6FBEFFCADE44F817814BAD /* Cub.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = Cub.modulemap; sourceTree = "<group>"; };
-		56FDDB2C9F73B710E42AD6B72641E06A /* Token.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Token.swift; path = Sources/SavannaKit/Model/Token.swift; sourceTree = "<group>"; };
-		5AC90C74E9952D9C279507AA7A9F6E50 /* Lexer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Lexer.swift; path = Sources/Cub/Lexer/Lexer.swift; sourceTree = "<group>"; };
-		5CCF4324727A81559763C3F34F6293D6 /* TabViewTabCollectionViewLayout.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TabViewTabCollectionViewLayout.swift; path = Sources/Internal/TabCollectionView/TabViewTabCollectionViewLayout.swift; sourceTree = "<group>"; };
-		5DC8153D77EFB4F028582336B8EE1382 /* PanelManager+Dragging.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "PanelManager+Dragging.swift"; path = "PanelKit/PanelManager/PanelManager+Dragging.swift"; sourceTree = "<group>"; };
+		4830F100F3102305A5094CD3A405664F /* SavannaKit-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "SavannaKit-umbrella.h"; sourceTree = "<group>"; };
+		49BB1EC4BBE68C8CEA29E6A0786D323A /* BytecodeInstructionError.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = BytecodeInstructionError.swift; path = Sources/Cub/Bytecode/BytecodeInstructionError.swift; sourceTree = "<group>"; };
+		4B0A375411F584AB60BB652E929A32EF /* ASTNode.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ASTNode.swift; path = Sources/Cub/AST/ASTNode.swift; sourceTree = "<group>"; };
+		4CB773DAA807DA5F5238CBD158806543 /* PanelManager+Closing.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "PanelManager+Closing.swift"; path = "PanelKit/PanelManager/PanelManager+Closing.swift"; sourceTree = "<group>"; };
+		4E04466C2503F0BFD68443850BCE177A /* PanelViewController+Appearance.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "PanelViewController+Appearance.swift"; path = "PanelKit/Controller/PanelViewController+Appearance.swift"; sourceTree = "<group>"; };
+		52E3EA26B92B0F6521459E03DA7C6859 /* Token.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Token.swift; path = Sources/Cub/Lexer/Token.swift; sourceTree = "<group>"; };
+		54CD0F16986FFE6A9E77016068824FC2 /* Paragraph.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Paragraph.swift; path = Sources/SavannaKit/Model/Paragraph.swift; sourceTree = "<group>"; };
+		5926B4D6E81B98FA520FC897C279340A /* PanelContentDelegate+Default.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "PanelContentDelegate+Default.swift"; path = "PanelKit/PanelContentDelegate/PanelContentDelegate+Default.swift"; sourceTree = "<group>"; };
+		59C38B3E1F5F64A409194973868FE1CC /* InputAssistantCollectionView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = InputAssistantCollectionView.swift; path = Sources/InputAssistantCollectionView.swift; sourceTree = "<group>"; };
+		5B35856B0E070137DCF8F01BBDBBACCA /* AssociatedObject.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AssociatedObject.swift; path = PanelKit/Model/AssociatedObject.swift; sourceTree = "<group>"; };
+		5DE3EC1A4B9BFFD8F2064A4BBA9336B4 /* InternalVariableNode.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = InternalVariableNode.swift; path = Sources/Cub/AST/Nodes/InternalVariableNode.swift; sourceTree = "<group>"; };
 		5E78EEE86D734CF50EE3ECEA46772649 /* SavannaKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = SavannaKit.framework; path = SavannaKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		600038C72B3419EDB9357B5710832F2A /* TabViewTabCollectionViewLayout.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TabViewTabCollectionViewLayout.swift; path = Sources/Internal/TabCollectionView/TabViewTabCollectionViewLayout.swift; sourceTree = "<group>"; };
+		601B04887BC64341C2147D5C3EA1A5A8 /* PanelPinSide.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PanelPinSide.swift; path = PanelKit/Model/PanelPinSide.swift; sourceTree = "<group>"; };
 		6118860695F9CCBBA7E546049A29A6AA /* Pods-OpenTerm.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-OpenTerm.debug.xcconfig"; sourceTree = "<group>"; };
-		623638586C57BD88E6B0E4C3CABDF45F /* ASTNode+Validation.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "ASTNode+Validation.swift"; path = "Sources/Cub/AST/ASTNode+Validation.swift"; sourceTree = "<group>"; };
-		63D828F5574634B8AB2FCCEFA53DCC3F /* Runner.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Runner.swift; path = Sources/Cub/Runner/Runner.swift; sourceTree = "<group>"; };
-		63E0F2E349485AE6C63737B06BF9C4D3 /* Token.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Token.swift; path = Sources/Cub/Lexer/Token.swift; sourceTree = "<group>"; };
-		647F8FB1C1C63CA1750D4CEEBE96E32F /* NSLayoutConstraint+Custom.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "NSLayoutConstraint+Custom.swift"; path = "Sources/Internal/Extension/NSLayoutConstraint+Custom.swift"; sourceTree = "<group>"; };
-		65880FFEC7CEB0B8A8315AB84A910576 /* BytecodeInstruction.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = BytecodeInstruction.swift; path = Sources/Cub/Bytecode/BytecodeInstruction.swift; sourceTree = "<group>"; };
-		65DC0B2EFBB900824094FF1F29915E20 /* PanelState.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PanelState.swift; path = "PanelKit/State Restoration/PanelState.swift"; sourceTree = "<group>"; };
+		61CB1CEA42EF51BF74C6FC51EA2D4171 /* PanelKit.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = PanelKit.modulemap; sourceTree = "<group>"; };
+		61DCA3AA4C3CA599070F307F7FB02ACB /* ArrayNode.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ArrayNode.swift; path = Sources/Cub/AST/Nodes/ArrayNode.swift; sourceTree = "<group>"; };
+		649A65111483629878BF53415E02C68E /* AutoCompletor.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AutoCompletor.swift; path = "Sources/Cub/Completion Suggestions/AutoCompletor.swift"; sourceTree = "<group>"; };
 		6604A7D69453B4569E4E4827FB9155A9 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS10.3.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
-		663F092BF07997E73B79450B0EE959D5 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		67B7B3A546552393DE84A50C3A2D5BDB /* SavannaKit.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = SavannaKit.xcconfig; sourceTree = "<group>"; };
+		66D0A81282EBC8FE3A16513AB36C55F0 /* BinaryOpNode.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = BinaryOpNode.swift; path = Sources/Cub/AST/Nodes/BinaryOpNode.swift; sourceTree = "<group>"; };
+		6701ADE40786B12401654956CE01352D /* ConditionalStatementNode.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ConditionalStatementNode.swift; path = Sources/Cub/AST/Nodes/ConditionalStatementNode.swift; sourceTree = "<group>"; };
+		6710226CF05C80001CB6919C65B64191 /* ForInLoopNode.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ForInLoopNode.swift; path = Sources/Cub/AST/Nodes/Loops/ForInLoopNode.swift; sourceTree = "<group>"; };
+		6889E48D4E90C42523FAF36E76FA0EAA /* PanelManager+Dragging.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "PanelManager+Dragging.swift"; path = "PanelKit/PanelManager/PanelManager+Dragging.swift"; sourceTree = "<group>"; };
 		691496670EFFAD994002454D5E1F8425 /* InputAssistant.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = InputAssistant.framework; path = InputAssistant.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		6918D952A0C34807DA763927EC4EFB02 /* Counter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Counter.swift; path = Sources/Cub/Interpreter/Counter.swift; sourceTree = "<group>"; };
-		695C94B23C99FC7AE1A6DDD53D6B1BE9 /* InputAssistant-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "InputAssistant-prefix.pch"; sourceTree = "<group>"; };
 		69ACFD8095A19DDE3CF1C089F7B5F531 /* PanelKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = PanelKit.framework; path = PanelKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		6AA1E7C22A00DD9F5C9E9C4F228ED03B /* StructPrototypeNode.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = StructPrototypeNode.swift; path = Sources/Cub/AST/Nodes/StructPrototypeNode.swift; sourceTree = "<group>"; };
-		6B203B5805287AB142A81C50034D431A /* SavannaKit-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "SavannaKit-dummy.m"; sourceTree = "<group>"; };
-		6EB4B4C8F6274F6D06BC52F042792DDB /* CompileError.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CompileError.swift; path = Sources/Cub/Compiler/CompileError.swift; sourceTree = "<group>"; };
-		6F36AE24609B30000AC82CB8C38A2562 /* InputAssistant.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = InputAssistant.modulemap; sourceTree = "<group>"; };
-		76D1DE5B618AB28165C78523FB4E77D1 /* BytecodeCompiler.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = BytecodeCompiler.swift; path = Sources/Cub/Compiler/BytecodeCompiler.swift; sourceTree = "<group>"; };
-		79D2B6698C2EF5FF3A834D2CB026B790 /* PanelManager+Offscreen.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "PanelManager+Offscreen.swift"; path = "PanelKit/PanelManager/PanelManager+Offscreen.swift"; sourceTree = "<group>"; };
-		7B788C1101B0C3F44FAC9356309BC76A /* Theme.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Theme.swift; path = Sources/Theme.swift; sourceTree = "<group>"; };
-		7BE5CDE0F10743DB17BC99C12A2CF39E /* Cub-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Cub-umbrella.h"; sourceTree = "<group>"; };
-		7C0948759FD8A9609CEA81426B5865D6 /* ConditionalStatementNode.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ConditionalStatementNode.swift; path = Sources/Cub/AST/Nodes/ConditionalStatementNode.swift; sourceTree = "<group>"; };
-		7D1B26FB83602DCC0E4D531A4032AF01 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		7E84B79B6C636202168969E1772CA6FF /* SavannaKit-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "SavannaKit-umbrella.h"; sourceTree = "<group>"; };
-		7EB4CFD5DCB2F6A5391D7B947ABC2A4A /* SavannaKit-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "SavannaKit-prefix.pch"; sourceTree = "<group>"; };
-		7F169CADCE86749480BF65E84B89B55C /* Cub-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Cub-dummy.m"; sourceTree = "<group>"; };
-		8181649B3B3901D8656E9718AD355012 /* PanelManager+Default.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "PanelManager+Default.swift"; path = "PanelKit/PanelManager/PanelManager+Default.swift"; sourceTree = "<group>"; };
-		830680ED9B2FFFC71213F55FA3C88722 /* InstructionArgumentType.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = InstructionArgumentType.swift; path = Sources/Cub/Bytecode/InstructionArgumentType.swift; sourceTree = "<group>"; };
-		8653F4A114CDFD48ED09BDE7E6D92952 /* InputAssistant.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = InputAssistant.xcconfig; sourceTree = "<group>"; };
-		8932FEC39CF15F1DE2C958B0B2809F6C /* Cub-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Cub-prefix.pch"; sourceTree = "<group>"; };
-		895E1A6ABF7259B7FC559CB16ADB4D95 /* ASTNodeDescriptor.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ASTNodeDescriptor.swift; path = Sources/Cub/AST/ASTNodeDescriptor.swift; sourceTree = "<group>"; };
-		8D04A65E36D07532DD524E4BC99BD9A8 /* TabViewContainerViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TabViewContainerViewController.swift; path = Sources/TabViewContainerViewController.swift; sourceTree = "<group>"; };
-		8E7CC721C225E4AA61F1BE9B9EC2D4B6 /* InputAssistant-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "InputAssistant-umbrella.h"; sourceTree = "<group>"; };
+		6AB93E4DD6B3F097464E52122F24B30F /* PanelManager+State.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "PanelManager+State.swift"; path = "PanelKit/PanelManager/PanelManager+State.swift"; sourceTree = "<group>"; };
+		703C698666C11115838837867E85E3CA /* TabViewContainerViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TabViewContainerViewController.swift; path = Sources/TabViewContainerViewController.swift; sourceTree = "<group>"; };
+		716FA39B3498F3E5D6BB9767B3AD1740 /* ValueType.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ValueType.swift; path = Sources/Cub/Interpreter/ValueType.swift; sourceTree = "<group>"; };
+		727EB597063FD4605813E353022C24A5 /* AssignmentNode.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AssignmentNode.swift; path = Sources/Cub/AST/Nodes/AssignmentNode.swift; sourceTree = "<group>"; };
+		78EABD855F29398F47710DA10DADA8CD /* RepeatWhileStatementNode.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = RepeatWhileStatementNode.swift; path = Sources/Cub/AST/Nodes/Loops/RepeatWhileStatementNode.swift; sourceTree = "<group>"; };
+		7CAD3BC8444159E60B94E5C79547F91C /* Graphics.cub */ = {isa = PBXFileReference; includeInIndex = 1; name = Graphics.cub; path = "Sources/Cub/Standard Library/Sources/Graphics.cub"; sourceTree = "<group>"; };
+		817D201CDA395C254F9AC9CFA3634D21 /* DoStatementNode.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = DoStatementNode.swift; path = Sources/Cub/AST/Nodes/Loops/DoStatementNode.swift; sourceTree = "<group>"; };
+		833BEDFB7D6CC3BE0F2500622BD43024 /* PinnedPosition.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PinnedPosition.swift; path = PanelKit/Model/PinnedPosition.swift; sourceTree = "<group>"; };
+		8494A515DD0EB4D26D1187A02D632A64 /* StructNode.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = StructNode.swift; path = Sources/Cub/AST/Nodes/StructNode.swift; sourceTree = "<group>"; };
+		84D46D026EE6663F5F19AC5554EE6792 /* Lexer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Lexer.swift; path = Sources/SavannaKit/Model/Lexer.swift; sourceTree = "<group>"; };
+		84FBBDF014CEC7C614438785F40911E4 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		862B613EAEFB2195D9E859E4B4EE6349 /* Arithmetic.cub */ = {isa = PBXFileReference; includeInIndex = 1; name = Arithmetic.cub; path = "Sources/Cub/Standard Library/Sources/Arithmetic.cub"; sourceTree = "<group>"; };
+		8676C69D8BEB1CE33AD86526F2A95035 /* InterpreterError.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = InterpreterError.swift; path = Sources/Cub/Interpreter/InterpreterError.swift; sourceTree = "<group>"; };
+		88539C2D49630630085B8829744B3E2B /* PanelViewController+Resize.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "PanelViewController+Resize.swift"; path = "PanelKit/Controller/PanelViewController+Resize.swift"; sourceTree = "<group>"; };
+		89DA7BF50A98BFDA83B3EB874286FE45 /* Array+Safe.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "Array+Safe.swift"; path = "Sources/Cub/Array+Safe.swift"; sourceTree = "<group>"; };
+		89FC54A520FD61B9A3C63E3A4B25DBD2 /* StructPrototypeNode.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = StructPrototypeNode.swift; path = Sources/Cub/AST/Nodes/StructPrototypeNode.swift; sourceTree = "<group>"; };
+		8C276C123776ED0F18D3783B9D5A0525 /* LoopNode.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = LoopNode.swift; path = Sources/Cub/AST/Nodes/Loops/LoopNode.swift; sourceTree = "<group>"; };
+		8CCFA1D454C6D272A322B1D7E69A2585 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		8DE699991DE0793728402ECE4AC65837 /* BreakLoopNode.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = BreakLoopNode.swift; path = Sources/Cub/AST/Nodes/Loops/BreakLoopNode.swift; sourceTree = "<group>"; };
+		8E58596ABA76293EC50FB048F18ABFBE /* Stack.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Stack.swift; path = Sources/Cub/Interpreter/Stack.swift; sourceTree = "<group>"; };
+		8FA9571393302CA993961043BA858F50 /* SavannaKit-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "SavannaKit-dummy.m"; sourceTree = "<group>"; };
+		91E12F964DB92C4159F0FF5EF3EF37D5 /* PanelContentDelegate+Navigation.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "PanelContentDelegate+Navigation.swift"; path = "PanelKit/PanelContentDelegate/PanelContentDelegate+Navigation.swift"; sourceTree = "<group>"; };
+		9255961917087D7EA975555F0FFDF7AC /* TokenType.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TokenType.swift; path = Sources/Cub/Lexer/TokenType.swift; sourceTree = "<group>"; };
+		934A4E68F35ABB118A0197A0A6976096 /* PanelManager+Default.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "PanelManager+Default.swift"; path = "PanelKit/PanelManager/PanelManager+Default.swift"; sourceTree = "<group>"; };
+		9377C79EE95B0B88A71FDB41D286EE53 /* TabView.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = TabView.xcconfig; sourceTree = "<group>"; };
 		93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
-		945ABEC8952126FDB15E27FC05D0656D /* PanelViewController+Resize.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "PanelViewController+Resize.swift"; path = "PanelKit/Controller/PanelViewController+Resize.swift"; sourceTree = "<group>"; };
-		96EF652173BEC6100913EF61D259DE03 /* TabView.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = TabView.modulemap; sourceTree = "<group>"; };
 		978FD896D1A6E2E3A222A0AB2F5A698C /* Pods-OpenTerm.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-OpenTerm.release.xcconfig"; sourceTree = "<group>"; };
-		99011FC738E2F105FCCE2269D1D55D44 /* TokenType.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TokenType.swift; path = Sources/Cub/Lexer/TokenType.swift; sourceTree = "<group>"; };
-		9A84094728B4D6462BC7AAC42D6D5803 /* VariableNode.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = VariableNode.swift; path = Sources/Cub/AST/Nodes/VariableNode.swift; sourceTree = "<group>"; };
-		9ACC10B714932705C624E964314D14BB /* BlockGestureRecognizer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = BlockGestureRecognizer.swift; path = PanelKit/Model/BlockGestureRecognizer.swift; sourceTree = "<group>"; };
-		9C6CE73D9397FFB3255787E61CA1A43B /* StringNode.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = StringNode.swift; path = Sources/Cub/AST/Nodes/StringNode.swift; sourceTree = "<group>"; };
-		A05906A6706A92D6F971C568AB14E667 /* TabView-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "TabView-dummy.m"; sourceTree = "<group>"; };
-		A1C30E96DF88272CF4B39F63131A3F07 /* PanelManager+Pinning.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "PanelManager+Pinning.swift"; path = "PanelKit/PanelManager/PanelManager+Pinning.swift"; sourceTree = "<group>"; };
-		A25BC50EDD66ABB2A1CF25A75968C2F1 /* NSTextView+UIKit.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "NSTextView+UIKit.swift"; path = "Sources/SavannaKit/Util/NSTextView+UIKit.swift"; sourceTree = "<group>"; };
-		A2C86604BF647DC8074FE2F6BFAB8BB0 /* PanelKit.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = PanelKit.modulemap; sourceTree = "<group>"; };
-		A451546A91E740C4DAB3E493B99C1A2D /* Parser.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Parser.swift; path = Sources/Cub/Parser/Parser.swift; sourceTree = "<group>"; };
-		A6247E9AA25A15CB241B3215D0C98DB6 /* String+Range.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "String+Range.swift"; path = "Sources/SavannaKit/Util/String+Range.swift"; sourceTree = "<group>"; };
-		A97E9687198968F049D4FAE501262DFA /* PanelKit-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "PanelKit-dummy.m"; sourceTree = "<group>"; };
-		AB75AFA10F223131FC927FD80B713CFB /* RunnerError.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = RunnerError.swift; path = Sources/Cub/Runner/RunnerError.swift; sourceTree = "<group>"; };
+		97C81BCA92D0118A9DAB6B3375374988 /* ParseErrorType.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ParseErrorType.swift; path = Sources/Cub/Parser/ParseErrorType.swift; sourceTree = "<group>"; };
+		9992D2C32729B06EAE684347CD0573F6 /* BytecodeCompiler.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = BytecodeCompiler.swift; path = Sources/Cub/Compiler/BytecodeCompiler.swift; sourceTree = "<group>"; };
+		9AD6657527F8066A4066AC1948105CB0 /* NSTextView+UIKit.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "NSTextView+UIKit.swift"; path = "Sources/SavannaKit/Util/NSTextView+UIKit.swift"; sourceTree = "<group>"; };
+		9C6604A1C0BFD19693E7C125973B7E41 /* CGRect+Center.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "CGRect+Center.swift"; path = "PanelKit/Utils/CGRect+Center.swift"; sourceTree = "<group>"; };
+		9D9ACB642FCFCE2DA7CD3F36755666D2 /* SavannaKit-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "SavannaKit-prefix.pch"; sourceTree = "<group>"; };
+		A067D6B1DCAAF98792F0A3E82D92D281 /* BodyNode.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = BodyNode.swift; path = Sources/Cub/AST/Nodes/BodyNode.swift; sourceTree = "<group>"; };
+		A1F212BC38032B1D4F731199B168AC74 /* Paragraphs.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Paragraphs.swift; path = Sources/SavannaKit/View/Paragraphs.swift; sourceTree = "<group>"; };
+		A2CBB80D92995BB821BAA70063EE5419 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A314FAEC016CC7F427E7A0572A2D896A /* Constants.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Constants.swift; path = PanelKit/Model/Constants.swift; sourceTree = "<group>"; };
+		A4196CF8A76D4D32E12B6DB07058582B /* LogLevel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = LogLevel.swift; path = PanelKit/Model/LogLevel.swift; sourceTree = "<group>"; };
+		A42831CC66D5194CE5A61EBD6AEA08C6 /* Cub-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Cub-dummy.m"; sourceTree = "<group>"; };
+		A7445216358B5B7DC51F23AFF88A3321 /* SyntaxColorTheme.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SyntaxColorTheme.swift; path = Sources/SavannaKit/Model/SyntaxColorTheme.swift; sourceTree = "<group>"; };
+		AA46BF3B10C9261E68C6E8736B9C11DF /* PanelManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PanelManager.swift; path = PanelKit/PanelManager/PanelManager.swift; sourceTree = "<group>"; };
 		AB9C6965C64D4664271F4B3C19B56459 /* Pods-OpenTerm.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-OpenTerm.modulemap"; sourceTree = "<group>"; };
-		AC90463B785AF35710B792E59660FC70 /* InnerTextView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = InnerTextView.swift; path = Sources/SavannaKit/View/InnerTextView.swift; sourceTree = "<group>"; };
-		AD5281D9AEF53BECD44953D8FAB8873F /* StructNode.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = StructNode.swift; path = Sources/Cub/AST/Nodes/StructNode.swift; sourceTree = "<group>"; };
-		AE50889147234132522CBBCDF18A79E2 /* Paragraph.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Paragraph.swift; path = Sources/SavannaKit/Model/Paragraph.swift; sourceTree = "<group>"; };
-		B01A5DD654C2400891F4404592A02CFB /* TokenType.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TokenType.swift; path = Sources/SavannaKit/Model/TokenType.swift; sourceTree = "<group>"; };
-		B203E663FA7CFEAD30F4DDC951C044EA /* PanelContentDelegate+Navigation.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "PanelContentDelegate+Navigation.swift"; path = "PanelKit/PanelContentDelegate/PanelContentDelegate+Navigation.swift"; sourceTree = "<group>"; };
-		B2D49EE5CD142D3031E312492D4454C4 /* PanelViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PanelViewController.swift; path = PanelKit/Controller/PanelViewController.swift; sourceTree = "<group>"; };
-		B3705A765B500FDCE5CF4774706D0B1E /* ParseErrorType.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ParseErrorType.swift; path = Sources/Cub/Parser/ParseErrorType.swift; sourceTree = "<group>"; };
-		B5B768AA00C44FCDC0D178139BFB6EA1 /* BreakLoopNode.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = BreakLoopNode.swift; path = Sources/Cub/AST/Nodes/Loops/BreakLoopNode.swift; sourceTree = "<group>"; };
+		AC18FFDBBAD74AF1CA1E6E244E4E35D5 /* VariableNode.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = VariableNode.swift; path = Sources/Cub/AST/Nodes/VariableNode.swift; sourceTree = "<group>"; };
+		AF9EFF592C98A91F61B3A35DC53E5A29 /* InputAssistant-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "InputAssistant-dummy.m"; sourceTree = "<group>"; };
+		B2126CC552F902FF90870D32679059C6 /* UIBarButtonItem+View.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "UIBarButtonItem+View.swift"; path = "Sources/Internal/Extension/UIBarButtonItem+View.swift"; sourceTree = "<group>"; };
 		B60A94E282006B378C02C82F7E7F7B40 /* TabView.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = TabView.framework; path = TabView.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		B9F3C10F46315701F6752C44D5AAC608 /* InputAssistant-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "InputAssistant-dummy.m"; sourceTree = "<group>"; };
-		BE057435564715894CA42119246418FC /* PanelViewController+Dragging.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "PanelViewController+Dragging.swift"; path = "PanelKit/Controller/PanelViewController+Dragging.swift"; sourceTree = "<group>"; };
-		BE4361CE5B4760829206F06B26AF24F7 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		B94780ECD74D5B3DE142436E5BE59C0D /* InputAssistant.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = InputAssistant.xcconfig; sourceTree = "<group>"; };
+		BA127F7B78D506AEFB794A71823B456A /* Token.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Token.swift; path = Sources/SavannaKit/Model/Token.swift; sourceTree = "<group>"; };
+		BE4E22E42F574E69B30F1AF814347B52 /* TabView-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "TabView-dummy.m"; sourceTree = "<group>"; };
 		BE5AEA9B2F0876AB87F1CA9BB5234EF9 /* Pods-OpenTerm-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-OpenTerm-resources.sh"; sourceTree = "<group>"; };
-		BFBFDBACAA0DAFB492E270206A1DC0A4 /* PanelContentDelegate+Default.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "PanelContentDelegate+Default.swift"; path = "PanelKit/PanelContentDelegate/PanelContentDelegate+Default.swift"; sourceTree = "<group>"; };
-		C05E66466281CD24DEA3D1A47D14E6AC /* ScopeNode.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ScopeNode.swift; path = "Sources/Cub/Compiler/Scope Tree/ScopeNode.swift"; sourceTree = "<group>"; };
-		C197EC1920D91A824589497A4846620B /* BytecodeInstructionType.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = BytecodeInstructionType.swift; path = Sources/Cub/Bytecode/BytecodeInstructionType.swift; sourceTree = "<group>"; };
-		C4B9D2E5410F2CAD1E30EDFAE6CE9ACA /* BinaryOpNode.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = BinaryOpNode.swift; path = Sources/Cub/AST/Nodes/BinaryOpNode.swift; sourceTree = "<group>"; };
-		C5D677EEE9003A83CBFC6AB27372BBC4 /* BodyNode.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = BodyNode.swift; path = Sources/Cub/AST/Nodes/BodyNode.swift; sourceTree = "<group>"; };
-		C6F9D963C25F5FAAAB496EEE8106DBED /* PanelManager+Closing.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "PanelManager+Closing.swift"; path = "PanelKit/PanelManager/PanelManager+Closing.swift"; sourceTree = "<group>"; };
-		CA7018D72E96D86199D720AAA18B2EAB /* ForInLoopNode.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ForInLoopNode.swift; path = Sources/Cub/AST/Nodes/Loops/ForInLoopNode.swift; sourceTree = "<group>"; };
-		CAC33D9D1E4619F403B88C5EC57A415C /* TabView.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = TabView.xcconfig; sourceTree = "<group>"; };
-		CBE23D5CF03D4613EE89A3EB5B9F3C53 /* FunctionNode.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FunctionNode.swift; path = Sources/Cub/AST/Nodes/FunctionNode.swift; sourceTree = "<group>"; };
-		CE69D521E194CE1A5CA5662FE757108C /* CallNode.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CallNode.swift; path = Sources/Cub/AST/Nodes/CallNode.swift; sourceTree = "<group>"; };
-		D11FC82F3FCC9951DECE4E50BE0E6076 /* TabViewTabCollectionView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TabViewTabCollectionView.swift; path = Sources/Internal/TabCollectionView/TabViewTabCollectionView.swift; sourceTree = "<group>"; };
-		D5CA457C513A445D04F22DB5D64D1395 /* PanelStateCoder.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PanelStateCoder.swift; path = "PanelKit/State Restoration/PanelStateCoder.swift"; sourceTree = "<group>"; };
-		D6444B78536677823111B953716109D3 /* RepeatWhileStatementNode.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = RepeatWhileStatementNode.swift; path = Sources/Cub/AST/Nodes/Loops/RepeatWhileStatementNode.swift; sourceTree = "<group>"; };
-		D7EFEC2C47FCD31F231BC95DE7B84EC4 /* BytecodeInstructionError.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = BytecodeInstructionError.swift; path = Sources/Cub/Bytecode/BytecodeInstructionError.swift; sourceTree = "<group>"; };
-		D7F3A0B7564CC67F6C8BB39B63C8535E /* PanelNavigationController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PanelNavigationController.swift; path = PanelKit/Controller/PanelNavigationController.swift; sourceTree = "<group>"; };
-		DA3D98A9EEA234B40C0112B01B381AFD /* ArraySubscriptNode.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ArraySubscriptNode.swift; path = Sources/Cub/AST/Nodes/ArraySubscriptNode.swift; sourceTree = "<group>"; };
-		DA78B4DFC68B651AA25BD49D408617EC /* InputAssistantView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = InputAssistantView.swift; path = Sources/InputAssistantView.swift; sourceTree = "<group>"; };
-		DB2F88B437E917B136A64E75842D2ADE /* NumberNode.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NumberNode.swift; path = Sources/Cub/AST/Nodes/NumberNode.swift; sourceTree = "<group>"; };
-		DE3531252C68962C03F71DE9982E0D51 /* Types.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Types.swift; path = Sources/SavannaKit/Util/Types.swift; sourceTree = "<group>"; };
-		DFD0BFEA9C4F847B62673200C91BCCEC /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		E06A8EF716A345AEF856867508DA0CB4 /* PanelKit-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "PanelKit-umbrella.h"; sourceTree = "<group>"; };
-		E0B8ABC413E44024887AEFA380D28D53 /* Arithmetic.cub */ = {isa = PBXFileReference; includeInIndex = 1; name = Arithmetic.cub; path = "Sources/Cub/Standard Library/Sources/Arithmetic.cub"; sourceTree = "<group>"; };
-		E24F74E351596716FAA0AED7F4AA4DA9 /* PanelKit.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = PanelKit.xcconfig; sourceTree = "<group>"; };
-		E2FD361923FA465CB93A3405FC0432BA /* Graphics.cub */ = {isa = PBXFileReference; includeInIndex = 1; name = Graphics.cub; path = "Sources/Cub/Standard Library/Sources/Graphics.cub"; sourceTree = "<group>"; };
-		E32AE28C7C1B73FDA1DCCF4795428DB5 /* NavigationItemObserver.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NavigationItemObserver.swift; path = Sources/Internal/Util/NavigationItemObserver.swift; sourceTree = "<group>"; };
-		E3FED23C9FEBDF8DFB993924FF6FE4E2 /* ResizeStart.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ResizeStart.swift; path = PanelKit/Model/ResizeStart.swift; sourceTree = "<group>"; };
-		E5CD25CD7D257B7EF2E27E7A933FB133 /* DoStatementNode.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = DoStatementNode.swift; path = Sources/Cub/AST/Nodes/Loops/DoStatementNode.swift; sourceTree = "<group>"; };
-		E9D44C002FADFA30C52AB577483ADB02 /* InputAssistantCollectionView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = InputAssistantCollectionView.swift; path = Sources/InputAssistantCollectionView.swift; sourceTree = "<group>"; };
-		EA33B3FC12A988DB1E530A6D557485DC /* PinnedPosition.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PinnedPosition.swift; path = PanelKit/Model/PinnedPosition.swift; sourceTree = "<group>"; };
-		EC4E060496427EEAA02F208BA6702FDB /* RunnerDelegate.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = RunnerDelegate.swift; path = Sources/Cub/Runner/RunnerDelegate.swift; sourceTree = "<group>"; };
-		EDD5C1BA7382E670FEA039792CF1B772 /* LoopNode.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = LoopNode.swift; path = Sources/Cub/AST/Nodes/Loops/LoopNode.swift; sourceTree = "<group>"; };
-		F0B949ADA1BCD00F79D6644D1BE53666 /* Stack.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Stack.swift; path = Sources/Cub/Interpreter/Stack.swift; sourceTree = "<group>"; };
-		F5920BBB49D5682749DEE0C5BD9AAB07 /* AssignmentNode.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AssignmentNode.swift; path = Sources/Cub/AST/Nodes/AssignmentNode.swift; sourceTree = "<group>"; };
-		F5B1778FFDCA46C0E3BB72378016F613 /* InterpreterError.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = InterpreterError.swift; path = Sources/Cub/Interpreter/InterpreterError.swift; sourceTree = "<group>"; };
-		F75CDDED9A921DF369E5ED0A61375EF2 /* ParseError.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ParseError.swift; path = Sources/Cub/Parser/ParseError.swift; sourceTree = "<group>"; };
-		F7A2C9EF6D2C343AEC5F7CF5B9442A86 /* PanelPinSide.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PanelPinSide.swift; path = PanelKit/Model/PanelPinSide.swift; sourceTree = "<group>"; };
-		F92E8D09FC4437E1FB08CD5DFC889403 /* Cub.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = Cub.xcconfig; sourceTree = "<group>"; };
-		FD21C3545C12F8ED5E5BC737B382DE87 /* ASTVisualizer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ASTVisualizer.swift; path = Sources/SavannaKit/ASTVisualizer.swift; sourceTree = "<group>"; };
+		BF047E9478F075853338B089B2245ABE /* PanelViewController+Dragging.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "PanelViewController+Dragging.swift"; path = "PanelKit/Controller/PanelViewController+Dragging.swift"; sourceTree = "<group>"; };
+		C0FC3B81BFE0D08E632BF8E54F5600E8 /* PanelNavigationController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PanelNavigationController.swift; path = PanelKit/Controller/PanelNavigationController.swift; sourceTree = "<group>"; };
+		C29E7817E96181A246FC8EB1D8A620B3 /* Cub.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = Cub.modulemap; sourceTree = "<group>"; };
+		C3C3AF0D861B923A9BE8EFD5C47D21C8 /* StringNode.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = StringNode.swift; path = Sources/Cub/AST/Nodes/StringNode.swift; sourceTree = "<group>"; };
+		CAC7223FE804E44F0391371879AF852E /* Runner.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Runner.swift; path = Sources/Cub/Runner/Runner.swift; sourceTree = "<group>"; };
+		CD9CD8C3D88A2B1D6058412B71AF5F9E /* ResizeStart.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ResizeStart.swift; path = PanelKit/Model/ResizeStart.swift; sourceTree = "<group>"; };
+		CE089DA1F9C148F3B29D23434D04A5CC /* ParseError.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ParseError.swift; path = Sources/Cub/Parser/ParseError.swift; sourceTree = "<group>"; };
+		CE880A1E79882E17C0352C463DEA494B /* TabView.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = TabView.modulemap; sourceTree = "<group>"; };
+		CECB3E4D8F860D6B0AED573409BF995F /* PanelViewController+States.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "PanelViewController+States.swift"; path = "PanelKit/Controller/PanelViewController+States.swift"; sourceTree = "<group>"; };
+		D0F74F6425FD297E5EBD3B5348A70574 /* ASTNodeDescriptor.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ASTNodeDescriptor.swift; path = Sources/Cub/AST/ASTNodeDescriptor.swift; sourceTree = "<group>"; };
+		D1AC9EA39F3EE28138699FB1D671802B /* NumberNode.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NumberNode.swift; path = Sources/Cub/AST/Nodes/NumberNode.swift; sourceTree = "<group>"; };
+		D1CEEE8D9D94ADFF12D334B7F1DD4378 /* Cub-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Cub-umbrella.h"; sourceTree = "<group>"; };
+		D20A16A00128EDBDFCF59B926C999A10 /* StructMemberNode.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = StructMemberNode.swift; path = Sources/Cub/AST/Nodes/StructMemberNode.swift; sourceTree = "<group>"; };
+		D4FD341348580D459D6AD5E705206F36 /* InnerTextView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = InnerTextView.swift; path = Sources/SavannaKit/View/InnerTextView.swift; sourceTree = "<group>"; };
+		D56C98DC46398553F1CCE22B8D9B7AC2 /* BlockBarButtonItem.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = BlockBarButtonItem.swift; path = PanelKit/Utils/BlockBarButtonItem.swift; sourceTree = "<group>"; };
+		D6DD54B7ABDDCD860F66A05D7BD3BA3B /* TabView-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "TabView-prefix.pch"; sourceTree = "<group>"; };
+		D8D15F4A866AEF98BFF0DDA197B68032 /* PanelKit-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "PanelKit-dummy.m"; sourceTree = "<group>"; };
+		DAAAAB593C6DF97A43CD4EC81B77AF31 /* PanelKit.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = PanelKit.xcconfig; sourceTree = "<group>"; };
+		DB8657B163DEF3F7A9DF7BF14A63FAF6 /* TokenType.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TokenType.swift; path = Sources/SavannaKit/Model/TokenType.swift; sourceTree = "<group>"; };
+		DD6CAC9A8982ACBF9A4486D1EEA083F9 /* ContinueNode.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ContinueNode.swift; path = Sources/Cub/AST/Nodes/Loops/ContinueNode.swift; sourceTree = "<group>"; };
+		E19D256B7602F39567E5E339FBB920B6 /* BytecodeDescriptor.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = BytecodeDescriptor.swift; path = Sources/Cub/Bytecode/BytecodeDescriptor.swift; sourceTree = "<group>"; };
+		E1E74AEF92A7EC80DFC694E94A8DE62D /* TabView-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "TabView-umbrella.h"; sourceTree = "<group>"; };
+		E3652EF36F3EF60280EB8D27CA44CDA1 /* ArraySubscriptNode.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ArraySubscriptNode.swift; path = Sources/Cub/AST/Nodes/ArraySubscriptNode.swift; sourceTree = "<group>"; };
+		E3B0E437A418EE8561DDD57A67CAF3E9 /* StdLib.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = StdLib.swift; path = "Sources/Cub/Standard Library/StdLib.swift"; sourceTree = "<group>"; };
+		E63C75600FBCE3E0D9ABED28008708A3 /* Config.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Config.swift; path = Sources/Cub/Config.swift; sourceTree = "<group>"; };
+		E6DEBAE3E62923820546A7CB2CADD3DB /* WhileStatementNode.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = WhileStatementNode.swift; path = Sources/Cub/AST/Nodes/Loops/WhileStatementNode.swift; sourceTree = "<group>"; };
+		E90EC41EF84F7E1D0D487F22692EED84 /* PanelManager+Offscreen.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "PanelManager+Offscreen.swift"; path = "PanelKit/PanelManager/PanelManager+Offscreen.swift"; sourceTree = "<group>"; };
+		EA50269776EC637DCA78920A76E29380 /* ScopeNode.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ScopeNode.swift; path = "Sources/Cub/Compiler/Scope Tree/ScopeNode.swift"; sourceTree = "<group>"; };
+		EDB7BCE1A7EA3D57AEBAC4FCD180DE45 /* PanelViewController+Offscreen.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "PanelViewController+Offscreen.swift"; path = "PanelKit/Controller/PanelViewController+Offscreen.swift"; sourceTree = "<group>"; };
+		EFEB70474226885F9AFF9D95C9FD96F3 /* PanelManager+Expose.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "PanelManager+Expose.swift"; path = "PanelKit/PanelManager/PanelManager+Expose.swift"; sourceTree = "<group>"; };
+		F0D621FB99D195F7215868D705FD7E81 /* BooleanNode.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = BooleanNode.swift; path = Sources/Cub/AST/Nodes/BooleanNode.swift; sourceTree = "<group>"; };
+		F19709B820C76637A89321DFE252F700 /* Cub-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Cub-prefix.pch"; sourceTree = "<group>"; };
+		F25DE3C84DDCAE7E2B92DF69E9295B42 /* CornerHandleView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CornerHandleView.swift; path = PanelKit/View/CornerHandleView.swift; sourceTree = "<group>"; };
+		F2CBFB98A43C962EFCA7A46F940DD6C6 /* UIViewController+Popover.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "UIViewController+Popover.swift"; path = "PanelKit/Utils/UIViewController+Popover.swift"; sourceTree = "<group>"; };
+		F5D278BD82B3F733663DD4B22C559EE6 /* PanelKit-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "PanelKit-umbrella.h"; sourceTree = "<group>"; };
+		F95C9100F20B89DC9FE7D80FA5B7353C /* Parser.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Parser.swift; path = Sources/Cub/Parser/Parser.swift; sourceTree = "<group>"; };
+		FB6BFCA6A6650EB457428AE1619067AB /* PanelKit-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "PanelKit-prefix.pch"; sourceTree = "<group>"; };
+		FC3B61E15044C54977F025E89D500152 /* CallNode.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CallNode.swift; path = Sources/Cub/AST/Nodes/CallNode.swift; sourceTree = "<group>"; };
+		FCD09D6605B154310FFFC2162CAB044E /* SyntaxTextView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SyntaxTextView.swift; path = Sources/SavannaKit/View/SyntaxTextView.swift; sourceTree = "<group>"; };
+		FDA352F55730D6E6DE0810E4691D77C3 /* SavannaKit.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = SavannaKit.modulemap; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -404,119 +410,103 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		039CC7039832A7989B0E9D2C71057470 /* Cub */ = {
+		01950A2AC3EA207759D946B5987AA8E0 /* InputAssistant */ = {
 			isa = PBXGroup;
 			children = (
-				555726CEDCF476E26EEF0A90125A9CB1 /* Array+Safe.swift */,
-				241B5BD346DE151FE096A0FC11405784 /* ArrayNode.swift */,
-				DA3D98A9EEA234B40C0112B01B381AFD /* ArraySubscriptNode.swift */,
-				F5920BBB49D5682749DEE0C5BD9AAB07 /* AssignmentNode.swift */,
-				3508B5480A311B07FF5442B404AC6ADE /* ASTChildNode.swift */,
-				019E7E34608D537FE137608C5F55B979 /* ASTNode.swift */,
-				623638586C57BD88E6B0E4C3CABDF45F /* ASTNode+Validation.swift */,
-				895E1A6ABF7259B7FC559CB16ADB4D95 /* ASTNodeDescriptor.swift */,
-				0910A0A2817090C8DED91404DF8F13FF /* AutoCompletor.swift */,
-				C4B9D2E5410F2CAD1E30EDFAE6CE9ACA /* BinaryOpNode.swift */,
-				C5D677EEE9003A83CBFC6AB27372BBC4 /* BodyNode.swift */,
-				421A39159C3B7DFC0180B4D3119458F9 /* BooleanNode.swift */,
-				B5B768AA00C44FCDC0D178139BFB6EA1 /* BreakLoopNode.swift */,
-				76D1DE5B618AB28165C78523FB4E77D1 /* BytecodeCompiler.swift */,
-				2775D2E272D394DC0662522165DBEAEC /* BytecodeDescriptor.swift */,
-				1BFF15B631D3FFA366BD88F56EA1E05B /* BytecodeExecutionInstruction.swift */,
-				65880FFEC7CEB0B8A8315AB84A910576 /* BytecodeInstruction.swift */,
-				D7EFEC2C47FCD31F231BC95DE7B84EC4 /* BytecodeInstructionError.swift */,
-				C197EC1920D91A824589497A4846620B /* BytecodeInstructionType.swift */,
-				51DB77EC756926554367C6EFBF9A28A2 /* BytecodeInterpreter.swift */,
-				CE69D521E194CE1A5CA5662FE757108C /* CallNode.swift */,
-				6EB4B4C8F6274F6D06BC52F042792DDB /* CompileError.swift */,
-				7C0948759FD8A9609CEA81426B5865D6 /* ConditionalStatementNode.swift */,
-				507B7F36AF9BF48CCFF8A8A8F3318624 /* Config.swift */,
-				1C387DFD1DAFFDB7048145825E2106F1 /* ContinueNode.swift */,
-				6918D952A0C34807DA763927EC4EFB02 /* Counter.swift */,
-				E5CD25CD7D257B7EF2E27E7A933FB133 /* DoStatementNode.swift */,
-				CA7018D72E96D86199D720AAA18B2EAB /* ForInLoopNode.swift */,
-				38A25713E52F2FBCCA91525CA0D94A8C /* ForStatementNode.swift */,
-				CBE23D5CF03D4613EE89A3EB5B9F3C53 /* FunctionNode.swift */,
-				2F54695ACE2BBD534B07ABEBD3959732 /* FunctionPrototypeNode.swift */,
-				830680ED9B2FFFC71213F55FA3C88722 /* InstructionArgumentType.swift */,
-				198429C8337CA67FD5C325687818505E /* InternalVariableNode.swift */,
-				F5B1778FFDCA46C0E3BB72378016F613 /* InterpreterError.swift */,
-				5AC90C74E9952D9C279507AA7A9F6E50 /* Lexer.swift */,
-				EDD5C1BA7382E670FEA039792CF1B772 /* LoopNode.swift */,
-				DB2F88B437E917B136A64E75842D2ADE /* NumberNode.swift */,
-				F75CDDED9A921DF369E5ED0A61375EF2 /* ParseError.swift */,
-				B3705A765B500FDCE5CF4774706D0B1E /* ParseErrorType.swift */,
-				A451546A91E740C4DAB3E493B99C1A2D /* Parser.swift */,
-				D6444B78536677823111B953716109D3 /* RepeatWhileStatementNode.swift */,
-				462B5318B39EFF4A749F5E71463E49B3 /* ReturnNode.swift */,
-				63D828F5574634B8AB2FCCEFA53DCC3F /* Runner.swift */,
-				EC4E060496427EEAA02F208BA6702FDB /* RunnerDelegate.swift */,
-				AB75AFA10F223131FC927FD80B713CFB /* RunnerError.swift */,
-				C05E66466281CD24DEA3D1A47D14E6AC /* ScopeNode.swift */,
-				F0B949ADA1BCD00F79D6644D1BE53666 /* Stack.swift */,
-				53DCD6153B22F3C4DA5125C8A0C578A5 /* StdLib.swift */,
-				9C6CE73D9397FFB3255787E61CA1A43B /* StringNode.swift */,
-				035A2E4908B0DAE1A03B79472D6D440B /* StructMemberNode.swift */,
-				AD5281D9AEF53BECD44953D8FAB8873F /* StructNode.swift */,
-				6AA1E7C22A00DD9F5C9E9C4F228ED03B /* StructPrototypeNode.swift */,
-				63E0F2E349485AE6C63737B06BF9C4D3 /* Token.swift */,
-				99011FC738E2F105FCCE2269D1D55D44 /* TokenType.swift */,
-				0ACF6116B5F9BBBDCBD9FC3D44AF5BCC /* ValueType.swift */,
-				9A84094728B4D6462BC7AAC42D6D5803 /* VariableNode.swift */,
-				115A0F726CE0AB0038A88C72C291522F /* WhileStatementNode.swift */,
-				0FDE44621B23D7419D1BCBB609684CB8 /* Resources */,
-				C1430308913B0C7BFC6CC50965C50AC8 /* Support Files */,
-			);
-			name = Cub;
-			path = Cub;
-			sourceTree = "<group>";
-		};
-		0FDE44621B23D7419D1BCBB609684CB8 /* Resources */ = {
-			isa = PBXGroup;
-			children = (
-				E0B8ABC413E44024887AEFA380D28D53 /* Arithmetic.cub */,
-				E2FD361923FA465CB93A3405FC0432BA /* Graphics.cub */,
-			);
-			name = Resources;
-			sourceTree = "<group>";
-		};
-		1D88EF2A92EB83AF51038CE802BF63B1 /* Support Files */ = {
-			isa = PBXGroup;
-			children = (
-				DFD0BFEA9C4F847B62673200C91BCCEC /* Info.plist */,
-				96EF652173BEC6100913EF61D259DE03 /* TabView.modulemap */,
-				CAC33D9D1E4619F403B88C5EC57A415C /* TabView.xcconfig */,
-				A05906A6706A92D6F971C568AB14E667 /* TabView-dummy.m */,
-				3A0612C30447D192160A26D8B2C82161 /* TabView-prefix.pch */,
-				404F6AEE47CF7572932C020D256F7998 /* TabView-umbrella.h */,
-			);
-			name = "Support Files";
-			path = "../Target Support Files/TabView";
-			sourceTree = "<group>";
-		};
-		25B55936B16A9A6867B47462C71F59A5 /* InputAssistant */ = {
-			isa = PBXGroup;
-			children = (
-				E9D44C002FADFA30C52AB577483ADB02 /* InputAssistantCollectionView.swift */,
-				DA78B4DFC68B651AA25BD49D408617EC /* InputAssistantView.swift */,
-				9C789466974791853A4CA6AB7C9F5657 /* Support Files */,
+				59C38B3E1F5F64A409194973868FE1CC /* InputAssistantCollectionView.swift */,
+				2F8CFBBA49E58672444F9B02762B73B7 /* InputAssistantView.swift */,
+				4BF850D3208899F7EEF01434CC8E892C /* Support Files */,
 			);
 			name = InputAssistant;
 			path = InputAssistant;
 			sourceTree = "<group>";
 		};
-		4F8FEF0FE39DF2F7FBA03CB7FD291174 /* Support Files */ = {
+		09A4AD03DA6EB8D7897FDA91EE6F005D /* Support Files */ = {
 			isa = PBXGroup;
 			children = (
-				663F092BF07997E73B79450B0EE959D5 /* Info.plist */,
-				A2C86604BF647DC8074FE2F6BFAB8BB0 /* PanelKit.modulemap */,
-				E24F74E351596716FAA0AED7F4AA4DA9 /* PanelKit.xcconfig */,
-				A97E9687198968F049D4FAE501262DFA /* PanelKit-dummy.m */,
-				3EB557C2A1C536B7A37D549EB20DFB0E /* PanelKit-prefix.pch */,
-				E06A8EF716A345AEF856867508DA0CB4 /* PanelKit-umbrella.h */,
+				C29E7817E96181A246FC8EB1D8A620B3 /* Cub.modulemap */,
+				37729043DEAADCBCCA9F227EDF0A1D22 /* Cub.xcconfig */,
+				A42831CC66D5194CE5A61EBD6AEA08C6 /* Cub-dummy.m */,
+				F19709B820C76637A89321DFE252F700 /* Cub-prefix.pch */,
+				D1CEEE8D9D94ADFF12D334B7F1DD4378 /* Cub-umbrella.h */,
+				8CCFA1D454C6D272A322B1D7E69A2585 /* Info.plist */,
+			);
+			name = "Support Files";
+			path = "../Target Support Files/Cub";
+			sourceTree = "<group>";
+		};
+		46A4B2C97279417827ECD79171EC2D01 /* Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				A2CBB80D92995BB821BAA70063EE5419 /* Info.plist */,
+				61CB1CEA42EF51BF74C6FC51EA2D4171 /* PanelKit.modulemap */,
+				DAAAAB593C6DF97A43CD4EC81B77AF31 /* PanelKit.xcconfig */,
+				D8D15F4A866AEF98BFF0DDA197B68032 /* PanelKit-dummy.m */,
+				FB6BFCA6A6650EB457428AE1619067AB /* PanelKit-prefix.pch */,
+				F5D278BD82B3F733663DD4B22C559EE6 /* PanelKit-umbrella.h */,
 			);
 			name = "Support Files";
 			path = "../Target Support Files/PanelKit";
+			sourceTree = "<group>";
+		};
+		490C978729A774DE689ADF3836653562 /* Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				1F5D281BA6449760266D6419581EA34F /* Info.plist */,
+				FDA352F55730D6E6DE0810E4691D77C3 /* SavannaKit.modulemap */,
+				0B726F2D8B71C183773C59C08A78DD35 /* SavannaKit.xcconfig */,
+				8FA9571393302CA993961043BA858F50 /* SavannaKit-dummy.m */,
+				9D9ACB642FCFCE2DA7CD3F36755666D2 /* SavannaKit-prefix.pch */,
+				4830F100F3102305A5094CD3A405664F /* SavannaKit-umbrella.h */,
+			);
+			name = "Support Files";
+			path = "../Target Support Files/SavannaKit";
+			sourceTree = "<group>";
+		};
+		4BF850D3208899F7EEF01434CC8E892C /* Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				84FBBDF014CEC7C614438785F40911E4 /* Info.plist */,
+				0CE44D19498F0BA4F1DA79F0EE737266 /* InputAssistant.modulemap */,
+				B94780ECD74D5B3DE142436E5BE59C0D /* InputAssistant.xcconfig */,
+				AF9EFF592C98A91F61B3A35DC53E5A29 /* InputAssistant-dummy.m */,
+				23E5B3677CB9062D16C6E671DE094B2C /* InputAssistant-prefix.pch */,
+				14DF1DCE75424AFD1D076F5632347A54 /* InputAssistant-umbrella.h */,
+			);
+			name = "Support Files";
+			path = "../Target Support Files/InputAssistant";
+			sourceTree = "<group>";
+		};
+		4C19C1F2367F8A0A599B5F885B9ADF2F /* Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				3B5FD3339CFD9060078754A5C18CDA67 /* Info.plist */,
+				CE880A1E79882E17C0352C463DEA494B /* TabView.modulemap */,
+				9377C79EE95B0B88A71FDB41D286EE53 /* TabView.xcconfig */,
+				BE4E22E42F574E69B30F1AF814347B52 /* TabView-dummy.m */,
+				D6DD54B7ABDDCD860F66A05D7BD3BA3B /* TabView-prefix.pch */,
+				E1E74AEF92A7EC80DFC694E94A8DE62D /* TabView-umbrella.h */,
+			);
+			name = "Support Files";
+			path = "../Target Support Files/TabView";
+			sourceTree = "<group>";
+		};
+		54B63731F1573D3F117A84603F27A0D1 /* TabView */ = {
+			isa = PBXGroup;
+			children = (
+				016F6AB08F641B5279F58AA07BAC7F7E /* NavigationItemObserver.swift */,
+				41AA8308238460F723182784E9AE593B /* NSLayoutConstraint+Custom.swift */,
+				2D9E813FBD3F9B895D7A21D6C6100E17 /* TabViewBar.swift */,
+				703C698666C11115838837867E85E3CA /* TabViewContainerViewController.swift */,
+				21FA0FCE04600FBC9C7F3A6F07EE1F49 /* TabViewController.swift */,
+				19FA78833AE794E6D0EA7EB768C0A250 /* TabViewTabCollectionView.swift */,
+				600038C72B3419EDB9357B5710832F2A /* TabViewTabCollectionViewLayout.swift */,
+				22EAD0EEA4DE1697936635EBD69D5D6A /* Theme.swift */,
+				B2126CC552F902FF90870D32679059C6 /* UIBarButtonItem+View.swift */,
+				4C19C1F2367F8A0A599B5F885B9ADF2F /* Support Files */,
+			);
+			name = TabView;
+			path = TabView;
 			sourceTree = "<group>";
 		};
 		566F0CDF9EDCBE7969C485D1A8205FCE /* Pods-OpenTerm */ = {
@@ -537,97 +527,18 @@
 			path = "Target Support Files/Pods-OpenTerm";
 			sourceTree = "<group>";
 		};
-		65F2B6380339C9C968715ACAEAA4A437 /* PanelKit */ = {
-			isa = PBXGroup;
-			children = (
-				063FB4D82D744EA797B8BF2BEEFE672D /* AssociatedObject.swift */,
-				14207A42E92AB15F8368707189A804B0 /* BlockBarButtonItem.swift */,
-				9ACC10B714932705C624E964314D14BB /* BlockGestureRecognizer.swift */,
-				2CC08EADFADC74EAD5D9715A77FD12ED /* CGRect+Center.swift */,
-				4304CC186AC9A2DB0B1B210ABA773DB7 /* Constants.swift */,
-				0157A949BA6994F6382FBD8C35508617 /* CornerHandleView.swift */,
-				275499C5248B3347C0DFF82A4C1F262C /* LogLevel.swift */,
-				1F6F8CF5889D22DD627D5770C845548F /* PanelContentDelegate.swift */,
-				BFBFDBACAA0DAFB492E270206A1DC0A4 /* PanelContentDelegate+Default.swift */,
-				B203E663FA7CFEAD30F4DDC951C044EA /* PanelContentDelegate+Navigation.swift */,
-				11388BE0754E87616E9F9B19FD5E1786 /* PanelFloatingState.swift */,
-				3037229CB1B241093EAE3EF85A0FA538 /* PanelManager.swift */,
-				2B201A21AE1E697EE5E2796F1FA2CE8C /* PanelManager+AutoLayout.swift */,
-				C6F9D963C25F5FAAAB496EEE8106DBED /* PanelManager+Closing.swift */,
-				8181649B3B3901D8656E9718AD355012 /* PanelManager+Default.swift */,
-				5DC8153D77EFB4F028582336B8EE1382 /* PanelManager+Dragging.swift */,
-				08C4B0D9464D7D92A3ACD223B62454F1 /* PanelManager+Expose.swift */,
-				11D57358AEC0CA39AE1399C1C3D815E7 /* PanelManager+Floating.swift */,
-				79D2B6698C2EF5FF3A834D2CB026B790 /* PanelManager+Offscreen.swift */,
-				A1C30E96DF88272CF4B39F63131A3F07 /* PanelManager+Pinning.swift */,
-				074FDC8008ADB979B6040926A1F22CF8 /* PanelManager+State.swift */,
-				D7F3A0B7564CC67F6C8BB39B63C8535E /* PanelNavigationController.swift */,
-				1EE95F0517B4C2347742121C2C93D009 /* PanelPinnedMetadata.swift */,
-				F7A2C9EF6D2C343AEC5F7CF5B9442A86 /* PanelPinSide.swift */,
-				65DC0B2EFBB900824094FF1F29915E20 /* PanelState.swift */,
-				D5CA457C513A445D04F22DB5D64D1395 /* PanelStateCoder.swift */,
-				B2D49EE5CD142D3031E312492D4454C4 /* PanelViewController.swift */,
-				1475E083802B261C899E9DAB55D64819 /* PanelViewController+Appearance.swift */,
-				BE057435564715894CA42119246418FC /* PanelViewController+Dragging.swift */,
-				40644FF2203B6CDAA6551AFA7B40902F /* PanelViewController+Keyboard.swift */,
-				34C67AF23A75A8EB4967DFD66F4478EA /* PanelViewController+Offscreen.swift */,
-				945ABEC8952126FDB15E27FC05D0656D /* PanelViewController+Resize.swift */,
-				434E3C4C73630767FD33FBA695441D26 /* PanelViewController+States.swift */,
-				EA33B3FC12A988DB1E530A6D557485DC /* PinnedPosition.swift */,
-				E3FED23C9FEBDF8DFB993924FF6FE4E2 /* ResizeStart.swift */,
-				37E9838E649548A0E641A8156596D0C5 /* UIViewController+Popover.swift */,
-				4DBBD9768DC6D723C7DCA26871965F04 /* UnpinningMetadata.swift */,
-				4F8FEF0FE39DF2F7FBA03CB7FD291174 /* Support Files */,
-			);
-			name = PanelKit;
-			path = PanelKit;
-			sourceTree = "<group>";
-		};
-		7986D33B6F52B70D6F4A4FFE9908D827 /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				039CC7039832A7989B0E9D2C71057470 /* Cub */,
-				25B55936B16A9A6867B47462C71F59A5 /* InputAssistant */,
-				65F2B6380339C9C968715ACAEAA4A437 /* PanelKit */,
-				7FC8FEEEFD2DE7A380286D8F4D6352A5 /* SavannaKit */,
-				8810304E84EFE4799C5BA54032581C22 /* SwiftLint */,
-				F77AE9C418E792C3D5E8B75D62AAD8B4 /* TabView */,
-			);
-			name = Pods;
-			sourceTree = "<group>";
-		};
 		7DB346D0F39D3F0E887471402A8071AB = {
 			isa = PBXGroup;
 			children = (
 				93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */,
 				BC3CA7F9E30CC8F7E2DD044DD34432FC /* Frameworks */,
-				7986D33B6F52B70D6F4A4FFE9908D827 /* Pods */,
+				AA98FDC3DF7BC06322239B4A2EF43BDD /* Pods */,
 				9FCD3B8AB558FA2F3FE7671BCD2593F0 /* Products */,
 				D0B9ACF226066733949A29878F7B5BDE /* Targets Support Files */,
 			);
 			sourceTree = "<group>";
 		};
-		7FC8FEEEFD2DE7A380286D8F4D6352A5 /* SavannaKit */ = {
-			isa = PBXGroup;
-			children = (
-				FD21C3545C12F8ED5E5BC737B382DE87 /* ASTVisualizer.swift */,
-				AC90463B785AF35710B792E59660FC70 /* InnerTextView.swift */,
-				0749F56D905887A381458B11970944D1 /* Lexer.swift */,
-				A25BC50EDD66ABB2A1CF25A75968C2F1 /* NSTextView+UIKit.swift */,
-				AE50889147234132522CBBCDF18A79E2 /* Paragraph.swift */,
-				A6247E9AA25A15CB241B3215D0C98DB6 /* String+Range.swift */,
-				5012759E007359866A434E53B8ECF5B0 /* SyntaxColorTheme.swift */,
-				1A5EC4A1BFAF9144A1D36FD38CB19FB1 /* SyntaxTextView.swift */,
-				56FDDB2C9F73B710E42AD6B72641E06A /* Token.swift */,
-				B01A5DD654C2400891F4404592A02CFB /* TokenType.swift */,
-				DE3531252C68962C03F71DE9982E0D51 /* Types.swift */,
-				E532FC27A6F93012D473F49F01A28CEB /* Support Files */,
-			);
-			name = SavannaKit;
-			path = SavannaKit;
-			sourceTree = "<group>";
-		};
-		8810304E84EFE4799C5BA54032581C22 /* SwiftLint */ = {
+		81F708C8BF35F64D00DE2629A5D54B29 /* SwiftLint */ = {
 			isa = PBXGroup;
 			children = (
 			);
@@ -635,18 +546,80 @@
 			path = SwiftLint;
 			sourceTree = "<group>";
 		};
-		9C789466974791853A4CA6AB7C9F5657 /* Support Files */ = {
+		8B18B756830103393D38EDB99D4CA48E /* Cub */ = {
 			isa = PBXGroup;
 			children = (
-				0570E05CA29BA2FCA3C5F57A24A3138A /* Info.plist */,
-				6F36AE24609B30000AC82CB8C38A2562 /* InputAssistant.modulemap */,
-				8653F4A114CDFD48ED09BDE7E6D92952 /* InputAssistant.xcconfig */,
-				B9F3C10F46315701F6752C44D5AAC608 /* InputAssistant-dummy.m */,
-				695C94B23C99FC7AE1A6DDD53D6B1BE9 /* InputAssistant-prefix.pch */,
-				8E7CC721C225E4AA61F1BE9B9EC2D4B6 /* InputAssistant-umbrella.h */,
+				89DA7BF50A98BFDA83B3EB874286FE45 /* Array+Safe.swift */,
+				61DCA3AA4C3CA599070F307F7FB02ACB /* ArrayNode.swift */,
+				E3652EF36F3EF60280EB8D27CA44CDA1 /* ArraySubscriptNode.swift */,
+				727EB597063FD4605813E353022C24A5 /* AssignmentNode.swift */,
+				2CFADB4AD7683E0F094A8FCD080170DE /* ASTChildNode.swift */,
+				4B0A375411F584AB60BB652E929A32EF /* ASTNode.swift */,
+				1E201C105E300B401EDE5D48679B3367 /* ASTNode+Validation.swift */,
+				D0F74F6425FD297E5EBD3B5348A70574 /* ASTNodeDescriptor.swift */,
+				649A65111483629878BF53415E02C68E /* AutoCompletor.swift */,
+				66D0A81282EBC8FE3A16513AB36C55F0 /* BinaryOpNode.swift */,
+				A067D6B1DCAAF98792F0A3E82D92D281 /* BodyNode.swift */,
+				F0D621FB99D195F7215868D705FD7E81 /* BooleanNode.swift */,
+				8DE699991DE0793728402ECE4AC65837 /* BreakLoopNode.swift */,
+				9992D2C32729B06EAE684347CD0573F6 /* BytecodeCompiler.swift */,
+				E19D256B7602F39567E5E339FBB920B6 /* BytecodeDescriptor.swift */,
+				1DBC2275FB9113D7677268021703BCB0 /* BytecodeExecutionInstruction.swift */,
+				220B4D6B6020D317A095183753F36006 /* BytecodeInstruction.swift */,
+				49BB1EC4BBE68C8CEA29E6A0786D323A /* BytecodeInstructionError.swift */,
+				221DFACEDDD542B776600292B9AAEA99 /* BytecodeInstructionType.swift */,
+				458DEABCCA1E5CF74E6F77A919283B9C /* BytecodeInterpreter.swift */,
+				FC3B61E15044C54977F025E89D500152 /* CallNode.swift */,
+				1BD88FAA5B0059A34247B338E5AC3738 /* CompileError.swift */,
+				6701ADE40786B12401654956CE01352D /* ConditionalStatementNode.swift */,
+				E63C75600FBCE3E0D9ABED28008708A3 /* Config.swift */,
+				DD6CAC9A8982ACBF9A4486D1EEA083F9 /* ContinueNode.swift */,
+				08740412F7EAFF0D5AAA96C8F57DFC81 /* Counter.swift */,
+				817D201CDA395C254F9AC9CFA3634D21 /* DoStatementNode.swift */,
+				6710226CF05C80001CB6919C65B64191 /* ForInLoopNode.swift */,
+				0F58D0F6C890BAF6F7098C5F6C7C2857 /* ForStatementNode.swift */,
+				3ADD4328B0E508FF331C1C80D0F41C55 /* FunctionNode.swift */,
+				3DE9CF5F7A49B0FCFF255D2554A3180F /* FunctionPrototypeNode.swift */,
+				0BE13ADE4E32013C16F6EFFCAE06FC40 /* InstructionArgumentType.swift */,
+				5DE3EC1A4B9BFFD8F2064A4BBA9336B4 /* InternalVariableNode.swift */,
+				8676C69D8BEB1CE33AD86526F2A95035 /* InterpreterError.swift */,
+				1904F27DF01B53DDAB7D9FD03323E3D2 /* Lexer.swift */,
+				8C276C123776ED0F18D3783B9D5A0525 /* LoopNode.swift */,
+				D1AC9EA39F3EE28138699FB1D671802B /* NumberNode.swift */,
+				CE089DA1F9C148F3B29D23434D04A5CC /* ParseError.swift */,
+				97C81BCA92D0118A9DAB6B3375374988 /* ParseErrorType.swift */,
+				F95C9100F20B89DC9FE7D80FA5B7353C /* Parser.swift */,
+				78EABD855F29398F47710DA10DADA8CD /* RepeatWhileStatementNode.swift */,
+				1F902B756C20A4D7C4CA55A7522AA59A /* ReturnNode.swift */,
+				CAC7223FE804E44F0391371879AF852E /* Runner.swift */,
+				2E59E7830F0BE9A418C6479000034DA1 /* RunnerDelegate.swift */,
+				0A9EA74BA875CAAAE83E1FDC2FAFFEA7 /* RunnerError.swift */,
+				EA50269776EC637DCA78920A76E29380 /* ScopeNode.swift */,
+				8E58596ABA76293EC50FB048F18ABFBE /* Stack.swift */,
+				E3B0E437A418EE8561DDD57A67CAF3E9 /* StdLib.swift */,
+				C3C3AF0D861B923A9BE8EFD5C47D21C8 /* StringNode.swift */,
+				D20A16A00128EDBDFCF59B926C999A10 /* StructMemberNode.swift */,
+				8494A515DD0EB4D26D1187A02D632A64 /* StructNode.swift */,
+				89FC54A520FD61B9A3C63E3A4B25DBD2 /* StructPrototypeNode.swift */,
+				52E3EA26B92B0F6521459E03DA7C6859 /* Token.swift */,
+				9255961917087D7EA975555F0FFDF7AC /* TokenType.swift */,
+				716FA39B3498F3E5D6BB9767B3AD1740 /* ValueType.swift */,
+				AC18FFDBBAD74AF1CA1E6E244E4E35D5 /* VariableNode.swift */,
+				E6DEBAE3E62923820546A7CB2CADD3DB /* WhileStatementNode.swift */,
+				9943160D51216BE0793DC1E7A9A6D37E /* Resources */,
+				09A4AD03DA6EB8D7897FDA91EE6F005D /* Support Files */,
 			);
-			name = "Support Files";
-			path = "../Target Support Files/InputAssistant";
+			name = Cub;
+			path = Cub;
+			sourceTree = "<group>";
+		};
+		9943160D51216BE0793DC1E7A9A6D37E /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				862B613EAEFB2195D9E859E4B4EE6349 /* Arithmetic.cub */,
+				7CAD3BC8444159E60B94E5C79547F91C /* Graphics.cub */,
+			);
+			name = Resources;
 			sourceTree = "<group>";
 		};
 		9FCD3B8AB558FA2F3FE7671BCD2593F0 /* Products */ = {
@@ -662,6 +635,42 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		A5AC49AC08124E9395875E8A22A40215 /* SavannaKit */ = {
+			isa = PBXGroup;
+			children = (
+				2C332256B8B6DB2FECBBBF52CF1B0F15 /* ASTVisualizer.swift */,
+				D4FD341348580D459D6AD5E705206F36 /* InnerTextView.swift */,
+				84D46D026EE6663F5F19AC5554EE6792 /* Lexer.swift */,
+				9AD6657527F8066A4066AC1948105CB0 /* NSTextView+UIKit.swift */,
+				54CD0F16986FFE6A9E77016068824FC2 /* Paragraph.swift */,
+				A1F212BC38032B1D4F731199B168AC74 /* Paragraphs.swift */,
+				157E1697301FF338C1BF8FDCCB36F141 /* String+Range.swift */,
+				A7445216358B5B7DC51F23AFF88A3321 /* SyntaxColorTheme.swift */,
+				FCD09D6605B154310FFFC2162CAB044E /* SyntaxTextView.swift */,
+				3E85EA655ABDD898B82CB67C2D82EAA2 /* SyntaxTextView+TextViewDelegate.swift */,
+				08F1D43D98C692182D87662D04D2E224 /* TextViewWrapperView.swift */,
+				BA127F7B78D506AEFB794A71823B456A /* Token.swift */,
+				DB8657B163DEF3F7A9DF7BF14A63FAF6 /* TokenType.swift */,
+				42638B62D517C8A6C1EEE21BC5A9CAB1 /* Types.swift */,
+				490C978729A774DE689ADF3836653562 /* Support Files */,
+			);
+			name = SavannaKit;
+			path = SavannaKit;
+			sourceTree = "<group>";
+		};
+		AA98FDC3DF7BC06322239B4A2EF43BDD /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				8B18B756830103393D38EDB99D4CA48E /* Cub */,
+				01950A2AC3EA207759D946B5987AA8E0 /* InputAssistant */,
+				CF176C61505152804C936B9EBE67DFB7 /* PanelKit */,
+				A5AC49AC08124E9395875E8A22A40215 /* SavannaKit */,
+				81F708C8BF35F64D00DE2629A5D54B29 /* SwiftLint */,
+				54B63731F1573D3F117A84603F27A0D1 /* TabView */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 		BC3CA7F9E30CC8F7E2DD044DD34432FC /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -670,18 +679,50 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		C1430308913B0C7BFC6CC50965C50AC8 /* Support Files */ = {
+		CF176C61505152804C936B9EBE67DFB7 /* PanelKit */ = {
 			isa = PBXGroup;
 			children = (
-				56C320549C6FBEFFCADE44F817814BAD /* Cub.modulemap */,
-				F92E8D09FC4437E1FB08CD5DFC889403 /* Cub.xcconfig */,
-				7F169CADCE86749480BF65E84B89B55C /* Cub-dummy.m */,
-				8932FEC39CF15F1DE2C958B0B2809F6C /* Cub-prefix.pch */,
-				7BE5CDE0F10743DB17BC99C12A2CF39E /* Cub-umbrella.h */,
-				7D1B26FB83602DCC0E4D531A4032AF01 /* Info.plist */,
+				5B35856B0E070137DCF8F01BBDBBACCA /* AssociatedObject.swift */,
+				D56C98DC46398553F1CCE22B8D9B7AC2 /* BlockBarButtonItem.swift */,
+				25506D20169442D67D75A31B66A2B46D /* BlockGestureRecognizer.swift */,
+				9C6604A1C0BFD19693E7C125973B7E41 /* CGRect+Center.swift */,
+				A314FAEC016CC7F427E7A0572A2D896A /* Constants.swift */,
+				F25DE3C84DDCAE7E2B92DF69E9295B42 /* CornerHandleView.swift */,
+				A4196CF8A76D4D32E12B6DB07058582B /* LogLevel.swift */,
+				0B67FF7DDC1868F1A93AE7E03FDA062A /* PanelContentDelegate.swift */,
+				5926B4D6E81B98FA520FC897C279340A /* PanelContentDelegate+Default.swift */,
+				91E12F964DB92C4159F0FF5EF3EF37D5 /* PanelContentDelegate+Navigation.swift */,
+				3B965C9FFC3AE96AF07AB53F22B0DD86 /* PanelFloatingState.swift */,
+				AA46BF3B10C9261E68C6E8736B9C11DF /* PanelManager.swift */,
+				1C32F4925EDF727B17A3631D6B12E12F /* PanelManager+AutoLayout.swift */,
+				4CB773DAA807DA5F5238CBD158806543 /* PanelManager+Closing.swift */,
+				934A4E68F35ABB118A0197A0A6976096 /* PanelManager+Default.swift */,
+				6889E48D4E90C42523FAF36E76FA0EAA /* PanelManager+Dragging.swift */,
+				EFEB70474226885F9AFF9D95C9FD96F3 /* PanelManager+Expose.swift */,
+				3532B4B2634167E9D0BC38349AA80232 /* PanelManager+Floating.swift */,
+				E90EC41EF84F7E1D0D487F22692EED84 /* PanelManager+Offscreen.swift */,
+				186027376D91A16CEE0361041174AEA5 /* PanelManager+Pinning.swift */,
+				6AB93E4DD6B3F097464E52122F24B30F /* PanelManager+State.swift */,
+				C0FC3B81BFE0D08E632BF8E54F5600E8 /* PanelNavigationController.swift */,
+				16EC67B07831CF8EDD430CD2354C01DB /* PanelPinnedMetadata.swift */,
+				601B04887BC64341C2147D5C3EA1A5A8 /* PanelPinSide.swift */,
+				0FC2FDA085FAE9D4DC5579CEF5ED82D7 /* PanelState.swift */,
+				157C472E3823FB6CB92E716B8B7866D0 /* PanelStateCoder.swift */,
+				1B6F16C6BAA91EA8A4B9F65EC73D5BC7 /* PanelViewController.swift */,
+				4E04466C2503F0BFD68443850BCE177A /* PanelViewController+Appearance.swift */,
+				BF047E9478F075853338B089B2245ABE /* PanelViewController+Dragging.swift */,
+				296AF0293D81ADB96AA43FA43236A411 /* PanelViewController+Keyboard.swift */,
+				EDB7BCE1A7EA3D57AEBAC4FCD180DE45 /* PanelViewController+Offscreen.swift */,
+				88539C2D49630630085B8829744B3E2B /* PanelViewController+Resize.swift */,
+				CECB3E4D8F860D6B0AED573409BF995F /* PanelViewController+States.swift */,
+				833BEDFB7D6CC3BE0F2500622BD43024 /* PinnedPosition.swift */,
+				CD9CD8C3D88A2B1D6058412B71AF5F9E /* ResizeStart.swift */,
+				F2CBFB98A43C962EFCA7A46F940DD6C6 /* UIViewController+Popover.swift */,
+				4241A3129E54EDE868DD51B25518E4D4 /* UnpinningMetadata.swift */,
+				46A4B2C97279417827ECD79171EC2D01 /* Support Files */,
 			);
-			name = "Support Files";
-			path = "../Target Support Files/Cub";
+			name = PanelKit;
+			path = PanelKit;
 			sourceTree = "<group>";
 		};
 		D0B9ACF226066733949A29878F7B5BDE /* Targets Support Files */ = {
@@ -698,38 +739,6 @@
 				6604A7D69453B4569E4E4827FB9155A9 /* Foundation.framework */,
 			);
 			name = iOS;
-			sourceTree = "<group>";
-		};
-		E532FC27A6F93012D473F49F01A28CEB /* Support Files */ = {
-			isa = PBXGroup;
-			children = (
-				BE4361CE5B4760829206F06B26AF24F7 /* Info.plist */,
-				4603BF8C672526BAE4E6AB1841917F48 /* SavannaKit.modulemap */,
-				67B7B3A546552393DE84A50C3A2D5BDB /* SavannaKit.xcconfig */,
-				6B203B5805287AB142A81C50034D431A /* SavannaKit-dummy.m */,
-				7EB4CFD5DCB2F6A5391D7B947ABC2A4A /* SavannaKit-prefix.pch */,
-				7E84B79B6C636202168969E1772CA6FF /* SavannaKit-umbrella.h */,
-			);
-			name = "Support Files";
-			path = "../Target Support Files/SavannaKit";
-			sourceTree = "<group>";
-		};
-		F77AE9C418E792C3D5E8B75D62AAD8B4 /* TabView */ = {
-			isa = PBXGroup;
-			children = (
-				E32AE28C7C1B73FDA1DCCF4795428DB5 /* NavigationItemObserver.swift */,
-				647F8FB1C1C63CA1750D4CEEBE96E32F /* NSLayoutConstraint+Custom.swift */,
-				4DE8171772BD92C1F641CE19B77FDC17 /* TabViewBar.swift */,
-				8D04A65E36D07532DD524E4BC99BD9A8 /* TabViewContainerViewController.swift */,
-				2C566EB921FBC8AEFC71ACD94DB642B5 /* TabViewController.swift */,
-				D11FC82F3FCC9951DECE4E50BE0E6076 /* TabViewTabCollectionView.swift */,
-				5CCF4324727A81559763C3F34F6293D6 /* TabViewTabCollectionViewLayout.swift */,
-				7B788C1101B0C3F44FAC9356309BC76A /* Theme.swift */,
-				4A5A544E351B2B9A037065A95E231381 /* UIBarButtonItem+View.swift */,
-				1D88EF2A92EB83AF51038CE802BF63B1 /* Support Files */,
-			);
-			name = TabView;
-			path = TabView;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -824,7 +833,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = D29E51B4BC57FBDF6D00F9B511E7A1E9 /* Build configuration list for PBXNativeTarget "SavannaKit" */;
 			buildPhases = (
-				B597EC2CD226BDCF3F523388DDB18E8C /* Sources */,
+				21A8A63069298343855C918127273C7E /* Sources */,
 				73D46432F0D6BF207F1A1F0E06523617 /* Frameworks */,
 				9CAD00563FD84684993B5978E0A2DB46 /* Headers */,
 			);
@@ -938,6 +947,28 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		21A8A63069298343855C918127273C7E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				848A468712BE43DCCECCECD1F06E51DD /* ASTVisualizer.swift in Sources */,
+				9C3FF6F7A3A9EF81E1475D2BE76918E6 /* InnerTextView.swift in Sources */,
+				610AAAB1210CBADD8B64F918B68F25F0 /* Lexer.swift in Sources */,
+				002AA73442890E52EB407B811E06347A /* NSTextView+UIKit.swift in Sources */,
+				A42DE6CE648A6859FD75D4A4959EE3DC /* Paragraph.swift in Sources */,
+				7FE886FCD42ADA8B33D982188593BF13 /* Paragraphs.swift in Sources */,
+				ACBB05A0CB9909D998242B3608AC6980 /* SavannaKit-dummy.m in Sources */,
+				024FE4A249BCA505F2B1A92914EF2CD3 /* String+Range.swift in Sources */,
+				9DE425111C1BE7F29ADE713A8AD4C73E /* SyntaxColorTheme.swift in Sources */,
+				55AD024D388789090B1D039600ADE36D /* SyntaxTextView+TextViewDelegate.swift in Sources */,
+				7D499D07E830E26D528B9DF4C50A27AA /* SyntaxTextView.swift in Sources */,
+				B96906D6633A4A660A9AF4905EF3DC04 /* TextViewWrapperView.swift in Sources */,
+				B88773097EF8CB10D28D2A7E24F2E2CB /* Token.swift in Sources */,
+				77748CB35AAA0A9C7204FD651E0BD090 /* TokenType.swift in Sources */,
+				9AB56FA7E1EAF4B9FCC50365ACB9142F /* Types.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		2476670D2030284B7596021C1C6DD98E /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1083,25 +1114,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		B597EC2CD226BDCF3F523388DDB18E8C /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				436B71F5F55C9E03C78484B20EB73C0D /* ASTVisualizer.swift in Sources */,
-				31B6D27C4AC160E6A64C7E7F25B2ACC0 /* InnerTextView.swift in Sources */,
-				5E798F96EA98C4CD13952063FBCD9F7E /* Lexer.swift in Sources */,
-				4F191D11B012A093D6F497E3246E317B /* NSTextView+UIKit.swift in Sources */,
-				5C91237F8FF21824C5813190C3C6EF39 /* Paragraph.swift in Sources */,
-				AB8DDD2FE311A0D9BAFE62FD5708781D /* SavannaKit-dummy.m in Sources */,
-				78108123A0F9E6BF41D357FD6CAFC465 /* String+Range.swift in Sources */,
-				9BBDAF044C3EA237F8CE1EEBA9BB02FF /* SyntaxColorTheme.swift in Sources */,
-				84C05EE95D23DC2174C250D193C1902F /* SyntaxTextView.swift in Sources */,
-				756FC2F77E582AD150C3A54A0098439F /* Token.swift in Sources */,
-				5EAC3F5B41D55DF680205F738B9DC119 /* TokenType.swift in Sources */,
-				68A0AA9D5F4AC811593D91F4A8F53AED /* Types.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -1203,7 +1215,7 @@
 		};
 		1E8F4878869593C1B3E4EDE6EE04A23C /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = E24F74E351596716FAA0AED7F4AA4DA9 /* PanelKit.xcconfig */;
+			baseConfigurationReference = DAAAAB593C6DF97A43CD4EC81B77AF31 /* PanelKit.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				CODE_SIGN_IDENTITY = "";
@@ -1236,7 +1248,7 @@
 		};
 		4FB25E36FEEEA9021063E3651ED56378 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = F92E8D09FC4437E1FB08CD5DFC889403 /* Cub.xcconfig */;
+			baseConfigurationReference = 37729043DEAADCBCCA9F227EDF0A1D22 /* Cub.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
@@ -1267,7 +1279,7 @@
 		};
 		69445013132030F5FFC1CE180DAAA580 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 8653F4A114CDFD48ED09BDE7E6D92952 /* InputAssistant.xcconfig */;
+			baseConfigurationReference = B94780ECD74D5B3DE142436E5BE59C0D /* InputAssistant.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				CODE_SIGN_IDENTITY = "";
@@ -1299,7 +1311,7 @@
 		};
 		71B6E0AB2315A58222DEAF048E4C5A0B /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = CAC33D9D1E4619F403B88C5EC57A415C /* TabView.xcconfig */;
+			baseConfigurationReference = 9377C79EE95B0B88A71FDB41D286EE53 /* TabView.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				CODE_SIGN_IDENTITY = "";
@@ -1331,7 +1343,7 @@
 		};
 		835BC290E7CC1CBC8F9DFFCA7D395E85 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 67B7B3A546552393DE84A50C3A2D5BDB /* SavannaKit.xcconfig */;
+			baseConfigurationReference = 0B726F2D8B71C183773C59C08A78DD35 /* SavannaKit.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
@@ -1420,7 +1432,7 @@
 		};
 		A35AF4622DA963BBC9E9BAD47D5706C2 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 67B7B3A546552393DE84A50C3A2D5BDB /* SavannaKit.xcconfig */;
+			baseConfigurationReference = 0B726F2D8B71C183773C59C08A78DD35 /* SavannaKit.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
@@ -1452,7 +1464,7 @@
 		};
 		AACA96CA72EA6CC60ED9FCBA711E07F7 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 8653F4A114CDFD48ED09BDE7E6D92952 /* InputAssistant.xcconfig */;
+			baseConfigurationReference = B94780ECD74D5B3DE142436E5BE59C0D /* InputAssistant.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				CODE_SIGN_IDENTITY = "";
@@ -1485,7 +1497,7 @@
 		};
 		ACAAE5873E4B3D45DF54B1031E3115AC /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = CAC33D9D1E4619F403B88C5EC57A415C /* TabView.xcconfig */;
+			baseConfigurationReference = 9377C79EE95B0B88A71FDB41D286EE53 /* TabView.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				CODE_SIGN_IDENTITY = "";
@@ -1553,7 +1565,7 @@
 		};
 		E417754578C6000B8FE2AADD119CB7E9 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = F92E8D09FC4437E1FB08CD5DFC889403 /* Cub.xcconfig */;
+			baseConfigurationReference = 37729043DEAADCBCCA9F227EDF0A1D22 /* Cub.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
@@ -1585,7 +1597,7 @@
 		};
 		ECA5908D51F7C3B52214B9E61892142E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = E24F74E351596716FAA0AED7F4AA4DA9 /* PanelKit.xcconfig */;
+			baseConfigurationReference = DAAAAB593C6DF97A43CD4EC81B77AF31 /* PanelKit.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				CODE_SIGN_IDENTITY = "";
