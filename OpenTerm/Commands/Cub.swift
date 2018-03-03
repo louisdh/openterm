@@ -110,8 +110,6 @@ public func cub(argc: Int32, argv: UnsafeMutablePointer<UnsafeMutablePointer<Int
 				
 				terminalView.executor.delegate = terminalView
 				
-				activeVC.terminalView.parserDidEndTransmission(activeVC.terminalView.stdoutParser)
-
 			}
 
 		}
