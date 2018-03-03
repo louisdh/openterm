@@ -34,6 +34,8 @@ class TerminalView: UIView {
 		didSet { self.updateAutoComplete() }
 	}
 
+	var didEnterInput: ((String) -> Void)?
+
 	weak var delegate: TerminalViewDelegate?
 
 	init() {
@@ -328,6 +330,13 @@ extension TerminalView: UITextViewDelegate {
 		//		}
 		//
 	}
+	
+	func waitForInput() {
+		
+		currentCommandStartIndex = textView.text.endIndex
+		executor.state = .waitingForInput
+		
+	}
 
 	func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
 
@@ -356,7 +365,24 @@ extension TerminalView: UITextViewDelegate {
 			}
 
 			return true
+			
+		case .waitingForInput:
+			
+			if text == "\n" {
+			
+				self.executor.state = .running
+				
+				let input = textView.text[currentCommandStartIndex..<textView.text.endIndex]
+				
+				newLine()
+				didEnterInput?(String(input))
+				
+				return false
+			}
+			
+			return true
 		}
+		
 	}
 
 	func textViewDidChange(_ textView: UITextView) {

@@ -31,6 +31,7 @@ class CommandExecutor {
 	enum State {
 		case idle
 		case running
+		case waitingForInput
 	}
 
 	var state: State = .idle {

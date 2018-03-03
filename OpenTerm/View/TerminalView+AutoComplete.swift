@@ -61,6 +61,8 @@ extension TerminalView {
 			autoCompleteManager.commandState = .running
 		case .idle:
 			autoCompleteManager.commandState = .typing(command: self.currentCommand)
+		case .waitingForInput:
+			autoCompleteManager.commandState = .running
 		}
 	}
 

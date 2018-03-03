@@ -73,6 +73,32 @@ public func cub(argc: Int32, argv: UnsafeMutablePointer<UnsafeMutablePointer<Int
 		_ = callback(.number(1))
 		return
 	}
+	
+	runner.registerExternalFunction(name: "readNumber", argumentNames: [], returns: true) { (arguments, callback) in
+		
+		terminalView.didEnterInput = { input in
+			if let i = NumberType(input) {
+				_ = callback(.number(i))
+			} else {
+				_ = callback(.number(0))
+			}
+		}
+		
+		terminalView.waitForInput()
+		
+		return
+	}
+	
+	runner.registerExternalFunction(name: "readLine", argumentNames: [], returns: true) { (arguments, callback) in
+		
+		terminalView.didEnterInput = { input in
+			_ = callback(.string(input))
+		}
+		
+		terminalView.waitForInput()
+		
+		return
+	}
 
 	runner.registerExternalFunction(name: "exec", argumentNames: ["command"], returns: true) { (arguments, callback) in
 
