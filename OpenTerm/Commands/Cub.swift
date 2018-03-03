@@ -143,6 +143,22 @@ public func cub(argc: Int32, argv: UnsafeMutablePointer<UnsafeMutablePointer<Int
 		try runner.run(source)
 
 	} catch {
+		
+		terminalView.stderrParser.delegate = terminalView
+		terminalView.stdoutParser.delegate = terminalView
+		
+		terminalView.executor.delegate = terminalView
+		
+		if let error = error as? DisplayableError {
+			
+			terminalView.writeOutput("Error occurred: \(error.description(inSource: source))")
+			
+		} else {
+			
+			terminalView.writeOutput("Unknown error occured")
+
+		}
+		
 		return 1
 	}
 
