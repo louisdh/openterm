@@ -72,6 +72,8 @@ import Foundation
 				})
 			}
 			
+			self.delegate?.didChangeText(self)
+			
 		}
 		
 	}

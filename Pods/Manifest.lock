@@ -21,7 +21,7 @@ EXTERNAL SOURCES:
 
 CHECKOUT OPTIONS:
   SavannaKit:
-    :commit: 2493bea90ac05850812deff49c8812744921da2a
+    :commit: d98129ea3aa91c2a678a8938d67c7e21d782d53a
     :git: https://github.com/louisdh/SavannaKit.git
 
 SPEC CHECKSUMS:
