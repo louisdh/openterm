@@ -24,6 +24,7 @@ private enum ScriptError: LocalizedError {
 /// A script is a text file in the .scripts folder, referenced by a unique name (it's file name).
 /// Each script can have a set of named arguments, which are stored in the file in the following format: $<<argument_name>>
 class Script {
+	
 	let name: String
 	var value: String {
 		didSet { save() }
@@ -38,41 +39,7 @@ class Script {
 
 	/// Replace argument templates with argument values
 	func runnableCommands(withArgs args: [String]) throws -> [String] {
-		// Step 1: Parse arguments from "--argname=value" to dictionary ["argname": "value"]
-		let argDict: [String: String] = Dictionary(uniqueKeysWithValues: args.flatMap({ arg in
-			let components = arg.components(separatedBy: "=")
-			guard let name = components.first, let value = components.last else { return nil }
-			return (name.replacingOccurrences(of: "--", with: ""), value)
-		}))
-
-		// Step 2: Find missing arguments, if any
-		let providedArgNames = Set(argDict.keys)
-		let requiredArgNames = Set(self.argumentNames)
-		let missingArgs = requiredArgNames.subtracting(providedArgNames)
-		if !missingArgs.isEmpty {
-			throw ScriptError.missingArguments(arguments: missingArgs.sorted())
-		}
-
-		// Step 3: Replace arg format strings with values for each command, return updated commands.
-		return commands.map { command in
-			var command = command
-			for (key, value) in argDict {
-				command = command.replacingOccurrences(of: "$<<\(key)>>", with: value)
-			}
-			return command
-		}
-	}
-
-	/// The names of the arguments, unique, and sorted by name
-	var argumentNames: [String] {
-		let matches = Script.argumentRegex.matches(in: value, options: [], range: NSRange(location: 0, length: value.count))
-		return Set(matches.flatMap { result in
-			let match = result.range(at: 1)
-			if let range = Range(match, in: value) {
-				return String(value[range])
-			}
-			return nil
-		}).sorted()
+		return []
 	}
 
 	/// Save the contents of the script to disk
@@ -87,8 +54,6 @@ class Script {
 			print("Unable to save script. \(error.localizedDescription)")
 		}
 	}
-
-	static let argumentRegex = try! NSRegularExpression(pattern: "\\$<<(\\w+)>>", options: [])
 
 	/// Load the script with the given name from disk.
 	static func named(_ name: String) throws -> Script {

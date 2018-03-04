@@ -144,9 +144,9 @@ extension TerminalView: AutoCompleteManagerDataSource {
 	}
 
 	func completionsForProgram(_ command: String, _ currentArguments: [String]) -> [AutoCompleteManager.Completion] {
-		// If command is a script, return the argument names in options form, for that script. Without ones that are already entered.
-		if Script.allNames.contains(command), let script = try? Script.named(command) {
-			return script.argumentNames.map { "--\($0)=" }.map { AutoCompleteManager.Completion($0, appendingSuffix: "") }
+
+		if Script.allNames.contains(command) {
+			return []
 		}
 
 		var completions: [AutoCompleteManager.Completion] = []
