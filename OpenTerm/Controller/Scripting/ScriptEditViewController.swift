@@ -27,7 +27,9 @@ class ScriptEditViewController: UIViewController {
 		self.title = script.name
 	}
 
-	required init?(coder aDecoder: NSCoder) { fatalError("init(coder:) has not been implemented") }
+	required init?(coder aDecoder: NSCoder) {
+		fatalError("init(coder:) has not been implemented")
+	}
 
 	override func loadView() {
 		view = textView
@@ -46,7 +48,6 @@ class ScriptEditViewController: UIViewController {
 		self.inputAssistantView.delegate = self
 		self.inputAssistantView.dataSource = self.autoCompleteManager
 		self.textView.contentTextView.inputAccessoryView = self.inputAssistantView
-		self.inputAssistantView.tintColor = .lightGray
 
 		// Hide default undo/redo/etc buttons
 		textView.inputAssistantItem.leadingBarButtonGroups = []
@@ -77,7 +78,7 @@ extension ScriptEditViewController: SyntaxTextViewDelegate {
 
 	func didChangeText(_ syntaxTextView: SyntaxTextView) {
 		save()
-		//        autoCompleteManager.reloadData()
+		autoCompleteManager.reloadData()
 	}
 
 	func lexerForSource(_ source: String) -> SavannaKit.Lexer {
@@ -97,7 +98,15 @@ extension ScriptEditViewController: UITextViewDelegate {
 extension ScriptEditViewController: AutoCompleteManagerDataSource {
 
 	func allCommandsForAutoCompletion() -> [String] {
-		return ["+ new argument"] + self.script.argumentNames
+		
+		let autoCompletor = AutoCompletor()
+		
+		let selectedRange = textView.contentTextView.selectedRange
+		let cursor = selectedRange.location + selectedRange.length - 1
+		
+		let suggestions = autoCompletor.completionSuggestions(for: textView.text, cursor: cursor)
+		
+		return suggestions.map({ $0.content })
 	}
 
 	func completionsForProgram(_ command: String, _ currentArguments: [String]) -> [AutoCompleteManager.Completion] {
@@ -117,6 +126,8 @@ extension ScriptEditViewController: InputAssistantViewDelegate {
 	func inputAssistantView(_ inputAssistantView: InputAssistantView, didSelectSuggestionAtIndex index: Int) {
 		let suggestion = autoCompleteManager.completions[index]
 
+		textView.contentTextView.insertText(suggestion.name)
+		
 		//        if suggestion.name == "+ new argument" {
 		//            textView.insertText("$<<argument>>")
 		//        } else {
