@@ -71,11 +71,8 @@ class TerminalViewController: UIViewController {
 		]
 
 		historyPanelViewController = PanelViewController(with: historyViewController, in: self)
-		historyPanelViewController.view.backgroundColor = .panelBackgroundColor
 		scriptsPanelViewController = PanelViewController(with: scriptsViewController, in: self)
-		scriptsPanelViewController.view.backgroundColor = .panelBackgroundColor
 		bookmarkPanelViewController = PanelViewController(with: bookmarkViewController, in: self)
-		bookmarkPanelViewController.view.backgroundColor = .panelBackgroundColor
 
 		historyViewController.delegate = self
 		bookmarkViewController.delegate = self
