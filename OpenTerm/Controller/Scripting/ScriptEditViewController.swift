@@ -47,11 +47,7 @@ class ScriptEditViewController: UIViewController {
 		// Set up input assistant and text view for auto completion
 		self.inputAssistantView.delegate = self
 		self.inputAssistantView.dataSource = self.autoCompleteManager
-		self.textView.contentTextView.inputAccessoryView = self.inputAssistantView
-
-		// Hide default undo/redo/etc buttons
-		textView.inputAssistantItem.leadingBarButtonGroups = []
-		textView.inputAssistantItem.trailingBarButtonGroups = []
+		self.inputAssistantView.attach(to: self.textView.contentTextView)
 
 	}
 
