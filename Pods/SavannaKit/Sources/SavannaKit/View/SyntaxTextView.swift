@@ -318,6 +318,7 @@ public class SyntaxTextView: View {
 	override public func layoutSubviews() {
 		super.layoutSubviews()
 		
+		self.textView.invalidateCachedParagraphs()
 		self.textView.setNeedsDisplay()
 
 	}
