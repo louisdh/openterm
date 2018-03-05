@@ -15,13 +15,13 @@ class ScriptEditViewController: UIViewController {
 
 	var script: Script
 	let textView: SyntaxTextView
-	let autoCompleteManager: AutoCompleteManager
+	let autoCompleteManager: CubSyntaxAutoCompleteManager
 	let inputAssistantView: InputAssistantView
 
 	init(script: Script) {
 		self.script = script
 		self.textView = SyntaxTextView()
-		self.autoCompleteManager = AutoCompleteManager()
+		self.autoCompleteManager = CubSyntaxAutoCompleteManager()
 		self.inputAssistantView = InputAssistantView()
 		super.init(nibName: nil, bundle: nil)
 		self.title = script.name
@@ -35,20 +35,28 @@ class ScriptEditViewController: UIViewController {
 		view = textView
 	}
 
+	private var textViewSelectedRangeObserver: NSKeyValueObservation?
+
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
 		textView.delegate = self
 
 		// Set up auto complete manager
-		self.autoCompleteManager.delegate = self.inputAssistantView
-		self.autoCompleteManager.dataSource = self
+		autoCompleteManager.delegate = inputAssistantView
+		autoCompleteManager.dataSource = self
 
 		// Set up input assistant and text view for auto completion
-		self.inputAssistantView.delegate = self
-		self.inputAssistantView.dataSource = self.autoCompleteManager
-		self.inputAssistantView.attach(to: self.textView.contentTextView)
+		inputAssistantView.delegate = self
+		inputAssistantView.dataSource = autoCompleteManager
+		inputAssistantView.attach(to: textView.contentTextView)
 
+		textViewSelectedRangeObserver = textView.contentTextView.observe(\UITextView.selectedTextRange) { [weak self] (textView, value) in
+			
+			self?.autoCompleteManager.reloadData()
+
+		}
+		
 	}
 
 	override func viewWillAppear(_ animated: Bool) {
@@ -91,9 +99,9 @@ extension ScriptEditViewController: UITextViewDelegate {
 	}
 }
 
-extension ScriptEditViewController: AutoCompleteManagerDataSource {
+extension ScriptEditViewController: CubSyntaxAutoCompleteManagerDataSource {
 
-	func allCommandsForAutoCompletion() -> [String] {
+	func completions() -> [CubSyntaxAutoCompleteManager.Completion] {
 		
 		let autoCompletor = AutoCompletor()
 		
@@ -102,32 +110,20 @@ extension ScriptEditViewController: AutoCompleteManagerDataSource {
 		
 		let suggestions = autoCompletor.completionSuggestions(for: textView.text, cursor: cursor)
 		
-		return suggestions.map({ $0.content })
+		return suggestions.map({ CubSyntaxAutoCompleteManager.Completion($0.content, data: $0) })
 	}
 
-	func completionsForProgram(_ command: String, _ currentArguments: [String]) -> [AutoCompleteManager.Completion] {
-		return []
-	}
-
-	func completionsForExecution() -> [AutoCompleteManager.Completion] {
-		return []
-	}
-
-	func availableCompletions(in completions: [AutoCompleteManager.Completion], forArguments arguments: [String]) -> [AutoCompleteManager.Completion] {
-		return completions
-	}
 }
 
 extension ScriptEditViewController: InputAssistantViewDelegate {
+	
 	func inputAssistantView(_ inputAssistantView: InputAssistantView, didSelectSuggestionAtIndex index: Int) {
-		let suggestion = autoCompleteManager.completions[index]
+		let completion = autoCompleteManager.completions[index]
 
-		textView.contentTextView.insertText(suggestion.name)
+		let suggestion = completion.data
 		
-		//        if suggestion.name == "+ new argument" {
-		//            textView.insertText("$<<argument>>")
-		//        } else {
-		//            textView.insertText("$<<\(suggestion.name)>>")
-		//        }
+		textView.contentTextView.insertText(suggestion.content)
+
 	}
+	
 }
