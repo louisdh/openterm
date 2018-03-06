@@ -10,6 +10,7 @@ import UIKit
 import InputAssistant
 import Cub
 import SavannaKit
+import PanelKit
 
 class ScriptEditViewController: UIViewController {
 
@@ -74,6 +75,26 @@ class ScriptEditViewController: UIViewController {
 	private func save() {
 		// Save to disk
 		script.value = textView.text
+	}
+
+}
+
+extension ScriptEditViewController: PanelContentDelegate {
+
+	var preferredPanelContentSize: CGSize {
+		return CGSize(width: 320, height: 480)
+	}
+	
+	var minimumPanelContentSize: CGSize {
+		return CGSize(width: 320, height: 320)
+	}
+	
+	var maximumPanelContentSize: CGSize {
+		return CGSize(width: 600, height: 800)
+	}
+	
+	var shouldAdjustForKeyboard: Bool {
+		return true
 	}
 
 }

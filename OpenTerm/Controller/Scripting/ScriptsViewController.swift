@@ -99,6 +99,15 @@ extension ScriptsViewController: PanelContentDelegate {
 	var maximumPanelContentSize: CGSize {
 		return CGSize(width: 600, height: 800)
 	}
+	
+	var shouldAdjustForKeyboard: Bool {
+		
+		if let scriptVC = self.navigationController?.visibleViewController as? ScriptEditViewController {
+			return scriptVC.shouldAdjustForKeyboard
+		}
+		
+		return false
+	}
 
 }
 
