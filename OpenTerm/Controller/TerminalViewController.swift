@@ -102,6 +102,7 @@ class TerminalViewController: UIViewController {
 			contentWrapperView.bottomAnchor.constraint(equalTo: view.layoutMarginsGuide.bottomAnchor)
 			])
 
+		contentWrapperView.backgroundColor = .black
 		
 		contentWrapperView.addSubview(terminalView)
 		terminalView.translatesAutoresizingMaskIntoConstraints = false
