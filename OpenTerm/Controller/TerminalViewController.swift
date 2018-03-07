@@ -71,8 +71,16 @@ class TerminalViewController: UIViewController {
 		]
 
 		historyPanelViewController = PanelViewController(with: historyViewController, in: self)
+		historyPanelViewController.panelNavigationController.view.backgroundColor = .panelBackgroundColor
+		historyPanelViewController.view.backgroundColor = .clear
+		
 		scriptsPanelViewController = PanelViewController(with: scriptsViewController, in: self)
+		scriptsPanelViewController.panelNavigationController.view.backgroundColor = .panelBackgroundColor
+		scriptsPanelViewController.view.backgroundColor = .clear
+
 		bookmarkPanelViewController = PanelViewController(with: bookmarkViewController, in: self)
+		bookmarkPanelViewController.panelNavigationController.view.backgroundColor = .panelBackgroundColor
+		bookmarkPanelViewController.view.backgroundColor = .clear
 
 		historyViewController.delegate = self
 		bookmarkViewController.delegate = self
@@ -94,10 +102,13 @@ class TerminalViewController: UIViewController {
 			contentWrapperView.bottomAnchor.constraint(equalTo: view.layoutMarginsGuide.bottomAnchor)
 			])
 
-		// Add terminal view as subview
-		terminalView.frame = contentWrapperView.bounds
-		terminalView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+		
 		contentWrapperView.addSubview(terminalView)
+		terminalView.translatesAutoresizingMaskIntoConstraints = false
+		terminalView.leadingAnchor.constraint(equalTo: contentWrapperView.leadingAnchor).isActive = true
+		terminalView.trailingAnchor.constraint(equalTo: contentWrapperView.trailingAnchor).isActive = true
+		terminalView.topAnchor.constraint(equalTo: contentWrapperView.topAnchor).isActive = true
+		terminalView.bottomAnchor.constraint(equalTo: contentWrapperView.bottomAnchor).isActive = true
 
 		updateTitle()
 
@@ -453,6 +464,10 @@ extension TerminalViewController: PanelManager {
 
 		savePanelStates()
 
+	}
+	
+	func maximumNumberOfPanelsPinned(at side: PanelPinSide) -> Int {
+		return 2
 	}
 
 }
