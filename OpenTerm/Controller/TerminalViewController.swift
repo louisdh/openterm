@@ -45,6 +45,8 @@ class TerminalViewController: UIViewController {
 	var bookmarkViewController: BookmarkViewController!
 	var bookmarkPanelViewController: PanelViewController!
 
+	var cubPanels = [PanelViewController]()
+	
 	private var overflowItems: [OverflowItem] = [] {
 		didSet { applyOverflowState() }
 	}
@@ -123,6 +125,7 @@ class TerminalViewController: UIViewController {
 		replaceCommand("pbcopy", mangleFunctionName("pbcopy"), true)
 		replaceCommand("pbpaste", mangleFunctionName("pbpaste"), true)
 		replaceCommand("cub", mangleFunctionName("cub"), true)
+		replaceCommand("savanna", mangleFunctionName("savanna"), true)
 
 		// Call reloadData for the added commands.
 		terminalView.autoCompleteManager.reloadData()
@@ -450,7 +453,7 @@ extension TerminalViewController: HistoryViewControllerDelegate {
 extension TerminalViewController: PanelManager {
 
 	var panels: [PanelViewController] {
-		return [historyPanelViewController, scriptsPanelViewController, bookmarkPanelViewController]
+		return [historyPanelViewController, scriptsPanelViewController, bookmarkPanelViewController] + cubPanels
 	}
 
 	var panelContentWrapperView: UIView {

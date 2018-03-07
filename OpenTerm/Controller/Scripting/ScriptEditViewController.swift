@@ -41,6 +41,9 @@ class ScriptEditViewController: UIViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
+		self.view.tintColor = .defaultMainTintColor
+		self.navigationController?.navigationBar.barStyle = .blackTranslucent
+		
 		textView.delegate = self
 
 		// Set up auto complete manager

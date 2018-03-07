@@ -39,7 +39,7 @@ class Script {
 		}
 	}
 
-	private init(url: URL, name: String, value: String) {
+	init(url: URL, name: String, value: String) {
 		self.url = url
 		self.name = name
 		self.value = value
