@@ -97,7 +97,7 @@ extension ScriptEditViewController: PanelContentDelegate {
 	}
 	
 	var shouldAdjustForKeyboard: Bool {
-		return true
+		return self.textView.contentTextView.isFirstResponder
 	}
 
 }
