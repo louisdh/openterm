@@ -49,11 +49,6 @@ class ScriptExecutorCommand: CommandExecutorCommand {
 			
 		} catch {
 			
-			terminalView.stderrParser.delegate = terminalView
-			terminalView.stdoutParser.delegate = terminalView
-			
-			terminalView.executor.delegate = terminalView
-			
 			if let error = error as? DisplayableError {
 				
 				terminalView.writeOutput("Error occurred: \(error.description(inSource: source))")

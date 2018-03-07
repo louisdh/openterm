@@ -55,10 +55,10 @@ class CubCommandExecutor: CommandExecutorDelegate, ParserDelegate {
 		
 		terminalView.performOnMain {
 			
-			self.terminalView.stderrParser.delegate = nil
-			self.terminalView.stdoutParser.delegate = nil
+			self.terminalView.stderrParser.delegate = self.terminalView
+			self.terminalView.stdoutParser.delegate = self.terminalView
 			
-			self.terminalView.executor.delegate = nil
+			self.terminalView.executor.delegate = self.terminalView
 			
 			self.callback()
 			

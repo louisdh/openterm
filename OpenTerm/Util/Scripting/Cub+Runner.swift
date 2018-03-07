@@ -83,20 +83,7 @@ extension Runner {
 			})
 			
 		}
-		
-		runner.executionFinishedCallback = {
-			
-			DispatchQueue.main.async {
-				
-				terminalView.stderrParser.delegate = terminalView
-				terminalView.stdoutParser.delegate = terminalView
-				
-				terminalView.executor.delegate = terminalView
-				
-			}
-			
-		}
-		
+
 		return runner
 	}
 	

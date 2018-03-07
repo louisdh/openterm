@@ -87,7 +87,12 @@ class CommandExecutor {
 		let push_stdout = stdout
 		let push_stderr = stderr
 
-		CommandExecutor.executionQueue.async {
+		let queue = DispatchQueue(label: "\(command)", qos: .utility)
+		
+		queue.async {
+		
+			Thread.current.name = command
+		
 			self.state = .running
 
 			// Set the executor's CWD as the process-wide CWD
