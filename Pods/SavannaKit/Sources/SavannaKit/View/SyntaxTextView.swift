@@ -33,7 +33,7 @@ public class SyntaxTextView: View {
 
 	let textView: InnerTextView
 	
-	var contentTextView: TextView {
+	public var contentTextView: TextView {
 		return textView
 	}
 	
@@ -318,6 +318,7 @@ public class SyntaxTextView: View {
 	override public func layoutSubviews() {
 		super.layoutSubviews()
 		
+		self.textView.invalidateCachedParagraphs()
 		self.textView.setNeedsDisplay()
 
 	}

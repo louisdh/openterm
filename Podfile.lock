@@ -2,7 +2,7 @@ PODS:
   - Cub (0.7.1)
   - InputAssistant (1.0.1)
   - PanelKit (2.0.1)
-  - SavannaKit (0.6.2)
+  - SavannaKit (0.6.3)
   - SwiftLint (0.25.0)
   - TabView (1.0.1)
 
@@ -18,7 +18,7 @@ SPEC CHECKSUMS:
   Cub: 912eeac7325ef2a4a22689baad314f0573164849
   InputAssistant: b5ddd7fc23e38eaabdeaef115f6f7b023fb5dfc0
   PanelKit: d05cecac1ab39af375b56ff21c7b5a9915a3eb5b
-  SavannaKit: ba3ef31702af24eb7c7c396a7d36772b8f35d4ad
+  SavannaKit: 2b647e0a6e32feb78e13cfcf9545af8d1e47191f
   SwiftLint: e14651157288e9e01d6e1a71db7014fb5744a8ea
   TabView: b8337b549e4b0f070a76cab141e258fa66e01fd1
 
