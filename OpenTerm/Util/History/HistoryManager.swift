@@ -30,6 +30,7 @@ class HistoryManager {
 				try command.write(to: historyFileURL, atomically: true, encoding: .utf8)
 			} else {
 				let fileHandle = try FileHandle.init(forWritingTo: historyFileURL)
+				fileHandle.seekToEndOfFile()
 				if let value = (command + "\n").data(using: .utf8) {
 					fileHandle.write(value)
 				}

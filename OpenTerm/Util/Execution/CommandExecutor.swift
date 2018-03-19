@@ -59,12 +59,14 @@ class CommandExecutor {
 	private let stdin_pipe = Pipe()
 	private let stdout_pipe = Pipe()
 	private let stderr_pipe = Pipe()
+
+	// Files for pipes, passed to ios_system
 	fileprivate let stdin_file: UnsafeMutablePointer<FILE>
-	private let stdout_file: UnsafeMutablePointer<FILE>
-	private let stderr_file: UnsafeMutablePointer<FILE>
+	fileprivate let stdout_file: UnsafeMutablePointer<FILE>
+	fileprivate let stderr_file: UnsafeMutablePointer<FILE>
 
 	/// Context from commands run by this executor
-	private var context = CommandExecutionContext()
+	var context = CommandExecutionContext()
 
 	init() {
 		self.currentWorkingDirectory = DocumentManager.shared.activeDocumentsFolderURL
@@ -82,18 +84,13 @@ class CommandExecutor {
 
 	// Dispatch a new text-based command to execute.
 	func dispatch(_ command: String) {
-		let push_stdin = stdin
-		let push_stdout = stdout
-		let push_stderr = stderr
 
 		CommandExecutor.executionQueue.async {
 			self.state = .running
 
 			// Set the executor's CWD as the process-wide CWD
 			DocumentManager.shared.currentDirectoryURL = self.currentWorkingDirectory
-			stdin = self.stdin_file
-			stdout = self.stdout_file
-			stderr = self.stderr_file
+
 			let returnCode: ReturnCode
 			do {
 				let executorCommand = self.executorCommand(forCommand: command, inContext: self.context)
@@ -117,13 +114,10 @@ class CommandExecutor {
 			// Save return code into the context
 			self.context[.status] = "\(returnCode)"
 
-			// Write the end code to stdout_pipe
-			// TODO: Also need to send to stderr?
-			self.stdout_pipe.fileHandleForWriting.write(Parser.Code.endOfTransmission.rawValue.data(using: .utf8)!)
-
-			stdin = push_stdin
-			stdout = push_stdout
-			stderr = push_stderr
+			// Write the end code to stdout and stderr
+			let etx = Parser.Code.endOfTransmission.rawValue.data(using: .utf8)!
+			self.stdout_pipe.fileHandleForWriting.write(etx)
+			self.stderr_pipe.fileHandleForWriting.write(etx)
 
 			self.state = .idle
 		}
@@ -187,14 +181,12 @@ struct SystemExecutorCommand: CommandExecutorCommand {
 
 	func run(forExecutor executor: CommandExecutor) throws -> ReturnCode {
 
+		thread_stdin = executor.stdin_file
+		thread_stdout = executor.stdout_file
+		thread_stderr = executor.stderr_file
+
 		// Pass the value of the string to system, return its exit code.
-		let returnCode = ios_system(command.utf8CString)
-
-		// Flush pipes to make sure all data is read
-		fflush(stdout)
-		fflush(stderr)
-
-		return returnCode
+		return ios_system(command.utf8CString)
 	}
 }
 

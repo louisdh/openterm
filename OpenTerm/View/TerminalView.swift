@@ -28,8 +28,6 @@ class TerminalView: UIView {
 
 	let keyboardObserver = KeyboardObserver()
 
-	var stdoutParser = Parser()
-	var stderrParser = Parser()
 	var currentCommandStartIndex: String.Index! {
 		didSet { self.updateAutoComplete() }
 	}
@@ -56,10 +54,8 @@ class TerminalView: UIView {
 	}
 
 	private func setup() {
-
-		stdoutParser.delegate = self
-		stderrParser.delegate = self
 		executor.delegate = self
+		textView.buffer.delegate = self
 
 		textView.translatesAutoresizingMaskIntoConstraints = false
 		self.addSubview(textView)
@@ -93,24 +89,14 @@ class TerminalView: UIView {
 
 	}
 
-	/// Performs the given block on the main thread, without dispatching if already there.
-	private func performOnMain(_ block: @escaping () -> Void) {
-		if Thread.isMainThread {
-			block()
-		} else {
-			DispatchQueue.main.async(execute: block)
-		}
-	}
-
 	private func appendText(_ text: NSAttributedString) {
 		dispatchPrecondition(condition: .onQueue(.main))
 
 		let text = NSMutableAttributedString.init(attributedString: text)
 		OutputSanitizer.sanitize(text.mutableString)
 
-		let new = NSMutableAttributedString(attributedString: textView.attributedText ?? NSAttributedString())
-		new.append(text)
-		textView.attributedText = new
+		textView.textStorage.append(text)
+		self.textView.buffer.moveCursorToEnd()
 
 		let rect = textView.caretRect(for: textView.endOfDocument)
 		textView.scrollRectToVisible(rect, animated: true)
@@ -132,13 +118,13 @@ class TerminalView: UIView {
 
 	// Appends the given string to the output, and updates the command start index.
 	func writeOutput(_ string: String) {
-		performOnMain {
+		DispatchQueue.performOnMain {
 			self.appendText(string)
 			self.currentCommandStartIndex = self.textView.text.endIndex
 		}
 	}
 	func writeOutput(_ string: NSAttributedString) {
-		performOnMain {
+		DispatchQueue.performOnMain {
 			self.appendText(string)
 			self.currentCommandStartIndex = self.textView.text.endIndex
 		}
@@ -156,8 +142,7 @@ class TerminalView: UIView {
 	func clearScreen() {
 		currentCommandStartIndex = nil
 		textView.text = ""
-		stdoutParser.reset()
-		stderrParser.reset()
+		textView.buffer.reset()
 	}
 
 	@discardableResult
@@ -259,26 +244,27 @@ extension TerminalView {
 	}
 }
 
-extension TerminalView: ParserDelegate {
+extension TerminalView: TerminalBufferDelegate {
 
-	func parserDidEndTransmission(_ parser: Parser) {
-		DispatchQueue.main.async {
-			self.writePrompt()
+	func terminalBuffer(_ buffer: TerminalBuffer, cursorDidChange cursor: TerminalCursor) {
+		if let position = textView.position(from: textView.beginningOfDocument, offset: cursor.offset) {
+			textView.selectedTextRange = textView.textRange(from: position, to: position)
 		}
 	}
 
-	func parser(_ parser: Parser, didReceiveString string: NSAttributedString) {
-		self.writeOutput(string)
+	func terminalBufferDidReceiveETX() {
+		self.writePrompt()
 	}
+
 }
 
 extension TerminalView: CommandExecutorDelegate {
 
 	func commandExecutor(_ commandExecutor: CommandExecutor, receivedStdout stdout: Data) {
-		stdoutParser.parse(stdout)
+		self.textView.buffer.add(stdout: stdout)
 	}
 	func commandExecutor(_ commandExecutor: CommandExecutor, receivedStderr stderr: Data) {
-		stderrParser.parse(stderr)
+		self.textView.buffer.add(stderr: stderr)
 	}
 
 	func commandExecutor(_ commandExecutor: CommandExecutor, didChangeWorkingDirectory to: URL) {
@@ -327,7 +313,10 @@ extension TerminalView: UITextViewDelegate {
 		switch executor.state {
 		case .running:
 			executor.sendInput(text)
-			return true
+			if let data = text.data(using: .utf8) {
+				self.textView.buffer.add(stdin: data)
+			}
+			return false
 		case .idle:
 			let i = textView.text.distance(from: textView.text.startIndex, to: currentCommandStartIndex)
 
@@ -345,9 +334,9 @@ extension TerminalView: UITextViewDelegate {
 					newLine()
 					delegate?.didEnterCommand(String(input))
 				}
+				// Don't enter the \n character
 				return false
 			}
-
 			return true
 		}
 	}

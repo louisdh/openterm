@@ -8,6 +8,7 @@
 
 import UIKit
 import TabView
+import ios_system
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -17,6 +18,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
 		// Override point for customization after application launch.
 
+		initializeEnvironment()
+		replaceCommand("open-url", mangleFunctionName("openUrl"), true)
+		replaceCommand("share", mangleFunctionName("shareFile"), true)
+		replaceCommand("pbcopy", mangleFunctionName("pbcopy"), true)
+		replaceCommand("pbpaste", mangleFunctionName("pbpaste"), true)
+
 		window = UIWindow(frame: UIScreen.main.bounds)
 		window?.rootViewController = TabViewContainerViewController<TerminalTabViewController>(theme: TabViewThemeDark())
 		window?.tintColor = .defaultMainTintColor
@@ -25,6 +32,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		UserDefaultsController.shared.registerDefaults()
 
 		return true
+	}
+
+	private func mangleFunctionName(_ functionName: String) -> String {
+		// This works because all functions have the same signature:
+		// (argc: Int32, argv: UnsafeMutablePointer<UnsafeMutablePointer<Int8>?>?) -> Int32
+		// The first part is the class name: _T0 + length + name. To change if not "OpenTerm"
+		return "_T08OpenTerm" + String(functionName.count) + functionName + "s5Int32VAD4argc_SpySpys4Int8VGSgGSg4argvtF"
 	}
 
 	func applicationWillResignActive(_ application: UIApplication) {

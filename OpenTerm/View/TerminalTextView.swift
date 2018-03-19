@@ -11,19 +11,12 @@ import UIKit
 /// UITextView that adopts the style of a terminal.
 class TerminalTextView: UITextView {
 
-	override init(frame: CGRect, textContainer: NSTextContainer?) {
-		super.init(frame: frame, textContainer: textContainer)
+	let buffer: TerminalBuffer
 
-		setup()
-	}
+	init() {
+		buffer = TerminalBuffer()
 
-	required init?(coder aDecoder: NSCoder) {
-		super.init(coder: aDecoder)
-
-		setup()
-	}
-
-	private func setup() {
+		super.init(frame: .zero, textContainer: buffer.textContainer)
 
 		// Show characters such as ^C
 		layoutManager.showsControlCharacters = true
@@ -40,6 +33,8 @@ class TerminalTextView: UITextView {
 
 		NotificationCenter.default.addObserver(self, selector: #selector(self.updateAppearanceFromSettingsAnimated), name: .appearanceDidChange, object: nil)
 	}
+
+	required init?(coder aDecoder: NSCoder) { fatalError("init(coder:) has not been implemented") }
 
 	@objc
 	private func updateAppearanceFromSettingsAnimated() {
