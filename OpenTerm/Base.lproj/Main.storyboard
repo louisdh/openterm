@@ -90,7 +90,7 @@ This project uses the open source ios_system project by Nicolas Holzschuch. This
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" id="A19-er-p5m">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" id="A19-er-p5m">
                                         <rect key="frame" x="0.0" y="191.5" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="A19-er-p5m" id="bat-Ak-lPK">
@@ -98,20 +98,20 @@ This project uses the open source ios_system project by Nicolas Holzschuch. This
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="Uob-WU-2Ym">
-                                                    <rect key="frame" x="20" y="11" width="601" height="22"/>
+                                                    <rect key="frame" x="16" y="11" width="317" height="22"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Text color" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="V4f-uk-eaC">
-                                                            <rect key="frame" x="0.0" y="1.5" width="569" height="19.5"/>
+                                                            <rect key="frame" x="0.0" y="1.5" width="287" height="19.5"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                             <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="np4-is-aoJ" customClass="ColorDisplayView" customModule="OpenTerm" customModuleProvider="target">
-                                                            <rect key="frame" x="577" y="0.0" width="24" height="22"/>
+                                                            <rect key="frame" x="295" y="0.0" width="22" height="22"/>
                                                             <color key="backgroundColor" name="Main Tint Color"/>
                                                             <constraints>
-                                                                <constraint firstAttribute="width" secondItem="np4-is-aoJ" secondAttribute="height" multiplier="12:11" id="RER-pj-7bD"/>
-                                                                <constraint firstAttribute="width" constant="24" id="oTz-Er-NhW"/>
+                                                                <constraint firstAttribute="width" secondItem="np4-is-aoJ" secondAttribute="height" multiplier="1:1" id="RER-pj-7bD"/>
+                                                                <constraint firstAttribute="height" constant="22" id="yor-pL-aNw"/>
                                                             </constraints>
                                                         </view>
                                                     </subviews>
@@ -137,17 +137,17 @@ This project uses the open source ios_system project by Nicolas Holzschuch. This
                                                     <rect key="frame" x="16" y="11" width="317" height="22"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Background" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IQg-Fr-vuC">
-                                                            <rect key="frame" x="0.0" y="1.5" width="285" height="19.5"/>
+                                                            <rect key="frame" x="0.0" y="1.5" width="287" height="19.5"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                             <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="atW-FQ-riI" customClass="ColorDisplayView" customModule="OpenTerm" customModuleProvider="target">
-                                                            <rect key="frame" x="293" y="0.0" width="24" height="22"/>
+                                                            <rect key="frame" x="295" y="0.0" width="22" height="22"/>
                                                             <color key="backgroundColor" name="Panel Background Color"/>
                                                             <constraints>
-                                                                <constraint firstAttribute="width" secondItem="atW-FQ-riI" secondAttribute="height" multiplier="12:11" id="HMX-Px-at5"/>
-                                                                <constraint firstAttribute="width" constant="24" id="OfB-jp-uMH"/>
+                                                                <constraint firstAttribute="width" secondItem="atW-FQ-riI" secondAttribute="height" multiplier="1:1" id="HMX-Px-at5"/>
+                                                                <constraint firstAttribute="height" constant="22" id="dnW-Gk-fQn"/>
                                                             </constraints>
                                                         </view>
                                                     </subviews>
