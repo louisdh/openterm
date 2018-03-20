@@ -49,6 +49,9 @@
 		BE505066201E5ED900CDFC60 /* Share.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE505065201E5ED900CDFC60 /* Share.swift */; };
 		BE51FC48205077D9009AE5D9 /* Savanna.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE51FC47205077D9009AE5D9 /* Savanna.swift */; };
 		BE70DA2C204DD5D900DEFF10 /* ScriptEditViewController+AutoComplete.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE70DA2B204DD5D800DEFF10 /* ScriptEditViewController+AutoComplete.swift */; };
+		BE8E66FC206196A7007B14E6 /* Notification+Names.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE8E66FB206196A7007B14E6 /* Notification+Names.swift */; };
+		BE8E66FE206196B8007B14E6 /* UIDevice+Name.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE8E66FD206196B8007B14E6 /* UIDevice+Name.swift */; };
+		BE8E6700206196D5007B14E6 /* Bundle+Info.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE8E66FF206196D5007B14E6 /* Bundle+Info.swift */; };
 		BE9275062013961D00BD2761 /* UserDefaultsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE9275052013961D00BD2761 /* UserDefaultsController.swift */; };
 		BEA14A65202CE5B700AB7351 /* Cub+SavannaKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEA14A64202CE5B600AB7351 /* Cub+SavannaKit.swift */; };
 		BEA14A67202CE5D300AB7351 /* Cub.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEA14A66202CE5D300AB7351 /* Cub.swift */; };
@@ -57,6 +60,7 @@
 		BEA4992E1FDC305B001B9B9D /* KeyboardObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEA4992D1FDC305B001B9B9D /* KeyboardObserver.swift */; };
 		BEA499301FDC3B93001B9B9D /* TerminalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEA4992F1FDC3B93001B9B9D /* TerminalView.swift */; };
 		BEA8E2912001348C00002475 /* UIColor+AssetCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEA8E2902001348C00002475 /* UIColor+AssetCatalog.swift */; };
+		BEBBA1F9206048960024CFBD /* libnetwork_ios.dylib in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = BEBBA1F8206048960024CFBD /* libnetwork_ios.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		BEC75BFD202B716600216462 /* OpenTermTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEC75BFC202B716600216462 /* OpenTermTests.swift */; };
 		BEE5D940202658F80040C72A /* (null) in Sources */ = {isa = PBXBuildFile; };
 		BEECFF0A1FFC1DC0009608B3 /* HistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEECFF091FFC1DC0009608B3 /* HistoryViewController.swift */; };
@@ -86,6 +90,7 @@
 				3C1A47AA2031357500D7CC5C /* libawk.dylib in Embed Frameworks */,
 				3C1A47AB2031357500D7CC5C /* libcurl.dylib in Embed Frameworks */,
 				3C1A47AC2031357500D7CC5C /* libfiles.dylib in Embed Frameworks */,
+				BEBBA1F9206048960024CFBD /* libnetwork_ios.dylib in Embed Frameworks */,
 				3C1A47AD2031357500D7CC5C /* libshell.dylib in Embed Frameworks */,
 				3C1A47AE2031357500D7CC5C /* libssh_cmd.dylib in Embed Frameworks */,
 				3C1A47AF2031357500D7CC5C /* libtar.dylib in Embed Frameworks */,
@@ -141,6 +146,9 @@
 		BE505065201E5ED900CDFC60 /* Share.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Share.swift; sourceTree = "<group>"; };
 		BE51FC47205077D9009AE5D9 /* Savanna.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Savanna.swift; sourceTree = "<group>"; };
 		BE70DA2B204DD5D800DEFF10 /* ScriptEditViewController+AutoComplete.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ScriptEditViewController+AutoComplete.swift"; sourceTree = "<group>"; };
+		BE8E66FB206196A7007B14E6 /* Notification+Names.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Notification+Names.swift"; sourceTree = "<group>"; };
+		BE8E66FD206196B8007B14E6 /* UIDevice+Name.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIDevice+Name.swift"; sourceTree = "<group>"; };
+		BE8E66FF206196D5007B14E6 /* Bundle+Info.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Bundle+Info.swift"; sourceTree = "<group>"; };
 		BE9275052013961D00BD2761 /* UserDefaultsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsController.swift; sourceTree = "<group>"; };
 		BEA14A64202CE5B600AB7351 /* Cub+SavannaKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Cub+SavannaKit.swift"; sourceTree = "<group>"; };
 		BEA14A66202CE5D300AB7351 /* Cub.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Cub.swift; sourceTree = "<group>"; };
@@ -150,6 +158,8 @@
 		BEA4992D1FDC305B001B9B9D /* KeyboardObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardObserver.swift; sourceTree = "<group>"; };
 		BEA4992F1FDC3B93001B9B9D /* TerminalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TerminalView.swift; sourceTree = "<group>"; };
 		BEA8E2902001348C00002475 /* UIColor+AssetCatalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+AssetCatalog.swift"; sourceTree = "<group>"; };
+		BEBBA1F72060477B0024CFBD /* libnetwork_ios.dylib */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libnetwork_ios.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		BEBBA1F8206048960024CFBD /* libnetwork_ios.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libnetwork_ios.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		BEC75BFA202B716600216462 /* OpenTermTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OpenTermTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		BEC75BFC202B716600216462 /* OpenTermTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenTermTests.swift; sourceTree = "<group>"; };
 		BEC75BFE202B716600216462 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -296,6 +306,7 @@
 		BE3768EC1FEC4DCE00D5A2D1 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				BEBBA1F72060477B0024CFBD /* libnetwork_ios.dylib */,
 				3C1A47B320336F0200D7CC5C /* libtext.dylib */,
 				3C1A479F2031355700D7CC5C /* libawk.dylib */,
 				3C1A479E2031355700D7CC5C /* libcurl.dylib */,
@@ -312,6 +323,7 @@
 		BE3808491FD9BFB600393EB8 = {
 			isa = PBXGroup;
 			children = (
+				BEBBA1F8206048960024CFBD /* libnetwork_ios.dylib */,
 				BE3808541FD9BFB600393EB8 /* OpenTerm */,
 				BEC75BFB202B716600216462 /* OpenTermTests */,
 				BE3808531FD9BFB600393EB8 /* Products */,
@@ -388,6 +400,9 @@
 				BEA499251FD9C4D7001B9B9D /* DocumentManager.swift */,
 				BE9275052013961D00BD2761 /* UserDefaultsController.swift */,
 				3C905FC920265BC60084BA63 /* StoreReviewPrompter.swift */,
+				BE8E66FB206196A7007B14E6 /* Notification+Names.swift */,
+				BE8E66FD206196B8007B14E6 /* UIDevice+Name.swift */,
+				BE8E66FF206196D5007B14E6 /* Bundle+Info.swift */,
 			);
 			path = Util;
 			sourceTree = "<group>";
@@ -609,11 +624,13 @@
 				3CE57681202A52ED00760E43 /* TerminalViewController.swift in Sources */,
 				BEA8E2912001348C00002475 /* UIColor+AssetCatalog.swift in Sources */,
 				28CDA4292024B3510055206D /* BookmarkManager.swift in Sources */,
+				BE8E66FC206196A7007B14E6 /* Notification+Names.swift in Sources */,
 				3CA320FF201FE8E100974B5F /* ScriptsViewController.swift in Sources */,
 				3C2E4385201EFF4700E4254A /* AutoCompleteManager.swift in Sources */,
 				BE1D5F9B204C66D0008A1C36 /* CubCommandExecutor.swift in Sources */,
 				3CA32102201FF6B100974B5F /* Script.swift in Sources */,
 				BEA499301FDC3B93001B9B9D /* TerminalView.swift in Sources */,
+				BE8E66FE206196B8007B14E6 /* UIDevice+Name.swift in Sources */,
 				3CE57680202A529200760E43 /* TerminalTabViewController.swift in Sources */,
 				F4602B49200A63FC009D0547 /* UserDefaults+UIColor.swift in Sources */,
 				28CDA426202444CC0055206D /* BookmarkViewController.swift in Sources */,
@@ -629,6 +646,7 @@
 				3CE5764820226A1500760E43 /* ANSITextState.swift in Sources */,
 				3CE576A0202A874C00760E43 /* OutputSanitizer.swift in Sources */,
 				BEECFF0A1FFC1DC0009608B3 /* HistoryViewController.swift in Sources */,
+				BE8E6700206196D5007B14E6 /* Bundle+Info.swift in Sources */,
 				BEA4992E1FDC305B001B9B9D /* KeyboardObserver.swift in Sources */,
 				3CA3210B20212D4200974B5F /* CommandExecutionContext.swift in Sources */,
 				BE70DA2C204DD5D900DEFF10 /* ScriptEditViewController+AutoComplete.swift in Sources */,

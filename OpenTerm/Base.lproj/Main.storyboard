@@ -4,7 +4,7 @@
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14075.4"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
@@ -49,7 +49,7 @@ This project uses the open source ios_system project by Nicolas Holzschuch. This
                             </tableViewSection>
                             <tableViewSection headerTitle="Appearance" footerTitle="" id="bVS-9S-NNQ">
                                 <cells>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" rowHeight="49" id="HHF-UO-azR">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" selectionStyle="none" indentationWidth="10" rowHeight="49" id="HHF-UO-azR">
                                         <rect key="frame" x="0.0" y="142.5" width="375" height="49"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="HHF-UO-azR" id="cWa-q4-aAy">
@@ -57,22 +57,22 @@ This project uses the open source ios_system project by Nicolas Holzschuch. This
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="aWJ-xk-8v2">
-                                                    <rect key="frame" x="16" y="11" width="343" height="27"/>
+                                                    <rect key="frame" x="20" y="11" width="627" height="27"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="Font size" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DhC-12-cwh">
-                                                            <rect key="frame" x="0.0" y="4" width="215.5" height="19.5"/>
+                                                            <rect key="frame" x="0.0" y="4" width="499.5" height="19.5"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                             <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="14" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kKd-eU-F7d">
-                                                            <rect key="frame" x="223.5" y="4" width="17.5" height="19.5"/>
+                                                            <rect key="frame" x="507.5" y="4" width="17.5" height="19.5"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                             <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <stepper opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" maximumValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="eEp-2H-VCg">
-                                                            <rect key="frame" x="249" y="0.0" width="94" height="29"/>
+                                                            <rect key="frame" x="533" y="0.0" width="94" height="29"/>
                                                             <color key="tintColor" name="Main Tint Color"/>
                                                             <connections>
                                                                 <action selector="fontSizeStepperDidChange:" destination="iJD-Lv-nas" eventType="valueChanged" id="WCP-AQ-ONa"/>
@@ -101,17 +101,17 @@ This project uses the open source ios_system project by Nicolas Holzschuch. This
                                                     <rect key="frame" x="16" y="11" width="317" height="22"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Text color" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="V4f-uk-eaC">
-                                                            <rect key="frame" x="0.0" y="1.5" width="285" height="19.5"/>
+                                                            <rect key="frame" x="0.0" y="1.5" width="287" height="19.5"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                             <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="np4-is-aoJ" customClass="ColorDisplayView" customModule="OpenTerm" customModuleProvider="target">
-                                                            <rect key="frame" x="293" y="0.0" width="24" height="22"/>
+                                                            <rect key="frame" x="295" y="0.0" width="22" height="22"/>
                                                             <color key="backgroundColor" name="Main Tint Color"/>
                                                             <constraints>
-                                                                <constraint firstAttribute="width" secondItem="np4-is-aoJ" secondAttribute="height" multiplier="12:11" id="RER-pj-7bD"/>
-                                                                <constraint firstAttribute="width" constant="24" id="oTz-Er-NhW"/>
+                                                                <constraint firstAttribute="width" secondItem="np4-is-aoJ" secondAttribute="height" multiplier="1:1" id="RER-pj-7bD"/>
+                                                                <constraint firstAttribute="height" constant="22" id="yor-pL-aNw"/>
                                                             </constraints>
                                                         </view>
                                                     </subviews>
@@ -137,17 +137,17 @@ This project uses the open source ios_system project by Nicolas Holzschuch. This
                                                     <rect key="frame" x="16" y="11" width="317" height="22"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Background" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IQg-Fr-vuC">
-                                                            <rect key="frame" x="0.0" y="1.5" width="285" height="19.5"/>
+                                                            <rect key="frame" x="0.0" y="1.5" width="287" height="19.5"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                             <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="atW-FQ-riI" customClass="ColorDisplayView" customModule="OpenTerm" customModuleProvider="target">
-                                                            <rect key="frame" x="293" y="0.0" width="24" height="22"/>
+                                                            <rect key="frame" x="295" y="0.0" width="22" height="22"/>
                                                             <color key="backgroundColor" name="Panel Background Color"/>
                                                             <constraints>
-                                                                <constraint firstAttribute="width" secondItem="atW-FQ-riI" secondAttribute="height" multiplier="12:11" id="HMX-Px-at5"/>
-                                                                <constraint firstAttribute="width" constant="24" id="OfB-jp-uMH"/>
+                                                                <constraint firstAttribute="width" secondItem="atW-FQ-riI" secondAttribute="height" multiplier="1:1" id="HMX-Px-at5"/>
+                                                                <constraint firstAttribute="height" constant="22" id="dnW-Gk-fQn"/>
                                                             </constraints>
                                                         </view>
                                                     </subviews>
@@ -178,9 +178,9 @@ This project uses the open source ios_system project by Nicolas Holzschuch. This
                                                             <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
-                                                        <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="cUd-gA-zoh">
+                                                        <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="cUd-gA-zoh">
                                                             <rect key="frame" x="294" y="0.0" width="51" height="22"/>
-                                                            <color key="tintColor" name="Main Tint Color"/>
+                                                            <color key="tintColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                                             <color key="onTintColor" name="Main Tint Color"/>
                                                             <connections>
                                                                 <action selector="useDarkKeyboardSwitchDidChange:" destination="iJD-Lv-nas" eventType="valueChanged" id="WL7-NP-9Du"/>
@@ -202,7 +202,7 @@ This project uses the open source ios_system project by Nicolas Holzschuch. This
                             </tableViewSection>
                             <tableViewSection headerTitle="Open Source" footerTitle="" id="tWz-OZ-bmh">
                                 <cells>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" textLabel="GrJ-Ev-Ihm" style="IBUITableViewCellStyleDefault" id="Nf3-aG-T2K">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" textLabel="GrJ-Ev-Ihm" style="IBUITableViewCellStyleDefault" id="Nf3-aG-T2K">
                                         <rect key="frame" x="0.0" y="387" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Nf3-aG-T2K" id="j6g-QT-nMK">
@@ -220,7 +220,7 @@ This project uses the open source ios_system project by Nicolas Holzschuch. This
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" textLabel="wWW-kp-UC4" style="IBUITableViewCellStyleDefault" id="5bv-0A-F3L">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" textLabel="wWW-kp-UC4" style="IBUITableViewCellStyleDefault" id="5bv-0A-F3L">
                                         <rect key="frame" x="0.0" y="431" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="5bv-0A-F3L" id="Cqv-Dw-h0s">
@@ -238,7 +238,7 @@ This project uses the open source ios_system project by Nicolas Holzschuch. This
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" textLabel="dCr-Rq-Y5K" style="IBUITableViewCellStyleDefault" id="iE8-L3-jCi">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" textLabel="dCr-Rq-Y5K" style="IBUITableViewCellStyleDefault" id="iE8-L3-jCi">
                                         <rect key="frame" x="0.0" y="475" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="iE8-L3-jCi" id="0fY-C1-55y">
@@ -256,7 +256,7 @@ This project uses the open source ios_system project by Nicolas Holzschuch. This
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" textLabel="DfM-kY-Uvt" style="IBUITableViewCellStyleDefault" id="pXV-gj-9Kb">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" textLabel="DfM-kY-Uvt" style="IBUITableViewCellStyleDefault" id="pXV-gj-9Kb">
                                         <rect key="frame" x="0.0" y="519" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="pXV-gj-9Kb" id="JZd-OJ-qp1">
@@ -278,7 +278,7 @@ This project uses the open source ios_system project by Nicolas Holzschuch. This
                             </tableViewSection>
                             <tableViewSection footerTitle="Copyright" id="wba-Rp-4iP">
                                 <cells>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" textLabel="2uu-C0-q4m" style="IBUITableViewCellStyleDefault" id="ekI-Y7-Ecy">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" textLabel="2uu-C0-q4m" style="IBUITableViewCellStyleDefault" id="ekI-Y7-Ecy">
                                         <rect key="frame" x="0.0" y="599" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="ekI-Y7-Ecy" id="rI7-7s-026">
@@ -296,15 +296,15 @@ This project uses the open source ios_system project by Nicolas Holzschuch. This
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" textLabel="S6F-N0-IeH" style="IBUITableViewCellStyleDefault" id="WmS-IE-23M">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" textLabel="S6F-N0-IeH" style="IBUITableViewCellStyleDefault" id="WmS-IE-23M">
                                         <rect key="frame" x="0.0" y="643" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="WmS-IE-23M" id="amP-Ne-Ebu">
-                                            <rect key="frame" x="0.0" y="0.0" width="349" height="43.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="341" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Follow @LouisDhauwe on Twitter for updates" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="S6F-N0-IeH">
-                                                    <rect key="frame" x="15" y="0.0" width="325" height="43.5"/>
+                                                    <rect key="frame" x="16" y="0.0" width="324" height="43.5"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                     <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -318,7 +318,7 @@ This project uses the open source ios_system project by Nicolas Holzschuch. This
                                         <rect key="frame" x="0.0" y="687" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="msL-wC-ju6" id="PO0-Ws-4ya">
-                                            <rect key="frame" x="0.0" y="0.0" width="349" height="43.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="342" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Contact Us" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Afx-4w-aV6">

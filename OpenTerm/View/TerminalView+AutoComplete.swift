@@ -113,24 +113,17 @@ extension TerminalView {
 	private static var downArrow: UIImage {
 		return UIGraphicsImageRenderer(size: .init(width: 24, height: 24)).image(actions: { context in
 
-			// Top left to center
-			let downwards = UIBezierPath()
-			downwards.move(to: CGPoint(x: 1, y: 7))
-			downwards.addLine(to: CGPoint(x: 11, y: 17))
+			let path = UIBezierPath()
+			path.move(to: CGPoint(x: 1, y: 7))
+			path.addLine(to: CGPoint(x: 11, y: 17))
+			path.addLine(to: CGPoint(x: 22, y: 7))
+			
 			UIColor.white.setStroke()
-			downwards.lineWidth = 2
-			downwards.stroke()
-
-			// Center to top right
-			let upwards = UIBezierPath()
-			upwards.move(to: CGPoint(x: 11, y: 17))
-			upwards.addLine(to: CGPoint(x: 22, y: 7))
-			UIColor.white.setStroke()
-			upwards.lineWidth = 2
-			upwards.stroke()
-
-			context.cgContext.addPath(downwards.cgPath)
-			context.cgContext.addPath(upwards.cgPath)
+			path.lineWidth = 2
+			path.stroke()
+			
+			context.cgContext.addPath(path.cgPath)
+			
 		}).withRenderingMode(.alwaysOriginal)
 	}
 }
