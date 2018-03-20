@@ -70,7 +70,7 @@ public func cub(argc: Int32, argv: UnsafeMutablePointer<UnsafeMutablePointer<Int
 			
 		} else {
 			
-			terminalView.writeOutput("Unknown error occured")
+			terminalView.writeOutput("Unknown error occurred")
 
 		}
 		

@@ -55,7 +55,7 @@ class ScriptExecutorCommand: CommandExecutorCommand {
 				
 			} else {
 				
-				terminalView.writeOutput("Unknown error occured")
+				terminalView.writeOutput("Unknown error occurred")
 				
 			}
 			
