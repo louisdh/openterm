@@ -8,10 +8,6 @@
 
 import Foundation
 
-extension Notification.Name {
-	static let historyDidChange = Notification.Name("HistoryManagerHistoryDidChangeNotification")
-}
-
 class HistoryManager {
 
 	/// List of commands run. Latest is first.

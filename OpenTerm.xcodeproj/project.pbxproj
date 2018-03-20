@@ -45,6 +45,9 @@
 		BE38085D1FD9BFB600393EB8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BE38085C1FD9BFB600393EB8 /* Assets.xcassets */; };
 		BE3808601FD9BFB600393EB8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BE38085E1FD9BFB600393EB8 /* LaunchScreen.storyboard */; };
 		BE505066201E5ED900CDFC60 /* Share.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE505065201E5ED900CDFC60 /* Share.swift */; };
+		BE8E66FC206196A7007B14E6 /* Notification+Names.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE8E66FB206196A7007B14E6 /* Notification+Names.swift */; };
+		BE8E66FE206196B8007B14E6 /* UIDevice+Name.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE8E66FD206196B8007B14E6 /* UIDevice+Name.swift */; };
+		BE8E6700206196D5007B14E6 /* Bundle+Info.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE8E66FF206196D5007B14E6 /* Bundle+Info.swift */; };
 		BE9275062013961D00BD2761 /* UserDefaultsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE9275052013961D00BD2761 /* UserDefaultsController.swift */; };
 		BEA14A69202CEE5800AB7351 /* Cub+SavannaKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEA14A68202CEE5800AB7351 /* Cub+SavannaKit.swift */; };
 		BEA499261FD9C4D7001B9B9D /* DocumentManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEA499251FD9C4D7001B9B9D /* DocumentManager.swift */; };
@@ -133,6 +136,9 @@
 		BE38085F1FD9BFB600393EB8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		BE3808611FD9BFB600393EB8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		BE505065201E5ED900CDFC60 /* Share.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Share.swift; sourceTree = "<group>"; };
+		BE8E66FB206196A7007B14E6 /* Notification+Names.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Notification+Names.swift"; sourceTree = "<group>"; };
+		BE8E66FD206196B8007B14E6 /* UIDevice+Name.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIDevice+Name.swift"; sourceTree = "<group>"; };
+		BE8E66FF206196D5007B14E6 /* Bundle+Info.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Bundle+Info.swift"; sourceTree = "<group>"; };
 		BE9275052013961D00BD2761 /* UserDefaultsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsController.swift; sourceTree = "<group>"; };
 		BEA14A68202CEE5800AB7351 /* Cub+SavannaKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Cub+SavannaKit.swift"; sourceTree = "<group>"; };
 		BEA499241FD9C46C001B9B9D /* OpenTerm.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = OpenTerm.entitlements; sourceTree = "<group>"; };
@@ -378,6 +384,9 @@
 				BEA499251FD9C4D7001B9B9D /* DocumentManager.swift */,
 				BE9275052013961D00BD2761 /* UserDefaultsController.swift */,
 				3C905FC920265BC60084BA63 /* StoreReviewPrompter.swift */,
+				BE8E66FB206196A7007B14E6 /* Notification+Names.swift */,
+				BE8E66FD206196B8007B14E6 /* UIDevice+Name.swift */,
+				BE8E66FF206196D5007B14E6 /* Bundle+Info.swift */,
 			);
 			path = Util;
 			sourceTree = "<group>";
@@ -597,10 +606,12 @@
 				3CE57681202A52ED00760E43 /* TerminalViewController.swift in Sources */,
 				BEA8E2912001348C00002475 /* UIColor+AssetCatalog.swift in Sources */,
 				28CDA4292024B3510055206D /* BookmarkManager.swift in Sources */,
+				BE8E66FC206196A7007B14E6 /* Notification+Names.swift in Sources */,
 				3CA320FF201FE8E100974B5F /* ScriptsViewController.swift in Sources */,
 				3C2E4385201EFF4700E4254A /* AutoCompleteManager.swift in Sources */,
 				3CA32102201FF6B100974B5F /* Script.swift in Sources */,
 				BEA499301FDC3B93001B9B9D /* TerminalView.swift in Sources */,
+				BE8E66FE206196B8007B14E6 /* UIDevice+Name.swift in Sources */,
 				3CE57680202A529200760E43 /* TerminalTabViewController.swift in Sources */,
 				BEA14A69202CEE5800AB7351 /* Cub+SavannaKit.swift in Sources */,
 				F4602B49200A63FC009D0547 /* UserDefaults+UIColor.swift in Sources */,
@@ -615,6 +626,7 @@
 				3CE5764820226A1500760E43 /* ANSITextState.swift in Sources */,
 				3CE576A0202A874C00760E43 /* OutputSanitizer.swift in Sources */,
 				BEECFF0A1FFC1DC0009608B3 /* HistoryViewController.swift in Sources */,
+				BE8E6700206196D5007B14E6 /* Bundle+Info.swift in Sources */,
 				BEA4992E1FDC305B001B9B9D /* KeyboardObserver.swift in Sources */,
 				3CA3210B20212D4200974B5F /* CommandExecutionContext.swift in Sources */,
 				3CA320FD201FE73900974B5F /* TerminalTextView.swift in Sources */,

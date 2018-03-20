@@ -9,38 +9,6 @@
 import UIKit
 import MessageUI
 
-extension Notification.Name {
-
-	static let appearanceDidChange = NSNotification.Name(rawValue: "appearanceDidChange")
-
-}
-
-extension UIDevice {
-
-	public var modelName: String {
-		var systemInfo = utsname()
-		uname(&systemInfo)
-		let machineMirror = Mirror(reflecting: systemInfo.machine)
-		let identifier = machineMirror.children.reduce("") { identifier, element in
-			guard let value = element.value as? Int8, value != 0 else { return identifier }
-			return identifier + String(UnicodeScalar(UInt8(value)))
-		}
-		return identifier
-	}
-}
-
-extension Bundle {
-
-	public var version: String {
-		return object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String
-	}
-
-	public var build: String {
-		return object(forInfoDictionaryKey: "CFBundleVersion") as! String
-	}
-
-}
-
 class SettingsViewController: UITableViewController {
 
 	@IBOutlet weak var fontSizeLabel: UILabel!
