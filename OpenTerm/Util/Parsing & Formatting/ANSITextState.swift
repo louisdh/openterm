@@ -108,7 +108,7 @@ enum ANSIForegroundColor: Int {
 	var color: UIColor {
 		switch self.rawValue {
 		case ANSIForegroundColor.default.rawValue:
-			return UserDefaultsController.shared.terminalTextColor
+			return UserDefaults.terminalDefaults[.terminalTextColor]
 		case 30...37:
 			return indexedColor(atIndex: self.rawValue - 30)
 		case 90...97:
@@ -174,8 +174,8 @@ enum ANSIFontState: Int {
 }
 
 struct ANSITextState {
-	var foregroundColor: UIColor = UserDefaultsController.shared.terminalTextColor
-	var backgroundColor: UIColor = UserDefaultsController.shared.terminalBackgroundColor
+	var foregroundColor: UIColor = UserDefaults.terminalDefaults[.terminalTextColor]
+	var backgroundColor: UIColor = .clear
 	var isUnderlined: Bool = false
 	var isStrikethrough: Bool = false
 	var font: UIFont = ANSITextState.font(fromTraits: [])
@@ -198,17 +198,17 @@ struct ANSITextState {
 	}
 
 	private static func font(fromTraits traits: UIFontDescriptorSymbolicTraits) -> UIFont {
-		let textSize = CGFloat(UserDefaultsController.shared.terminalFontSize)
-		var descriptor = UIFontDescriptor.init(name: "Menlo", size: textSize)
+		let textSize: Int = UserDefaults.terminalDefaults[.terminalFontSize]
+		var descriptor = UIFontDescriptor.init(name: "Menlo", size: CGFloat(textSize))
 		if let traitDescriptor = descriptor.withSymbolicTraits(traits) {
 			descriptor = traitDescriptor
 		}
-		return UIFont.init(descriptor: descriptor, size: textSize)
+		return UIFont.init(descriptor: descriptor, size: CGFloat(textSize))
 	}
 
 	mutating func reset() {
-		foregroundColor = UserDefaultsController.shared.terminalTextColor
-		backgroundColor = UserDefaultsController.shared.terminalBackgroundColor
+		foregroundColor = UserDefaults.terminalDefaults[.terminalTextColor]
+		backgroundColor = UserDefaults.terminalDefaults[.terminalBackgroundColor]
 		isUnderlined = false
 		isStrikethrough = false
 		fontTraits = []

@@ -49,18 +49,17 @@ class TerminalTextView: UITextView {
 	}
 
 	private func updateAppearanceFromSettings() {
-		let userDefaultsController = UserDefaultsController.shared
+		let userDefaults = UserDefaults.terminalDefaults
 
-		let terminalFontSize = userDefaultsController.terminalFontSize
-		self.font = UIFont(name: "Menlo", size: CGFloat(terminalFontSize))
+		let fontSize: Int = userDefaults[.terminalFontSize]
+		self.font = UIFont(name: "Menlo", size: CGFloat(fontSize))
 
-		let terminaltextColor = userDefaultsController.terminalTextColor
-		self.textColor = terminaltextColor
-		self.tintColor = terminaltextColor
+		self.textColor = userDefaults[.terminalTextColor]
+		self.tintColor = userDefaults[.terminalTextColor]
 
-		self.backgroundColor = userDefaultsController.terminalBackgroundColor
+		self.backgroundColor = userDefaults[.terminalBackgroundColor]
 
-		if userDefaultsController.userDarkKeyboardInTerminal {
+		if userDefaults[.useDarkKeyboardInTerminal] {
 			self.keyboardAppearance = .dark
 		} else {
 			self.keyboardAppearance = .light

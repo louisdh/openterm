@@ -22,8 +22,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		window?.tintColor = .defaultMainTintColor
 		window?.makeKeyAndVisible()
 
-		UserDefaultsController.shared.registerDefaults()
-
 		return true
 	}
 
