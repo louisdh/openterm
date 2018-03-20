@@ -180,7 +180,7 @@ This project uses the open source ios_system project by Nicolas Holzschuch. This
                                                         </label>
                                                         <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="cUd-gA-zoh">
                                                             <rect key="frame" x="294" y="0.0" width="51" height="22"/>
-                                                            <color key="tintColor" name="Main Tint Color"/>
+                                                            <color key="tintColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                                             <color key="onTintColor" name="Main Tint Color"/>
                                                             <connections>
                                                                 <action selector="useDarkKeyboardSwitchDidChange:" destination="iJD-Lv-nas" eventType="valueChanged" id="WL7-NP-9Du"/>
