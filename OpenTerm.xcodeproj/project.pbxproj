@@ -57,6 +57,10 @@
 		BEA8E2912001348C00002475 /* UIColor+AssetCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEA8E2902001348C00002475 /* UIColor+AssetCatalog.swift */; };
 		BEBBA1F9206048960024CFBD /* libnetwork_ios.dylib in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = BEBBA1F8206048960024CFBD /* libnetwork_ios.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		BEC75BFD202B716600216462 /* OpenTermTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEC75BFC202B716600216462 /* OpenTermTests.swift */; };
+		BEE563D62062E4CD003399AA /* openssl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BEE563D42062E4CC003399AA /* openssl.framework */; };
+		BEE563D72062E4CD003399AA /* openssl.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = BEE563D42062E4CC003399AA /* openssl.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		BEE563D82062E4CD003399AA /* libssh2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BEE563D52062E4CC003399AA /* libssh2.framework */; };
+		BEE563D92062E4CD003399AA /* libssh2.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = BEE563D52062E4CC003399AA /* libssh2.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		BEECFF0A1FFC1DC0009608B3 /* HistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEECFF091FFC1DC0009608B3 /* HistoryViewController.swift */; };
 		BEECFF391FFEC187009608B3 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEECFF381FFEC187009608B3 /* SettingsViewController.swift */; };
 		F456629E200B9BC500C574AA /* ColorDisplayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F456629D200B9BC500C574AA /* ColorDisplayView.swift */; };
@@ -81,7 +85,9 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				BEE563D92062E4CD003399AA /* libssh2.framework in Embed Frameworks */,
 				3C1A47AA2031357500D7CC5C /* libawk.dylib in Embed Frameworks */,
+				BEE563D72062E4CD003399AA /* openssl.framework in Embed Frameworks */,
 				3C1A47AB2031357500D7CC5C /* libcurl.dylib in Embed Frameworks */,
 				3C1A47AC2031357500D7CC5C /* libfiles.dylib in Embed Frameworks */,
 				BEBBA1F9206048960024CFBD /* libnetwork_ios.dylib in Embed Frameworks */,
@@ -152,6 +158,8 @@
 		BEC75BFA202B716600216462 /* OpenTermTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OpenTermTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		BEC75BFC202B716600216462 /* OpenTermTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenTermTests.swift; sourceTree = "<group>"; };
 		BEC75BFE202B716600216462 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		BEE563D42062E4CC003399AA /* openssl.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = openssl.framework; path = Dependencies/ios_system/Frameworks/openssl.framework; sourceTree = "<group>"; };
+		BEE563D52062E4CC003399AA /* libssh2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = libssh2.framework; path = Dependencies/ios_system/Frameworks/libssh2.framework; sourceTree = "<group>"; };
 		BEECFF091FFC1DC0009608B3 /* HistoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = HistoryViewController.swift; path = OpenTerm/Controller/History/HistoryViewController.swift; sourceTree = SOURCE_ROOT; };
 		BEECFF381FFEC187009608B3 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SettingsViewController.swift; path = OpenTerm/Controller/Settings/SettingsViewController.swift; sourceTree = SOURCE_ROOT; };
 		D4433523D5E174B363623AD4 /* Pods-OpenTerm.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenTerm.release.xcconfig"; path = "Pods/Target Support Files/Pods-OpenTerm/Pods-OpenTerm.release.xcconfig"; sourceTree = "<group>"; };
@@ -166,6 +174,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BEE563D82062E4CD003399AA /* libssh2.framework in Frameworks */,
+				BEE563D62062E4CD003399AA /* openssl.framework in Frameworks */,
 				5A38CC73C499E1A878353871 /* Pods_OpenTerm.framework in Frameworks */,
 				3C1A47B22031357B00D7CC5C /* ios_system.framework in Frameworks */,
 			);
@@ -307,6 +317,8 @@
 		BE3808491FD9BFB600393EB8 = {
 			isa = PBXGroup;
 			children = (
+				BEE563D52062E4CC003399AA /* libssh2.framework */,
+				BEE563D42062E4CC003399AA /* openssl.framework */,
 				BEBBA1F8206048960024CFBD /* libnetwork_ios.dylib */,
 				BE3808541FD9BFB600393EB8 /* OpenTerm */,
 				BEC75BFB202B716600216462 /* OpenTermTests */,
@@ -801,6 +813,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Dependencies",
+					"$(PROJECT_DIR)/Dependencies/ios_system/Frameworks",
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/OpenTerm/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
@@ -826,6 +839,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Dependencies",
+					"$(PROJECT_DIR)/Dependencies/ios_system/Frameworks",
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/OpenTerm/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
