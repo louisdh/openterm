@@ -8,6 +8,7 @@
 
 import XCTest
 @testable import OpenTerm
+import ios_system
 
 class OpenTermTests: XCTestCase {
     
@@ -21,11 +22,67 @@ class OpenTermTests: XCTestCase {
         super.tearDown()
     }
     
-    func testExecutor() {
+    func testCURL() {
 		
-		// TODO: actually test this
-		let executor = CommandExecutor()
+		let terminalView = TerminalView()
+		
+		initializeEnvironment()
+
+		let delegator = TerminalViewDelegator(terminalView: terminalView)
+		
+		terminalView.delegate = delegator
+		
+		delegator.didEnterCommand("curl")
+		
+		let deviceName = terminalView.deviceName
+		
+		let delayExpectation = expectation(description: "Waiting for command")
+
+		let expectedOutput = "\(deviceName): curl: try \'curl --help\' or \'curl --manual\' for more information\n\(deviceName): "
+		
+		DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+			
+			let output = terminalView.textView.text
+			
+			XCTAssertEqual(output, expectedOutput)
+			
+			delayExpectation.fulfill()
+		}
+
+		waitForExpectations(timeout: 2)
 		
     }
+	
+}
+
+class TerminalViewDelegator: TerminalViewDelegate {
+	
+	let terminalView: TerminalView
+	
+	init(terminalView: TerminalView) {
+		self.terminalView = terminalView
+	}
+	
+	func commandDidEnd() {
+
+	}
+	
+	func didEnterCommand(_ command: String) {
+		
+		processCommand(command)
+	}
+	
+	func didChangeCurrentWorkingDirectory(_ workingDirectory: URL) {
+
+	}
+	
+	private func processCommand(_ command: String) {
+		
+		// Trim leading/trailing space
+		let command = command.trimmingCharacters(in: .whitespacesAndNewlines)
+		
+		// Dispatch the command to the executor
+		terminalView.executor.dispatch(command)
+	}
 	
 }
