@@ -94,7 +94,7 @@ class TerminalView: UIView {
 	}
 
 	/// Performs the given block on the main thread, without dispatching if already there.
-	private func performOnMain(_ block: @escaping () -> Void) {
+	func performOnMain(_ block: @escaping () -> Void) {
 		if Thread.isMainThread {
 			block()
 		} else {
@@ -102,7 +102,7 @@ class TerminalView: UIView {
 		}
 	}
 
-	private func appendText(_ text: NSAttributedString) {
+	func appendText(_ text: NSAttributedString) {
 		dispatchPrecondition(condition: .onQueue(.main))
 
 		let text = NSMutableAttributedString.init(attributedString: text)
