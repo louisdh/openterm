@@ -131,7 +131,10 @@ class CommandExecutor {
 
 	// Send input to the running command's stdin.
 	func sendInput(_ input: String) {
-		guard self.state == .running, let data = input.data(using: .utf8) else { return }
+		guard self.state == .running, let data = input.data(using: .utf8) else {
+			return
+		}
+		
 		switch input {
 		case Parser.Code.endOfText.rawValue, Parser.Code.endOfTransmission.rawValue:
 			// Kill running process on CTRL+C or CTRL+D.

@@ -117,6 +117,7 @@ class TerminalView: UIView {
 		self.textView.isScrollEnabled = false
 		self.textView.isScrollEnabled = true
 	}
+	
 	private func appendText(_ text: String) {
 		dispatchPrecondition(condition: .onQueue(.main))
 
@@ -137,6 +138,7 @@ class TerminalView: UIView {
 			self.currentCommandStartIndex = self.textView.text.endIndex
 		}
 	}
+	
 	func writeOutput(_ string: NSAttributedString) {
 		performOnMain {
 			self.appendText(string)
@@ -277,6 +279,7 @@ extension TerminalView: CommandExecutorDelegate {
 	func commandExecutor(_ commandExecutor: CommandExecutor, receivedStdout stdout: Data) {
 		stdoutParser.parse(stdout)
 	}
+	
 	func commandExecutor(_ commandExecutor: CommandExecutor, receivedStderr stderr: Data) {
 		stderrParser.parse(stderr)
 	}
