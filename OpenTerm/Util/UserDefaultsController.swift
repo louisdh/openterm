@@ -54,7 +54,7 @@ class UserDefaultsController {
 		}
 	}
 
-	var userDarkKeyboardInTerminal: Bool {
+	var useDarkKeyboard: Bool {
 		get {
 			
 			guard let val = userDefaults.object(forKey: "userDarkKeyboardInTerminal") as? Bool else {
