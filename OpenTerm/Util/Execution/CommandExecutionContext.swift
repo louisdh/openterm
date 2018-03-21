@@ -26,14 +26,22 @@ struct CommandExecutionContext {
 
 	/// Access storage from predefined keys
 	subscript(key: Key) -> String? {
-		get { return self[key.rawValue] }
-		set { self[key.rawValue] = newValue }
+		get {
+			return self[key.rawValue]
+		}
+		set {
+			self[key.rawValue] = newValue
+		}
 	}
 
 	/// Access storage from raw keys.
 	subscript(key: String) -> String? {
-		get { return storage[key] }
-		set { storage[key] = newValue }
+		get {
+			return storage[key]
+		}
+		set {
+			storage[key] = newValue
+		}
 	}
 
 	/// Replaces occurrences of each $variable in the context with its value.

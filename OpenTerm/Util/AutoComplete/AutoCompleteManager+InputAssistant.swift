@@ -29,15 +29,19 @@ extension AutoCompleteManager: InputAssistantViewDataSource {
 	func inputAssistantView(_ inputAssistantView: InputAssistantView, nameForSuggestionAtIndex index: Int) -> String {
 		return self.completions[index].name
 	}
+	
 }
 
 // Make the input assistant reload when completions change
 extension InputAssistantView: AutoCompleteManagerDelegate {
+	
 	func autoCompleteManagerDidChangeState() {
+		
 	}
 
 	func autoCompleteManagerDidChangeCompletions() {
 		// Completions were updated, so display them.
 		self.reloadData()
 	}
+	
 }

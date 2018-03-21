@@ -14,8 +14,11 @@ class ScriptExecutorCommand: CommandExecutorCommand {
 	let script: Script
 	let arguments: [String]
 	let context: CommandExecutionContext
+	
 	init(script: Script, arguments: [String], context: CommandExecutionContext) {
-		self.script = script; self.arguments = arguments; self.context = context
+		self.script = script
+		self.arguments = arguments
+		self.context = context
 	}
 
 	func run(forExecutor executor: CommandExecutor) throws -> ReturnCode {

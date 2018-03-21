@@ -69,7 +69,11 @@ class UserDefaultsController {
 	}
 
 	var lastStoreReviewPrompt: Date? {
-		get { return userDefaults.object(forKey: "lastStoreReviewPrompt") as? Date }
-		set { userDefaults.set(newValue, forKey: "lastStoreReviewPrompt") }
+		get {
+			return userDefaults.object(forKey: "lastStoreReviewPrompt") as? Date
+		}
+		set {
+			userDefaults.set(newValue, forKey: "lastStoreReviewPrompt")
+		}
 	}
 }

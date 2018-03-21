@@ -46,10 +46,15 @@ class TerminalViewController: UIViewController {
 	var bookmarkPanelViewController: PanelViewController!
 
 	private var overflowItems: [OverflowItem] = [] {
-		didSet { applyOverflowState() }
+		didSet {
+			applyOverflowState()
+		}
 	}
+	
 	private var overflowState: OverflowState = .compact {
-		didSet { applyOverflowState() }
+		didSet {
+			applyOverflowState()
+		}
 	}
 
 	init() {
@@ -87,7 +92,9 @@ class TerminalViewController: UIViewController {
 		terminalView.delegate = self
 	}
 
-	required init?(coder aDecoder: NSCoder) { fatalError("init(coder:) has not been implemented") }
+	required init?(coder aDecoder: NSCoder) {
+		fatalError("init(coder:) has not been implemented")
+	}
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -304,7 +311,7 @@ class TerminalViewController: UIViewController {
 		return [
 			// Navigation between commands
 			UIKeyCommand(input: UIKeyInputUpArrow, modifierFlags: UIKeyModifierFlags(rawValue: 0), action: #selector(selectPreviousCommand), discoverabilityTitle: "Previous command"),
-			UIKeyCommand(input: UIKeyInputDownArrow, modifierFlags: UIKeyModifierFlags(rawValue: 0), action: #selector(selectNextCommand), discoverabilityTitle: "Next command"),
+			UIKeyCommand(input: UIKeyInputDownArrow, modifierFlags: UIKeyModifierFlags(rawValue: 0), action: #selector(selectNextCommand), discoverabilityTitle: "Next command")
 		]
 	}
 
@@ -327,15 +334,19 @@ class TerminalViewController: UIViewController {
 
 		self.present(picker, animated: true, completion: nil)
 	}
+	
 	private func showHistory(_ sender: UIView) {
 		presentPopover(historyPanelViewController, from: sender)
 	}
+	
 	private func showScripts(_ sender: UIView) {
 		presentPopover(scriptsPanelViewController, from: sender)
 	}
+	
 	private func showBookmarks(_ sender: UIView) {
 		presentPopover(bookmarkPanelViewController, from: sender)
 	}
+	
 }
 
 extension TerminalViewController: UIDocumentPickerDelegate {
@@ -629,7 +640,9 @@ private extension TerminalViewController {
 	}
 
 	private class OverflowBarButtonItem: UIBarButtonItem {
+		
 		var item: OverflowItem?
+		
 		convenience init(item: OverflowItem) {
 			self.init(image: item.icon, style: .plain, target: nil, action: #selector(onTap))
 			self.target = self
