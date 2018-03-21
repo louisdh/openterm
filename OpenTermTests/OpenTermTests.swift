@@ -11,23 +11,27 @@ import XCTest
 import ios_system
 
 class OpenTermTests: XCTestCase {
-    
+	
+	let terminalView = TerminalView()
+
     override func setUp() {
         super.setUp()
         // Put setup code here. This method is called before the invocation of each test method in the class.
+		
+		initializeEnvironment()
+
     }
     
     override func tearDown() {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
         super.tearDown()
+		
+		terminalView.clearScreen()
+
     }
     
     func testCURL() {
 		
-		let terminalView = TerminalView()
-		
-		initializeEnvironment()
-
 		let delegator = TerminalViewDelegator(terminalView: terminalView)
 		
 		terminalView.delegate = delegator
@@ -42,7 +46,7 @@ class OpenTermTests: XCTestCase {
 		
 		DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
 			
-			let output = terminalView.textView.text
+			let output = self.terminalView.textView.text
 			
 			XCTAssertEqual(output, expectedOutput)
 			
