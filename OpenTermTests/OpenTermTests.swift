@@ -12,8 +12,6 @@ import ios_system
 
 class OpenTermTests: XCTestCase {
 	
-	let terminalView = TerminalView()
-
     override func setUp() {
         super.setUp()
         // Put setup code here. This method is called before the invocation of each test method in the class.
@@ -26,8 +24,6 @@ class OpenTermTests: XCTestCase {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
         super.tearDown()
 		
-		terminalView.clearScreen()
-
     }
 	
 	/// Test to make sure commands don't accidentally get added or removed.
@@ -42,9 +38,75 @@ class OpenTermTests: XCTestCase {
 		XCTAssertEqual(commands, expectedCommands)
 		
 	}
-    
+	
+	func testIfAllCommandsWork() {
+		
+		let terminalVC = TerminalViewController()
+		
+		let commands = terminalVC.availableCommands()
+		
+		for command in commands {
+			
+			// These commands enter the interactive mode of the terminal,
+			// so ignore these for now.
+			let interactiveCommands = ["cat", "chksum", "dig", "nslookup", "gunzip", "gzip", "pbcopy", "pbpaste", "sed", "share", "ssh-keygen", "sum", "tee", "telnet", "wc"]
+			
+			if interactiveCommands.contains(command) {
+				continue
+			}
+			
+			testIfCommandWorks(command: command)
+
+		}
+		
+	}
+	
+	// Keep a strong pointer to executors, so they stay in memory.
+	var executors = [CallbackCommandExecutor]()
+	
+	func testIfCommandWorks(command: String) {
+
+		print("test \(command)")
+
+		let terminalView = TerminalView()
+
+		let deviceName = terminalView.deviceName
+		
+		let delayExpectation = expectation(description: "Waiting for \(command)")
+		
+		let notFoundOutput = "\(deviceName): \(command): command not found\n\(deviceName): "
+		
+		let executor = CallbackCommandExecutor(commandStr: command, terminalView: terminalView, callback: {
+			
+			let output = terminalView.textView.text
+			XCTAssertNotEqual(output, notFoundOutput)
+			
+			if terminalView.executor.state == .running {
+				
+				let character = Parser.Code.endOfText.rawValue
+				terminalView.textView.insertText(character)
+				terminalView.executor.sendInput(character)
+				
+			}
+			
+			print("fullfill \(command)")
+			
+			delayExpectation.fulfill()
+			
+		})
+	
+		executors.append(executor)
+		
+		wait(for: [delayExpectation], timeout: 2)
+		
+		print("next from \(command)")
+		
+	}
+	
     func testCURL() {
 		
+		let terminalView = TerminalView()
+
 		let delegator = TerminalViewDelegator(terminalView: terminalView)
 		
 		terminalView.delegate = delegator
@@ -59,7 +121,7 @@ class OpenTermTests: XCTestCase {
 		
 		DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
 			
-			let output = self.terminalView.textView.text
+			let output = terminalView.textView.text
 			
 			XCTAssertEqual(output, expectedOutput)
 			
@@ -100,6 +162,67 @@ class TerminalViewDelegator: TerminalViewDelegate {
 		
 		// Dispatch the command to the executor
 		terminalView.executor.dispatch(command)
+	}
+	
+}
+
+
+class CallbackCommandExecutor: CommandExecutorDelegate, ParserDelegate {
+	
+	let callback: (() -> Void)
+	
+	let terminalView: TerminalView
+	
+	init(commandStr: String, terminalView: TerminalView, callback: @escaping (() -> Void)) {
+		
+		self.callback = callback
+		self.terminalView = terminalView
+		
+		terminalView.stderrParser.delegate = self
+		terminalView.stdoutParser.delegate = self
+		
+		terminalView.executor.delegate = self
+		
+		terminalView.executor.dispatch(commandStr)
+	}
+	
+	func commandExecutor(_ commandExecutor: CommandExecutor, receivedStdout stdout: Data) {
+		terminalView.stdoutParser.parse(stdout)
+	}
+	
+	func commandExecutor(_ commandExecutor: CommandExecutor, receivedStderr stderr: Data) {
+		terminalView.stderrParser.parse(stderr)
+	}
+	
+	func commandExecutor(_ commandExecutor: CommandExecutor, didChangeWorkingDirectory to: URL) {
+		
+	}
+	
+	func commandExecutor(_ commandExecutor: CommandExecutor, stateDidChange newState: CommandExecutor.State) {
+		
+	}
+	
+	func parser(_ parser: Parser, didReceiveString string: NSAttributedString) {
+		
+		terminalView.performOnMain {
+			self.terminalView.appendText(string)
+		}
+		
+	}
+	
+	func parserDidEndTransmission(_ parser: Parser) {
+		
+		terminalView.performOnMain {
+			
+			self.terminalView.stderrParser.delegate = self.terminalView
+			self.terminalView.stdoutParser.delegate = self.terminalView
+			
+			self.terminalView.executor.delegate = self.terminalView
+			
+			self.callback()
+			
+		}
+		
 	}
 	
 }
