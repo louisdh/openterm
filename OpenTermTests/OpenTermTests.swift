@@ -81,14 +81,6 @@ class OpenTermTests: XCTestCase {
 			let output = terminalView.textView.text
 			XCTAssertNotEqual(output, notFoundOutput)
 			
-			if terminalView.executor.state == .running {
-				
-				let character = Parser.Code.endOfText.rawValue
-				terminalView.textView.insertText(character)
-				terminalView.executor.sendInput(character)
-				
-			}
-			
 			print("fullfill \(command)")
 			
 			delayExpectation.fulfill()
@@ -98,8 +90,6 @@ class OpenTermTests: XCTestCase {
 		executors.append(executor)
 		
 		wait(for: [delayExpectation], timeout: 2)
-		
-		print("next from \(command)")
 		
 	}
 	
