@@ -126,6 +126,7 @@ class TerminalView: UIView {
 	}
 	
 	func appendText(_ text: String) {
+
 		dispatchPrecondition(condition: .onQueue(.main))
 
 		appendText(NSAttributedString(string: text, attributes: [.foregroundColor: textView.textColor ?? .black, .font: textView.font!]))
@@ -145,6 +146,7 @@ class TerminalView: UIView {
 			self.currentCommandStartIndex = self.textView.text.endIndex
 		}
 	}
+	
 	func writeOutput(_ string: NSAttributedString) {
 		performOnMain {
 			self.appendText(string)
@@ -286,6 +288,7 @@ extension TerminalView: CommandExecutorDelegate {
 	func commandExecutor(_ commandExecutor: CommandExecutor, receivedStdout stdout: Data) {
 		stdoutParser.parse(stdout)
 	}
+	
 	func commandExecutor(_ commandExecutor: CommandExecutor, receivedStderr stderr: Data) {
 		stderrParser.parse(stderr)
 	}

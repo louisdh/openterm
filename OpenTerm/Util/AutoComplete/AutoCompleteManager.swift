@@ -117,7 +117,9 @@ class AutoCompleteManager {
 
 	/// A set of completions to be displayed to the user. Updated when the `currentCommand` changes.
 	private(set) var completions: [Completion] = [] {
-		didSet { self.delegate?.autoCompleteManagerDidChangeCompletions() }
+		didSet {
+			self.delegate?.autoCompleteManagerDidChangeCompletions()
+		}
 	}
 
 	/// Set this to receive notifications when state changes.
@@ -125,7 +127,9 @@ class AutoCompleteManager {
 
 	/// Set this to provide completions.
 	weak var dataSource: AutoCompleteManagerDataSource? {
-		didSet { self.reloadData() }
+		didSet {
+			self.reloadData()
+		}
 	}
 
 	/// Create a new auto complete manager. Starts in an empty state.

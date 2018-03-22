@@ -60,7 +60,7 @@ class TerminalTextView: UITextView {
 
 		self.backgroundColor = userDefaultsController.terminalBackgroundColor
 
-		if userDefaultsController.userDarkKeyboardInTerminal {
+		if userDefaultsController.useDarkKeyboard {
 			self.keyboardAppearance = .dark
 		} else {
 			self.keyboardAppearance = .light

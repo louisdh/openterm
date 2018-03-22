@@ -223,17 +223,30 @@ struct ANSITextState {
 			var readCount = 1
 
 			// Reset code = reset all state
-			if code == 0 { reset() }
-
-				// Foreground color
-			else if let foregroundColor = ANSIForegroundColor.init(rawValue: code) { self.foregroundColor = foregroundColor.color }
-			else if code == ANSIForegroundColor.custom { let result = customColor(codes: Array(codes.suffix(from: index + 1))); readCount += result.readCount; foregroundColor = result.color }
-
-				// Background color
-			else if let backgroundColor = ANSIBackgroundColor.init(rawValue: code) { self.backgroundColor = backgroundColor.color }
-			else if code == ANSIBackgroundColor.custom { let result = customColor(codes: Array(codes.suffix(from: index + 1))); readCount += result.readCount; backgroundColor = result.color }
-
-			else if let fontState = ANSIFontState.init(rawValue: code) {
+			if code == 0 {
+				
+				reset()
+				
+			} else if let foregroundColor = ANSIForegroundColor(rawValue: code) {
+				
+				self.foregroundColor = foregroundColor.color
+				
+			} else if code == ANSIForegroundColor.custom {
+				
+				let result = customColor(codes: Array(codes.suffix(from: index + 1)))
+				readCount += result.readCount
+				foregroundColor = result.color
+				
+			} else if let backgroundColor = ANSIBackgroundColor(rawValue: code) {
+				self.backgroundColor = backgroundColor.color
+				
+			} else if code == ANSIBackgroundColor.custom {
+				
+				let result = customColor(codes: Array(codes.suffix(from: index + 1)))
+				readCount += result.readCount
+				backgroundColor = result.color
+				
+			} else if let fontState = ANSIFontState(rawValue: code) {
 				switch fontState {
 				case .bold: fontTraits.insert(.traitBold)
 				case .noBold: fontTraits.remove(.traitBold)

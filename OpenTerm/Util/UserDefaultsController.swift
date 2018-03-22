@@ -19,15 +19,6 @@ class UserDefaultsController {
 		self.userDefaults = userDefaults
 	}
 
-	func registerDefaults() {
-		userDefaults.register(defaults: [
-			"terminalFontSize": 14,
-			"terminalTextColor": NSKeyedArchiver.archivedData(withRootObject: UIColor.defaultMainTintColor),
-			"terminalBackgroundColor": NSKeyedArchiver.archivedData(withRootObject: UIColor.panelBackgroundColor),
-			"userDarkKeyboardInTerminal": true]
-		)
-	}
-
 	var terminalTextColor: UIColor {
 		get {
 			return userDefaults.color(forKey: "terminalTextColor") ?? UIColor.defaultMainTintColor
@@ -50,7 +41,12 @@ class UserDefaultsController {
 
 	var terminalFontSize: Int {
 		get {
-			return userDefaults.integer(forKey: "terminalFontSize")
+			
+			guard let val = userDefaults.object(forKey: "terminalFontSize") as? Int else {
+				return 14
+			}
+			
+			return val
 		}
 		set {
 			userDefaults.set(newValue, forKey: "terminalFontSize")
@@ -58,9 +54,14 @@ class UserDefaultsController {
 		}
 	}
 
-	var userDarkKeyboardInTerminal: Bool {
+	var useDarkKeyboard: Bool {
 		get {
-			return userDefaults.bool(forKey: "userDarkKeyboardInTerminal")
+			
+			guard let val = userDefaults.object(forKey: "userDarkKeyboardInTerminal") as? Bool else {
+				return true
+			}
+			
+			return val
 		}
 		set {
 			userDefaults.set(newValue, forKey: "userDarkKeyboardInTerminal")
@@ -69,7 +70,11 @@ class UserDefaultsController {
 	}
 
 	var lastStoreReviewPrompt: Date? {
-		get { return userDefaults.object(forKey: "lastStoreReviewPrompt") as? Date }
-		set { userDefaults.set(newValue, forKey: "lastStoreReviewPrompt") }
+		get {
+			return userDefaults.object(forKey: "lastStoreReviewPrompt") as? Date
+		}
+		set {
+			userDefaults.set(newValue, forKey: "lastStoreReviewPrompt")
+		}
 	}
 }

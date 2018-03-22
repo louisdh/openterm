@@ -12,7 +12,9 @@ import PanelKit
 class ScriptsViewController: UITableViewController {
 
 	var scriptNames: [String] = [] {
-		didSet { tableView.reloadData() }
+		didSet {
+			tableView.reloadData()
+		}
 	}
 
 	override func viewDidLoad() {
@@ -55,9 +57,11 @@ class ScriptsViewController: UITableViewController {
 	private func reload() {
 		self.scriptNames = Script.allNames
 	}
+	
 }
 
 extension ScriptsViewController {
+	
 	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		return scriptNames.count
 	}
@@ -69,8 +73,11 @@ extension ScriptsViewController {
 
 		return cell
 	}
+	
 }
+
 extension ScriptsViewController {
+
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		tableView.deselectRow(at: indexPath, animated: true)
 
@@ -80,6 +87,7 @@ extension ScriptsViewController {
 		let vc = ScriptEditViewController(script: script)
 		self.navigationController?.pushViewController(vc, animated: true)
 	}
+	
 }
 
 extension ScriptsViewController: PanelContentDelegate {

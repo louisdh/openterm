@@ -41,7 +41,7 @@ class SettingsViewController: UITableViewController {
 		terminalTextColorView.backgroundColor = UserDefaultsController.shared.terminalTextColor
 		terminalBackgroundColorView.backgroundColor = UserDefaultsController.shared.terminalBackgroundColor
 
-		useDarkKeyboardSwitch.isOn = UserDefaultsController.shared.userDarkKeyboardInTerminal
+		useDarkKeyboardSwitch.isOn = UserDefaultsController.shared.useDarkKeyboard
 
 	}
 
@@ -57,7 +57,7 @@ class SettingsViewController: UITableViewController {
 
 	@IBAction func useDarkKeyboardSwitchDidChange(_ sender: UISwitch) {
 
-		UserDefaultsController.shared.userDarkKeyboardInTerminal = useDarkKeyboardSwitch.isOn
+		UserDefaultsController.shared.useDarkKeyboard = useDarkKeyboardSwitch.isOn
 
 		NotificationCenter.default.post(name: .appearanceDidChange, object: nil)
 
