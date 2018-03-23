@@ -21,3 +21,5 @@ script:
   - ./bootstrap.sh
 
   - travis_retry xcodebuild -workspace "$WORKSPACE" -scheme "$APP_SCHEME" -destination "$DESTINATION" -configuration Debug ONLY_ACTIVE_ARCH=NO test | xcpretty;
+
+  - travis_retry xcodebuild -workspace "$WORKSPACE" -scheme "$APP_SCHEME" -destination "$DESTINATION" -configuration Release ONLY_ACTIVE_ARCH=NO | xcpretty;
