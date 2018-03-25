@@ -17,7 +17,7 @@
 		3C1A47AE2031357500D7CC5C /* libssh_cmd.dylib in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3C1A47A22031355700D7CC5C /* libssh_cmd.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		3C1A47AF2031357500D7CC5C /* libtar.dylib in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3C1A47A32031355700D7CC5C /* libtar.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		3C1A47B02031357500D7CC5C /* ios_system.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = BE3768EE1FEC4DCE00D5A2D1 /* ios_system.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		3C1A47B12031357500D7CC5C /* Pods_OpenTerm.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FC01604DAC695ABD64544260 /* Pods_OpenTerm.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		3C1A47B12031357500D7CC5C /* BuildFile in Embed Frameworks */ = {isa = PBXBuildFile; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		3C1A47B22031357B00D7CC5C /* ios_system.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BE3768EE1FEC4DCE00D5A2D1 /* ios_system.framework */; };
 		3C1A47B520336F0F00D7CC5C /* libtext.dylib in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3C1A47B320336F0200D7CC5C /* libtext.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		3C2E4374201EF67C00E4254A /* TerminalView+AutoComplete.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C2E4373201EF67C00E4254A /* TerminalView+AutoComplete.swift */; };
@@ -37,7 +37,7 @@
 		3CE57681202A52ED00760E43 /* TerminalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE3808571FD9BFB600393EB8 /* TerminalViewController.swift */; };
 		3CE5769E202A7EC500760E43 /* Parser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CE5769D202A7EC500760E43 /* Parser.swift */; };
 		3CE576A0202A874C00760E43 /* OutputSanitizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CE5769F202A874C00760E43 /* OutputSanitizer.swift */; };
-		5A38CC73C499E1A878353871 /* Pods_OpenTerm.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC01604DAC695ABD64544260 /* Pods_OpenTerm.framework */; };
+		AEF20A4A223775F9F5101BF5 /* Pods_OpenTerm.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 064CE91D25CE0DA967737711 /* Pods_OpenTerm.framework */; };
 		BE165408201909040067EC92 /* xCallBackUrl.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE165407201909030067EC92 /* xCallBackUrl.swift */; };
 		BE244DC8201FBB6000A7EA4E /* cacert.pem in Resources */ = {isa = PBXBuildFile; fileRef = BE244DC7201FBB6000A7EA4E /* cacert.pem */; };
 		BE3808561FD9BFB600393EB8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE3808551FD9BFB600393EB8 /* AppDelegate.swift */; };
@@ -96,7 +96,7 @@
 				3C1A47AF2031357500D7CC5C /* libtar.dylib in Embed Frameworks */,
 				3C1A47B520336F0F00D7CC5C /* libtext.dylib in Embed Frameworks */,
 				3C1A47B02031357500D7CC5C /* ios_system.framework in Embed Frameworks */,
-				3C1A47B12031357500D7CC5C /* Pods_OpenTerm.framework in Embed Frameworks */,
+				3C1A47B12031357500D7CC5C /* BuildFile in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -104,6 +104,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		064CE91D25CE0DA967737711 /* Pods_OpenTerm.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_OpenTerm.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		0B49C6C42402049931D1ABDB /* Pods-OpenTerm.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenTerm.debug.xcconfig"; path = "Pods/Target Support Files/Pods-OpenTerm/Pods-OpenTerm.debug.xcconfig"; sourceTree = "<group>"; };
 		1C81BE5620225C3800D07301 /* Clipboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Clipboard.swift; sourceTree = "<group>"; };
 		28CDA425202444CC0055206D /* BookmarkViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BookmarkViewController.swift; sourceTree = "<group>"; };
 		28CDA4282024B3510055206D /* BookmarkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkManager.swift; sourceTree = "<group>"; };
@@ -130,7 +132,6 @@
 		3CE5764720226A1500760E43 /* ANSITextState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ANSITextState.swift; sourceTree = "<group>"; };
 		3CE5769D202A7EC500760E43 /* Parser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Parser.swift; sourceTree = "<group>"; };
 		3CE5769F202A874C00760E43 /* OutputSanitizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutputSanitizer.swift; sourceTree = "<group>"; };
-		448CC7691FD84EB5D2C24705 /* Pods-OpenTerm.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenTerm.debug.xcconfig"; path = "Pods/Target Support Files/Pods-OpenTerm/Pods-OpenTerm.debug.xcconfig"; sourceTree = "<group>"; };
 		BE165407201909030067EC92 /* xCallBackUrl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = xCallBackUrl.swift; sourceTree = "<group>"; };
 		BE244DC7201FBB6000A7EA4E /* cacert.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = cacert.pem; sourceTree = "<group>"; };
 		BE3768EE1FEC4DCE00D5A2D1 /* ios_system.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = ios_system.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -162,11 +163,10 @@
 		BEE563D52062E4CC003399AA /* libssh2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = libssh2.framework; path = Dependencies/ios_system/Frameworks/libssh2.framework; sourceTree = "<group>"; };
 		BEECFF091FFC1DC0009608B3 /* HistoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = HistoryViewController.swift; path = OpenTerm/Controller/History/HistoryViewController.swift; sourceTree = SOURCE_ROOT; };
 		BEECFF381FFEC187009608B3 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SettingsViewController.swift; path = OpenTerm/Controller/Settings/SettingsViewController.swift; sourceTree = SOURCE_ROOT; };
-		D4433523D5E174B363623AD4 /* Pods-OpenTerm.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenTerm.release.xcconfig"; path = "Pods/Target Support Files/Pods-OpenTerm/Pods-OpenTerm.release.xcconfig"; sourceTree = "<group>"; };
 		F456629D200B9BC500C574AA /* ColorDisplayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorDisplayView.swift; sourceTree = "<group>"; };
 		F4602B40200A08D0009D0547 /* ColorPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorPickerViewController.swift; sourceTree = "<group>"; };
 		F4602B48200A63FC009D0547 /* UserDefaults+UIColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserDefaults+UIColor.swift"; sourceTree = "<group>"; };
-		FC01604DAC695ABD64544260 /* Pods_OpenTerm.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_OpenTerm.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		FDC5C7C341371B47A1DB68A2 /* Pods-OpenTerm.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenTerm.release.xcconfig"; path = "Pods/Target Support Files/Pods-OpenTerm/Pods-OpenTerm.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -176,8 +176,8 @@
 			files = (
 				BEE563D82062E4CD003399AA /* libssh2.framework in Frameworks */,
 				BEE563D62062E4CD003399AA /* openssl.framework in Frameworks */,
-				5A38CC73C499E1A878353871 /* Pods_OpenTerm.framework in Frameworks */,
 				3C1A47B22031357B00D7CC5C /* ios_system.framework in Frameworks */,
+				AEF20A4A223775F9F5101BF5 /* Pods_OpenTerm.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -289,6 +289,15 @@
 			path = Bookmarks;
 			sourceTree = "<group>";
 		};
+		5B9E0BA51B8BE30E1206AFDD /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				0B49C6C42402049931D1ABDB /* Pods-OpenTerm.debug.xcconfig */,
+				FDC5C7C341371B47A1DB68A2 /* Pods-OpenTerm.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 		BE244DC6201FBB4F00A7EA4E /* Default certs */ = {
 			isa = PBXGroup;
 			children = (
@@ -309,7 +318,7 @@
 				3C1A47A22031355700D7CC5C /* libssh_cmd.dylib */,
 				3C1A47A32031355700D7CC5C /* libtar.dylib */,
 				BE3768EE1FEC4DCE00D5A2D1 /* ios_system.framework */,
-				FC01604DAC695ABD64544260 /* Pods_OpenTerm.framework */,
+				064CE91D25CE0DA967737711 /* Pods_OpenTerm.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -324,7 +333,7 @@
 				BEC75BFB202B716600216462 /* OpenTermTests */,
 				BE3808531FD9BFB600393EB8 /* Products */,
 				BE3768EC1FEC4DCE00D5A2D1 /* Frameworks */,
-				EDE154E4BB3A66786AACAA5C /* Pods */,
+				5B9E0BA51B8BE30E1206AFDD /* Pods */,
 			);
 			sourceTree = "<group>";
 			usesTabs = 1;
@@ -412,15 +421,6 @@
 			path = OpenTermTests;
 			sourceTree = "<group>";
 		};
-		EDE154E4BB3A66786AACAA5C /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				448CC7691FD84EB5D2C24705 /* Pods-OpenTerm.debug.xcconfig */,
-				D4433523D5E174B363623AD4 /* Pods-OpenTerm.release.xcconfig */,
-			);
-			name = Pods;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -428,14 +428,14 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = BE3808641FD9BFB600393EB8 /* Build configuration list for PBXNativeTarget "OpenTerm" */;
 			buildPhases = (
-				4B5DFD929D217199A76A3C45 /* [CP] Check Pods Manifest.lock */,
+				EAD887D1C605B72756B620DA /* [CP] Check Pods Manifest.lock */,
 				BE38084E1FD9BFB600393EB8 /* Sources */,
 				BE38084F1FD9BFB600393EB8 /* Frameworks */,
 				BE3808501FD9BFB600393EB8 /* Resources */,
 				BE000C0B1FEC4F7000D06B91 /* Embed Frameworks */,
-				7E594A5DD24920828A657E90 /* [CP] Embed Pods Frameworks */,
-				0817298A6DFC720C403FB709 /* [CP] Copy Pods Resources */,
 				BEE23C96202A35AD00D038C6 /* SwiftLint */,
+				0BA57695505EFB0FE6354191 /* [CP] Embed Pods Frameworks */,
+				E6CA2FE896168E728A365513 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -535,40 +535,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		0817298A6DFC720C403FB709 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-OpenTerm/Pods-OpenTerm-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		4B5DFD929D217199A76A3C45 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-OpenTerm-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		7E594A5DD24920828A657E90 /* [CP] Embed Pods Frameworks */ = {
+		0BA57695505EFB0FE6354191 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -607,6 +574,39 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "if which swiftlint >/dev/null; then\nswiftlint\nelse\necho \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi";
+		};
+		E6CA2FE896168E728A365513 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-OpenTerm/Pods-OpenTerm-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		EAD887D1C605B72756B620DA /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-OpenTerm-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -802,7 +802,7 @@
 		};
 		BE3808651FD9BFB600393EB8 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 448CC7691FD84EB5D2C24705 /* Pods-OpenTerm.debug.xcconfig */;
+			baseConfigurationReference = 0B49C6C42402049931D1ABDB /* Pods-OpenTerm.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = OpenTerm/OpenTerm.entitlements;
@@ -828,7 +828,7 @@
 		};
 		BE3808661FD9BFB600393EB8 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = D4433523D5E174B363623AD4 /* Pods-OpenTerm.release.xcconfig */;
+			baseConfigurationReference = FDC5C7C341371B47A1DB68A2 /* Pods-OpenTerm.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = OpenTerm/OpenTerm.entitlements;
