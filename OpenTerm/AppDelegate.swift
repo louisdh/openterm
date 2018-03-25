@@ -50,7 +50,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey: Any] = [:]) -> Bool {
 		// feed x-callback-url data into xCallbackUrl logic, where it is safe to pass in other URL's
 		// as xCallbackUrlOpen returns false for stuff it does not understand.
-		if xCallbackUrlOpen(url) { return true }
+		if xCallbackUrlOpen(url) {
+			return true
+		}
 
 		// we could not do anything with this URL
 		return false
