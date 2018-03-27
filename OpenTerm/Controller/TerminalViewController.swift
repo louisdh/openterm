@@ -427,7 +427,6 @@ extension TerminalViewController: TerminalViewDelegate {
 
 		if command == "exit" {
 			if let parent = self.parent as? TerminalTabViewController {
-				terminalView.executor.closeSession()
 				parent.closeTab(self)
 			}
 			return
