@@ -92,7 +92,7 @@ extension BookmarkViewController: UITableViewDataSource {
 		//  Show the name of the bookmark (last path component) and the actual file path in the cell.
 		let bookmarkURL = bookmarks[indexPath.row]
 
-		let urlDescription = NSMutableString.init(string: bookmarkURL.absoluteURL.path)
+		let urlDescription = NSMutableString(string: bookmarkURL.absoluteURL.path)
 		OutputSanitizer.sanitize(urlDescription)
 
 		cell.textLabel?.text = "\(bookmarkURL.lastPathComponent): \(urlDescription)"

@@ -548,10 +548,10 @@ private extension TerminalViewController {
 	}
 
 	func applyOverflowState() {
-		let overflowItem = UIBarButtonItem.init(image: #imageLiteral(resourceName: "More"), style: .plain, target: self, action: #selector(showOverflowMenu(_:)))
+		let overflowItem = UIBarButtonItem(image: #imageLiteral(resourceName: "More"), style: .plain, target: self, action: #selector(showOverflowMenu(_:)))
 		switch self.overflowState {
 		case .expanded:
-			let visibleItems = overflowItems.filter { $0.visibleInBar }.map { OverflowBarButtonItem.init(item: $0) }
+			let visibleItems = overflowItems.filter { $0.visibleInBar }.map { OverflowBarButtonItem(item: $0) }
 			self.navigationItem.rightBarButtonItems = visibleItems + (visibleItems.count != overflowItems.count ? [overflowItem] : [])
 		case .compact:
 			self.navigationItem.rightBarButtonItems = [overflowItem]
@@ -589,7 +589,7 @@ private extension TerminalViewController {
 		override func viewDidLayoutSubviews() {
 			super.viewDidLayoutSubviews()
 
-			self.preferredContentSize = CGSize.init(width: 240, height: tableView.contentSize.height)
+			self.preferredContentSize = CGSize(width: 240, height: tableView.contentSize.height)
 		}
 
 		override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

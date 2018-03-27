@@ -199,11 +199,11 @@ struct ANSITextState {
 
 	private static func font(fromTraits traits: UIFontDescriptorSymbolicTraits) -> UIFont {
 		let textSize = CGFloat(UserDefaultsController.shared.terminalFontSize)
-		var descriptor = UIFontDescriptor.init(name: "Menlo", size: textSize)
+		var descriptor = UIFontDescriptor(name: "Menlo", size: textSize)
 		if let traitDescriptor = descriptor.withSymbolicTraits(traits) {
 			descriptor = traitDescriptor
 		}
-		return UIFont.init(descriptor: descriptor, size: textSize)
+		return UIFont(descriptor: descriptor, size: textSize)
 	}
 
 	mutating func reset() {
