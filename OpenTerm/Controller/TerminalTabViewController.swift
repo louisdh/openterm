@@ -35,7 +35,7 @@ class TerminalTabViewController: TabViewController {
 	}
 
 	@objc private func showSettings() {
-		let settingsVC = UIStoryboard.init(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "SettingsViewController")
+		let settingsVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "SettingsViewController")
 		let nav = UINavigationController(rootViewController: settingsVC)
 		nav.navigationBar.barStyle = .black
 		nav.modalPresentationStyle = .formSheet
@@ -54,8 +54,8 @@ class TerminalTabViewController: TabViewController {
 
 	override var keyCommands: [UIKeyCommand]? {
 		return [
-			UIKeyCommand.init(input: "T", modifierFlags: .command, action: #selector(addTab), discoverabilityTitle: "New tab"),
-			UIKeyCommand.init(input: "W", modifierFlags: .command, action: #selector(closeCurrentTab), discoverabilityTitle: "Close tab")
+			UIKeyCommand(input: "T", modifierFlags: .command, action: #selector(addTab), discoverabilityTitle: "New tab"),
+			UIKeyCommand(input: "W", modifierFlags: .command, action: #selector(closeCurrentTab), discoverabilityTitle: "Close tab")
 		]
 	}
 
