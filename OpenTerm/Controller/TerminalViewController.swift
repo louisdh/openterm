@@ -617,7 +617,7 @@ private extension TerminalViewController {
 				return
 			}
 
-			// Dismiss ourself, and run action with presentiing view
+			// Dismiss ourself, and run action with presenting view
 			let item = items[indexPath.row]
 			presentingViewController?.dismiss(animated: true, completion: {
 				item.action(presentingView)
