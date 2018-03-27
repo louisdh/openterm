@@ -142,7 +142,7 @@ class CommandExecutor {
 		guard self.state == .running, let data = input.data(using: .utf8) else {
 			return
 		}
-		
+		ios_switchSession(self.stdout_file)
 		switch input {
 		case Parser.Code.endOfText.rawValue, Parser.Code.endOfTransmission.rawValue:
 			// Kill running process in the current session (tab) on CTRL+C or CTRL+D.
