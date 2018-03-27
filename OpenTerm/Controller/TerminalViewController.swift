@@ -613,7 +613,9 @@ private extension TerminalViewController {
 			tableView.deselectRow(at: indexPath, animated: true)
 
 			// Get the view that presented this popover
-			guard let presentingView = popoverPresentationController?.sourceView else { return }
+			guard let presentingView = popoverPresentationController?.sourceView else {
+				return
+			}
 
 			// Dismiss ourself, and run action with presentiing view
 			let item = items[indexPath.row]

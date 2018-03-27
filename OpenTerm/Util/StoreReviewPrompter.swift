@@ -12,7 +12,11 @@ import StoreKit
 class StoreReviewPrompter {
 
 	static func promptIfNeeded() {
-		if HistoryManager.history.count < 5 { return }
+		
+		if HistoryManager.history.count < 5 {
+			return
+		}
+		
 		guard let lastPrompt = UserDefaultsController.shared.lastStoreReviewPrompt else { return prompt() }
 		let day: TimeInterval = 86400
 		if Date().timeIntervalSince(lastPrompt) > day * 7 {

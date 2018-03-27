@@ -221,7 +221,10 @@ extension TerminalView {
 
 	@objc private func stopCurrentCommand() {
 		// Send CTRL+C character to running command
-		guard executor.state == .running else { return }
+		guard executor.state == .running else {
+			return
+		}
+		
 		let character = Parser.Code.endOfText.rawValue
 		textView.insertText(character)
 		executor.sendInput(character)
@@ -240,10 +243,10 @@ extension TerminalView {
 	}
 
 	@objc func completeCommand() {
-		guard
-			let firstCompletion = autoCompleteManager.completions.first?.name,
-			currentCommand != firstCompletion
-			else { return }
+		guard let firstCompletion = autoCompleteManager.completions.first?.name,
+			currentCommand != firstCompletion else {
+				return
+		}
 
 		let completed: String
 		if let lastCommand = currentCommand.components(separatedBy: " ").last {

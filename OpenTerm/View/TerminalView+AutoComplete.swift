@@ -67,7 +67,10 @@ extension TerminalView {
 	func insertCompletion(_ completion: AutoCompleteManager.Completion) {
 		switch autoCompleteManager.state {
 		case .executing:
-			guard let character = completion.data as? String else { return }
+			guard let character = completion.data as? String else {
+				return
+			}
+			
 			textView.insertText(character)
 			executor.sendInput(character)
 		default:
