@@ -51,7 +51,8 @@ class CommandExecutor {
 	}
 
 	/// Dispatch queue to serially run commands on.
-	private static let executionQueue = DispatchQueue(label: "CommandExecutor", qos: .userInteractive)
+	// was static
+	private let executionQueue = DispatchQueue(label: "CommandExecutor", qos: .userInteractive)
 	/// Dispatch queue that delegate methods will be called on.
 	private let delegateQueue = DispatchQueue(label: "CommandExecutor-Delegate", qos: .userInteractive)
 
@@ -82,20 +83,14 @@ class CommandExecutor {
 
 	// Dispatch a new text-based command to execute.
 	func dispatch(_ command: String) {
-		let push_stdin = stdin
-		let push_stdout = stdout
-		let push_stderr = stderr
 
-		CommandExecutor.executionQueue.async {
+		executionQueue.async {
 			self.state = .running
-			ios_switchSession(self.stdout_file)
 
+			// DocumentManager.shared.currentDirectoryURL = self.currentWorkingDirectory
 			// Set the executor's CWD as the process-wide CWD
-			DocumentManager.shared.currentDirectoryURL = self.currentWorkingDirectory
-			// ios_system requires these to be set (so pipe works, and commands that call commands).
-			stdin = self.stdin_file
-			stdout = self.stdout_file
-			stderr = self.stderr_file
+			ios_switchSession(self.stdout_file)
+			ios_setStreams(self.stdin_file, self.stdout_file, self.stderr_file)
 			let returnCode: ReturnCode
 			do {
 				let executorCommand = self.executorCommand(forCommand: command, inContext: self.context)
@@ -123,10 +118,6 @@ class CommandExecutor {
 			// TODO: Also need to send to stderr?
 			self.stdout_pipe.fileHandleForWriting.write(Parser.Code.endOfTransmission.rawValue.data(using: .utf8)!)
 
-			stdin = push_stdin
-			stdout = push_stdout
-			stderr = push_stderr
-
 			self.state = .idle
 		}
 	}
@@ -142,6 +133,7 @@ class CommandExecutor {
 		guard self.state == .running, let data = input.data(using: .utf8) else {
 			return
 		}
+		
 		ios_switchSession(self.stdout_file)
 		switch input {
 		case Parser.Code.endOfText.rawValue, Parser.Code.endOfTransmission.rawValue:
