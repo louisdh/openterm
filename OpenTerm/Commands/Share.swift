@@ -19,9 +19,12 @@ public func shareFile(argc: Int32, argv: UnsafeMutablePointer<UnsafeMutablePoint
 	while stdin != thread_stdin {
 		var byte: Int8 = 0
 		let count = read(fileno(thread_stdin), &byte, 1)
-		guard count == 1 else { break }
+		guard count == 1 else {
+			break
+		}
 		bytes.append(byte)
 	}
+	
 	let data = Data(bytes: bytes, count: bytes.count)
 	if data.count > 0 {
 		let string = String(data: data, encoding: .utf8) ?? ""

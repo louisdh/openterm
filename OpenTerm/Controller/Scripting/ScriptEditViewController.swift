@@ -25,7 +25,9 @@ class ScriptEditViewController: UIViewController {
 		self.title = script.name
 	}
 
-	required init?(coder aDecoder: NSCoder) { fatalError("init(coder:) has not been implemented") }
+	required init?(coder aDecoder: NSCoder) {
+		fatalError("init(coder:) has not been implemented")
+	}
 
 	override func loadView() {
 		view = textView

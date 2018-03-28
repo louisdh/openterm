@@ -24,7 +24,11 @@ public func pbcopy(argc: Int32, argv: UnsafeMutablePointer<UnsafeMutablePointer<
 	}
 
 	let data = Data(bytes: bytes, count: bytes.count)
-	guard data.count > 0 else { return 1 }
+	
+	guard data.count > 0 else {
+		return 1
+	}
+	
 	UIPasteboard.general.string = String(data: data, encoding: .utf8)
 	return 0
 }
