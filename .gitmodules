@@ -5,3 +5,4 @@
 [submodule "Dependencies/network_ios"]
 	path = Dependencies/network_ios
 	url = https://github.com/holzschu/network_ios.git
+	branch = iosSessions
