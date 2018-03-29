@@ -51,7 +51,6 @@ class CommandExecutor {
 	}
 
 	/// Dispatch queue to serially run commands on.
-	// was static
 	private let executionQueue = DispatchQueue(label: "CommandExecutor", qos: .userInteractive)
 	/// Dispatch queue that delegate methods will be called on.
 	private let delegateQueue = DispatchQueue(label: "CommandExecutor-Delegate", qos: .userInteractive)
@@ -191,8 +190,8 @@ struct SystemExecutorCommand: CommandExecutorCommand {
 	func run(forExecutor executor: CommandExecutor) throws -> ReturnCode {
 
 		// ios_system requires these to be set to nil before command execution
-		thread_stdout = nil;
-		thread_stderr = nil;
+		thread_stdout = nil
+		thread_stderr = nil
 		// Pass the value of the string to system, return its exit code.
 		let returnCode = ios_system(command.utf8CString)
 
