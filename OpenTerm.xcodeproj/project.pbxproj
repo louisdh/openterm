@@ -113,8 +113,8 @@
 		22287E83206983810031C57D /* curl_ios.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = curl_ios.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		22A808C920664BEF001AB98D /* commandDictionary.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = commandDictionary.plist; path = Resources/commandDictionary.plist; sourceTree = "<group>"; };
 		22A808CA20664BF0001AB98D /* extraCommandsDictionary.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = extraCommandsDictionary.plist; path = Resources/extraCommandsDictionary.plist; sourceTree = "<group>"; };
-		22A9494D2067FE65003A0666 /* openssl.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = openssl.framework; path = "Dependencies/libssh2-for-iOS/openssl.framework"; sourceTree = "<group>"; };
-		22A9494E2067FE65003A0666 /* libssh2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = libssh2.framework; sourceTree = "<group>"; };
+		22A9494D2067FE65003A0666 /* openssl.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = openssl.framework; path = Dependencies/ios_system/Frameworks/openssl.framework; sourceTree = "<group>"; };
+		22A9494E2067FE65003A0666 /* libssh2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = libssh2.framework; path = Dependencies/ios_system/Frameworks/libssh2.framework; sourceTree = "<group>"; };
 		22A949552067FEFA003A0666 /* files.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = files.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		22A949562067FEFB003A0666 /* tar.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = tar.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		28CDA425202444CC0055206D /* BookmarkViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BookmarkViewController.swift; sourceTree = "<group>"; };
