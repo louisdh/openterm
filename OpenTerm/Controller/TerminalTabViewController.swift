@@ -58,5 +58,14 @@ class TerminalTabViewController: TabViewController {
 			UIKeyCommand(input: "W", modifierFlags: .command, action: #selector(closeCurrentTab), discoverabilityTitle: "Close tab")
 		]
 	}
+	
+	override func closeTab(_ tab: UIViewController) {
+		super.closeTab(tab)
+		
+		if let terminalVC = tab as? TerminalViewController {
+			terminalVC.terminalView.executor.closeSession()
+		}
+		
+	}
 
 }
