@@ -216,7 +216,7 @@ struct ANSITextState {
 
 	mutating func parse(escapeCodes: String) {
 		// Codes will be a colon-separated string of integers. For each one, adjust our state
-		let codes = escapeCodes.components(separatedBy: ";").flatMap { Int($0) }
+		let codes = escapeCodes.components(separatedBy: ";").compactMap { Int($0) }
 		var index = codes.startIndex
 		while index < codes.endIndex {
 			let code = codes[index]
