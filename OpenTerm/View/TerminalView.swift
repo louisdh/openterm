@@ -31,7 +31,9 @@ class TerminalView: UIView {
 	var stdoutParser = Parser()
 	var stderrParser = Parser()
 	var currentCommandStartIndex: String.Index! {
-		didSet { self.updateAutoComplete() }
+		didSet {
+			self.updateAutoComplete()
+		}
 	}
 
 	weak var delegate: TerminalViewDelegate?
