@@ -72,7 +72,7 @@ class TerminalViewController: UIViewController {
 			.init(visibleInBar: true, icon: #imageLiteral(resourceName: "Open"), title: "Open", action: self.showDocumentPicker),
 			.init(visibleInBar: true, icon: #imageLiteral(resourceName: "Bookmarks"), title: "Bookmarks", action: self.showBookmarks),
 			.init(visibleInBar: true, icon: #imageLiteral(resourceName: "History"), title: "History", action: self.showHistory),
-			.init(visibleInBar: false, icon: #imageLiteral(resourceName: "Script"), title: "Scripts", action: self.showScripts)
+			.init(visibleInBar: true, icon: #imageLiteral(resourceName: "Script"), title: "Scripts", action: self.showScripts)
 		]
 
 		historyPanelViewController = PanelViewController(with: historyViewController, in: self)
