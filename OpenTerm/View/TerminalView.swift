@@ -39,6 +39,7 @@ class TerminalView: UIView {
 	var columnWidth: Int {
 		
 		guard let font = textView.font else {
+			assertionFailure("Expected font")
 			return 0
 		}
 		
