@@ -68,11 +68,27 @@ class TerminalViewController: UIViewController {
 
 		super.init(nibName: nil, bundle: nil)
 
+		let openFolderItem = OverflowItem(visibleInBar: true, icon: #imageLiteral(resourceName: "Open"), title: "Open", action: { [weak self] sender in
+			self?.showDocumentPicker(sender)
+		})
+		
+		let bookmarksItem = OverflowItem(visibleInBar: true, icon: #imageLiteral(resourceName: "Bookmarks"), title: "Bookmarks", action: { [weak self] sender in
+			self?.showBookmarks(sender)
+		})
+		
+		let historyItem = OverflowItem(visibleInBar: true, icon: #imageLiteral(resourceName: "History"), title: "History", action: { [weak self] sender in
+			self?.showHistory(sender)
+		})
+		
+		let scriptsItem = OverflowItem(visibleInBar: true, icon: #imageLiteral(resourceName: "Script"), title: "Scripts", action: { [weak self] sender in
+			self?.showScripts(sender)
+		})
+
 		overflowItems = [
-			.init(visibleInBar: true, icon: #imageLiteral(resourceName: "Open"), title: "Open", action: self.showDocumentPicker),
-			.init(visibleInBar: true, icon: #imageLiteral(resourceName: "Bookmarks"), title: "Bookmarks", action: self.showBookmarks),
-			.init(visibleInBar: true, icon: #imageLiteral(resourceName: "History"), title: "History", action: self.showHistory),
-			.init(visibleInBar: true, icon: #imageLiteral(resourceName: "Script"), title: "Scripts", action: self.showScripts)
+			openFolderItem,
+			bookmarksItem,
+			historyItem,
+			scriptsItem
 		]
 
 		historyPanelViewController = PanelViewController(with: historyViewController, in: self)
