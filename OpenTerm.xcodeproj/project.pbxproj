@@ -43,6 +43,8 @@
 		3CE576A0202A874C00760E43 /* OutputSanitizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CE5769F202A874C00760E43 /* OutputSanitizer.swift */; };
 		AEF20A4A223775F9F5101BF5 /* Pods_OpenTerm.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 064CE91D25CE0DA967737711 /* Pods_OpenTerm.framework */; };
 		BE165408201909040067EC92 /* xCallBackUrl.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE165407201909030067EC92 /* xCallBackUrl.swift */; };
+		BE189036206FF36500EE6739 /* Logo.txt in Resources */ = {isa = PBXBuildFile; fileRef = BE189035206FF36500EE6739 /* Logo.txt */; };
+		BE18903B20700EFA00EE6739 /* Author.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE18903A20700EFA00EE6739 /* Author.swift */; };
 		BE244DC8201FBB6000A7EA4E /* cacert.pem in Resources */ = {isa = PBXBuildFile; fileRef = BE244DC7201FBB6000A7EA4E /* cacert.pem */; };
 		BE3808561FD9BFB600393EB8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE3808551FD9BFB600393EB8 /* AppDelegate.swift */; };
 		BE38085B1FD9BFB600393EB8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BE3808591FD9BFB600393EB8 /* Main.storyboard */; };
@@ -59,6 +61,9 @@
 		BEA4992E1FDC305B001B9B9D /* KeyboardObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEA4992D1FDC305B001B9B9D /* KeyboardObserver.swift */; };
 		BEA499301FDC3B93001B9B9D /* TerminalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEA4992F1FDC3B93001B9B9D /* TerminalView.swift */; };
 		BEA8E2912001348C00002475 /* UIColor+AssetCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEA8E2902001348C00002475 /* UIColor+AssetCatalog.swift */; };
+		BEB774ED20701D2900201EBB /* Credits.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEB774EC20701D2900201EBB /* Credits.swift */; };
+		BEB774EF20701D8500201EBB /* authors.json in Resources */ = {isa = PBXBuildFile; fileRef = BEB774EE20701D8500201EBB /* authors.json */; };
+		BEB774F12070206E00201EBB /* Logo-small.txt in Resources */ = {isa = PBXBuildFile; fileRef = BEB774F02070206E00201EBB /* Logo-small.txt */; };
 		BEC75BFD202B716600216462 /* OpenTermTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEC75BFC202B716600216462 /* OpenTermTests.swift */; };
 		BEECFF0A1FFC1DC0009608B3 /* HistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEECFF091FFC1DC0009608B3 /* HistoryViewController.swift */; };
 		BEECFF391FFEC187009608B3 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEECFF381FFEC187009608B3 /* SettingsViewController.swift */; };
@@ -136,6 +141,8 @@
 		3CE5769D202A7EC500760E43 /* Parser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Parser.swift; sourceTree = "<group>"; };
 		3CE5769F202A874C00760E43 /* OutputSanitizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutputSanitizer.swift; sourceTree = "<group>"; };
 		BE165407201909030067EC92 /* xCallBackUrl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = xCallBackUrl.swift; sourceTree = "<group>"; };
+		BE189035206FF36500EE6739 /* Logo.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = Logo.txt; sourceTree = "<group>"; };
+		BE18903A20700EFA00EE6739 /* Author.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Author.swift; sourceTree = "<group>"; };
 		BE244DC7201FBB6000A7EA4E /* cacert.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = cacert.pem; sourceTree = "<group>"; };
 		BE3768EE1FEC4DCE00D5A2D1 /* ios_system.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = ios_system.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		BE3808521FD9BFB600393EB8 /* OpenTerm.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OpenTerm.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -157,6 +164,9 @@
 		BEA4992D1FDC305B001B9B9D /* KeyboardObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardObserver.swift; sourceTree = "<group>"; };
 		BEA4992F1FDC3B93001B9B9D /* TerminalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TerminalView.swift; sourceTree = "<group>"; };
 		BEA8E2902001348C00002475 /* UIColor+AssetCatalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+AssetCatalog.swift"; sourceTree = "<group>"; };
+		BEB774EC20701D2900201EBB /* Credits.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Credits.swift; sourceTree = "<group>"; };
+		BEB774EE20701D8500201EBB /* authors.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = authors.json; sourceTree = "<group>"; };
+		BEB774F02070206E00201EBB /* Logo-small.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = "Logo-small.txt"; sourceTree = "<group>"; };
 		BEC75BFA202B716600216462 /* OpenTermTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OpenTermTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		BEC75BFC202B716600216462 /* OpenTermTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenTermTests.swift; sourceTree = "<group>"; };
 		BEC75BFE202B716600216462 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -208,6 +218,7 @@
 		3C15E37C2026CE4F003216CF /* Commands */ = {
 			isa = PBXGroup;
 			children = (
+				BE18903720700EE200EE6739 /* Credits */,
 				1C81BE5620225C3800D07301 /* Clipboard.swift */,
 				BE165407201909030067EC92 /* xCallBackUrl.swift */,
 				BE505065201E5ED900CDFC60 /* Share.swift */,
@@ -302,6 +313,18 @@
 				FDC5C7C341371B47A1DB68A2 /* Pods-OpenTerm.release.xcconfig */,
 			);
 			name = Pods;
+			sourceTree = "<group>";
+		};
+		BE18903720700EE200EE6739 /* Credits */ = {
+			isa = PBXGroup;
+			children = (
+				BEB774EE20701D8500201EBB /* authors.json */,
+				BE189035206FF36500EE6739 /* Logo.txt */,
+				BEB774F02070206E00201EBB /* Logo-small.txt */,
+				BE18903A20700EFA00EE6739 /* Author.swift */,
+				BEB774EC20701D2900201EBB /* Credits.swift */,
+			);
+			path = Credits;
 			sourceTree = "<group>";
 		};
 		BE244DC6201FBB4F00A7EA4E /* Default certs */ = {
@@ -526,10 +549,13 @@
 				22A808CB20664BF0001AB98D /* commandDictionary.plist in Resources */,
 				22A808CC20664BF0001AB98D /* extraCommandsDictionary.plist in Resources */,
 				BE3808601FD9BFB600393EB8 /* LaunchScreen.storyboard in Resources */,
+				BEB774F12070206E00201EBB /* Logo-small.txt in Resources */,
 				BE38085D1FD9BFB600393EB8 /* Assets.xcassets in Resources */,
 				BEA4992C1FDC0918001B9B9D /* icon-320.png in Resources */,
 				BE38085B1FD9BFB600393EB8 /* Main.storyboard in Resources */,
 				BE244DC8201FBB6000A7EA4E /* cacert.pem in Resources */,
+				BE189036206FF36500EE6739 /* Logo.txt in Resources */,
+				BEB774EF20701D8500201EBB /* authors.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -633,6 +659,7 @@
 				3C2E4385201EFF4700E4254A /* AutoCompleteManager.swift in Sources */,
 				3CA32102201FF6B100974B5F /* Script.swift in Sources */,
 				BEA499301FDC3B93001B9B9D /* TerminalView.swift in Sources */,
+				BE18903B20700EFA00EE6739 /* Author.swift in Sources */,
 				BE8E66FE206196B8007B14E6 /* UIDevice+Name.swift in Sources */,
 				3CE57680202A529200760E43 /* TerminalTabViewController.swift in Sources */,
 				BEA14A69202CEE5800AB7351 /* Cub+SavannaKit.swift in Sources */,
@@ -661,6 +688,7 @@
 				BE3808561FD9BFB600393EB8 /* AppDelegate.swift in Sources */,
 				3C406E1A20207CE7005F97C4 /* CommandExecutor.swift in Sources */,
 				3C905FCA20265BC60084BA63 /* StoreReviewPrompter.swift in Sources */,
+				BEB774ED20701D2900201EBB /* Credits.swift in Sources */,
 				3CE5764320225E1B00760E43 /* HistoryManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

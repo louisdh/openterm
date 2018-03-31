@@ -35,6 +35,20 @@ class TerminalView: UIView {
 			self.updateAutoComplete()
 		}
 	}
+	
+	var columnWidth: Int {
+		
+		guard let font = textView.font else {
+			return 0
+		}
+				
+		let viewWidth = textView.bounds.width
+
+		let dummyAtributedString = NSAttributedString(string: "X", attributes: [.font: font])
+		let charWidth = dummyAtributedString.size().width
+		
+		return Int(viewWidth / charWidth)
+	}
 
 	weak var delegate: TerminalViewDelegate?
 
