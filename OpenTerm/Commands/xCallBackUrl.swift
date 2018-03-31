@@ -89,7 +89,9 @@ For x-callback-url's the command does not terminate until either x-success or x-
 	while true {
 		var byte: Int8 = 0
 		let count = read(fileno(thread_stdin), &byte, 1)
-		guard count == 1 else { break }
+		guard count == 1 else {
+			break
+		}
 		bytes.append(byte)
 	}
 	var urlString = url!.absoluteString
