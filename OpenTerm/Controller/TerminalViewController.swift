@@ -102,21 +102,25 @@ class TerminalViewController: UIViewController {
 		// Content wrapper is root view
 		contentWrapperView.translatesAutoresizingMaskIntoConstraints = false
 		view.addSubview(contentWrapperView)
+		
 		NSLayoutConstraint.activate([
 			contentWrapperView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
 			contentWrapperView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
 			contentWrapperView.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor),
-			contentWrapperView.bottomAnchor.constraint(equalTo: view.layoutMarginsGuide.bottomAnchor)
+			contentWrapperView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
 			])
 
 		
-		contentWrapperView.addSubview(terminalView)
 		terminalView.translatesAutoresizingMaskIntoConstraints = false
-		terminalView.leadingAnchor.constraint(equalTo: contentWrapperView.leadingAnchor).isActive = true
-		terminalView.trailingAnchor.constraint(equalTo: contentWrapperView.trailingAnchor).isActive = true
-		terminalView.topAnchor.constraint(equalTo: contentWrapperView.topAnchor).isActive = true
-		terminalView.bottomAnchor.constraint(equalTo: contentWrapperView.bottomAnchor).isActive = true
-
+		contentWrapperView.addSubview(terminalView)
+		
+		NSLayoutConstraint.activate([
+			terminalView.leadingAnchor.constraint(equalTo: contentWrapperView.leadingAnchor),
+			terminalView.trailingAnchor.constraint(equalTo: contentWrapperView.trailingAnchor),
+			terminalView.topAnchor.constraint(equalTo: contentWrapperView.topAnchor),
+			terminalView.bottomAnchor.constraint(equalTo: contentWrapperView.bottomAnchor)
+			])
+		
 		updateTitle()
 
 		NotificationCenter.default.addObserver(self, selector: #selector(didDismissKeyboard), name: .UIKeyboardDidHide, object: nil)

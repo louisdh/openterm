@@ -80,15 +80,32 @@ class TerminalView: UIView {
 
 		self.setupAutoComplete()
 
+		textView.contentInsetAdjustmentBehavior = .always
+		
 		keyboardObserver.observe { (state) in
 
 			let rect = self.textView.convert(state.keyboardFrameEnd, from: nil).intersection(self.textView.bounds)
 
 			UIView.animate(withDuration: state.duration, delay: 0.0, options: state.options, animations: {
+				
+				if rect.height == 0 {
 
-				self.textView.contentInset.bottom = rect.height
-				self.textView.scrollIndicatorInsets.bottom = rect.height
+					// Keyboard is not visible.
+					
+					self.textView.contentInset.bottom = 0
+					self.textView.scrollIndicatorInsets.bottom = 0
 
+				} else {
+					
+					// Keyboard is visible, keyboard height includes safeAreaInsets.
+
+					let bottomInset = rect.height - self.safeAreaInsets.bottom
+
+					self.textView.contentInset.bottom = bottomInset
+					self.textView.scrollIndicatorInsets.bottom = bottomInset
+
+				}
+				
 			}, completion: nil)
 
 		}
