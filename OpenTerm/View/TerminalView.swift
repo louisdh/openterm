@@ -41,7 +41,8 @@ class TerminalView: UIView {
 		guard let font = textView.font else {
 			return 0
 		}
-				
+		
+		// TODO: check if the bounds includes the safe area (on iPhone X)
 		let viewWidth = textView.bounds.width
 
 		let dummyAtributedString = NSAttributedString(string: "X", attributes: [.font: font])
