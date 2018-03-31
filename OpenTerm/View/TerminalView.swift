@@ -47,6 +47,7 @@ class TerminalView: UIView {
 		let dummyAtributedString = NSAttributedString(string: "X", attributes: [.font: font])
 		let charWidth = dummyAtributedString.size().width
 		
+		// Assumes the font is monospaced
 		return Int(viewWidth / charWidth)
 	}
 
