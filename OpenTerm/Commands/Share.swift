@@ -1,5 +1,5 @@
 //
-//  Share.swft.swift
+//  Share.swift
 //  OpenTerm
 //
 //  Created by Anders Borum on 28/01/2018.
