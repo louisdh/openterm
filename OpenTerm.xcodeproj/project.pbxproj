@@ -554,6 +554,7 @@
 				"${BUILT_PRODUCTS_DIR}/InputAssistant/InputAssistant.framework",
 				"${BUILT_PRODUCTS_DIR}/PanelKit/PanelKit.framework",
 				"${BUILT_PRODUCTS_DIR}/SavannaKit/SavannaKit.framework",
+				"${BUILT_PRODUCTS_DIR}/SimulatorStatusMagic/SimulatorStatusMagic.framework",
 				"${BUILT_PRODUCTS_DIR}/TabView/TabView.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
@@ -562,6 +563,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/InputAssistant.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/PanelKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SavannaKit.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SimulatorStatusMagic.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TabView.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;

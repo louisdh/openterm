@@ -9,6 +9,12 @@
 import UIKit
 import TabView
 
+#if swift(>=4.1)
+	#if canImport(SimulatorStatusMagic)
+		import SimulatorStatusMagic
+	#endif
+#endif
+
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
@@ -22,6 +28,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		window?.tintColor = .defaultMainTintColor
 		window?.makeKeyAndVisible()
 
+		#if swift(>=4.1)
+			#if canImport(SimulatorStatusMagic)
+				SDStatusBarManager.sharedInstance().enableOverrides()
+			#endif
+		#endif
+		
 		return true
 	}
 

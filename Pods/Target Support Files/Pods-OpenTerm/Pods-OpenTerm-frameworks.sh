@@ -138,6 +138,7 @@ if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework "${BUILT_PRODUCTS_DIR}/InputAssistant/InputAssistant.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/PanelKit/PanelKit.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/SavannaKit/SavannaKit.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/SimulatorStatusMagic/SimulatorStatusMagic.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/TabView/TabView.framework"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then

@@ -3,6 +3,7 @@ PODS:
   - InputAssistant (1.0.1)
   - PanelKit (2.0.1)
   - SavannaKit (0.6.3)
+  - SimulatorStatusMagic (2.1)
   - SwiftLint (0.25.0)
   - TabView (1.0.1)
 
@@ -11,6 +12,7 @@ DEPENDENCIES:
   - InputAssistant (~> 1.0)
   - PanelKit (~> 2.0)
   - SavannaKit (~> 0.6)
+  - SimulatorStatusMagic (~> 2.0)
   - SwiftLint
   - TabView (~> 1.0)
 
@@ -19,9 +21,10 @@ SPEC CHECKSUMS:
   InputAssistant: b5ddd7fc23e38eaabdeaef115f6f7b023fb5dfc0
   PanelKit: d05cecac1ab39af375b56ff21c7b5a9915a3eb5b
   SavannaKit: 2b647e0a6e32feb78e13cfcf9545af8d1e47191f
+  SimulatorStatusMagic: 481558caf2b9ccb2ceba2cc193728d4db3dcac07
   SwiftLint: e14651157288e9e01d6e1a71db7014fb5744a8ea
   TabView: b8337b549e4b0f070a76cab141e258fa66e01fd1
 
-PODFILE CHECKSUM: 541616255e35f0ef7f1d2fc9ea790f7c66498694
+PODFILE CHECKSUM: b21c576bc479626da7b7b51b530857d1d1d8c0a1
 
 COCOAPODS: 1.4.0
