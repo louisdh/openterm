@@ -70,11 +70,27 @@ class TerminalViewController: UIViewController {
 
 		super.init(nibName: nil, bundle: nil)
 
+		let openFolderItem = OverflowItem(visibleInBar: true, icon: #imageLiteral(resourceName: "Open"), title: "Open", action: { [weak self] sender in
+			self?.showDocumentPicker(sender)
+		})
+		
+		let bookmarksItem = OverflowItem(visibleInBar: true, icon: #imageLiteral(resourceName: "Bookmarks"), title: "Bookmarks", action: { [weak self] sender in
+			self?.showBookmarks(sender)
+		})
+		
+		let historyItem = OverflowItem(visibleInBar: true, icon: #imageLiteral(resourceName: "History"), title: "History", action: { [weak self] sender in
+			self?.showHistory(sender)
+		})
+		
+		let scriptsItem = OverflowItem(visibleInBar: true, icon: #imageLiteral(resourceName: "Script"), title: "Scripts", action: { [weak self] sender in
+			self?.showScripts(sender)
+		})
+
 		overflowItems = [
-			.init(visibleInBar: true, icon: #imageLiteral(resourceName: "Open"), title: "Open", action: self.showDocumentPicker),
-			.init(visibleInBar: true, icon: #imageLiteral(resourceName: "Bookmarks"), title: "Bookmarks", action: self.showBookmarks),
-			.init(visibleInBar: true, icon: #imageLiteral(resourceName: "History"), title: "History", action: self.showHistory),
-			.init(visibleInBar: false, icon: #imageLiteral(resourceName: "Script"), title: "Scripts", action: self.showScripts)
+			openFolderItem,
+			bookmarksItem,
+			historyItem,
+			scriptsItem
 		]
 
 		historyPanelViewController = PanelViewController(with: historyViewController, in: self)
@@ -104,22 +120,26 @@ class TerminalViewController: UIViewController {
 		// Content wrapper is root view
 		contentWrapperView.translatesAutoresizingMaskIntoConstraints = false
 		view.addSubview(contentWrapperView)
+		
 		NSLayoutConstraint.activate([
 			contentWrapperView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
 			contentWrapperView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
 			contentWrapperView.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor),
-			contentWrapperView.bottomAnchor.constraint(equalTo: view.layoutMarginsGuide.bottomAnchor)
+			contentWrapperView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
 			])
 
 		contentWrapperView.backgroundColor = .black
 		
-		contentWrapperView.addSubview(terminalView)
 		terminalView.translatesAutoresizingMaskIntoConstraints = false
-		terminalView.leadingAnchor.constraint(equalTo: contentWrapperView.leadingAnchor).isActive = true
-		terminalView.trailingAnchor.constraint(equalTo: contentWrapperView.trailingAnchor).isActive = true
-		terminalView.topAnchor.constraint(equalTo: contentWrapperView.topAnchor).isActive = true
-		terminalView.bottomAnchor.constraint(equalTo: contentWrapperView.bottomAnchor).isActive = true
-
+		contentWrapperView.addSubview(terminalView)
+		
+		NSLayoutConstraint.activate([
+			terminalView.leadingAnchor.constraint(equalTo: contentWrapperView.leadingAnchor),
+			terminalView.trailingAnchor.constraint(equalTo: contentWrapperView.trailingAnchor),
+			terminalView.topAnchor.constraint(equalTo: contentWrapperView.topAnchor),
+			terminalView.bottomAnchor.constraint(equalTo: contentWrapperView.bottomAnchor)
+			])
+		
 		updateTitle()
 
 		NotificationCenter.default.addObserver(self, selector: #selector(didDismissKeyboard), name: .UIKeyboardDidHide, object: nil)
@@ -133,6 +153,7 @@ class TerminalViewController: UIViewController {
 		replaceCommand("pbpaste", mangleFunctionName("pbpaste"), true)
 		replaceCommand("cub", mangleFunctionName("cub"), true)
 		replaceCommand("savanna", mangleFunctionName("savanna"), true)
+		replaceCommand("credits", mangleFunctionName("credits"), true)
 
 		// Call reloadData for the added commands.
 		terminalView.autoCompleteManager.reloadData()
@@ -432,6 +453,7 @@ extension TerminalViewController: TerminalViewDelegate {
 
 		if command == "exit" {
 			if let parent = self.parent as? TerminalTabViewController {
+				terminalView.executor.closeSession()
 				parent.closeTab(self)
 			}
 			return
@@ -553,10 +575,10 @@ private extension TerminalViewController {
 	}
 
 	func applyOverflowState() {
-		let overflowItem = UIBarButtonItem.init(image: #imageLiteral(resourceName: "More"), style: .plain, target: self, action: #selector(showOverflowMenu(_:)))
+		let overflowItem = UIBarButtonItem(image: #imageLiteral(resourceName: "More"), style: .plain, target: self, action: #selector(showOverflowMenu(_:)))
 		switch self.overflowState {
 		case .expanded:
-			let visibleItems = overflowItems.filter { $0.visibleInBar }.map { OverflowBarButtonItem.init(item: $0) }
+			let visibleItems = overflowItems.filter { $0.visibleInBar }.map { OverflowBarButtonItem(item: $0) }
 			self.navigationItem.rightBarButtonItems = visibleItems + (visibleItems.count != overflowItems.count ? [overflowItem] : [])
 		case .compact:
 			self.navigationItem.rightBarButtonItems = [overflowItem]
@@ -589,12 +611,14 @@ private extension TerminalViewController {
 			tableView.alwaysBounceVertical = false
 		}
 
-		required init?(coder aDecoder: NSCoder) { fatalError("init(coder:) has not been implemented") }
+		required init?(coder aDecoder: NSCoder) {
+			fatalError("init(coder:) has not been implemented")
+		}
 
 		override func viewDidLayoutSubviews() {
 			super.viewDidLayoutSubviews()
 
-			self.preferredContentSize = CGSize.init(width: 240, height: tableView.contentSize.height)
+			self.preferredContentSize = CGSize(width: 240, height: tableView.contentSize.height)
 		}
 
 		override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -618,9 +642,11 @@ private extension TerminalViewController {
 			tableView.deselectRow(at: indexPath, animated: true)
 
 			// Get the view that presented this popover
-			guard let presentingView = popoverPresentationController?.sourceView else { return }
+			guard let presentingView = popoverPresentationController?.sourceView else {
+				return
+			}
 
-			// Dismiss ourself, and run action with presentiing view
+			// Dismiss ourself, and run action with presenting view
 			let item = items[indexPath.row]
 			presentingViewController?.dismiss(animated: true, completion: {
 				item.action(presentingView)

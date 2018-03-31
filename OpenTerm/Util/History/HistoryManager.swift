@@ -20,12 +20,16 @@ class HistoryManager {
 	/// Add the command that the user ran to the history.
 	static func add(_ command: String) {
 		let command = command.trimmingCharacters(in: .whitespacesAndNewlines)
-		if command.isEmpty { return }
+		
+		if command.isEmpty {
+			return
+		}
+		
 		do {
 			if !DocumentManager.shared.fileManager.fileExists(atPath: historyFileURL.path) {
 				try command.write(to: historyFileURL, atomically: true, encoding: .utf8)
 			} else {
-				let fileHandle = try FileHandle.init(forWritingTo: historyFileURL)
+				let fileHandle = try FileHandle(forWritingTo: historyFileURL)
 				if let value = (command + "\n").data(using: .utf8) {
 					fileHandle.write(value)
 				}
@@ -39,7 +43,7 @@ class HistoryManager {
 	private static let historyFileURL = DocumentManager.shared.activeDocumentsFolderURL.appendingPathComponent(".history")
 	private static func loadHistory() -> [String] {
 		do {
-			let string = try String.init(contentsOf: historyFileURL)
+			let string = try String(contentsOf: historyFileURL)
 			return string.components(separatedBy: .newlines).filter { !$0.isEmpty }.reversed()
 		} catch {
 			return []

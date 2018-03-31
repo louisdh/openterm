@@ -12,6 +12,7 @@ target 'OpenTerm' do
   pod 'TabView', '~> 1.0'
   pod 'InputAssistant', '~> 1.0'
   pod 'SwiftLint'
+  pod 'SimulatorStatusMagic', '~> 2.0', :configurations => ['Debug']
 
 end
 

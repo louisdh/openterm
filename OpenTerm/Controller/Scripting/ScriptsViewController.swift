@@ -47,7 +47,10 @@ class ScriptsViewController: UITableViewController {
 		}
 		alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
 		alertController.addAction(UIAlertAction(title: "Create", style: .default, handler: { [unowned self] _ in
-			guard let name = alertController.textFields?.first?.text else { return }
+			guard let name = alertController.textFields?.first?.text else {
+				return
+			}
+			
 			Script.create(name)
 			self.reload()
 		}))

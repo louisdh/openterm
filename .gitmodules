@@ -1,7 +1,6 @@
 [submodule "Dependencies/ios_system"]
 	path = Dependencies/ios_system
 	url = https://github.com/holzschu/ios_system.git
-	branch = master
 [submodule "Dependencies/network_ios"]
 	path = Dependencies/network_ios
 	url = https://github.com/holzschu/network_ios.git

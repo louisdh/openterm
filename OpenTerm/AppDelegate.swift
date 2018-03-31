@@ -9,6 +9,12 @@
 import UIKit
 import TabView
 
+#if swift(>=4.1)
+	#if canImport(SimulatorStatusMagic)
+		import SimulatorStatusMagic
+	#endif
+#endif
+
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
@@ -22,6 +28,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		window?.tintColor = .defaultMainTintColor
 		window?.makeKeyAndVisible()
 
+		#if swift(>=4.1)
+			#if canImport(SimulatorStatusMagic)
+				SDStatusBarManager.sharedInstance().enableOverrides()
+			#endif
+		#endif
+		
 		return true
 	}
 
@@ -50,7 +62,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey: Any] = [:]) -> Bool {
 		// feed x-callback-url data into xCallbackUrl logic, where it is safe to pass in other URL's
 		// as xCallbackUrlOpen returns false for stuff it does not understand.
-		if xCallbackUrlOpen(url) { return true }
+		if xCallbackUrlOpen(url) {
+			return true
+		}
 
 		// we could not do anything with this URL
 		return false

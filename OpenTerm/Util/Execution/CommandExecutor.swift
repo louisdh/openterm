@@ -52,7 +52,7 @@ class CommandExecutor {
 	}
 
 	/// Dispatch queue to serially run commands on.
-	private static let executionQueue = DispatchQueue(label: "CommandExecutor", qos: .userInteractive)
+	private let executionQueue = DispatchQueue(label: "CommandExecutor", qos: .userInteractive)
 	/// Dispatch queue that delegate methods will be called on.
 	private let delegateQueue = DispatchQueue(label: "CommandExecutor-Delegate", qos: .userInteractive)
 
@@ -83,9 +83,6 @@ class CommandExecutor {
 
 	// Dispatch a new text-based command to execute.
 	func dispatch(_ command: String) {
-		let push_stdin = stdin
-		let push_stdout = stdout
-		let push_stderr = stderr
 
 		let queue = DispatchQueue(label: "\(command)", qos: .utility)
 		
@@ -95,11 +92,10 @@ class CommandExecutor {
 		
 			self.state = .running
 
+			// DocumentManager.shared.currentDirectoryURL = self.currentWorkingDirectory
 			// Set the executor's CWD as the process-wide CWD
-			DocumentManager.shared.currentDirectoryURL = self.currentWorkingDirectory
-			stdin = self.stdin_file
-			stdout = self.stdout_file
-			stderr = self.stderr_file
+			ios_switchSession(self.stdout_file)
+			ios_setStreams(self.stdin_file, self.stdout_file, self.stderr_file)
 			let returnCode: ReturnCode
 			do {
 				let executorCommand = self.executorCommand(forCommand: command, inContext: self.context)
@@ -127,12 +123,14 @@ class CommandExecutor {
 			// TODO: Also need to send to stderr?
 			self.stdout_pipe.fileHandleForWriting.write(Parser.Code.endOfTransmission.rawValue.data(using: .utf8)!)
 
-			stdin = push_stdin
-			stdout = push_stdout
-			stderr = push_stderr
-
 			self.state = .idle
 		}
+	}
+	
+	func closeSession() {
+		// Warn ios_system to release all data associated with this session:
+		// current directory, previous directory...
+		ios_closeSession(self.stdout_file)
 	}
 
 	// Send input to the running command's stdin.
@@ -141,9 +139,10 @@ class CommandExecutor {
 			return
 		}
 		
+		ios_switchSession(self.stdout_file)
 		switch input {
 		case Parser.Code.endOfText.rawValue, Parser.Code.endOfTransmission.rawValue:
-			// Kill running process on CTRL+C or CTRL+D.
+			// Kill running process in the current session (tab) on CTRL+C or CTRL+D.
 			// No way to send different kill signals since ios_system/pthread are running in process.
 			ios_kill()
 		default:
@@ -196,6 +195,9 @@ struct SystemExecutorCommand: CommandExecutorCommand {
 
 	func run(forExecutor executor: CommandExecutor) throws -> ReturnCode {
 
+		// ios_system requires these to be set to nil before command execution
+		thread_stdout = nil
+		thread_stderr = nil
 		// Pass the value of the string to system, return its exit code.
 		let returnCode = ios_system(command.utf8CString)
 

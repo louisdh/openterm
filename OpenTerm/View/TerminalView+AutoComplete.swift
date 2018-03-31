@@ -69,7 +69,10 @@ extension TerminalView {
 	func insertCompletion(_ completion: AutoCompleteManager.Completion) {
 		switch autoCompleteManager.state {
 		case .executing:
-			guard let character = completion.data as? String else { return }
+			guard let character = completion.data as? String else {
+				return
+			}
+			
 			textView.insertText(character)
 			executor.sendInput(character)
 		default:
@@ -241,7 +244,7 @@ extension TerminalView: AutoCompleteManagerDataSource {
 				let resourceValues = try url.resourceValues(forKeys: [.isDirectoryKey])
 				let isDirectory = resourceValues.isDirectory ?? false
 				if showFolders && isDirectory || showFiles && !isDirectory {
-					return AutoCompleteManager.Completion.init(url.lastPathComponent, appendingSuffix: isDirectory ? "/" : " ", data: url.standardizedFileURL)
+					return AutoCompleteManager.Completion(url.lastPathComponent, appendingSuffix: isDirectory ? "/" : " ", data: url.standardizedFileURL)
 				}
 				return nil
 			}

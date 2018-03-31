@@ -83,7 +83,9 @@ class AutoCompleteManager {
 	/// The current command text entered by the user.
 	private var currentCommand: String = "" {
 		didSet {
-			guard let dataSource = self.dataSource else { return }
+			guard let dataSource = self.dataSource else {
+				return
+			}
 
 			// Change the state if needed.
 			let components = currentCommand.components(separatedBy: .whitespaces)

@@ -31,7 +31,26 @@ class TerminalView: UIView {
 	var stdoutParser = Parser()
 	var stderrParser = Parser()
 	var currentCommandStartIndex: String.Index! {
-		didSet { self.updateAutoComplete() }
+		didSet {
+			self.updateAutoComplete()
+		}
+	}
+	
+	var columnWidth: Int {
+		
+		guard let font = textView.font else {
+			assertionFailure("Expected font")
+			return 0
+		}
+		
+		// TODO: check if the bounds includes the safe area (on iPhone X)
+		let viewWidth = textView.bounds.width
+
+		let dummyAtributedString = NSAttributedString(string: "X", attributes: [.font: font])
+		let charWidth = dummyAtributedString.size().width
+		
+		// Assumes the font is monospaced
+		return Int(viewWidth / charWidth)
 	}
 
 	var didEnterInput: ((String) -> Void)?
@@ -80,19 +99,40 @@ class TerminalView: UIView {
 
 		self.setupAutoComplete()
 
-		keyboardObserver.observe { (state) in
-
-			let rect = self.textView.convert(state.keyboardFrameEnd, from: nil).intersection(self.textView.bounds)
-
-			UIView.animate(withDuration: state.duration, delay: 0.0, options: state.options, animations: {
-
-				self.textView.contentInset.bottom = rect.height
-				self.textView.scrollIndicatorInsets.bottom = rect.height
-
-			}, completion: nil)
-
+		textView.contentInsetAdjustmentBehavior = .always
+		
+		keyboardObserver.observe { [weak self] (state) in
+			self?.adjustInsets(for: state)
 		}
 
+	}
+	
+	private func adjustInsets(for state: KeyboardEvent) {
+		
+		let rect = self.textView.convert(state.keyboardFrameEnd, from: nil).intersection(self.textView.bounds)
+		
+		UIView.animate(withDuration: state.duration, delay: 0.0, options: state.options, animations: {
+			
+			if rect.height == 0 {
+				
+				// Keyboard is not visible.
+				
+				self.textView.contentInset.bottom = 0
+				self.textView.scrollIndicatorInsets.bottom = 0
+				
+			} else {
+				
+				// Keyboard is visible, keyboard height includes safeAreaInsets.
+				
+				let bottomInset = rect.height - self.safeAreaInsets.bottom
+				
+				self.textView.contentInset.bottom = bottomInset
+				self.textView.scrollIndicatorInsets.bottom = bottomInset
+				
+			}
+			
+		}, completion: nil)
+		
 	}
 
 	/// Performs the given block on the main thread, without dispatching if already there.
@@ -229,7 +269,10 @@ extension TerminalView {
 
 	@objc private func stopCurrentCommand() {
 		// Send CTRL+C character to running command
-		guard executor.state == .running else { return }
+		guard executor.state == .running else {
+			return
+		}
+		
 		let character = Parser.Code.endOfText.rawValue
 		textView.insertText(character)
 		executor.sendInput(character)
@@ -248,10 +291,10 @@ extension TerminalView {
 	}
 
 	@objc func completeCommand() {
-		guard
-			let firstCompletion = autoCompleteManager.completions.first?.name,
-			currentCommand != firstCompletion
-			else { return }
+		guard let firstCompletion = autoCompleteManager.completions.first?.name,
+			currentCommand != firstCompletion else {
+				return
+		}
 
 		let completed: String
 		if let lastCommand = currentCommand.components(separatedBy: " ").last {

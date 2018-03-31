@@ -15,17 +15,27 @@ private var xCallbacks = [String: xCallback]()
 
 public func xCallbackUrlOpen(_ url: URL) -> Bool {
 	// make sure the scheme is correct
-	guard url.scheme == "openterm" else { return false }
+	guard url.scheme == "openterm" else {
+		return false
+	}
 
 	// uuid identifying this callback is the path except for a leading slash
-	guard url.path.hasPrefix("/") else { return false }
+	guard url.path.hasPrefix("/") else {
+		return false
+	}
+	
 	let uuid = String(url.path.suffix(url.path.count - 1))
 
 	// we ignore callbacks where uuid is unknown
-	guard let callback = xCallbacks[uuid] else { return false }
+	guard let callback = xCallbacks[uuid] else {
+		return false
+	}
 
 	// parse parameters
-	guard let components = URLComponents(url: url, resolvingAgainstBaseURL: true) else { return false }
+	guard let components = URLComponents(url: url, resolvingAgainstBaseURL: true) else {
+		return false
+	}
+	
 	let items = components.queryItems ?? []
 
 	switch url.host {
@@ -40,7 +50,9 @@ public func xCallbackUrlOpen(_ url: URL) -> Bool {
 		// pass along errorCode=code and errorMessage=message
 		let errorCodeString = items.first(where: { $0.name == "errorCode" })?.value ?? ""
 		let errorMessage = items.first(where: { $0.name == "errorMessage" })?.value ?? ""
-		guard let errorCode = Int(errorCodeString) else { return false }
+		guard let errorCode = Int(errorCodeString) else {
+			return false
+		}
 
 		callback(nil, errorCode, errorMessage)
 		return true
@@ -77,7 +89,9 @@ For x-callback-url's the command does not terminate until either x-success or x-
 	while true {
 		var byte: Int8 = 0
 		let count = read(fileno(thread_stdin), &byte, 1)
-		guard count == 1 else { break }
+		guard count == 1 else {
+			break
+		}
 		bytes.append(byte)
 	}
 	var urlString = url!.absoluteString

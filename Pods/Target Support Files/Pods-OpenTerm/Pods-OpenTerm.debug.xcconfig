@@ -1,10 +1,10 @@
 ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES
-FRAMEWORK_SEARCH_PATHS = $(inherited) "${PODS_CONFIGURATION_BUILD_DIR}/Cub" "${PODS_CONFIGURATION_BUILD_DIR}/InputAssistant" "${PODS_CONFIGURATION_BUILD_DIR}/PanelKit" "${PODS_CONFIGURATION_BUILD_DIR}/SavannaKit" "${PODS_CONFIGURATION_BUILD_DIR}/TabView"
+FRAMEWORK_SEARCH_PATHS = $(inherited) "${PODS_CONFIGURATION_BUILD_DIR}/Cub" "${PODS_CONFIGURATION_BUILD_DIR}/InputAssistant" "${PODS_CONFIGURATION_BUILD_DIR}/PanelKit" "${PODS_CONFIGURATION_BUILD_DIR}/SavannaKit" "${PODS_CONFIGURATION_BUILD_DIR}/SimulatorStatusMagic" "${PODS_CONFIGURATION_BUILD_DIR}/TabView"
 GCC_PREPROCESSOR_DEFINITIONS = $(inherited) COCOAPODS=1
 HEADER_SEARCH_PATHS = $(inherited) "${PODS_ROOT}/Headers/Public" "${PODS_ROOT}/Headers/Public/SwiftLint"
 LD_RUNPATH_SEARCH_PATHS = $(inherited) '@executable_path/Frameworks' '@loader_path/Frameworks'
-OTHER_CFLAGS = $(inherited) -iquote "${PODS_CONFIGURATION_BUILD_DIR}/Cub/Cub.framework/Headers" -iquote "${PODS_CONFIGURATION_BUILD_DIR}/InputAssistant/InputAssistant.framework/Headers" -iquote "${PODS_CONFIGURATION_BUILD_DIR}/PanelKit/PanelKit.framework/Headers" -iquote "${PODS_CONFIGURATION_BUILD_DIR}/SavannaKit/SavannaKit.framework/Headers" -iquote "${PODS_CONFIGURATION_BUILD_DIR}/TabView/TabView.framework/Headers" -isystem "${PODS_ROOT}/Headers/Public" -isystem "${PODS_ROOT}/Headers/Public/SwiftLint"
-OTHER_LDFLAGS = $(inherited) -framework "Cub" -framework "InputAssistant" -framework "PanelKit" -framework "SavannaKit" -framework "TabView"
+OTHER_CFLAGS = $(inherited) -iquote "${PODS_CONFIGURATION_BUILD_DIR}/Cub/Cub.framework/Headers" -iquote "${PODS_CONFIGURATION_BUILD_DIR}/InputAssistant/InputAssistant.framework/Headers" -iquote "${PODS_CONFIGURATION_BUILD_DIR}/PanelKit/PanelKit.framework/Headers" -iquote "${PODS_CONFIGURATION_BUILD_DIR}/SavannaKit/SavannaKit.framework/Headers" -iquote "${PODS_CONFIGURATION_BUILD_DIR}/SimulatorStatusMagic/SimulatorStatusMagic.framework/Headers" -iquote "${PODS_CONFIGURATION_BUILD_DIR}/TabView/TabView.framework/Headers" -isystem "${PODS_ROOT}/Headers/Public" -isystem "${PODS_ROOT}/Headers/Public/SwiftLint"
+OTHER_LDFLAGS = $(inherited) -framework "Cub" -framework "InputAssistant" -framework "PanelKit" -framework "SavannaKit" -framework "SimulatorStatusMagic" -framework "TabView"
 OTHER_SWIFT_FLAGS = $(inherited) "-D" "COCOAPODS"
 PODS_BUILD_DIR = ${BUILD_DIR}
 PODS_CONFIGURATION_BUILD_DIR = ${PODS_BUILD_DIR}/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)
