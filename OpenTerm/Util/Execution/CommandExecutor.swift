@@ -86,9 +86,10 @@ class CommandExecutor {
 		executionQueue.async {
 			self.state = .running
 
-			// DocumentManager.shared.currentDirectoryURL = self.currentWorkingDirectory
+			DocumentManager.shared.currentDirectoryURL = self.currentWorkingDirectory
 			// Set the executor's CWD as the process-wide CWD
 			ios_switchSession(self.stdout_file)
+			ios_setDirectoryURL(self.currentWorkingDirectory)
 			ios_setStreams(self.stdin_file, self.stdout_file, self.stderr_file)
 			let returnCode: ReturnCode
 			do {
@@ -126,6 +127,12 @@ class CommandExecutor {
 		// current directory, previous directory...
 		ios_closeSession(self.stdout_file)
 	}
+	
+	func setLocalMiniRoot() {
+		ios_switchSession(self.stdout_file)
+		ios_setMiniRootURL(self.currentWorkingDirectory)
+	}
+
 
 	// Send input to the running command's stdin.
 	func sendInput(_ input: String) {

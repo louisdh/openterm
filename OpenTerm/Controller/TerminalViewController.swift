@@ -381,6 +381,7 @@ extension TerminalViewController: UIDocumentPickerDelegate {
 		_ = firstFolder.startAccessingSecurityScopedResource()
 
 		self.terminalView.executor.currentWorkingDirectory = firstFolder
+		self.terminalView.executor.setLocalMiniRoot()
 	}
 
 }
@@ -399,6 +400,7 @@ extension TerminalViewController: BookmarkViewControllerDelegate {
 
 			//  Change the directory to the path.
 			self.terminalView.executor.currentWorkingDirectory = newValue
+			self.terminalView.executor.setLocalMiniRoot()
 
 			self.terminalView.newLine()
 			self.terminalView.writeOutput("Current directory changed to \"\(newValue.path)\"")
