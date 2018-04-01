@@ -109,7 +109,7 @@ class OpenTermTests: XCTestCase {
 
 		let expectedOutput = "\(deviceName): curl: try \'curl --help\' or \'curl --manual\' for more information\n\(deviceName): "
 		
-		DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+		DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
 			
 			let output = terminalView.textView.text
 			
@@ -118,7 +118,7 @@ class OpenTermTests: XCTestCase {
 			delayExpectation.fulfill()
 		}
 
-		waitForExpectations(timeout: 2)
+		waitForExpectations(timeout: 3)
 		
     }
 	
