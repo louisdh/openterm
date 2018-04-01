@@ -72,6 +72,7 @@
 		BEB7752520716B5200201EBB /* PridelandCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEB7752320716B5200201EBB /* PridelandCollectionViewCell.swift */; };
 		BEB7752620716B5200201EBB /* PridelandCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = BEB7752420716B5200201EBB /* PridelandCollectionViewCell.xib */; };
 		BEB77528207172D100201EBB /* UIColor+Hex.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEB77527207172D100201EBB /* UIColor+Hex.swift */; };
+		BEB7752220714E2C00201EBB /* UIViewController+Alerts.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEB7752120714E2C00201EBB /* UIViewController+Alerts.swift */; };
 		BEC75BFD202B716600216462 /* OpenTermTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEC75BFC202B716600216462 /* OpenTermTests.swift */; };
 		BEECFF0A1FFC1DC0009608B3 /* HistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEECFF091FFC1DC0009608B3 /* HistoryViewController.swift */; };
 		BEECFF391FFEC187009608B3 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEECFF381FFEC187009608B3 /* SettingsViewController.swift */; };
@@ -183,6 +184,7 @@
 		BEB7752320716B5200201EBB /* PridelandCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PridelandCollectionViewCell.swift; sourceTree = "<group>"; };
 		BEB7752420716B5200201EBB /* PridelandCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PridelandCollectionViewCell.xib; sourceTree = "<group>"; };
 		BEB77527207172D100201EBB /* UIColor+Hex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Hex.swift"; sourceTree = "<group>"; };
+		BEB7752120714E2C00201EBB /* UIViewController+Alerts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Alerts.swift"; sourceTree = "<group>"; };
 		BEC75BFA202B716600216462 /* OpenTermTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OpenTermTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		BEC75BFC202B716600216462 /* OpenTermTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenTermTests.swift; sourceTree = "<group>"; };
 		BEC75BFE202B716600216462 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -461,6 +463,7 @@
 				BE8E66FD206196B8007B14E6 /* UIDevice+Name.swift */,
 				BE8E66FF206196D5007B14E6 /* Bundle+Info.swift */,
 				BEB77527207172D100201EBB /* UIColor+Hex.swift */,
+				BEB7752120714E2C00201EBB /* UIViewController+Alerts.swift */,
 			);
 			path = Util;
 			sourceTree = "<group>";
@@ -681,6 +684,7 @@
 				3CE57681202A52ED00760E43 /* TerminalViewController.swift in Sources */,
 				BEA8E2912001348C00002475 /* UIColor+AssetCatalog.swift in Sources */,
 				28CDA4292024B3510055206D /* BookmarkManager.swift in Sources */,
+				BEB7752220714E2C00201EBB /* UIViewController+Alerts.swift in Sources */,
 				BE8E66FC206196A7007B14E6 /* Notification+Names.swift in Sources */,
 				3CA320FF201FE8E100974B5F /* ScriptsViewController.swift in Sources */,
 				3C2E4385201EFF4700E4254A /* AutoCompleteManager.swift in Sources */,
