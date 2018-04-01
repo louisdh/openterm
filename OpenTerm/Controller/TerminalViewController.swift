@@ -378,8 +378,14 @@ extension TerminalViewController: UIDocumentPickerDelegate {
 			return
 		}
 
-		_ = firstFolder.startAccessingSecurityScopedResource()
-
+		let success = firstFolder.startAccessingSecurityScopedResource()
+		let isReadable = DocumentManager.shared.fileManager.isReadableFile(atPath: firstFolder.path)
+		
+		guard success && isReadable else {
+			showAlert("Error", message: "Could not access folder.")
+			return
+		}
+		
 		self.terminalView.executor.currentWorkingDirectory = firstFolder
 		self.terminalView.executor.setLocalMiniRoot()
 	}
