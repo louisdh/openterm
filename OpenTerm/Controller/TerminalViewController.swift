@@ -377,7 +377,6 @@ extension TerminalViewController: UIDocumentPickerDelegate {
 			return
 		}
 
-		// This one is called
 		_ = firstFolder.startAccessingSecurityScopedResource()
 
 		self.terminalView.executor.currentWorkingDirectory = firstFolder
