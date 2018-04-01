@@ -9,22 +9,29 @@
 import UIKit
 import PanelKit
 
-class ScriptsViewController: UITableViewController {
+class ScriptsViewController: UIViewController {
 
+	@IBOutlet weak var collectionView: UICollectionView!
+	
 	var scriptNames: [String] = [] {
 		didSet {
-			tableView.reloadData()
+			collectionView.reloadData()
 		}
 	}
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
+		
+		self.title = "Scripts"
+		
+		collectionView.register(UINib(nibName: "PridelandCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "PridelandCollectionViewCell")
+
+		collectionView.dataSource = self
+		collectionView.delegate = self
 
 		self.view.tintColor = .defaultMainTintColor
 		self.navigationController?.navigationBar.barStyle = .blackTranslucent
 
-		// Remove separators beyond content
-		self.tableView.tableFooterView = UIView()
 	}
 
 	override func viewWillAppear(_ animated: Bool) {
@@ -63,32 +70,53 @@ class ScriptsViewController: UITableViewController {
 	
 }
 
-extension ScriptsViewController {
+extension ScriptsViewController: UICollectionViewDataSource {
 	
-	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
 		return scriptNames.count
 	}
-
-	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-		let cell = tableView.dequeueReusableCell(withIdentifier: "ScriptCell", for: indexPath)
-
-		cell.textLabel?.text = scriptNames[indexPath.row]
-
+	
+	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+		
+		let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PridelandCollectionViewCell", for: indexPath) as! PridelandCollectionViewCell
+		
+		let prideland = scriptNames[indexPath.row]
+		
+		cell.show(prideland)
+		
 		return cell
 	}
 	
 }
 
-extension ScriptsViewController {
+extension ScriptsViewController: UICollectionViewDelegateFlowLayout {
 
-	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-		tableView.deselectRow(at: indexPath, animated: true)
+	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+		
+		let preferedWidth: CGFloat = 240
+		
+		let availableWidth = collectionView.bounds.width - collectionView.contentInset.left - collectionView.contentInset.right - 32
+		
+		let columns = max(1, Int(availableWidth / preferedWidth))
+		
+		let spacing: CGFloat = 16
+		
+		let width: CGFloat = (availableWidth - ((CGFloat(columns) - 1.0) * spacing)) / CGFloat(columns)
+		
+		return CGSize(width: width, height: 88)
+	}
+	
+	func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+		
+		let prideland = scriptNames[indexPath.row]
 
-		guard let script = try? Script.named(scriptNames[indexPath.row]) else {
+		guard let script = try? Script.named(prideland) else {
 			return
 		}
+		
 		let vc = ScriptEditViewController(script: script)
 		self.navigationController?.pushViewController(vc, animated: true)
+
 	}
 	
 }

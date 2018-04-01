@@ -366,7 +366,11 @@ class TerminalViewController: UIViewController {
 	}
 	
 	private func showScripts(_ sender: UIView) {
-		presentPopover(scriptsPanelViewController, from: sender)
+		
+		scriptsPanelViewController.modalPresentationStyle = .pageSheet
+		
+		present(scriptsPanelViewController, animated: true, completion: nil)
+		
 	}
 	
 	private func showBookmarks(_ sender: UIView) {
