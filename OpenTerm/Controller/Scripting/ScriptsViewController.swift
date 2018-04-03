@@ -93,17 +93,17 @@ extension ScriptsViewController: UICollectionViewDelegateFlowLayout {
 
 	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
 		
-		let preferedWidth: CGFloat = 240
+		let preferredWidth: CGFloat = 240
 		
 		let availableWidth = collectionView.bounds.width - collectionView.contentInset.left - collectionView.contentInset.right - 32
 		
-		let columns = max(1, Int(availableWidth / preferedWidth))
+		let columns = max(1, Int(availableWidth / preferredWidth))
 		
 		let spacing: CGFloat = 16
 		
 		let width: CGFloat = (availableWidth - ((CGFloat(columns) - 1.0) * spacing)) / CGFloat(columns)
 		
-		return CGSize(width: width, height: 88)
+		return CGSize(width: width, height: 100)
 	}
 	
 	func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
