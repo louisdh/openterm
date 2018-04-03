@@ -1,0 +1,6 @@
+framework module HueKit {
+  umbrella header "HueKit-umbrella.h"
+
+  export *
+  module * { export * }
+}

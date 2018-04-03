@@ -135,6 +135,7 @@ strip_invalid_archs() {
 
 if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework "${BUILT_PRODUCTS_DIR}/Cub/Cub.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/HueKit/HueKit.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/InputAssistant/InputAssistant.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/PanelKit/PanelKit.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/SavannaKit/SavannaKit.framework"
@@ -143,6 +144,7 @@ if [[ "$CONFIGURATION" == "Debug" ]]; then
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework "${BUILT_PRODUCTS_DIR}/Cub/Cub.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/HueKit/HueKit.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/InputAssistant/InputAssistant.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/PanelKit/PanelKit.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/SavannaKit/SavannaKit.framework"

@@ -69,10 +69,10 @@
 		BEB774ED20701D2900201EBB /* Credits.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEB774EC20701D2900201EBB /* Credits.swift */; };
 		BEB774EF20701D8500201EBB /* authors.json in Resources */ = {isa = PBXBuildFile; fileRef = BEB774EE20701D8500201EBB /* authors.json */; };
 		BEB774F12070206E00201EBB /* Logo-small.txt in Resources */ = {isa = PBXBuildFile; fileRef = BEB774F02070206E00201EBB /* Logo-small.txt */; };
+		BEB7752220714E2C00201EBB /* UIViewController+Alerts.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEB7752120714E2C00201EBB /* UIViewController+Alerts.swift */; };
 		BEB7752520716B5200201EBB /* PridelandCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEB7752320716B5200201EBB /* PridelandCollectionViewCell.swift */; };
 		BEB7752620716B5200201EBB /* PridelandCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = BEB7752420716B5200201EBB /* PridelandCollectionViewCell.xib */; };
 		BEB77528207172D100201EBB /* UIColor+Hex.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEB77527207172D100201EBB /* UIColor+Hex.swift */; };
-		BEB7752220714E2C00201EBB /* UIViewController+Alerts.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEB7752120714E2C00201EBB /* UIViewController+Alerts.swift */; };
 		BEC75BFD202B716600216462 /* OpenTermTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEC75BFC202B716600216462 /* OpenTermTests.swift */; };
 		BEECFF0A1FFC1DC0009608B3 /* HistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEECFF091FFC1DC0009608B3 /* HistoryViewController.swift */; };
 		BEECFF391FFEC187009608B3 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEECFF381FFEC187009608B3 /* SettingsViewController.swift */; };
@@ -181,10 +181,10 @@
 		BEB774EC20701D2900201EBB /* Credits.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Credits.swift; sourceTree = "<group>"; };
 		BEB774EE20701D8500201EBB /* authors.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = authors.json; sourceTree = "<group>"; };
 		BEB774F02070206E00201EBB /* Logo-small.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = "Logo-small.txt"; sourceTree = "<group>"; };
+		BEB7752120714E2C00201EBB /* UIViewController+Alerts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Alerts.swift"; sourceTree = "<group>"; };
 		BEB7752320716B5200201EBB /* PridelandCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PridelandCollectionViewCell.swift; sourceTree = "<group>"; };
 		BEB7752420716B5200201EBB /* PridelandCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PridelandCollectionViewCell.xib; sourceTree = "<group>"; };
 		BEB77527207172D100201EBB /* UIColor+Hex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Hex.swift"; sourceTree = "<group>"; };
-		BEB7752120714E2C00201EBB /* UIViewController+Alerts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Alerts.swift"; sourceTree = "<group>"; };
 		BEC75BFA202B716600216462 /* OpenTermTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OpenTermTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		BEC75BFC202B716600216462 /* OpenTermTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenTermTests.swift; sourceTree = "<group>"; };
 		BEC75BFE202B716600216462 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -605,6 +605,7 @@
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-OpenTerm/Pods-OpenTerm-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/Cub/Cub.framework",
+				"${BUILT_PRODUCTS_DIR}/HueKit/HueKit.framework",
 				"${BUILT_PRODUCTS_DIR}/InputAssistant/InputAssistant.framework",
 				"${BUILT_PRODUCTS_DIR}/PanelKit/PanelKit.framework",
 				"${BUILT_PRODUCTS_DIR}/SavannaKit/SavannaKit.framework",
@@ -614,6 +615,7 @@
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Cub.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/HueKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/InputAssistant.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/PanelKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SavannaKit.framework",
