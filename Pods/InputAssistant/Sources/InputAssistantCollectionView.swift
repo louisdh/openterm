@@ -48,6 +48,11 @@ class InputAssistantCollectionView: UICollectionView {
     
     override func reloadData() {
         super.reloadData()
+
+        // Need to reset scrolling position,
+        // since the self sizing cells can cause a crash when scrolling back after a reloadData.
+        contentOffset = .zero
+		
         noSuggestionsLabel.text = self.inputAssistantView?.dataSource?.textForEmptySuggestionsInInputAssistantView()
         noSuggestionsLabel.isHidden = self.numberOfItems(inSection: 0) > 0
     }
