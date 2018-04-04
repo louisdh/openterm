@@ -9,6 +9,7 @@ target 'OpenTerm' do
   pod 'PanelKit', '~> 2.0'
   pod 'Cub', '~> 0.6'
   pod 'SavannaKit', '~> 0.6'
+  pod 'HueKit', '~> 1.0'
   pod 'TabView', '~> 1.0'
   pod 'InputAssistant', '~> 1.0'
   pod 'SwiftLint'
