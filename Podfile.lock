@@ -1,7 +1,7 @@
 PODS:
   - Cub (0.7.1)
-  - HueKit (1.0.0)
-  - InputAssistant (1.0.1)
+  - HueKit (1.0.1)
+  - InputAssistant (1.0.2)
   - PanelKit (2.0.1)
   - SavannaKit (0.6.3)
   - SimulatorStatusMagic (2.1)
@@ -20,8 +20,8 @@ DEPENDENCIES:
 
 SPEC CHECKSUMS:
   Cub: 912eeac7325ef2a4a22689baad314f0573164849
-  HueKit: 8381c5e460af75f425de5439d173c81087e66a69
-  InputAssistant: b5ddd7fc23e38eaabdeaef115f6f7b023fb5dfc0
+  HueKit: a255770053f7028907db3e84d5cdecc7837197e4
+  InputAssistant: b0b70cd0d69ef7013ecb2a1fa350b7a2786e2e01
   PanelKit: d05cecac1ab39af375b56ff21c7b5a9915a3eb5b
   SavannaKit: 2b647e0a6e32feb78e13cfcf9545af8d1e47191f
   SimulatorStatusMagic: 481558caf2b9ccb2ceba2cc193728d4db3dcac07

@@ -73,6 +73,10 @@
 		BEB7752520716B5200201EBB /* PridelandCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEB7752320716B5200201EBB /* PridelandCollectionViewCell.swift */; };
 		BEB7752620716B5200201EBB /* PridelandCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = BEB7752420716B5200201EBB /* PridelandCollectionViewCell.xib */; };
 		BEB77528207172D100201EBB /* UIColor+Hex.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEB77527207172D100201EBB /* UIColor+Hex.swift */; };
+		BEB775642073F85600201EBB /* CustomColorBarPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEB775632073F85600201EBB /* CustomColorBarPicker.swift */; };
+		BEB775662074095800201EBB /* ScriptMetadataViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEB775652074095800201EBB /* ScriptMetadataViewController.swift */; };
+		BEB7756820740DFE00201EBB /* CustomTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEB7756720740DFE00201EBB /* CustomTextView.swift */; };
+		BEBD36E720755B0400C9725C /* StoryboardFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEBD36E620755B0400C9725C /* StoryboardFactory.swift */; };
 		BEC75BFD202B716600216462 /* OpenTermTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEC75BFC202B716600216462 /* OpenTermTests.swift */; };
 		BEECFF0A1FFC1DC0009608B3 /* HistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEECFF091FFC1DC0009608B3 /* HistoryViewController.swift */; };
 		BEECFF391FFEC187009608B3 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEECFF381FFEC187009608B3 /* SettingsViewController.swift */; };
@@ -185,6 +189,10 @@
 		BEB7752320716B5200201EBB /* PridelandCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PridelandCollectionViewCell.swift; sourceTree = "<group>"; };
 		BEB7752420716B5200201EBB /* PridelandCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PridelandCollectionViewCell.xib; sourceTree = "<group>"; };
 		BEB77527207172D100201EBB /* UIColor+Hex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Hex.swift"; sourceTree = "<group>"; };
+		BEB775632073F85600201EBB /* CustomColorBarPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomColorBarPicker.swift; sourceTree = "<group>"; };
+		BEB775652074095800201EBB /* ScriptMetadataViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScriptMetadataViewController.swift; sourceTree = "<group>"; };
+		BEB7756720740DFE00201EBB /* CustomTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTextView.swift; sourceTree = "<group>"; };
+		BEBD36E620755B0400C9725C /* StoryboardFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoryboardFactory.swift; sourceTree = "<group>"; };
 		BEC75BFA202B716600216462 /* OpenTermTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OpenTermTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		BEC75BFC202B716600216462 /* OpenTermTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenTermTests.swift; sourceTree = "<group>"; };
 		BEC75BFE202B716600216462 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -301,6 +309,7 @@
 				BE70DA2B204DD5D800DEFF10 /* ScriptEditViewController+AutoComplete.swift */,
 				BEB7752320716B5200201EBB /* PridelandCollectionViewCell.swift */,
 				BEB7752420716B5200201EBB /* PridelandCollectionViewCell.xib */,
+				BEB775652074095800201EBB /* ScriptMetadataViewController.swift */,
 			);
 			path = Scripting;
 			sourceTree = "<group>";
@@ -440,6 +449,8 @@
 				3C2E4373201EF67C00E4254A /* TerminalView+AutoComplete.swift */,
 				F456629D200B9BC500C574AA /* ColorDisplayView.swift */,
 				3CA320FC201FE73900974B5F /* TerminalTextView.swift */,
+				BEB775632073F85600201EBB /* CustomColorBarPicker.swift */,
+				BEB7756720740DFE00201EBB /* CustomTextView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -464,6 +475,7 @@
 				BE8E66FF206196D5007B14E6 /* Bundle+Info.swift */,
 				BEB77527207172D100201EBB /* UIColor+Hex.swift */,
 				BEB7752120714E2C00201EBB /* UIViewController+Alerts.swift */,
+				BEBD36E620755B0400C9725C /* StoryboardFactory.swift */,
 			);
 			path = Util;
 			sourceTree = "<group>";
@@ -689,11 +701,13 @@
 				BEB7752220714E2C00201EBB /* UIViewController+Alerts.swift in Sources */,
 				BE8E66FC206196A7007B14E6 /* Notification+Names.swift in Sources */,
 				3CA320FF201FE8E100974B5F /* ScriptsViewController.swift in Sources */,
+				BEBD36E720755B0400C9725C /* StoryboardFactory.swift in Sources */,
 				3C2E4385201EFF4700E4254A /* AutoCompleteManager.swift in Sources */,
 				BE1D5F9B204C66D0008A1C36 /* CubCommandExecutor.swift in Sources */,
 				3CA32102201FF6B100974B5F /* Script.swift in Sources */,
 				BEA499301FDC3B93001B9B9D /* TerminalView.swift in Sources */,
 				BE18903B20700EFA00EE6739 /* Author.swift in Sources */,
+				BEB775662074095800201EBB /* ScriptMetadataViewController.swift in Sources */,
 				BE8E66FE206196B8007B14E6 /* UIDevice+Name.swift in Sources */,
 				3CE57680202A529200760E43 /* TerminalTabViewController.swift in Sources */,
 				F4602B49200A63FC009D0547 /* UserDefaults+UIColor.swift in Sources */,
@@ -706,6 +720,7 @@
 				BEA499261FD9C4D7001B9B9D /* DocumentManager.swift in Sources */,
 				BEA14A65202CE5B700AB7351 /* Cub+SavannaKit.swift in Sources */,
 				BE505066201E5ED900CDFC60 /* Share.swift in Sources */,
+				BEB7756820740DFE00201EBB /* CustomTextView.swift in Sources */,
 				3CE5764820226A1500760E43 /* ANSITextState.swift in Sources */,
 				BEB77528207172D100201EBB /* UIColor+Hex.swift in Sources */,
 				3CE576A0202A874C00760E43 /* OutputSanitizer.swift in Sources */,
@@ -726,6 +741,7 @@
 				3C406E1A20207CE7005F97C4 /* CommandExecutor.swift in Sources */,
 				3C905FCA20265BC60084BA63 /* StoreReviewPrompter.swift in Sources */,
 				BEA14A67202CE5D300AB7351 /* Cub.swift in Sources */,
+				BEB775642073F85600201EBB /* CustomColorBarPicker.swift in Sources */,
 				BEB774ED20701D2900201EBB /* Credits.swift in Sources */,
 				3CE5764320225E1B00760E43 /* HistoryManager.swift in Sources */,
 			);

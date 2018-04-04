@@ -62,7 +62,7 @@ open class ColorBarPicker: UIControl {
 		}
 	}
 	
-	private lazy var colorBarView: ColorBarView = {
+	open lazy var colorBarView: ColorBarView = {
 		return ColorBarView()
 	}()
 	

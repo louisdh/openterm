@@ -366,9 +366,7 @@ class TerminalViewController: UIViewController {
 	}
 	
 	private func showScripts(_ sender: UIView) {
-		
-		scriptsPanelViewController.modalPresentationStyle = .pageSheet
-		
+				
 		present(scriptsPanelViewController, animated: true, completion: nil)
 		
 	}

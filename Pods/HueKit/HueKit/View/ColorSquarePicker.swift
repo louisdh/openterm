@@ -22,7 +22,7 @@ open class ColorSquarePicker: UIControl {
 		return ColorSquareView()
 	}()
 	
-	private lazy var indicator: ColorIndicatorView = {
+	open lazy var indicator: ColorIndicatorView = {
 		
 		let size = CGSize(width: self.indicatorSizeInactive, height: self.indicatorSizeInactive)
 		let indicatorRect = CGRect(origin: .zero, size: size)
