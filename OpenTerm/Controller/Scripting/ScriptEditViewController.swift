@@ -61,6 +61,12 @@ class ScriptEditViewController: UIViewController {
 
 		}
 		
+		let infoButton = UIButton(type: .infoLight)
+		infoButton.addTarget(self, action: #selector(showScriptMetadata), for: .touchUpInside)
+		
+		let infoBarButtonItem = UIBarButtonItem(customView: infoButton)
+		navigationItem.rightBarButtonItem = infoBarButtonItem
+		
 	}
 
 	override func viewWillAppear(_ animated: Bool) {
@@ -73,6 +79,19 @@ class ScriptEditViewController: UIViewController {
 		super.viewDidAppear(animated)
 
 		textView.becomeFirstResponder()
+	}
+	
+	@objc
+	func showScriptMetadata() {
+		
+		let scriptMetadataVC = UIStoryboard.main.scriptMetadataViewController(state: .update)
+		
+		let navController = UINavigationController(rootViewController: scriptMetadataVC)
+		navController.navigationBar.barStyle = .blackTranslucent
+		navController.modalPresentationStyle = .formSheet
+		
+		self.present(navController, animated: true, completion: nil)
+		
 	}
 
 	private func save() {
