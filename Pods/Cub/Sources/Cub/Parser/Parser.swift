@@ -413,7 +413,7 @@ public class Parser {
 
 	private func parseVariable(with name: String) throws -> ASTNode {
 
-		let varNode = VariableNode(name: name, range: peekCurrentToken()?.range)
+		let varNode = VariableNode(name: name, range: currentTokenRange())
 
 		if let currentToken = peekCurrentToken(), case .equals = currentToken.type {
 
@@ -649,14 +649,14 @@ public class Parser {
 
 		try popCurrentToken(andExpect: .continue)
 
-		return ContinueNode(range: peekCurrentToken()?.range)
+		return ContinueNode(range: currentTokenRange())
 	}
 
 	private func parseBreak() throws -> BreakLoopNode {
 
 		try popCurrentToken(andExpect: .break)
 
-		return BreakLoopNode(range: peekCurrentToken()?.range)
+		return BreakLoopNode(range: currentTokenRange())
 	}
 
 	private func parseIfStatement() throws -> ConditionalStatementNode {
@@ -686,7 +686,7 @@ public class Parser {
 
 		} else {
 
-			return ConditionalStatementNode(condition: condition, body: body, range: peekCurrentToken()?.range)
+			return ConditionalStatementNode(condition: condition, body: body, range: currentTokenRange())
 
 		}
 
@@ -706,7 +706,7 @@ public class Parser {
 
 		do {
 
-			doStatement = try DoStatementNode(amount: amount, body: body, range: peekCurrentToken()?.range)
+			doStatement = try DoStatementNode(amount: amount, body: body, range: currentTokenRange())
 
 		} catch {
 
@@ -772,7 +772,7 @@ public class Parser {
 
 		do {
 
-			forStatement = try ForStatementNode(assignment: assignment, condition: condition, interval: interval, body: body, range: peekCurrentToken()?.range)
+			forStatement = try ForStatementNode(assignment: assignment, condition: condition, interval: interval, body: body, range: currentTokenRange())
 
 		} catch {
 
@@ -795,7 +795,7 @@ public class Parser {
 
 		}
 
-		return ReturnNode(value: expr, range: peekCurrentToken()?.range)
+		return ReturnNode(value: expr, range: currentTokenRange())
 	}
 
 	private func parseWhileStatement() throws -> WhileStatementNode {
@@ -809,7 +809,7 @@ public class Parser {
 		let whileStatement: WhileStatementNode
 
 		do {
-			whileStatement = try WhileStatementNode(condition: condition, body: body, range: peekCurrentToken()?.range)
+			whileStatement = try WhileStatementNode(condition: condition, body: body, range: currentTokenRange())
 		} catch {
 			throw self.error(.illegalStatement, token: whileToken)
 		}
@@ -830,7 +830,7 @@ public class Parser {
 		let whileStatement: RepeatWhileStatementNode
 
 		do {
-			whileStatement = try RepeatWhileStatementNode(condition: condition, body: body, range: peekCurrentToken()?.range)
+			whileStatement = try RepeatWhileStatementNode(condition: condition, body: body, range: currentTokenRange())
 		} catch {
 			throw self.error(.illegalStatement, token: whileToken)
 		}
@@ -865,7 +865,7 @@ public class Parser {
 
 		}
 
-		return BodyNode(nodes: nodes, range: peekCurrentToken()?.range)
+		return BodyNode(nodes: nodes, range: currentTokenRange())
 
 	}
 
@@ -1003,7 +1003,7 @@ public class Parser {
 
 		try popCurrentToken(andExpect: .curlyClose, "}")
 
-		return FunctionNode(prototype: prototype, body: body, range: peekCurrentToken()?.range)
+		return FunctionNode(prototype: prototype, body: body, range: currentTokenRange())
 	}
 
 	private func parseArray() throws -> ArrayNode {
@@ -1040,7 +1040,7 @@ public class Parser {
 
 		try popCurrentToken(andExpect: .squareBracketClose, "]")
 
-		return try ArrayNode(values: arguments, range: peekCurrentToken()?.range)
+		return try ArrayNode(values: arguments, range: currentTokenRange())
 	}
 	
 	private func parseStruct() throws -> StructNode {
@@ -1084,6 +1084,10 @@ public class Parser {
 	}
 
 	// MARK: -
+	
+	func currentTokenRange() -> Range<Int>? {
+		return (peekCurrentToken() ?? peekPreviousToken())?.range
+	}
 
 	private func error(_ type: ParseErrorType, token: Token? = nil) -> ParseError {
 

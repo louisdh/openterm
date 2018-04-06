@@ -36,7 +36,7 @@ struct DefaultTheme: SyntaxColorTheme {
 	
 	let font = Font(name: "Menlo", size: 15)!
 	
-	let backgroundColor: Color = Color(red: 31/255.0, green: 32/255, blue: 41/255, alpha: 1.0)
+	let backgroundColor = Color(red: 31/255.0, green: 32/255, blue: 41/255, alpha: 1.0)
 	
 	func color(for syntaxColorType: SyntaxColorType) -> Color {
 		
@@ -53,6 +53,8 @@ struct DefaultTheme: SyntaxColorTheme {
 			return Color(red: 215/255, green: 0, blue: 143/255, alpha: 1.0)
 		case .comment:
 			return Color(red: 69.0/255.0, green: 187.0/255.0, blue: 62.0/255.0, alpha: 1.0)
+		case .editorPlaceholder:
+			return backgroundColor
 		}
 		
 	}
@@ -66,5 +68,6 @@ public enum SyntaxColorType {
 	case identifier
 	case keyword
 	case comment
+	case editorPlaceholder
 }
 

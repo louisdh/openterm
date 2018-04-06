@@ -1,9 +1,9 @@
 PODS:
-  - Cub (0.7.1)
+  - Cub (0.7.2)
   - HueKit (1.0.1)
   - InputAssistant (1.0.2)
   - PanelKit (2.0.1)
-  - SavannaKit (0.6.3)
+  - SavannaKit (0.7.0)
   - SimulatorStatusMagic (2.1)
   - SwiftLint (0.25.0)
   - TabView (1.0.1)
@@ -18,16 +18,27 @@ DEPENDENCIES:
   - SwiftLint
   - TabView (~> 1.0)
 
+SPEC REPOS:
+  https://github.com/CocoaPods/Specs.git:
+    - Cub
+    - HueKit
+    - InputAssistant
+    - PanelKit
+    - SavannaKit
+    - SimulatorStatusMagic
+    - SwiftLint
+    - TabView
+
 SPEC CHECKSUMS:
-  Cub: 912eeac7325ef2a4a22689baad314f0573164849
+  Cub: d17f2c6e13f2e1def2589c9869cccac1df2033f3
   HueKit: a255770053f7028907db3e84d5cdecc7837197e4
   InputAssistant: b0b70cd0d69ef7013ecb2a1fa350b7a2786e2e01
   PanelKit: d05cecac1ab39af375b56ff21c7b5a9915a3eb5b
-  SavannaKit: 2b647e0a6e32feb78e13cfcf9545af8d1e47191f
+  SavannaKit: 8b9737cd714f8250881bbf38616455a9384bb35e
   SimulatorStatusMagic: 481558caf2b9ccb2ceba2cc193728d4db3dcac07
   SwiftLint: e14651157288e9e01d6e1a71db7014fb5744a8ea
   TabView: b8337b549e4b0f070a76cab141e258fa66e01fd1
 
 PODFILE CHECKSUM: 0fedffc18889a5b4bab714c39d586ffa8f3cd720
 
-COCOAPODS: 1.4.0
+COCOAPODS: 1.5.0

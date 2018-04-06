@@ -467,7 +467,6 @@
 				BE000C0B1FEC4F7000D06B91 /* Embed Frameworks */,
 				BEE23C96202A35AD00D038C6 /* SwiftLint */,
 				0BA57695505EFB0FE6354191 /* [CP] Embed Pods Frameworks */,
-				E6CA2FE896168E728A365513 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -615,21 +614,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "if which swiftlint >/dev/null; then\nswiftlint\nelse\necho \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi";
-		};
-		E6CA2FE896168E728A365513 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-OpenTerm/Pods-OpenTerm-resources.sh\"\n";
-			showEnvVarsInLog = 0;
 		};
 		EAD887D1C605B72756B620DA /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;

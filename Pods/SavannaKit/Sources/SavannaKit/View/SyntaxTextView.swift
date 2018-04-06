@@ -31,6 +31,8 @@ public protocol SyntaxTextViewDelegate: class {
 @IBDesignable
 public class SyntaxTextView: View {
 
+	var previousSelectedRange: NSRange?
+	
 	let textView: InnerTextView
 	
 	public var contentTextView: TextView {
@@ -38,6 +40,12 @@ public class SyntaxTextView: View {
 	}
 	
 	public weak var delegate: SyntaxTextViewDelegate?
+
+	#if os(macOS)
+	
+	var ignoreSelectionChange = false
+	
+	#endif
 	
 	#if os(macOS)
 	
@@ -82,8 +90,17 @@ public class SyntaxTextView: View {
 	}
 	
 	private init?(_ initMethod: InitMethod) {
-
-		textView = InnerTextView(frame: .zero)
+		
+		let textStorage = NSTextStorage()
+		let layoutManager = SyntaxTextViewLayoutManager()
+		let containerSize = CGSize(width: 0, height: CGFloat.greatestFiniteMagnitude)
+		let textContainer = NSTextContainer(size: containerSize)
+		
+		textContainer.widthTracksTextView = true
+		layoutManager.addTextContainer(textContainer)
+		textStorage.addLayoutManager(layoutManager)
+		
+		self.textView = InnerTextView(frame: .zero, textContainer: textContainer)
 		
 		switch initMethod {
 		case let .coder(coder): super.init(coder: coder)
@@ -309,6 +326,45 @@ public class SyntaxTextView: View {
 	
 	// MARK: -
 	
+	public func insertText(_ text: String) {
+		
+		if let tokens = cachedTokens {
+		
+			for token in tokens {
+				
+				guard let tokenRange = token.range else {
+					continue
+				}
+				
+				guard let range = textView.text.nsRange(fromRange: tokenRange) else {
+					continue
+				}
+				
+				if case .editorPlaceholder = token.savannaTokenType.syntaxColorType {
+					
+					if textView.selectedRange.intersection(range) != nil {
+						
+						#if os(macOS)
+							textView.textStorage?.replaceCharacters(in: range, with: text)
+						#else
+							textView.textStorage.replaceCharacters(in: range, with: text)
+						#endif
+						
+						didUpdateText()
+						
+						return
+					}
+					
+				}
+				
+			}
+			
+		}
+		
+		contentTextView.insertText(text)
+
+	}
+	
 	#if os(iOS)
 
 	public func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -329,6 +385,12 @@ public class SyntaxTextView: View {
 		return DefaultTheme()
 	}()
 	
+	var cachedTokens: [Token]?
+	
+	func invalidateCachedTokens() {
+		cachedTokens = nil
+	}
+	
 	func colorTextView(lexerForSource: (String) -> Lexer) {
 		
 		guard let string = textView.text else {
@@ -348,25 +410,37 @@ public class SyntaxTextView: View {
 		
 //		self.backgroundColor = theme.backgroundColor
 		
-		let lexer = lexerForSource(string)
-		let tokens = lexer.getSavannaTokens()
 		
-		let attributedString = NSMutableAttributedString(string: string)
+		let tokens: [Token]
+		
+		if let cachedTokens = cachedTokens {
+			
+			tokens = cachedTokens
+			
+		} else {
+			
+			let lexer = lexerForSource(string)
+			tokens = lexer.getSavannaTokens()
+			cachedTokens = tokens
+
+		}
 		
 		var attributes = [NSAttributedStringKey: Any]()
 		
+		let paragraphStyle = NSMutableParagraphStyle()
+		paragraphStyle.paragraphSpacing = 2.0
+		
 		let wholeRange = NSRange(location: 0, length: string.count)
-		attributedString.addAttribute(NSAttributedStringKey.foregroundColor, value: theme.color(for: .plain), range: wholeRange)
-		attributedString.addAttribute(.font, value: theme.font, range: wholeRange)
 		
 		attributes[.foregroundColor] = theme.color(for: .plain)
 		attributes[.font] = theme.font
-		
+		attributes[.paragraphStyle] = paragraphStyle
+
 		textStorage.setAttributes(attributes, range: wholeRange)
 
+		let selectedRange = textView.selectedRange
 		
 		for token in tokens {
-			
 			let syntaxColorType = token.savannaTokenType.syntaxColorType
 			
 			if syntaxColorType == .plain {
@@ -378,7 +452,35 @@ public class SyntaxTextView: View {
 			}
 			
 			guard let range = string.nsRange(fromRange: tokenRange) else {
-				return
+				continue
+			}
+			
+			if case .editorPlaceholder = syntaxColorType {
+				
+				let startRange = NSRange(location: range.lowerBound, length: 2)
+				let endRange = NSRange(location: range.upperBound - 2, length: 2)
+
+				let contentRange = NSRange(location: range.lowerBound + 2, length: range.length - 4)
+				
+				let color = theme.color(for: syntaxColorType)
+				
+				var attr = [NSAttributedStringKey: Any]()
+				
+				var state: EditorPlaceholderState = .inactive
+				
+				if selectedRange.intersection(range) != nil {
+					state = .active
+				}
+				
+				attr[.editorPlaceholder] = state
+				
+				textStorage.addAttributes([.foregroundColor: color], range: contentRange)
+
+				textStorage.addAttributes([.foregroundColor: Color.clear, .font: Font.systemFont(ofSize: 0.01)], range: startRange)
+				textStorage.addAttributes([.foregroundColor: Color.clear, .font: Font.systemFont(ofSize: 0.01)], range: endRange)
+
+				textStorage.addAttributes(attr, range: range)
+				continue
 			}
 			
 			let color = theme.color(for: syntaxColorType)
@@ -391,9 +493,6 @@ public class SyntaxTextView: View {
 		}
 		
 		textStorage.endEditing()
-
-		//		sourceTextView.typingAttributes = attributedString.attributes
-		//		sourceTextView.attributedText = attributedString
 		
 	}
 	

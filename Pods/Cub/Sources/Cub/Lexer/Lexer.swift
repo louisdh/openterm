@@ -98,8 +98,10 @@ public class Lexer {
 	private var isInIdentifier = false
 	private var isInNumber = false
 	private var isInString = false
+	private var isInEditorPlaceholder = false
 
 	private var charIndex = 0
+	private var tokenCharIndex = 0
 
 	private var currentString = ""
 	private var currentStringLength = 0
@@ -130,8 +132,10 @@ public class Lexer {
 
 		isInLineComment = false
 		isInBlockComment = false
+		isInEditorPlaceholder = false
 
 		charIndex = 0
+		tokenCharIndex = 0
 
 		currentString = ""
 		currentStringLength = 0
@@ -187,6 +191,11 @@ public class Lexer {
 					continue
 				}
 				
+				if !isInEditorPlaceholder && currentString == "<#" {
+					isInEditorPlaceholder = true
+					continue
+				}
+				
 				if currentString.isEmpty && !isInNumber && (!isInLineComment && content.hasPrefix("//")) {
 					
 					isInLineComment = true
@@ -201,6 +210,13 @@ public class Lexer {
 					continue
 				}
 				
+				if currentString.isEmpty && !isInNumber && (!isInEditorPlaceholder && content.hasPrefix("<#")) {
+					
+					isInEditorPlaceholder = true
+					consumeCharactersAtStart(2)
+					continue
+				}
+				
 				if currentString.isEmpty && !isInString && (!isInLineComment && content.hasPrefix("\"")) {
 					
 					isInString = true
@@ -210,7 +226,7 @@ public class Lexer {
 				
 			}
 
-			if !isInBlockComment && !isInLineComment && !isInString {
+			if !isInBlockComment && !isInLineComment && !isInString && !isInEditorPlaceholder {
 				
 				if isInNumber {
 
@@ -318,6 +334,13 @@ public class Lexer {
 				continue
 			}
 
+			if !isInEditorPlaceholder && nextString == "<#" {
+				
+				isInEditorPlaceholder = true
+				consumeCharactersAtStart(1)
+				continue
+			}
+			
 			if isInString && content.hasPrefix("\"") {
 				
 				consumeCharactersAtStart(1, updateCurrentString: true)
@@ -335,6 +358,19 @@ public class Lexer {
 				consumeCharactersAtStart(2)
 				isInBlockComment = false
 				addToken(type: .comment)
+				continue
+			}
+			
+			if isInEditorPlaceholder && content.hasPrefix("#>") {
+				
+				consumeCharactersAtStart(2)
+				isInEditorPlaceholder = false
+				
+				var rawString = currentString
+				rawString.removeFirst(2)
+				rawString.removeLast(2)
+
+				addToken(type: .editorPlaceholder(rawString))
 				continue
 			}
 
@@ -381,48 +417,40 @@ public class Lexer {
 
 	}
 
-	func removeNewLineControlChar() -> Bool {
-
-		let keyword = "\n"
-
-		if content.hasPrefix(keyword) {
-
-			let temp = currentString
-			let keywordLength = keyword.count
-			consumeCharactersAtStart(keywordLength)
-			currentString = temp
-
-			return true
-		}
-
-		return false
-	}
-
 	func removeControlChar() -> Bool {
-
-		let updateCurrentString = isInString
 		
 		if content.hasPrefix(" ") {
 		
+			let updateCurrentString = isInString || isInLineComment || isInBlockComment
+
 			consumeCharactersAtStart(1, updateCurrentString: updateCurrentString)
 			return true
 		}
 		
 		if content.hasPrefix("\n") {
 			
+			let updateCurrentString = isInString || isInBlockComment
+
+			consumeCharactersAtStart(1, updateCurrentString: updateCurrentString)
+			
 			if isInLineComment {
 				
 				isInLineComment = false
 				addToken(type: .comment)
 				
+			}			
+			
+			if !updateCurrentString {				
+				tokenCharIndex = charIndex
 			}
 			
-			consumeCharactersAtStart(1, updateCurrentString: updateCurrentString)
 			return true
 		}
 		
 		if content.hasPrefix("\t") {
 			
+			let updateCurrentString = isInString || isInLineComment || isInBlockComment
+
 			consumeCharactersAtStart(1, updateCurrentString: updateCurrentString)
 			return true
 		}
@@ -491,8 +519,8 @@ public class Lexer {
 
 	func addToken(type: TokenType) {
 
-		let start = charIndex - currentStringLength
-		let end = charIndex
+		let start = tokenCharIndex - currentStringLength
+		let end = tokenCharIndex
 		
 		let range: Range<Int> = start..<end
 
@@ -502,7 +530,7 @@ public class Lexer {
 
 		currentString = ""
 		currentStringLength = 0
-
+		tokenCharIndex = charIndex
 	}
 
 	func consumeCharactersAtStart(_ n: Int, updateCurrentString: Bool = true) {
@@ -511,11 +539,12 @@ public class Lexer {
 
 		if updateCurrentString {
 			currentString += content[..<index]
+			currentStringLength += n
+			tokenCharIndex += n
 		}
-		
-		currentStringLength += n
 
 		charIndex += n
+
 		content.removeCharacters(to: index)
 
 		if updateCurrentString {
