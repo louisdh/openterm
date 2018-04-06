@@ -42,6 +42,7 @@
 		3CE5769E202A7EC500760E43 /* Parser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CE5769D202A7EC500760E43 /* Parser.swift */; };
 		3CE576A0202A874C00760E43 /* OutputSanitizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CE5769F202A874C00760E43 /* OutputSanitizer.swift */; };
 		AEF20A4A223775F9F5101BF5 /* Pods_OpenTerm.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 064CE91D25CE0DA967737711 /* Pods_OpenTerm.framework */; };
+		BE1643D22077E9D4002939B7 /* PridelandDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE1643D12077E9D4002939B7 /* PridelandDocument.swift */; };
 		BE165408201909040067EC92 /* xCallBackUrl.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE165407201909030067EC92 /* xCallBackUrl.swift */; };
 		BE189036206FF36500EE6739 /* Logo.txt in Resources */ = {isa = PBXBuildFile; fileRef = BE189035206FF36500EE6739 /* Logo.txt */; };
 		BE18903B20700EFA00EE6739 /* Author.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE18903A20700EFA00EE6739 /* Author.swift */; };
@@ -153,6 +154,7 @@
 		3CE5764720226A1500760E43 /* ANSITextState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ANSITextState.swift; sourceTree = "<group>"; };
 		3CE5769D202A7EC500760E43 /* Parser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Parser.swift; sourceTree = "<group>"; };
 		3CE5769F202A874C00760E43 /* OutputSanitizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutputSanitizer.swift; sourceTree = "<group>"; };
+		BE1643D12077E9D4002939B7 /* PridelandDocument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PridelandDocument.swift; sourceTree = "<group>"; };
 		BE165407201909030067EC92 /* xCallBackUrl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = xCallBackUrl.swift; sourceTree = "<group>"; };
 		BE189035206FF36500EE6739 /* Logo.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = Logo.txt; sourceTree = "<group>"; };
 		BE18903A20700EFA00EE6739 /* Author.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Author.swift; sourceTree = "<group>"; };
@@ -310,6 +312,7 @@
 				BEB7752320716B5200201EBB /* PridelandCollectionViewCell.swift */,
 				BEB7752420716B5200201EBB /* PridelandCollectionViewCell.xib */,
 				BEB775652074095800201EBB /* ScriptMetadataViewController.swift */,
+				BE1643D12077E9D4002939B7 /* PridelandDocument.swift */,
 			);
 			path = Scripting;
 			sourceTree = "<group>";
@@ -721,6 +724,7 @@
 				3C406E1D2020988B005F97C4 /* AutoCompleteManager+InputAssistant.swift in Sources */,
 				1C81BE5720225C3800D07301 /* Clipboard.swift in Sources */,
 				BEB7752520716B5200201EBB /* PridelandCollectionViewCell.swift in Sources */,
+				BE1643D22077E9D4002939B7 /* PridelandDocument.swift in Sources */,
 				BE3808561FD9BFB600393EB8 /* AppDelegate.swift in Sources */,
 				3C406E1A20207CE7005F97C4 /* CommandExecutor.swift in Sources */,
 				3C905FCA20265BC60084BA63 /* StoreReviewPrompter.swift in Sources */,
