@@ -48,8 +48,15 @@ extension PridelandOverview: Equatable {
 
 class ScriptsViewController: UIViewController {
 
-	enum CellType {
+	enum CellType: Equatable {
 		case prideland(PridelandOverview)
+		
+		static func ==(lhs: CellType, rhs: CellType) -> Bool {
+			switch (lhs, rhs) {
+			case let (.prideland(overview1), .prideland(overview2)):
+				return overview1 == overview2
+			}
+		}
 	}
 	
 	@IBOutlet weak var collectionView: UICollectionView!
@@ -156,7 +163,7 @@ class ScriptsViewController: UIViewController {
 			return
 		}
 		
-		self.collectionView.update(dataSourceUpdateClosure: {
+		collectionView.update(dataSourceUpdateClosure: {
 			
 			cellItems = newItems
 			
@@ -169,10 +176,7 @@ class ScriptsViewController: UIViewController {
 			
 		}, sameValueClosure: { (p1, p2) -> Bool in
 			
-			switch (p1, p2) {
-			case let (.prideland(overview1), .prideland(overview2)):
-				return overview1 == overview2
-			}
+			return p1 == p2
 			
 		})
 		
