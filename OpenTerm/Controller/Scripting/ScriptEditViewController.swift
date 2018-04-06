@@ -166,8 +166,17 @@ extension ScriptEditViewController: CubSyntaxAutoCompleteManagerDataSource {
 		
 		let autoCompletor = AutoCompleter()
 		
+		guard let text = textView.contentTextView.text else {
+			return []
+		}
+		
 		let selectedRange = textView.contentTextView.selectedRange
-		let cursor = selectedRange.location + selectedRange.length - 1
+		
+		guard let swiftRange = Range(selectedRange, in: text) else {
+			return []
+		}
+		
+		let cursor = text.distance(from: text.startIndex, to: swiftRange.lowerBound)
 		
 		let suggestions = autoCompletor.completionSuggestions(for: textView.text, cursor: cursor)
 		
