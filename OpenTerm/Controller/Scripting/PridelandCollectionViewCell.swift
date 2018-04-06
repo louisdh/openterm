@@ -41,15 +41,29 @@ class PridelandCollectionViewCell: UICollectionViewCell {
 		titleLbl.text = prideland.metadata.name
 		descriptionLbl.text = prideland.metadata.description
 		
-		updateGradient(hue: prideland.metadata.hueTint)
+		let hue = CGFloat(prideland.metadata.hueTint)
+		
+		updateGradient(hue: hue)
 		
 	}
 	
-	private func updateGradient(hue: Double) {
+	private func updateGradient(hue: CGFloat) {
 		
-		let gradientColor1 = UIColor(hue: CGFloat(hue), saturation: 1.0, brightness: 1.0, alpha: 1.0)
-		let gradientColor2 = UIColor(hue: CGFloat(hue), saturation: 1.0, brightness: 0.6, alpha: 1.0)
+		let gradientColor1: UIColor
+		let gradientColor2: UIColor
+		
+		if hue > 0.1 && hue < 0.3 {
+			
+			gradientColor1 = UIColor(hue: hue, saturation: 1.0, brightness: 1.0, alpha: 1.0)
+			gradientColor2 = UIColor(hue: hue - 0.1, saturation: 1.0, brightness: 0.5, alpha: 1.0)
 
+		} else {
+			
+			gradientColor1 = UIColor(hue: hue, saturation: 1.0, brightness: 1.0, alpha: 1.0)
+			gradientColor2 = UIColor(hue: hue - 0.1, saturation: 1.0, brightness: 1.0, alpha: 1.0)
+
+		}
+		
 		gradientLayer.colors = [gradientColor1.cgColor, gradientColor2.cgColor]
 		
 	}
