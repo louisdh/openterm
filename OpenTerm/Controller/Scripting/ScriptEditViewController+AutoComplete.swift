@@ -21,7 +21,7 @@ extension CubSyntaxAutoCompleteManager: InputAssistantViewDataSource {
 	}
 	
 	func inputAssistantView(_ inputAssistantView: InputAssistantView, nameForSuggestionAtIndex index: Int) -> String {
-		return self.completions[index].name
+		return self.completions[index].data.title
 	}
 }
 
