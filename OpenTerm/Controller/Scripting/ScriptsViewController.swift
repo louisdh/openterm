@@ -231,12 +231,13 @@ extension ScriptsViewController: UICollectionViewDelegateFlowLayout {
 			return
 		}
 		
-//		guard let script = try? Script.named(prideland.metadata.name) else {
-//			return
-//		}
-//
-//		let vc = ScriptEditViewController(script: script)
-//		self.navigationController?.pushViewController(vc, animated: true)
+		switch cellItem {
+		case .prideland(let pridelandOverview):
+
+			let vc = ScriptEditViewController(url: pridelandOverview.url)
+			self.navigationController?.pushViewController(vc, animated: true)
+
+		}
 
 	}
 	

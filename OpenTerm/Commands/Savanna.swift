@@ -38,21 +38,9 @@ public func savanna(argc: Int32, argv: UnsafeMutablePointer<UnsafeMutablePointer
 	
 	let url = URL(fileURLWithPath: path)
 	
-	guard let data = FileManager.default.contents(atPath: url.path) else {
-		fputs("Missing file \"\(path)\"\n", thread_stderr)
-		return 1
-	}
-	
-	guard let source = String(data: data, encoding: .utf8) else {
-		fputs("Missing file \"\(path)\"\n", thread_stderr)
-		return 1
-	}
-	
-	let script = Script(url: url, name: String(cString: fileName), value: source)
-	
 	DispatchQueue.main.async {
 		
-		let scriptVC = ScriptEditViewController(script: script)
+		let scriptVC = ScriptEditViewController(url: url)
 		
 		let panelVC = PanelViewController(with: scriptVC, in: activeVC)
 		activeVC.cubPanels.append(panelVC)

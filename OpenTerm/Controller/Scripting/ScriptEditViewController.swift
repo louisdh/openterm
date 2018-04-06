@@ -14,18 +14,23 @@ import PanelKit
 
 class ScriptEditViewController: UIViewController {
 
-	var script: Script
+	var url: URL
+	let document: PridelandDocument
 	let textView: SyntaxTextView
 	let autoCompleteManager: CubSyntaxAutoCompleteManager
 	let inputAssistantView: InputAssistantView
 
-	init(script: Script) {
-		self.script = script
+	init(url: URL) {
+		self.url = url
 		self.textView = SyntaxTextView()
 		self.autoCompleteManager = CubSyntaxAutoCompleteManager()
 		self.inputAssistantView = InputAssistantView()
+		self.document = PridelandDocument(fileURL: url)
+
 		super.init(nibName: nil, bundle: nil)
-		self.title = script.name
+		
+		self.title = url.lastPathComponent
+
 	}
 
 	required init?(coder aDecoder: NSCoder) {
@@ -67,12 +72,25 @@ class ScriptEditViewController: UIViewController {
 		let infoBarButtonItem = UIBarButtonItem(customView: infoButton)
 		navigationItem.rightBarButtonItem = infoBarButtonItem
 		
+		document.open { [weak self] (success) in
+			
+			if !success {
+				
+				self?.showErrorAlert(dismissCallback: {
+					self?.dismiss(animated: true, completion: nil)
+				})
+				
+			}
+			
+			self?.textView.text = self?.document.text ?? ""
+
+		}
+		
 	}
 
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 		
-		textView.text = script.value
 	}
 	
 	override func viewDidAppear(_ animated: Bool) {
@@ -96,7 +114,7 @@ class ScriptEditViewController: UIViewController {
 
 	private func save() {
 		// Save to disk
-		script.value = textView.text
+//		script.value = textView.text
 	}
 
 }
