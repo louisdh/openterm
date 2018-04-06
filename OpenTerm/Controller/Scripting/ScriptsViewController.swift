@@ -9,15 +9,56 @@
 import UIKit
 import PanelKit
 
+struct PridelandOverview {
+	
+	let url: URL
+	let metadata: PridelandMetadata
+
+	init(url: URL, fileWrapper: FileWrapper) throws {
+
+		guard let wrappers = fileWrapper.fileWrappers else {
+			throw PridelandDocumentError.invalidDocument
+		}
+	
+		guard let metadataData = wrappers["metadata.plist"]?.regularFileContents else {
+			throw PridelandDocumentError.invalidDocument
+		}
+		
+		let decoder = PropertyListDecoder()
+		
+		guard let metadata = try? decoder.decode(PridelandMetadata.self, from: metadataData) else {
+			throw PridelandDocumentError.invalidDocument
+		}
+		
+		self.metadata = metadata
+		self.url = url
+		
+	}
+	
+}
+
+extension PridelandOverview: Equatable {
+	
+	static func ==(lhs: PridelandOverview, rhs: PridelandOverview) -> Bool {
+		return lhs.url == rhs.url &&
+			lhs.metadata == rhs.metadata
+	}
+	
+}
+
 class ScriptsViewController: UIViewController {
 
+	enum CellType {
+		case prideland(PridelandOverview)
+	}
+	
 	@IBOutlet weak var collectionView: UICollectionView!
 	
-	var scriptNames: [String] = [] {
-		didSet {
-			collectionView.reloadData()
-		}
-	}
+	private let scriptsDir = DocumentManager.shared.activeDocumentsFolderURL.appendingPathComponent(".scripts")
+
+	var cellItems: [CellType]?
+	
+	var directoryObserver: DirectoryObserver?
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -32,6 +73,12 @@ class ScriptsViewController: UIViewController {
 		self.view.tintColor = .defaultMainTintColor
 		self.navigationController?.navigationBar.barStyle = .blackTranslucent
 
+		directoryObserver = DirectoryObserver(pathToWatch: scriptsDir) { [weak self] in
+			self?.reload()
+		}
+		
+		try? directoryObserver?.startObserving()
+		
 	}
 
 	override func viewWillAppear(_ animated: Bool) {
@@ -58,7 +105,79 @@ class ScriptsViewController: UIViewController {
 	}
 
 	private func reload() {
-		self.scriptNames = Script.allNames
+		
+		let fileManager = DocumentManager.shared.fileManager
+		
+		
+		do {
+
+			let documentsURLs = try fileManager.contentsOfDirectory(at: scriptsDir, includingPropertiesForKeys: [], options: .skipsPackageDescendants)
+			
+			var pridelandOverviews = [PridelandOverview]()
+			
+			for documentURL in documentsURLs {
+
+				let pathExtension = documentURL.pathExtension.lowercased()
+				
+				if pathExtension == "icloud" {
+					try fileManager.startDownloadingUbiquitousItem(at: documentURL)
+					continue
+				}
+				
+				guard pathExtension == "prideland" else {
+					continue
+				}
+				
+				let fileWrapper = try FileWrapper(url: documentURL, options: [])
+				
+				let overview = try PridelandOverview(url: documentURL, fileWrapper: fileWrapper)
+				
+				pridelandOverviews.append(overview)
+				
+			}
+			
+			updatePridelandItems(pridelandOverviews)
+			
+		} catch {
+			
+			self.showErrorAlert(error)
+			
+		}
+			
+	}
+	
+	func updatePridelandItems(_ overviews: [PridelandOverview]) {
+		
+		let newItems: [CellType] = overviews.map({ .prideland($0) })
+		
+		guard let prevItems = cellItems else {
+			cellItems = newItems
+			collectionView.reloadData()
+			return
+		}
+		
+		collectionView.performBatchUpdates({
+			
+			cellItems = newItems
+
+			self.collectionView.update(section: 0, from: prevItems, to: newItems, sameIdentityClosure: { (p1, p2) -> Bool in
+				
+				switch (p1, p2) {
+				case let (.prideland(overview1), .prideland(overview2)):
+					return overview1.url == overview2.url
+				}
+				
+			}, sameValueClosure: { (p1, p2) -> Bool in
+				
+				switch (p1, p2) {
+				case let (.prideland(overview1), .prideland(overview2)):
+					return overview1 == overview2
+				}
+				
+			})
+			
+		}, completion: nil)
+	
 	}
 	
 }
@@ -66,16 +185,21 @@ class ScriptsViewController: UIViewController {
 extension ScriptsViewController: UICollectionViewDataSource {
 	
 	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-		return scriptNames.count
+		return cellItems?.count ?? 0
 	}
 	
 	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 		
 		let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PridelandCollectionViewCell", for: indexPath) as! PridelandCollectionViewCell
 		
-		let prideland = scriptNames[indexPath.row]
+		guard let cellItem = cellItems?[indexPath.row] else {
+			return cell
+		}
 		
-		cell.show(prideland)
+		switch cellItem {
+		case .prideland(let pridelandOverview):
+			cell.show(pridelandOverview)
+		}
 		
 		return cell
 	}
@@ -101,14 +225,16 @@ extension ScriptsViewController: UICollectionViewDelegateFlowLayout {
 	
 	func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
 		
-		let prideland = scriptNames[indexPath.row]
-
-		guard let script = try? Script.named(prideland) else {
+		guard let cellItem = cellItems?[indexPath.row] else {
 			return
 		}
 		
-		let vc = ScriptEditViewController(script: script)
-		self.navigationController?.pushViewController(vc, animated: true)
+//		guard let script = try? Script.named(prideland.metadata.name) else {
+//			return
+//		}
+//
+//		let vc = ScriptEditViewController(script: script)
+//		self.navigationController?.pushViewController(vc, animated: true)
 
 	}
 	

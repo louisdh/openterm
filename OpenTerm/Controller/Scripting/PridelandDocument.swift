@@ -71,3 +71,13 @@ struct PridelandMetadata: Codable {
 	let hueTint: Double
 	
 }
+
+extension PridelandMetadata: Equatable {
+	
+	static func ==(lhs: PridelandMetadata, rhs: PridelandMetadata) -> Bool {
+		return lhs.name == rhs.name &&
+			lhs.description == rhs.description &&
+			lhs.hueTint == rhs.hueTint
+	}
+	
+}

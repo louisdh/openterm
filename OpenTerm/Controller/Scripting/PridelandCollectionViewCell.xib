@@ -55,6 +55,7 @@
             <viewLayoutGuide key="safeArea" id="ZTg-uK-7eu"/>
             <size key="customSize" width="281" height="139"/>
             <connections>
+                <outlet property="descriptionLbl" destination="XaG-UW-eSE" id="jPa-Ar-aKg"/>
                 <outlet property="titleLbl" destination="dmw-TQ-GTC" id="4Wh-pQ-KLp"/>
             </connections>
             <point key="canvasLocation" x="-37.5" y="22.5"/>

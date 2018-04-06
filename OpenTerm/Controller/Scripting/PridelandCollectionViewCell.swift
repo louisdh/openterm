@@ -13,6 +13,7 @@ class PridelandCollectionViewCell: UICollectionViewCell {
 	let gradientLayer = CAGradientLayer()
 
 	@IBOutlet weak var titleLbl: UILabel!
+	@IBOutlet weak var descriptionLbl: UILabel!
 	
 	override func awakeFromNib() {
         super.awakeFromNib()
@@ -35,24 +36,20 @@ class PridelandCollectionViewCell: UICollectionViewCell {
 
 	}
 	
-	func show(_ prideland: String) {
+	func show(_ prideland: PridelandOverview) {
 		
-		titleLbl.text = prideland
+		titleLbl.text = prideland.metadata.name
+		descriptionLbl.text = prideland.metadata.description
 		
-		updateGradient()
+		updateGradient(hue: prideland.metadata.hueTint)
 		
 	}
 	
-	private func updateGradient() {
+	private func updateGradient(hue: Double) {
 		
-		guard let gradientColor1 = UIColor(hexString: "#ff6c3f") else {
-			return
-		}
-		
-		guard let gradientColor2 = UIColor(hexString: "#ff2400") else {
-			return
-		}
-		
+		let gradientColor1 = UIColor(hue: CGFloat(hue), saturation: 1.0, brightness: 1.0, alpha: 1.0)
+		let gradientColor2 = UIColor(hue: CGFloat(hue), saturation: 1.0, brightness: 0.6, alpha: 1.0)
+
 		gradientLayer.colors = [gradientColor1.cgColor, gradientColor2.cgColor]
 		
 	}
