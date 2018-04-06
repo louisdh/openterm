@@ -43,6 +43,8 @@ class ScriptEditViewController: UIViewController {
 
 	private var textViewSelectedRangeObserver: NSKeyValueObservation?
 
+	private let keyboardObserver = KeyboardObserver()
+	
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
@@ -85,6 +87,36 @@ class ScriptEditViewController: UIViewController {
 			self?.textView.text = self?.document.text ?? ""
 
 		}
+		
+		keyboardObserver.observe { [weak self] (state) in
+			self?.adjustInsets(for: state)
+		}
+		
+	}
+	
+	private func adjustInsets(for state: KeyboardEvent) {
+		
+		let rect = self.textView.convert(state.keyboardFrameEnd, from: nil).intersection(self.textView.bounds)
+		
+		UIView.animate(withDuration: state.duration, delay: 0.0, options: state.options, animations: {
+			
+			if rect.height == 0 {
+				
+				// Keyboard is not visible.
+				
+				self.textView.contentInset.bottom = 0
+				
+			} else {
+				
+				// Keyboard is visible, keyboard height includes safeAreaInsets.
+				
+				let bottomInset = rect.height - self.view.safeAreaInsets.bottom
+				
+				self.textView.contentInset.bottom = bottomInset
+				
+			}
+			
+		}, completion: nil)
 		
 	}
 
