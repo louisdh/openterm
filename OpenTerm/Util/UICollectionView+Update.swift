@@ -90,22 +90,46 @@ extension UICollectionView: CollectionView {
 	///   - section: The section to update.
 	///   - oldElements: The elements in the collection view before the update.
 	///   - newElements: The elements in the collection view after the update.
-	func update<T>(section: Int, from oldElements: [T], to newElements: [T], sameIdentityClosure: SameIdentityClosure<T>, sameValueClosure: SameValueClosure<T>) {
+	func update<T>(dataSourceUpdateClosure: () -> Void, section: Int, from oldElements: [T], to newElements: [T], sameIdentityClosure: SameIdentityClosure<T>, sameValueClosure: SameValueClosure<T>) {
 		
-		update(section: section, from: oldElements, to: newElements, onMoveItem: { (atIndexPath, toIndexPath) in
+		self.performBatchUpdates({
+
+			dataSourceUpdateClosure()
 			
-			self.moveItem(at: atIndexPath, to: toIndexPath)
+			update(section: section, from: oldElements, to: newElements, onMoveItem: { (atIndexPath, toIndexPath) in
+				
+				self.moveItem(at: atIndexPath, to: toIndexPath)
+				
+			}, onDeleteItem: { (indexPath) in
+				
+				self.deleteItems(at: [indexPath])
+				
+			}, onInsertItem: { (indexPath) in
+				
+				self.insertItems(at: [indexPath])
+				
+			}, sameIdentityClosure: sameIdentityClosure, sameValueClosure: sameValueClosure)
 			
-		}, onDeleteItem: { (indexPath) in
-			
-			self.deleteItems(at: [indexPath])
-			
-		}, onInsertItem: { (indexPath) in
-			
-			self.insertItems(at: [indexPath])
-			
-		}, sameIdentityClosure: sameIdentityClosure, sameValueClosure: sameValueClosure)
+		})
 		
+		self.performBatchUpdates({
+
+			for (i, element) in newElements.enumerated() {
+				
+				let indexPath = IndexPath(item: i, section: section)
+				
+				if let oldI = oldElements.index(where: { sameIdentityClosure($0, element) }) {
+					
+					if !sameValueClosure(oldElements[oldI], element) {
+						self.reloadItems(at: [indexPath])
+					}
+					
+				}
+				
+			}
+			
+		})
+			
 	}
 	
 }

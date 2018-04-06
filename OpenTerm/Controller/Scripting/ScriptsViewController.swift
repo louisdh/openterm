@@ -156,28 +156,26 @@ class ScriptsViewController: UIViewController {
 			return
 		}
 		
-		collectionView.performBatchUpdates({
+		self.collectionView.update(dataSourceUpdateClosure: {
 			
 			cellItems = newItems
-
-			self.collectionView.update(section: 0, from: prevItems, to: newItems, sameIdentityClosure: { (p1, p2) -> Bool in
-				
-				switch (p1, p2) {
-				case let (.prideland(overview1), .prideland(overview2)):
-					return overview1.url == overview2.url
-				}
-				
-			}, sameValueClosure: { (p1, p2) -> Bool in
-				
-				switch (p1, p2) {
-				case let (.prideland(overview1), .prideland(overview2)):
-					return overview1 == overview2
-				}
-				
-			})
 			
-		}, completion: nil)
-	
+		}, section: 0, from: prevItems, to: newItems, sameIdentityClosure: { (p1, p2) -> Bool in
+			
+			switch (p1, p2) {
+			case let (.prideland(overview1), .prideland(overview2)):
+				return overview1.url == overview2.url
+			}
+			
+		}, sameValueClosure: { (p1, p2) -> Bool in
+			
+			switch (p1, p2) {
+			case let (.prideland(overview1), .prideland(overview2)):
+				return overview1 == overview2
+			}
+			
+		})
+		
 	}
 	
 }
