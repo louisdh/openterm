@@ -98,4 +98,21 @@ class InnerTextView: TextView {
 		}
 	}
 	
+	#if os(iOS)
+	
+	override func caretRect(for position: UITextPosition) -> CGRect {
+		
+		var superRect = super.caretRect(for: position)
+		
+		let font = self.theme.font
+		
+		// "descender" is expressed as a negative value,
+		// so to add its height you must subtract its value
+		superRect.size.height = font.pointSize - font.descender
+		
+		return superRect
+	}
+	
+	#endif
+	
 }

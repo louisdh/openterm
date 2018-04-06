@@ -46,8 +46,60 @@ public struct ParseError: DisplayableError, CustomStringConvertible {
 
 extension String {
 
-	func lineNumber(of index: Int) -> Int {
+	func getLine(_ index: Int) -> String {
+		
+		if self.isEmpty && index <= 1 {
+			return ""
+		}
+		
+		let newLineIndices = [0] + self.indices(of: "\n").map { (index) -> Int in
+			return self.distance(from: self.startIndex, to: index)
+		}
+		
+		if self.hasSuffix("\n") && index == newLineIndices.count + 1 {
+			return ""
+		}
 
+		let startI = newLineIndices[index - 1]
+
+		let startIndex = self.index(self.startIndex, offsetBy: startI)
+		
+		if let endI = newLineIndices[safe: index] {
+			
+			let endIndex = self.index(self.startIndex, offsetBy: endI)
+
+			#if os(Linux)
+				var line = String(self[startIndex..<endIndex]) ?? ""
+			#else
+				var line = String(self[startIndex..<endIndex])
+			#endif
+			
+			if line.hasPrefix("\n") {
+				line.removeCharactersAtStart(1)
+			}
+			
+			return line
+
+		} else {
+			
+			#if os(Linux)
+				var line = String(self[startIndex...]) ?? ""
+			#else
+				var line = String(self[startIndex...])
+			#endif
+			
+			if line.hasPrefix("\n") {
+				line.removeCharactersAtStart(1)
+			}
+			
+			return line
+		}
+	}
+	
+	func lineNumber(of index: Int) -> Int {
+		
+		assert(index <= self.count, "Invalid index")
+		
 		let i = self.distance(from: self.startIndex, to: self.index(self.startIndex, offsetBy: index))
 
 		let newLineIndices = self.indices(of: "\n").map { (index) -> Int in

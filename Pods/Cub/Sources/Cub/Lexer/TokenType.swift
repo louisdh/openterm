@@ -17,6 +17,7 @@ public enum TokenType {
 	case identifier(String)
 	case number(NumberType)
 	case string(String)
+	case editorPlaceholder(String)
 
 	case parensOpen
 	case parensClose

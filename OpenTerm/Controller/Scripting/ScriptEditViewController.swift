@@ -146,7 +146,7 @@ extension ScriptEditViewController: CubSyntaxAutoCompleteManagerDataSource {
 
 	func completions() -> [CubSyntaxAutoCompleteManager.Completion] {
 		
-		let autoCompletor = AutoCompletor()
+		let autoCompletor = AutoCompleter()
 		
 		let selectedRange = textView.contentTextView.selectedRange
 		let cursor = selectedRange.location + selectedRange.length - 1

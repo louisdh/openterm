@@ -26,3 +26,11 @@ public struct Token: CustomStringConvertible {
 	}
 
 }
+
+extension Token: Equatable {
+	
+	public static func == (lhs: Token, rhs: Token) -> Bool {
+		return lhs.type == rhs.type && lhs.range == rhs.range
+	}
+	
+}

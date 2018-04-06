@@ -27,6 +27,10 @@ extension String {
 	
 	func nsRange(fromRange range: Range<Int>) -> NSRange? {
 		
+		guard range.upperBound <= self.count else {
+			return nil
+		}
+		
 		let start = self.index(startIndex, offsetBy: range.lowerBound)
 		let end = self.index(startIndex, offsetBy: range.upperBound)
 

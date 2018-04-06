@@ -45,6 +45,9 @@ extension Cub.TokenType: SavannaKit.TokenType {
 		case .identifier:
 			return .identifier
 
+		case .editorPlaceholder:
+			return .editorPlaceholder
+			
 		}
 
 	}
