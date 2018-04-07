@@ -29,8 +29,6 @@ class ScriptEditViewController: UIViewController {
 
 		super.init(nibName: nil, bundle: nil)
 		
-		self.title = url.lastPathComponent
-
 	}
 
 	required init?(coder aDecoder: NSCoder) {
@@ -134,7 +132,7 @@ class ScriptEditViewController: UIViewController {
 	@objc
 	func showScriptMetadata() {
 		
-		let scriptMetadataVC = UIStoryboard.main.scriptMetadataViewController(state: .update)
+		let scriptMetadataVC = UIStoryboard.main.scriptMetadataViewController(state: .update(document))
 		
 		let navController = UINavigationController(rootViewController: scriptMetadataVC)
 		navController.navigationBar.barStyle = .blackTranslucent

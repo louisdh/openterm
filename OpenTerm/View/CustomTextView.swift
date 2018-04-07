@@ -24,6 +24,12 @@ class CustomTextView: UITextView {
 		}
 	}
 	
+	override var text: String! {
+		didSet {
+			textDidChange()
+		}
+	}
+	
 	@objc
 	private func textDidChange() {
 		

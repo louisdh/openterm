@@ -115,7 +115,6 @@ class ScriptsViewController: UIViewController {
 		
 		let fileManager = DocumentManager.shared.fileManager
 		
-		
 		do {
 
 			let documentsURLs = try fileManager.contentsOfDirectory(at: scriptsDir, includingPropertiesForKeys: [], options: .skipsPackageDescendants)
@@ -234,8 +233,9 @@ extension ScriptsViewController: UICollectionViewDelegateFlowLayout {
 		switch cellItem {
 		case .prideland(let pridelandOverview):
 
-			let vc = ScriptEditViewController(url: pridelandOverview.url)
-			self.navigationController?.pushViewController(vc, animated: true)
+			let scriptVC = ScriptEditViewController(url: pridelandOverview.url)
+			scriptVC.title = pridelandOverview.metadata.name
+			self.navigationController?.pushViewController(scriptVC, animated: true)
 
 		}
 
