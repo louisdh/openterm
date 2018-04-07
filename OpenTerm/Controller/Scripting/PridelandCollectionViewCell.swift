@@ -50,21 +50,56 @@ class PridelandCollectionViewCell: UICollectionViewCell {
 	private func updateGradient(hue: CGFloat) {
 		
 		let gradientColor1: UIColor
-		let gradientColor2: UIColor
+		var gradientColor2: UIColor
 		
-		if hue > 0.1 && hue < 0.3 {
-			
-			gradientColor1 = UIColor(hue: hue, saturation: 1.0, brightness: 1.0, alpha: 1.0)
-			gradientColor2 = UIColor(hue: hue - 0.1, saturation: 1.0, brightness: 0.5, alpha: 1.0)
+		let hue2: CGFloat
+		
+		if hue < 0.1 {
+
+			hue2 = 1.0 - (0.1 - hue)
 
 		} else {
 			
+			hue2 = hue - 0.1
+			
+		}
+		
+		if hue > 0.1 && hue < 0.6 {
+
 			gradientColor1 = UIColor(hue: hue, saturation: 1.0, brightness: 1.0, alpha: 1.0)
-			gradientColor2 = UIColor(hue: hue - 0.1, saturation: 1.0, brightness: 1.0, alpha: 1.0)
+			gradientColor2 = UIColor(hue: hue2, saturation: 0.9, brightness: 0.5, alpha: 1.0)
+
+		} else {
+
+			gradientColor1 = UIColor(hue: hue, saturation: 1.0, brightness: 1.0, alpha: 1.0)
+			gradientColor2 = UIColor(hue: hue2, saturation: 1.0, brightness: 1.0, alpha: 1.0)
 
 		}
 		
-		gradientLayer.colors = [gradientColor1.cgColor, gradientColor2.cgColor]
+		var grayscale1: CGFloat = 0
+		var grayscale2: CGFloat = 0
+
+		gradientColor1.getWhite(&grayscale1, alpha: nil)
+		gradientColor2.getWhite(&grayscale2, alpha: nil)
+		
+		if abs(grayscale1 - grayscale2) < 0.1 {
+			
+			gradientColor2 = UIColor(hue: hue2, saturation: 0.8, brightness: 0.6, alpha: 1.0)
+			gradientColor2.getWhite(&grayscale2, alpha: nil)
+
+		}
+		
+		// Gradient should always be light -> dark
+		if grayscale1 < grayscale2 {
+			
+			gradientLayer.colors = [gradientColor2.cgColor, gradientColor1.cgColor]
+
+		} else {
+			
+			gradientLayer.colors = [gradientColor1.cgColor, gradientColor2.cgColor]
+
+		}
+
 		
 	}
 
