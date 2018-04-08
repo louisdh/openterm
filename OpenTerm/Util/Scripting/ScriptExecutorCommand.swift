@@ -49,16 +49,22 @@ class ScriptExecutorCommand: CommandExecutorCommand {
 			
 		} catch {
 			
+			let errorMessage: String
+			
 			if let error = error as? DisplayableError {
 				
-				terminalView.writeOutput("Error occurred: \(error.description(inSource: source))")
-				
+				errorMessage = "Error occurred: \(error.description(inSource: source))"
+
 			} else {
 				
-				terminalView.writeOutput("Unknown error occurred")
+				errorMessage = "Unknown error occurred"
 				
 			}
 			
+			terminalView.writeOutput(errorMessage)
+			// FIXME: use fputs?
+//			fputs(errorMessage, stderr)
+
 			returnCode = 1
 		}
 
