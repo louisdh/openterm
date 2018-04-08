@@ -14,15 +14,19 @@ public weak var shareFileViewController: UIViewController?
 public func shareFile(argc: Int32, argv: UnsafeMutablePointer<UnsafeMutablePointer<Int8>?>?) -> Int32 {
 	var itemsToShare = [Any]()
 
-	// share text from stdin when present
 	var bytes = [Int8]()
-	while stdin != thread_stdin {
-		var byte: Int8 = 0
-		let count = read(fileno(thread_stdin), &byte, 1)
-		guard count == 1 else {
-			break
+	
+	if Int(argc) == 1 {
+		
+		// share text from stdin when present
+		while stdin != thread_stdin {
+			var byte: Int8 = 0
+			let count = read(fileno(thread_stdin), &byte, 1)
+			guard count == 1 else {
+				break
+			}
+			bytes.append(byte)
 		}
-		bytes.append(byte)
 	}
 	
 	let data = Data(bytes: bytes, count: bytes.count)
