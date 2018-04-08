@@ -53,18 +53,21 @@ class ScriptExecutorCommand: CommandExecutorCommand {
 			
 			if let error = error as? DisplayableError {
 				
-				errorMessage = "Error occurred: \(error.description(inSource: source))"
+				// TODO: make error red in output?
+//				errorMessage = "\n\u{1B}[1m\u{1B}[31mlab\u{1B}[39;49m\u{1B}[0m"
+				
+				errorMessage = "\nError occurred: \(error.description(inSource: source))"
 
 			} else {
 				
-				errorMessage = "Unknown error occurred"
+				errorMessage = "\nUnknown error occurred"
 				
 			}
 			
-			terminalView.writeOutput(errorMessage)
-			// FIXME: use fputs?
-//			fputs(errorMessage, stderr)
-
+			if let data = errorMessage.data(using: .utf8) {
+				executor.delegate?.commandExecutor(executor, receivedStderr: data)
+			}
+			
 			returnCode = 1
 		}
 
