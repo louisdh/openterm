@@ -164,7 +164,10 @@ class CommandExecutor {
 
 		// Separate in to command and arguments
 		let components = command.components(separatedBy: .whitespaces)
-		guard components.count > 0 else { return EmptyExecutorCommand() }
+		guard components.count > 0 else {
+			return EmptyExecutorCommand()
+		}
+		
 		let program = components[0]
 		let args = Array(components[1..<components.endIndex])
 
