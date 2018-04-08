@@ -14,6 +14,8 @@ protocol CommandExecutorDelegate: class {
 	func commandExecutor(_ commandExecutor: CommandExecutor, receivedStderr stderr: Data)
 	func commandExecutor(_ commandExecutor: CommandExecutor, didChangeWorkingDirectory to: URL)
 	func commandExecutor(_ commandExecutor: CommandExecutor, stateDidChange newState: CommandExecutor.State)
+	func commandExecutor(_ commandExecutor: CommandExecutor, waitForInput callback: @escaping (String) -> Void)
+	func commandExecutor(_ commandExecutor: CommandExecutor, executeSubCommand subCommand: String, callback: @escaping () -> Void)
 }
 
 // Exit status from an ios_system command

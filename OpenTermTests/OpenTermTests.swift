@@ -192,6 +192,14 @@ class CallbackCommandExecutor: CommandExecutorDelegate, ParserDelegate {
 		
 	}
 	
+	func commandExecutor(_ commandExecutor: CommandExecutor, waitForInput callback: @escaping (String) -> Void) {
+		
+	}
+	
+	func commandExecutor(_ commandExecutor: CommandExecutor, executeSubCommand subCommand: String, callback: @escaping () -> Void) {
+		
+	}
+	
 	func parser(_ parser: Parser, didReceiveString string: NSAttributedString) {
 		
 		terminalView.performOnMain {

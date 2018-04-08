@@ -11,7 +11,7 @@ import Cub
 
 extension Runner {
 	
-	static func runner(for terminalView: TerminalView) -> Runner {
+	static func runner(executor: CommandExecutor, executorDelegate: CommandExecutorDelegate) -> Runner {
 		
 		let runner = Runner(logDebug: false, logTime: false)
 		
@@ -22,10 +22,9 @@ extension Runner {
 				var input = arg.description(with: runner.compiler)
 				input = input.replacingOccurrences(of: "\\n", with: "\n")
 				
-				terminalView.performOnMain {
-					terminalView.appendText(input)
+				if let data = input.data(using: .utf8) {
+					executorDelegate.commandExecutor(executor, receivedStdout: data)
 				}
-				
 			}
 			
 			Thread.sleep(forTimeInterval: 0.02)
@@ -35,27 +34,25 @@ extension Runner {
 		
 		runner.registerExternalFunction(name: "readNumber", argumentNames: [], returns: true) { (arguments, callback) in
 			
-			terminalView.didEnterInput = { input in
+			executorDelegate.commandExecutor(executor, waitForInput: { (input) in
+				
 				if let i = NumberType(input) {
 					_ = callback(.number(i))
 				} else {
 					_ = callback(.number(0))
 				}
-			}
-			
-			terminalView.waitForInput()
-			
+				
+			})
+
 			return
 		}
 		
 		runner.registerExternalFunction(name: "readLine", argumentNames: [], returns: true) { (arguments, callback) in
 			
-			terminalView.didEnterInput = { input in
+			executorDelegate.commandExecutor(executor, waitForInput: { (input) in
 				_ = callback(.string(input))
-			}
-			
-			terminalView.waitForInput()
-			
+			})
+
 			return
 		}
 		
@@ -72,14 +69,14 @@ extension Runner {
 				_ = callback(.number(1))
 				return
 			}
-			
-			executorCommand = CubCommandExecutor(commandStr: commandStr, terminalView: terminalView, callback: {
+
+			executorDelegate.commandExecutor(executor, executeSubCommand: commandStr, callback: {
 				
 				DispatchQueue.main.async {
 					
 					_ = callback(.number(1))
 				}
-				
+
 			})
 			
 		}

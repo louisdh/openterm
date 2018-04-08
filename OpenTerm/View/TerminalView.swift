@@ -54,6 +54,7 @@ class TerminalView: UIView {
 	}
 
 	var didEnterInput: ((String) -> Void)?
+	var subCommandParserDidEndTransmissionCallback: (() -> Void)?
 
 	weak var delegate: TerminalViewDelegate?
 
@@ -316,6 +317,11 @@ extension TerminalView: ParserDelegate {
 
 	func parserDidEndTransmission(_ parser: Parser) {
 
+		if let callback = subCommandParserDidEndTransmissionCallback {
+			callback()
+			return
+		}
+		
 		DispatchQueue.main.async {
 			self.writePrompt()
 		}
@@ -347,6 +353,27 @@ extension TerminalView: CommandExecutorDelegate {
 			self.updateAutoComplete()
 		}
 	}
+	
+	func commandExecutor(_ commandExecutor: CommandExecutor, waitForInput callback: @escaping (String) -> Void) {
+	
+		didEnterInput = callback
+		currentCommandStartIndex = textView.text.endIndex
+		executor.state = .waitingForInput
+		
+	}
+	
+	func commandExecutor(_ commandExecutor: CommandExecutor, executeSubCommand subCommand: String, callback: @escaping () -> Void) {
+		
+		subCommandParserDidEndTransmissionCallback = { [weak self] in
+			
+			self?.subCommandParserDidEndTransmissionCallback = nil
+			callback()
+		}
+		
+		commandExecutor.dispatch(subCommand)
+		
+	}
+	
 }
 
 extension TerminalView: UITextDragDelegate {

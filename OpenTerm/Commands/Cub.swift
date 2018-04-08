@@ -11,8 +11,6 @@ import Cub
 import ios_system
 import TabView
 
-var executorCommand: CubCommandExecutor?
-
 public func cub(argc: Int32, argv: UnsafeMutablePointer<UnsafeMutablePointer<Int8>?>?) -> Int32 {
 
 	guard let tabViewContainer = UIApplication.shared.keyWindow?.rootViewController as? TabViewContainerViewController<TerminalTabViewController> else {
@@ -51,29 +49,29 @@ public func cub(argc: Int32, argv: UnsafeMutablePointer<UnsafeMutablePointer<Int
 		return 1
 	}
 
-	let runner = Runner.runner(for: terminalView)
-	
+	let runner = Runner.runner(executor: terminalView.executor, executorDelegate: terminalView)
+
 	do {
-		
+
 		try runner.run(source)
 
 	} catch {
-		
+
 		terminalView.stderrParser.delegate = terminalView
 		terminalView.stdoutParser.delegate = terminalView
-		
+
 		terminalView.executor.delegate = terminalView
-		
+
 		if let error = error as? DisplayableError {
-			
+
 			terminalView.writeOutput("Error occurred: \(error.description(inSource: source))")
-			
+
 		} else {
-			
+
 			terminalView.writeOutput("Unknown error occurred")
 
 		}
-		
+
 		return 1
 	}
 

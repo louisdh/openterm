@@ -26,18 +26,11 @@ class ScriptExecutorCommand: CommandExecutorCommand {
 
 	func run(forExecutor executor: CommandExecutor) throws -> ReturnCode {
 
-		guard let tabViewContainer = UIApplication.shared.keyWindow?.rootViewController as? TabViewContainerViewController<TerminalTabViewController> else {
+		guard let executorDelegate = executor.delegate else {
 			return 1
 		}
 		
-		guard let activeVC = tabViewContainer.primaryTabViewController.visibleViewController as? TerminalViewController else {
-			return 1
-		}
-		
-		let terminalView = activeVC.terminalView
-
-		
-		let runner = Runner.runner(for: terminalView)
+		let runner = Runner.runner(executor: executor, executorDelegate: executorDelegate)
 		
 		let source = script.value
 		
@@ -65,7 +58,7 @@ class ScriptExecutorCommand: CommandExecutorCommand {
 			}
 			
 			if let data = errorMessage.data(using: .utf8) {
-				executor.delegate?.commandExecutor(executor, receivedStderr: data)
+				executorDelegate.commandExecutor(executor, receivedStderr: data)
 			}
 			
 			returnCode = 1
