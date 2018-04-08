@@ -70,7 +70,7 @@ public class DirectoryObserver {
 		
 		if let source = source {
 			// Call directoryDidChange on event callback
-			source.setEventHandler() { [weak self] in
+			source.setEventHandler { [weak self] in
 				self?.directoryDidChange()
 			}
 			
