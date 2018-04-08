@@ -120,19 +120,21 @@ class ScriptEditViewController: UIViewController {
 
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
-		
+
+		textView.contentTextView.becomeFirstResponder()
+
 	}
 	
 	override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
 
-		textView.becomeFirstResponder()
 	}
 	
 	@objc
 	func showScriptMetadata() {
 		
 		let scriptMetadataVC = UIStoryboard.main.scriptMetadataViewController(state: .update(document))
+		scriptMetadataVC.delegate = self
 		
 		let navController = UINavigationController(rootViewController: scriptMetadataVC)
 		navController.navigationBar.barStyle = .blackTranslucent
@@ -147,6 +149,18 @@ class ScriptEditViewController: UIViewController {
 //		script.value = textView.text
 	}
 
+}
+
+extension ScriptEditViewController: ScriptMetadataViewControllerDelegate {
+	
+	func didUpdateScript(_ updatedDocument: PridelandDocument) {
+		self.title = updatedDocument.metadata?.name ?? ""
+	}
+	
+	func didCreateScript(_ document: PridelandDocument) {
+		
+	}
+	
 }
 
 extension ScriptEditViewController: PanelContentDelegate {

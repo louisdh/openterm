@@ -13,6 +13,13 @@ enum ScriptMetadataState {
 	case update(PridelandDocument)
 }
 
+protocol ScriptMetadataViewControllerDelegate: class {
+	
+	func didUpdateScript(_ updatedDocument: PridelandDocument)
+	func didCreateScript(_ document: PridelandDocument)
+	
+}
+
 class ScriptMetadataViewController: UIViewController {
 
 	@IBOutlet weak var scrollView: UIScrollView!
@@ -21,6 +28,8 @@ class ScriptMetadataViewController: UIViewController {
 	@IBOutlet weak var saveBarButtonItem: UIBarButtonItem!
 	@IBOutlet weak var colorBarPicker: CustomColorBarPicker!
 	@IBOutlet weak var nameErrorLbl: UILabel!
+	
+	weak var delegate: ScriptMetadataViewControllerDelegate?
 	
 	let keyboardObserver = KeyboardObserver()
 
@@ -124,7 +133,13 @@ class ScriptMetadataViewController: UIViewController {
 		
 	}
 	
+	private let scriptsDir = DocumentManager.shared.activeDocumentsFolderURL.appendingPathComponent(".scripts")
+
 	@IBAction func save(_ sender: UIBarButtonItem) {
+		
+		guard let state = state else {
+			return
+		}
 		
 		let name = nameTextField.text ?? ""
 
@@ -133,11 +148,63 @@ class ScriptMetadataViewController: UIViewController {
 			return
 		}
 		
-		self.dismiss(animated: true, completion: nil)
+		let metadata = self.metadata()
+		
+		switch state {
+		case .create:
+			let url = scriptsDir.appendingPathComponent("\(metadata.name).prideland")
+			
+			let document = PridelandDocument(fileURL: url)
+			document.metadata = metadata
+			
+			document.save(to: url, for: .forCreating) { (success) in
+				
+				if success {
+					self.dismiss(animated: true, completion: nil)
+					self.delegate?.didCreateScript(document)
+				} else {
+					self.showErrorAlert()
+				}
+
+			}
+			
+		case .update(let currentDocument):
+			
+			let prevMetadata = currentDocument.metadata
+			
+			currentDocument.metadata = metadata
+
+			if prevMetadata?.name != metadata.name {
+				
+				// rename
+
+				let url = scriptsDir.appendingPathComponent("\(metadata.name).prideland")
+
+				currentDocument.save(to: url, for: .forCreating) { (success) in
+					
+					if success {
+						self.dismiss(animated: true, completion: nil)
+						self.delegate?.didUpdateScript(currentDocument)
+					} else {
+						self.showErrorAlert()
+					}
+					
+				}
+				
+			} else {
+				
+				currentDocument.updateChangeCount(.done)
+				delegate?.didUpdateScript(currentDocument)
+				self.dismiss(animated: true, completion: nil)
+
+			}
+
+		}
+		
 
 	}
 	
-	private func overview() -> PridelandMetadata {
+	private func metadata() -> PridelandMetadata {
 		
 		let name = nameTextField.text ?? ""
 		let description = descriptionTextView.text ?? ""

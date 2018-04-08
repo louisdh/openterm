@@ -93,6 +93,19 @@ class ScriptsViewController: UIViewController {
 
 		reload()
 	}
+	
+	override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+		
+		coordinator.animate(alongsideTransition: { (ctx) in
+			
+			
+		}, completion: { (ctx) in
+			
+			self.collectionView.collectionViewLayout.invalidateLayout()
+
+		})
+		
+	}
 
 	override var preferredStatusBarStyle: UIStatusBarStyle {
 		return .lightContent
@@ -102,6 +115,7 @@ class ScriptsViewController: UIViewController {
 	fileprivate func addScript() {
 		
 		let scriptMetadataVC = UIStoryboard.main.scriptMetadataViewController(state: .create)
+		scriptMetadataVC.delegate = self
 		
 		let navController = UINavigationController(rootViewController: scriptMetadataVC)
 		navController.navigationBar.barStyle = .blackTranslucent
@@ -142,6 +156,7 @@ class ScriptsViewController: UIViewController {
 				
 			}
 			
+			pridelandOverviews.sort(by: { $0.metadata.name < $1.metadata.name })
 			updatePridelandItems(pridelandOverviews)
 			
 		} catch {
@@ -232,13 +247,31 @@ extension ScriptsViewController: UICollectionViewDelegateFlowLayout {
 		
 		switch cellItem {
 		case .prideland(let pridelandOverview):
-
-			let scriptVC = ScriptEditViewController(url: pridelandOverview.url)
-			scriptVC.title = pridelandOverview.metadata.name
-			self.navigationController?.pushViewController(scriptVC, animated: true)
-
+			openPrideland(url: pridelandOverview.url, title: pridelandOverview.metadata.name)
+			
 		}
 
+	}
+	
+	func openPrideland(url: URL, title: String) {
+		
+		let scriptVC = ScriptEditViewController(url: url)
+		scriptVC.title = title
+		self.navigationController?.pushViewController(scriptVC, animated: true)
+		
+	}
+	
+}
+
+extension ScriptsViewController: ScriptMetadataViewControllerDelegate {
+	
+	func didUpdateScript(_ updatedDocument: PridelandDocument) {
+		self.reload()
+	}
+	
+	func didCreateScript(_ document: PridelandDocument) {
+		self.reload()
+		openPrideland(url: document.fileURL, title: document.metadata?.name ?? "")
 	}
 	
 }
