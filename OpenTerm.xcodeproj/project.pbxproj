@@ -241,14 +241,6 @@
 			name = Resources;
 			sourceTree = "<group>";
 		};
-		28CDA4272024B33D0055206D /* Bookmarks */ = {
-			isa = PBXGroup;
-			children = (
-				28CDA4282024B3510055206D /* BookmarkManager.swift */,
-			);
-			path = Bookmarks;
-			sourceTree = "<group>";
-		};
 		3C15E37C2026CE4F003216CF /* Commands */ = {
 			isa = PBXGroup;
 			children = (
@@ -323,14 +315,6 @@
 			path = Scripting;
 			sourceTree = "<group>";
 		};
-		3CE5764120225E1B00760E43 /* History */ = {
-			isa = PBXGroup;
-			children = (
-				3CE5764220225E1B00760E43 /* HistoryManager.swift */,
-			);
-			path = History;
-			sourceTree = "<group>";
-		};
 		3CE576442022607000760E43 /* Parsing & Formatting */ = {
 			isa = PBXGroup;
 			children = (
@@ -361,6 +345,9 @@
 		BE102813207A36A5005E965F /* Data */ = {
 			isa = PBXGroup;
 			children = (
+				3C406E1B2020987B005F97C4 /* AutoComplete */,
+				28CDA4282024B3510055206D /* BookmarkManager.swift */,
+				3CE5764220225E1B00760E43 /* HistoryManager.swift */,
 				BEBD36E620755B0400C9725C /* StoryboardFactory.swift */,
 				BEA499251FD9C4D7001B9B9D /* DocumentManager.swift */,
 				BE9275052013961D00BD2761 /* UserDefaultsController.swift */,
@@ -479,11 +466,8 @@
 			isa = PBXGroup;
 			children = (
 				3CE576442022607000760E43 /* Parsing & Formatting */,
-				3C406E1B2020987B005F97C4 /* AutoComplete */,
 				3C406E1820207CDA005F97C4 /* Execution */,
 				3CA32100201FF6A100974B5F /* Scripting */,
-				3CE5764120225E1B00760E43 /* History */,
-				28CDA4272024B33D0055206D /* Bookmarks */,
 				BEA8E2902001348C00002475 /* UIColor+AssetCatalog.swift */,
 				F4602B48200A63FC009D0547 /* UserDefaults+UIColor.swift */,
 				BEA4992D1FDC305B001B9B9D /* KeyboardObserver.swift */,
