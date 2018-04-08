@@ -356,6 +356,16 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
+		BE102813207A36A5005E965F /* Data */ = {
+			isa = PBXGroup;
+			children = (
+				BEBD36E620755B0400C9725C /* StoryboardFactory.swift */,
+				BEA499251FD9C4D7001B9B9D /* DocumentManager.swift */,
+				BE9275052013961D00BD2761 /* UserDefaultsController.swift */,
+			);
+			path = Data;
+			sourceTree = "<group>";
+		};
 		BE18903720700EE200EE6739 /* Credits */ = {
 			isa = PBXGroup;
 			children = (
@@ -423,6 +433,7 @@
 				3C15E37C2026CE4F003216CF /* Commands */,
 				BE244DC6201FBB4F00A7EA4E /* Default certs */,
 				BEA8E28F2001346D00002475 /* Util */,
+				BE102813207A36A5005E965F /* Data */,
 				BEA8E28E2001345700002475 /* View */,
 				BEA8E28D2001344400002475 /* Controller */,
 				BEA4992B1FDC0918001B9B9D /* icon-320.png */,
@@ -474,15 +485,12 @@
 				BEA8E2902001348C00002475 /* UIColor+AssetCatalog.swift */,
 				F4602B48200A63FC009D0547 /* UserDefaults+UIColor.swift */,
 				BEA4992D1FDC305B001B9B9D /* KeyboardObserver.swift */,
-				BEA499251FD9C4D7001B9B9D /* DocumentManager.swift */,
-				BE9275052013961D00BD2761 /* UserDefaultsController.swift */,
 				3C905FC920265BC60084BA63 /* StoreReviewPrompter.swift */,
 				BE8E66FB206196A7007B14E6 /* Notification+Names.swift */,
 				BE8E66FD206196B8007B14E6 /* UIDevice+Name.swift */,
 				BE8E66FF206196D5007B14E6 /* Bundle+Info.swift */,
 				BEB77527207172D100201EBB /* UIColor+Hex.swift */,
 				BEB7752120714E2C00201EBB /* UIViewController+Alerts.swift */,
-				BEBD36E620755B0400C9725C /* StoryboardFactory.swift */,
 				BE1643D32077F857002939B7 /* DirectoryObserver.swift */,
 				BE1643D52077FFC0002939B7 /* UICollectionView+Update.swift */,
 			);
