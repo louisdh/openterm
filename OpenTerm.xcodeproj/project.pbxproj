@@ -42,6 +42,7 @@
 		3CE5769E202A7EC500760E43 /* Parser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CE5769D202A7EC500760E43 /* Parser.swift */; };
 		3CE576A0202A874C00760E43 /* OutputSanitizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CE5769F202A874C00760E43 /* OutputSanitizer.swift */; };
 		AEF20A4A223775F9F5101BF5 /* Pods_OpenTerm.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 064CE91D25CE0DA967737711 /* Pods_OpenTerm.framework */; };
+		BE102815207A372C005E965F /* String+C.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE102814207A372C005E965F /* String+C.swift */; };
 		BE1643D22077E9D4002939B7 /* PridelandDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE1643D12077E9D4002939B7 /* PridelandDocument.swift */; };
 		BE1643D42077F857002939B7 /* DirectoryObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE1643D32077F857002939B7 /* DirectoryObserver.swift */; };
 		BE1643D62077FFC0002939B7 /* UICollectionView+Update.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE1643D52077FFC0002939B7 /* UICollectionView+Update.swift */; };
@@ -156,6 +157,7 @@
 		3CE5764720226A1500760E43 /* ANSITextState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ANSITextState.swift; sourceTree = "<group>"; };
 		3CE5769D202A7EC500760E43 /* Parser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Parser.swift; sourceTree = "<group>"; };
 		3CE5769F202A874C00760E43 /* OutputSanitizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutputSanitizer.swift; sourceTree = "<group>"; };
+		BE102814207A372C005E965F /* String+C.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+C.swift"; sourceTree = "<group>"; };
 		BE1643D12077E9D4002939B7 /* PridelandDocument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PridelandDocument.swift; sourceTree = "<group>"; };
 		BE1643D32077F857002939B7 /* DirectoryObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectoryObserver.swift; sourceTree = "<group>"; };
 		BE1643D52077FFC0002939B7 /* UICollectionView+Update.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UICollectionView+Update.swift"; sourceTree = "<group>"; };
@@ -493,6 +495,7 @@
 				BEB7752120714E2C00201EBB /* UIViewController+Alerts.swift */,
 				BE1643D32077F857002939B7 /* DirectoryObserver.swift */,
 				BE1643D52077FFC0002939B7 /* UICollectionView+Update.swift */,
+				BE102814207A372C005E965F /* String+C.swift */,
 			);
 			path = Util;
 			sourceTree = "<group>";
@@ -704,6 +707,7 @@
 				BE1643D62077FFC0002939B7 /* UICollectionView+Update.swift in Sources */,
 				3CA320FF201FE8E100974B5F /* ScriptsViewController.swift in Sources */,
 				BEBD36E720755B0400C9725C /* StoryboardFactory.swift in Sources */,
+				BE102815207A372C005E965F /* String+C.swift in Sources */,
 				3C2E4385201EFF4700E4254A /* AutoCompleteManager.swift in Sources */,
 				BE1D5F9B204C66D0008A1C36 /* CubCommandExecutor.swift in Sources */,
 				3CA32102201FF6B100974B5F /* Script.swift in Sources */,
