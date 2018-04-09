@@ -197,31 +197,3 @@ class CommandExecutor {
 	}
 
 }
-
-/// Basic implementation of a command, run ios_system
-struct SystemExecutorCommand: CommandExecutorCommand {
-
-	let command: String
-
-	func run(forExecutor executor: CommandExecutor) throws -> ReturnCode {
-
-		// ios_system requires these to be set to nil before command execution
-		thread_stdout = nil
-		thread_stderr = nil
-		// Pass the value of the string to system, return its exit code.
-		let returnCode = ios_system(command.utf8CString)
-
-		// Flush pipes to make sure all data is read
-		fflush(stdout)
-		fflush(stderr)
-
-		return returnCode
-	}
-}
-
-/// No-op command to run.
-struct EmptyExecutorCommand: CommandExecutorCommand {
-	func run(forExecutor executor: CommandExecutor) throws -> ReturnCode {
-		return 0
-	}
-}

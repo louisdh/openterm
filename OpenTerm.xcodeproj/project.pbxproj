@@ -56,6 +56,8 @@
 		BE3808601FD9BFB600393EB8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BE38085E1FD9BFB600393EB8 /* LaunchScreen.storyboard */; };
 		BE505066201E5ED900CDFC60 /* Share.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE505065201E5ED900CDFC60 /* Share.swift */; };
 		BE57BDCF207BE0CD00A60950 /* CommandManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE57BDCE207BE0CD00A60950 /* CommandManager.swift */; };
+		BE57BDD2207BF3AA00A60950 /* SystemExecutorCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE57BDD1207BF3AA00A60950 /* SystemExecutorCommand.swift */; };
+		BE57BDD4207BF3B200A60950 /* EmptyExecutorCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE57BDD3207BF3B200A60950 /* EmptyExecutorCommand.swift */; };
 		BE70DA2C204DD5D900DEFF10 /* ScriptEditViewController+AutoComplete.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE70DA2B204DD5D800DEFF10 /* ScriptEditViewController+AutoComplete.swift */; };
 		BE8E66FC206196A7007B14E6 /* Notification+Names.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE8E66FB206196A7007B14E6 /* Notification+Names.swift */; };
 		BE8E66FE206196B8007B14E6 /* UIDevice+Name.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE8E66FD206196B8007B14E6 /* UIDevice+Name.swift */; };
@@ -173,6 +175,8 @@
 		BE3808611FD9BFB600393EB8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		BE505065201E5ED900CDFC60 /* Share.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Share.swift; sourceTree = "<group>"; };
 		BE57BDCE207BE0CD00A60950 /* CommandManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommandManager.swift; sourceTree = "<group>"; };
+		BE57BDD1207BF3AA00A60950 /* SystemExecutorCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemExecutorCommand.swift; sourceTree = "<group>"; };
+		BE57BDD3207BF3B200A60950 /* EmptyExecutorCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyExecutorCommand.swift; sourceTree = "<group>"; };
 		BE70DA2B204DD5D800DEFF10 /* ScriptEditViewController+AutoComplete.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ScriptEditViewController+AutoComplete.swift"; sourceTree = "<group>"; };
 		BE8E66FB206196A7007B14E6 /* Notification+Names.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Notification+Names.swift"; sourceTree = "<group>"; };
 		BE8E66FD206196B8007B14E6 /* UIDevice+Name.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIDevice+Name.swift"; sourceTree = "<group>"; };
@@ -254,6 +258,9 @@
 			children = (
 				3C406E1920207CE7005F97C4 /* CommandExecutor.swift */,
 				3CA3210A20212D4200974B5F /* CommandExecutionContext.swift */,
+				BE57BDD1207BF3AA00A60950 /* SystemExecutorCommand.swift */,
+				BE57BDD3207BF3B200A60950 /* EmptyExecutorCommand.swift */,
+				3CA3210820211D5600974B5F /* ScriptExecutorCommand.swift */,
 			);
 			path = Execution;
 			sourceTree = "<group>";
@@ -287,7 +294,6 @@
 		3CA32100201FF6A100974B5F /* Scripting */ = {
 			isa = PBXGroup;
 			children = (
-				3CA3210820211D5600974B5F /* ScriptExecutorCommand.swift */,
 				BEA14A64202CE5B600AB7351 /* Cub+SavannaKit.swift */,
 				BE1D5F9C204C66F1008A1C36 /* Cub+Runner.swift */,
 			);
@@ -709,7 +715,9 @@
 				BE8E6700206196D5007B14E6 /* Bundle+Info.swift in Sources */,
 				BEA4992E1FDC305B001B9B9D /* KeyboardObserver.swift in Sources */,
 				3CA3210B20212D4200974B5F /* CommandExecutionContext.swift in Sources */,
+				BE57BDD4207BF3B200A60950 /* EmptyExecutorCommand.swift in Sources */,
 				BE70DA2C204DD5D900DEFF10 /* ScriptEditViewController+AutoComplete.swift in Sources */,
+				BE57BDD2207BF3AA00A60950 /* SystemExecutorCommand.swift in Sources */,
 				3CA320FD201FE73900974B5F /* TerminalTextView.swift in Sources */,
 				3CE5769E202A7EC500760E43 /* Parser.swift in Sources */,
 				F4602B41200A08D0009D0547 /* ColorPickerViewController.swift in Sources */,
