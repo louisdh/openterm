@@ -15,21 +15,6 @@ import PanelKit
 import StoreKit
 import MobileCoreServices
 
-extension String {
-	func toCString() -> UnsafePointer<Int8>? {
-		let nsSelf: NSString = self as NSString
-		return nsSelf.cString(using: String.Encoding.utf8.rawValue)
-	}
-}
-
-extension String {
-
-	var utf8CString: UnsafeMutablePointer<Int8> {
-		return UnsafeMutablePointer(mutating: (self as NSString).utf8String!)
-	}
-
-}
-
 class TerminalViewController: UIViewController {
 
 	let terminalView: TerminalView
@@ -45,6 +30,8 @@ class TerminalViewController: UIViewController {
 	var bookmarkViewController: BookmarkViewController!
 	var bookmarkPanelViewController: PanelViewController!
 
+	var cubPanels = [PanelViewController]()
+	
 	private var overflowItems: [OverflowItem] = [] {
 		didSet {
 			applyOverflowState()
@@ -126,6 +113,7 @@ class TerminalViewController: UIViewController {
 			contentWrapperView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
 			])
 
+		contentWrapperView.backgroundColor = .black
 		
 		terminalView.translatesAutoresizingMaskIntoConstraints = false
 		contentWrapperView.addSubview(terminalView)
@@ -148,6 +136,7 @@ class TerminalViewController: UIViewController {
 		replaceCommand("share", mangleFunctionName("shareFile"), true)
 		replaceCommand("pbcopy", mangleFunctionName("pbcopy"), true)
 		replaceCommand("pbpaste", mangleFunctionName("pbpaste"), true)
+		replaceCommand("cub", mangleFunctionName("cub"), true)
 		replaceCommand("credits", mangleFunctionName("credits"), true)
 
 		// Call reloadData for the added commands.
@@ -361,7 +350,9 @@ class TerminalViewController: UIViewController {
 	}
 	
 	private func showScripts(_ sender: UIView) {
-		presentPopover(scriptsPanelViewController, from: sender)
+				
+		present(scriptsPanelViewController, animated: true, completion: nil)
+		
 	}
 	
 	private func showBookmarks(_ sender: UIView) {
@@ -489,7 +480,7 @@ extension TerminalViewController: HistoryViewControllerDelegate {
 extension TerminalViewController: PanelManager {
 
 	var panels: [PanelViewController] {
-		return [historyPanelViewController, scriptsPanelViewController, bookmarkPanelViewController]
+		return [historyPanelViewController, scriptsPanelViewController, bookmarkPanelViewController] + cubPanels
 	}
 
 	var panelContentWrapperView: UIView {

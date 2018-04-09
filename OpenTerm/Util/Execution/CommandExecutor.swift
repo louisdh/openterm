@@ -14,6 +14,8 @@ protocol CommandExecutorDelegate: class {
 	func commandExecutor(_ commandExecutor: CommandExecutor, receivedStderr stderr: Data)
 	func commandExecutor(_ commandExecutor: CommandExecutor, didChangeWorkingDirectory to: URL)
 	func commandExecutor(_ commandExecutor: CommandExecutor, stateDidChange newState: CommandExecutor.State)
+	func commandExecutor(_ commandExecutor: CommandExecutor, waitForInput callback: @escaping (String) -> Void)
+	func commandExecutor(_ commandExecutor: CommandExecutor, executeSubCommand subCommand: String, callback: @escaping () -> Void)
 }
 
 // Exit status from an ios_system command
@@ -31,6 +33,7 @@ class CommandExecutor {
 	enum State {
 		case idle
 		case running
+		case waitingForInput
 	}
 
 	var state: State = .idle {
@@ -50,8 +53,6 @@ class CommandExecutor {
 		}
 	}
 
-	/// Dispatch queue to serially run commands on.
-	private let executionQueue = DispatchQueue(label: "CommandExecutor", qos: .userInteractive)
 	/// Dispatch queue that delegate methods will be called on.
 	private let delegateQueue = DispatchQueue(label: "CommandExecutor-Delegate", qos: .userInteractive)
 
@@ -83,7 +84,12 @@ class CommandExecutor {
 	// Dispatch a new text-based command to execute.
 	func dispatch(_ command: String) {
 
-		executionQueue.async {
+		let queue = DispatchQueue(label: "\(command)", qos: .utility)
+		
+		queue.async {
+		
+			Thread.current.name = command
+		
 			self.state = .running
 
 			DocumentManager.shared.currentDirectoryURL = self.currentWorkingDirectory
@@ -158,13 +164,16 @@ class CommandExecutor {
 
 		// Separate in to command and arguments
 		let components = command.components(separatedBy: .whitespaces)
-		guard components.count > 0 else { return EmptyExecutorCommand() }
+		guard components.count > 0 else {
+			return EmptyExecutorCommand()
+		}
+		
 		let program = components[0]
 		let args = Array(components[1..<components.endIndex])
 
 		// Special case for scripts
-		if Script.allNames.contains(program), let script = try? Script.named(program) {
-			return ScriptExecutorCommand(script: script, arguments: args, context: context)
+		if let scriptDocument = CommandManager.shared.script(named: program) {
+			return ScriptExecutorCommand(script: scriptDocument, arguments: args, context: context)
 		}
 
 		// Default case: Just execute the string itself

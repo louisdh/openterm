@@ -53,6 +53,9 @@ class TerminalView: UIView {
 		return Int(viewWidth / charWidth)
 	}
 
+	var didEnterInput: ((String) -> Void)?
+	var subCommandParserDidEndTransmissionCallback: (() -> Void)?
+
 	weak var delegate: TerminalViewDelegate?
 
 	init() {
@@ -143,9 +146,14 @@ class TerminalView: UIView {
 	}
 
 	func appendText(_ text: NSAttributedString) {
+		
+		if text.string.isEmpty {
+			return
+		}
+		
 		dispatchPrecondition(condition: .onQueue(.main))
 
-		let text = NSMutableAttributedString.init(attributedString: text)
+		let text = NSMutableAttributedString(attributedString: text)
 		OutputSanitizer.sanitize(text.mutableString)
 
 		let new = NSMutableAttributedString(attributedString: textView.attributedText ?? NSAttributedString())
@@ -158,7 +166,8 @@ class TerminalView: UIView {
 		self.textView.isScrollEnabled = true
 	}
 	
-	private func appendText(_ text: String) {
+	func appendText(_ text: String) {
+
 		dispatchPrecondition(condition: .onQueue(.main))
 
 		appendText(NSAttributedString(string: text, attributes: [.foregroundColor: textView.textColor ?? .black, .font: textView.font!]))
@@ -307,6 +316,12 @@ extension TerminalView {
 extension TerminalView: ParserDelegate {
 
 	func parserDidEndTransmission(_ parser: Parser) {
+
+		if let callback = subCommandParserDidEndTransmissionCallback {
+			callback()
+			return
+		}
+		
 		DispatchQueue.main.async {
 			self.writePrompt()
 		}
@@ -338,6 +353,27 @@ extension TerminalView: CommandExecutorDelegate {
 			self.updateAutoComplete()
 		}
 	}
+	
+	func commandExecutor(_ commandExecutor: CommandExecutor, waitForInput callback: @escaping (String) -> Void) {
+	
+		didEnterInput = callback
+		currentCommandStartIndex = textView.text.endIndex
+		executor.state = .waitingForInput
+		
+	}
+	
+	func commandExecutor(_ commandExecutor: CommandExecutor, executeSubCommand subCommand: String, callback: @escaping () -> Void) {
+		
+		subCommandParserDidEndTransmissionCallback = { [weak self] in
+			
+			self?.subCommandParserDidEndTransmissionCallback = nil
+			callback()
+		}
+		
+		commandExecutor.dispatch(subCommand)
+		
+	}
+	
 }
 
 extension TerminalView: UITextDragDelegate {
@@ -367,6 +403,13 @@ extension TerminalView: UITextViewDelegate {
 		//		}
 		//
 	}
+	
+	func waitForInput() {
+		
+		currentCommandStartIndex = textView.text.endIndex
+		executor.state = .waitingForInput
+		
+	}
 
 	func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
 
@@ -395,7 +438,24 @@ extension TerminalView: UITextViewDelegate {
 			}
 
 			return true
+			
+		case .waitingForInput:
+			
+			if text == "\n" {
+			
+				self.executor.state = .running
+				
+				let input = textView.text[currentCommandStartIndex..<textView.text.endIndex]
+				
+				newLine()
+				didEnterInput?(String(input))
+				
+				return false
+			}
+			
+			return true
 		}
+		
 	}
 
 	func textViewDidChange(_ textView: UITextView) {

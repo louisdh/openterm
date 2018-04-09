@@ -61,6 +61,8 @@ extension TerminalView {
 			autoCompleteManager.commandState = .running
 		case .idle:
 			autoCompleteManager.commandState = .typing(command: self.currentCommand)
+		case .waitingForInput:
+			autoCompleteManager.commandState = .running
 		}
 	}
 
@@ -134,13 +136,13 @@ extension TerminalView: AutoCompleteManagerDataSource {
 	func allCommandsForAutoCompletion() -> [String] {
 		let allCommands = (commandsAsArray() as? [String] ?? []).sorted()
 		let recentHistory = uniqueItemsInRecentHistory()
-		return recentHistory + Script.allNames + allCommands + ["help", "clear"]
+		return recentHistory + CommandManager.shared.scriptCommands + allCommands + ["help", "clear"]
 	}
 
 	func completionsForProgram(_ command: String, _ currentArguments: [String]) -> [AutoCompleteManager.Completion] {
-		// If command is a script, return the argument names in options form, for that script. Without ones that are already entered.
-		if Script.allNames.contains(command), let script = try? Script.named(command) {
-			return script.argumentNames.map { "--\($0)=" }.map { AutoCompleteManager.Completion($0, appendingSuffix: "") }
+
+		if CommandManager.shared.scriptCommands.contains(command) {
+			return []
 		}
 
 		var completions: [AutoCompleteManager.Completion] = []

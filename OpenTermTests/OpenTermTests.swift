@@ -33,8 +33,8 @@ class OpenTermTests: XCTestCase {
 		
 		let commands = terminalVC.availableCommands()
 		
-		let expectedCommands = ["awk", "cat", "cd", "chflags", "chksum", "clear", "compress", "cp", "credits", "curl", "date", "dig", "du", "echo", "egrep", "env", "fgrep", "grep", "gunzip", "gzip", "help", "host", "link", "ln", "ls", "mkdir", "mv", "nc", "nslookup", "open-url", "pbcopy", "pbpaste", "ping", "printenv", "pwd", "readlink", "rlogin", "rm", "rmdir", "scp", "sed", "setenv", "sftp", "share", "ssh", "ssh-keygen", "stat", "sum", "tar", "tee", "telnet", "touch", "tr", "uname", "uncompress", "unlink", "unsetenv", "uptime", "wc", "whoami"]
-		
+		let expectedCommands = ["awk", "cat", "cd", "chflags", "chksum", "clear", "compress", "cp", "credits", "cub", "curl", "date", "dig", "du", "echo", "egrep", "env", "fgrep", "grep", "gunzip", "gzip", "help", "host", "link", "ln", "ls", "mkdir", "mv", "nc", "nslookup", "open-url", "pbcopy", "pbpaste", "ping", "printenv", "pwd", "readlink", "rlogin", "rm", "rmdir", "scp", "sed", "setenv", "sftp", "share", "ssh", "ssh-keygen", "stat", "sum", "tar", "tee", "telnet", "touch", "tr", "uname", "uncompress", "unlink", "unsetenv", "uptime", "wc", "whoami"]
+
 		XCTAssertEqual(commands, expectedCommands)
 		
 	}
@@ -189,6 +189,14 @@ class CallbackCommandExecutor: CommandExecutorDelegate, ParserDelegate {
 	}
 	
 	func commandExecutor(_ commandExecutor: CommandExecutor, stateDidChange newState: CommandExecutor.State) {
+		
+	}
+	
+	func commandExecutor(_ commandExecutor: CommandExecutor, waitForInput callback: @escaping (String) -> Void) {
+		
+	}
+	
+	func commandExecutor(_ commandExecutor: CommandExecutor, executeSubCommand subCommand: String, callback: @escaping () -> Void) {
 		
 	}
 	
