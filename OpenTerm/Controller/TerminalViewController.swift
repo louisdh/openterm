@@ -137,7 +137,6 @@ class TerminalViewController: UIViewController {
 		replaceCommand("pbcopy", mangleFunctionName("pbcopy"), true)
 		replaceCommand("pbpaste", mangleFunctionName("pbpaste"), true)
 		replaceCommand("cub", mangleFunctionName("cub"), true)
-		replaceCommand("savanna", mangleFunctionName("savanna"), true)
 		replaceCommand("credits", mangleFunctionName("credits"), true)
 
 		// Call reloadData for the added commands.
