@@ -145,8 +145,14 @@ class ScriptEditViewController: UIViewController {
 	}
 
 	private func save() {
-		// Save to disk
-//		script.value = textView.text
+		
+		if document.text != textView.text {
+			
+			document.text = textView.text
+			document.updateChangeCount(.done)
+			
+		}
+		
 	}
 
 }
