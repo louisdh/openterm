@@ -130,6 +130,14 @@ class ScriptEditViewController: UIViewController {
 
 	}
 	
+	deinit {
+		
+		if self.document.documentState != .closed {
+			self.document.close(completionHandler: nil)
+		}
+		
+	}
+	
 	@objc
 	func showScriptMetadata() {
 		
