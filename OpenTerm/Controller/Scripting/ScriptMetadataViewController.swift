@@ -133,8 +133,6 @@ class ScriptMetadataViewController: UIViewController {
 		
 	}
 	
-	private let scriptsDir = DocumentManager.shared.activeDocumentsFolderURL.appendingPathComponent(".scripts")
-
 	@IBAction func save(_ sender: UIBarButtonItem) {
 		
 		guard let state = state else {
@@ -152,7 +150,7 @@ class ScriptMetadataViewController: UIViewController {
 		
 		switch state {
 		case .create:
-			let url = scriptsDir.appendingPathComponent("\(metadata.name).prideland")
+			let url = DocumentManager.shared.scriptsURL.appendingPathComponent("\(metadata.name).prideland")
 			
 			let document = PridelandDocument(fileURL: url)
 			document.metadata = metadata
@@ -178,7 +176,7 @@ class ScriptMetadataViewController: UIViewController {
 				
 				// rename
 
-				let url = scriptsDir.appendingPathComponent("\(metadata.name).prideland")
+				let url = DocumentManager.shared.scriptsURL.appendingPathComponent("\(metadata.name).prideland")
 
 				currentDocument.save(to: url, for: .forCreating) { (success) in
 					
@@ -281,13 +279,11 @@ extension ScriptMetadataViewController: UITextFieldDelegate {
 	
 	func allUsedScriptNames(ignoringURL: URL?) -> [String] {
 		
-		let scriptsDir = DocumentManager.shared.activeDocumentsFolderURL.appendingPathComponent(".scripts")
-
 		let fileManager = DocumentManager.shared.fileManager
 		
 		do {
 			
-			let documentsURLs = try fileManager.contentsOfDirectory(at: scriptsDir, includingPropertiesForKeys: [], options: .skipsPackageDescendants)
+			let documentsURLs = try fileManager.contentsOfDirectory(at: DocumentManager.shared.scriptsURL, includingPropertiesForKeys: [], options: .skipsPackageDescendants)
 		
 			let pridelandURLs = documentsURLs.filter({ $0 != ignoringURL && $0.pathExtension.lowercased() == "prideland" })
 			

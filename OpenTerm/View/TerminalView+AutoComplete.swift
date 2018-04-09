@@ -136,12 +136,12 @@ extension TerminalView: AutoCompleteManagerDataSource {
 	func allCommandsForAutoCompletion() -> [String] {
 		let allCommands = (commandsAsArray() as? [String] ?? []).sorted()
 		let recentHistory = uniqueItemsInRecentHistory()
-		return recentHistory + Script.allNames + allCommands + ["help", "clear"]
+		return recentHistory + CommandManager.shared.scriptCommands + allCommands + ["help", "clear"]
 	}
 
 	func completionsForProgram(_ command: String, _ currentArguments: [String]) -> [AutoCompleteManager.Completion] {
 
-		if Script.allNames.contains(command) {
+		if CommandManager.shared.scriptCommands.contains(command) {
 			return []
 		}
 

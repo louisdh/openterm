@@ -14,11 +14,11 @@ import TabView
 /// Implementation for running a script.
 class ScriptExecutorCommand: CommandExecutorCommand {
 
-	let script: Script
+	let script: PridelandDocument
 	let arguments: [String]
 	let context: CommandExecutionContext
 	
-	init(script: Script, arguments: [String], context: CommandExecutionContext) {
+	init(script: PridelandDocument, arguments: [String], context: CommandExecutionContext) {
 		self.script = script
 		self.arguments = arguments
 		self.context = context
@@ -32,7 +32,7 @@ class ScriptExecutorCommand: CommandExecutorCommand {
 		
 		let runner = Runner.runner(executor: executor, executorDelegate: executorDelegate)
 		
-		let source = script.value
+		let source = script.text
 		
 		var returnCode: Int32 = 0
 

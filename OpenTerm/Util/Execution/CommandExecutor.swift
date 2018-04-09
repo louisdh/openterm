@@ -53,8 +53,6 @@ class CommandExecutor {
 		}
 	}
 
-	/// Dispatch queue to serially run commands on.
-	private let executionQueue = DispatchQueue(label: "CommandExecutor", qos: .userInteractive)
 	/// Dispatch queue that delegate methods will be called on.
 	private let delegateQueue = DispatchQueue(label: "CommandExecutor-Delegate", qos: .userInteractive)
 
@@ -174,8 +172,8 @@ class CommandExecutor {
 		let args = Array(components[1..<components.endIndex])
 
 		// Special case for scripts
-		if Script.allNames.contains(program), let script = try? Script.named(program) {
-			return ScriptExecutorCommand(script: script, arguments: args, context: context)
+		if let scriptDocument = CommandManager.shared.script(named: program) {
+			return ScriptExecutorCommand(script: scriptDocument, arguments: args, context: context)
 		}
 
 		// Default case: Just execute the string itself

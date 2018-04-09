@@ -61,8 +61,6 @@ class ScriptsViewController: UIViewController {
 	
 	@IBOutlet weak var collectionView: UICollectionView!
 	
-	private let scriptsDir = DocumentManager.shared.activeDocumentsFolderURL.appendingPathComponent(".scripts")
-
 	var cellItems: [CellType]?
 	
 	var directoryObserver: DirectoryObserver?
@@ -80,7 +78,7 @@ class ScriptsViewController: UIViewController {
 		self.view.tintColor = .defaultMainTintColor
 		self.navigationController?.navigationBar.barStyle = .blackTranslucent
 
-		directoryObserver = DirectoryObserver(pathToWatch: scriptsDir) { [weak self] in
+		directoryObserver = DirectoryObserver(pathToWatch: DocumentManager.shared.scriptsURL) { [weak self] in
 			self?.reload()
 		}
 		
@@ -131,7 +129,7 @@ class ScriptsViewController: UIViewController {
 		
 		do {
 
-			let documentsURLs = try fileManager.contentsOfDirectory(at: scriptsDir, includingPropertiesForKeys: [], options: .skipsPackageDescendants)
+			let documentsURLs = try fileManager.contentsOfDirectory(at: DocumentManager.shared.scriptsURL, includingPropertiesForKeys: [], options: .skipsPackageDescendants)
 			
 			var pridelandOverviews = [PridelandOverview]()
 			

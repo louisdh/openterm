@@ -14,7 +14,7 @@ class DocumentManager {
 	static let shared = DocumentManager()
 
 	let fileManager: FileManager
-
+	
 	init(fileManager: FileManager = .default) {
 
 		self.fileManager = fileManager
@@ -36,6 +36,10 @@ class DocumentManager {
 		return fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0]
 	}
 
+	lazy var scriptsURL: URL = {
+		return activeDocumentsFolderURL.appendingPathComponent(".scripts")
+	}()
+	
 	private var cloudDocumentsURL: URL? {
 
 		guard iCloudAvailable else {
