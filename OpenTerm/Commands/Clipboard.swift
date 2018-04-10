@@ -19,7 +19,9 @@ public func pbcopy(argc: Int32, argv: UnsafeMutablePointer<UnsafeMutablePointer<
 	while true {
 		var byte: Int8 = 0
 		let count = read(fileno(thread_stdin), &byte, 1)
-		guard count == 1 else { break }
+		guard count == 1 else {
+			break
+		}
 		bytes.append(byte)
 	}
 
