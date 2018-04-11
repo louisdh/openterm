@@ -84,6 +84,7 @@
 		BEBD36E720755B0400C9725C /* StoryboardFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEBD36E620755B0400C9725C /* StoryboardFactory.swift */; };
 		BEC75BFD202B716600216462 /* OpenTermTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEC75BFC202B716600216462 /* OpenTermTests.swift */; };
 		BEEAD9C6207E8C8500CBC254 /* Array+Safe.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEEAD9C5207E8C8500CBC254 /* Array+Safe.swift */; };
+		BEEAD9C8207EA09700CBC254 /* Stdin+Read.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEEAD9C7207EA09700CBC254 /* Stdin+Read.swift */; };
 		BEECFF0A1FFC1DC0009608B3 /* HistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEECFF091FFC1DC0009608B3 /* HistoryViewController.swift */; };
 		BEECFF391FFEC187009608B3 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEECFF381FFEC187009608B3 /* SettingsViewController.swift */; };
 		F456629E200B9BC500C574AA /* ColorDisplayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F456629D200B9BC500C574AA /* ColorDisplayView.swift */; };
@@ -208,6 +209,7 @@
 		BEC75BFC202B716600216462 /* OpenTermTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenTermTests.swift; sourceTree = "<group>"; };
 		BEC75BFE202B716600216462 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		BEEAD9C5207E8C8500CBC254 /* Array+Safe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Safe.swift"; sourceTree = "<group>"; };
+		BEEAD9C7207EA09700CBC254 /* Stdin+Read.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Stdin+Read.swift"; sourceTree = "<group>"; };
 		BEECFF091FFC1DC0009608B3 /* HistoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = HistoryViewController.swift; path = OpenTerm/Controller/History/HistoryViewController.swift; sourceTree = SOURCE_ROOT; };
 		BEECFF381FFEC187009608B3 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SettingsViewController.swift; path = OpenTerm/Controller/Settings/SettingsViewController.swift; sourceTree = SOURCE_ROOT; };
 		F456629D200B9BC500C574AA /* ColorDisplayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorDisplayView.swift; sourceTree = "<group>"; };
@@ -486,6 +488,7 @@
 				BE1643D52077FFC0002939B7 /* UICollectionView+Update.swift */,
 				BE102814207A372C005E965F /* String+C.swift */,
 				BEEAD9C5207E8C8500CBC254 /* Array+Safe.swift */,
+				BEEAD9C7207EA09700CBC254 /* Stdin+Read.swift */,
 			);
 			path = Util;
 			sourceTree = "<group>";
@@ -693,6 +696,7 @@
 				BEA8E2912001348C00002475 /* UIColor+AssetCatalog.swift in Sources */,
 				28CDA4292024B3510055206D /* BookmarkManager.swift in Sources */,
 				BEB7752220714E2C00201EBB /* UIViewController+Alerts.swift in Sources */,
+				BEEAD9C8207EA09700CBC254 /* Stdin+Read.swift in Sources */,
 				BE8E66FC206196A7007B14E6 /* Notification+Names.swift in Sources */,
 				BE1643D62077FFC0002939B7 /* UICollectionView+Update.swift in Sources */,
 				3CA320FF201FE8E100974B5F /* ScriptsViewController.swift in Sources */,

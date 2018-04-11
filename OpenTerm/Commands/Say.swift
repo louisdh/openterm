@@ -10,73 +10,6 @@ import Foundation
 import ios_system
 import AVFoundation
 
-struct SayCommandInput {
-	
-	let message: String
-	let voice: AVSpeechSynthesisVoice?
-
-}
-
-func readStdinBytes() -> [Int8] {
-	
-	var bytes = [Int8]()
-
-	while stdin != thread_stdin {
-		var byte: Int8 = 0
-		let count = read(fileno(thread_stdin), &byte, 1)
-		guard count == 1 else {
-			break
-		}
-		bytes.append(byte)
-	}
-	
-	return bytes
-}
-
-struct SayCommandParsed {
-	
-	let messageArgument: String?
-	let flags: [String: String]
-	
-}
-
-class SayCommandParser {
-	
-	static func parse(args: [String]) -> SayCommandParsed {
-		
-		var message: String?
-		
-		var currentFlag: String?
-		
-		var flags = [String: String]()
-		
-		for arg in args.dropFirst() {
-			
-			if arg.hasPrefix("-") {
-				currentFlag = String(arg.dropFirst())
-				continue
-			}
-			
-			if let currFlag = currentFlag {
-				
-				flags[currFlag] = arg
-				
-				currentFlag = nil
-				
-				continue
-			}
-			
-			if message == nil {
-				message = arg
-			}
-			
-		}
-		
-		return SayCommandParsed(messageArgument: message, flags: flags)
-	}
-	
-}
-
 public func say(argc: Int32, argv: UnsafeMutablePointer<UnsafeMutablePointer<Int8>?>?) -> Int32 {
 
 	guard let args = convertCArguments(argc: argc, argv: argv) else {
@@ -175,7 +108,58 @@ public func say(argc: Int32, argv: UnsafeMutablePointer<UnsafeMutablePointer<Int
 	return executor.execute()
 }
 
-class SayCommandExecutor {
+private struct SayCommandInput {
+	
+	let message: String
+	let voice: AVSpeechSynthesisVoice?
+	
+}
+
+private struct SayCommandParsed {
+	
+	let messageArgument: String?
+	let flags: [String: String]
+	
+}
+
+private class SayCommandParser {
+	
+	static func parse(args: [String]) -> SayCommandParsed {
+		
+		var message: String?
+		
+		var currentFlag: String?
+		
+		var flags = [String: String]()
+		
+		for arg in args.dropFirst() {
+			
+			if arg.hasPrefix("-") {
+				currentFlag = String(arg.dropFirst())
+				continue
+			}
+			
+			if let currFlag = currentFlag {
+				
+				flags[currFlag] = arg
+				
+				currentFlag = nil
+				
+				continue
+			}
+			
+			if message == nil {
+				message = arg
+			}
+			
+		}
+		
+		return SayCommandParsed(messageArgument: message, flags: flags)
+	}
+	
+}
+
+private class SayCommandExecutor {
 	
 	let input: SayCommandInput
 	
@@ -200,7 +184,7 @@ class SayCommandExecutor {
 		let utterance = AVSpeechUtterance(string: input.message)
 		utterance.rate = 0.5
 		utterance.pitchMultiplier = 1.0
-				
+		
 		utterance.voice = input.voice
 		
 		synthesizer.speak(utterance)
@@ -212,7 +196,7 @@ class SayCommandExecutor {
 	
 }
 
-class AVSpeechSynthesizerManager: NSObject, AVSpeechSynthesizerDelegate {
+private class AVSpeechSynthesizerManager: NSObject, AVSpeechSynthesizerDelegate {
 	
 	var finishCallback: () -> Void
 	
