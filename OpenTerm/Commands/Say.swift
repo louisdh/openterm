@@ -200,9 +200,7 @@ class SayCommandExecutor {
 		let utterance = AVSpeechUtterance(string: input.message)
 		utterance.rate = 0.5
 		utterance.pitchMultiplier = 1.0
-		
-		//	let voice = AVSpeechSynthesisVoice(identifier: AVSpeechSynthesisVoiceIdentifierAlex)
-		
+				
 		utterance.voice = input.voice
 		
 		synthesizer.speak(utterance)
