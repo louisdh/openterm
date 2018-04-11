@@ -66,23 +66,7 @@ public func say(argc: Int32, argv: UnsafeMutablePointer<UnsafeMutablePointer<Int
 		
 		if voiceString == "?" {
 			
-			var voicesOutput = ""
-			
-			let maxVoiceNameLength = speechVoices.map({ $0.name.count }).max() ?? 1
-			
-			for speechVoice in speechVoices {
-				
-				var line = speechVoice.name + ""
-				
-				let extraSpaces = Array(repeating: " ", count: maxVoiceNameLength - speechVoice.name.count).joined()
-				
-				line += extraSpaces
-				
-				line += " \(speechVoice.language)"
-				
-				voicesOutput += "\(line)\n"
-				
-			}
+			let voicesOutput = voicesHelpDescription(speechVoices)
 			
 			fputs(voicesOutput, thread_stdout)
 			return 0
@@ -106,6 +90,29 @@ public func say(argc: Int32, argv: UnsafeMutablePointer<UnsafeMutablePointer<Int
 	let executor = SayCommandExecutor(input: input)
 
 	return executor.execute()
+}
+
+private func voicesHelpDescription(_ voices: [AVSpeechSynthesisVoice]) -> String {
+	
+	var voicesOutput = ""
+	
+	let maxVoiceNameLength = voices.map({ $0.name.count }).max() ?? 1
+	
+	for speechVoice in voices {
+		
+		var line = speechVoice.name + ""
+		
+		let extraSpaces = Array(repeating: " ", count: maxVoiceNameLength - speechVoice.name.count).joined()
+		
+		line += extraSpaces
+		
+		line += " \(speechVoice.language)"
+		
+		voicesOutput += "\(line)\n"
+		
+	}
+	
+	return voicesOutput
 }
 
 private struct SayCommandInput {
