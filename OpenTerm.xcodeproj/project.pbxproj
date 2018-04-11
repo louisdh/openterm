@@ -58,6 +58,7 @@
 		BE57BDCF207BE0CD00A60950 /* CommandManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE57BDCE207BE0CD00A60950 /* CommandManager.swift */; };
 		BE57BDD2207BF3AA00A60950 /* SystemExecutorCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE57BDD1207BF3AA00A60950 /* SystemExecutorCommand.swift */; };
 		BE57BDD4207BF3B200A60950 /* EmptyExecutorCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE57BDD3207BF3B200A60950 /* EmptyExecutorCommand.swift */; };
+		BE57BDD6207BF9D800A60950 /* Say.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE57BDD5207BF9D800A60950 /* Say.swift */; };
 		BE70DA2C204DD5D900DEFF10 /* ScriptEditViewController+AutoComplete.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE70DA2B204DD5D800DEFF10 /* ScriptEditViewController+AutoComplete.swift */; };
 		BE8E66FC206196A7007B14E6 /* Notification+Names.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE8E66FB206196A7007B14E6 /* Notification+Names.swift */; };
 		BE8E66FE206196B8007B14E6 /* UIDevice+Name.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE8E66FD206196B8007B14E6 /* UIDevice+Name.swift */; };
@@ -82,6 +83,7 @@
 		BEB7756820740DFE00201EBB /* CustomTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEB7756720740DFE00201EBB /* CustomTextView.swift */; };
 		BEBD36E720755B0400C9725C /* StoryboardFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEBD36E620755B0400C9725C /* StoryboardFactory.swift */; };
 		BEC75BFD202B716600216462 /* OpenTermTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEC75BFC202B716600216462 /* OpenTermTests.swift */; };
+		BEEAD9C6207E8C8500CBC254 /* Array+Safe.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEEAD9C5207E8C8500CBC254 /* Array+Safe.swift */; };
 		BEECFF0A1FFC1DC0009608B3 /* HistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEECFF091FFC1DC0009608B3 /* HistoryViewController.swift */; };
 		BEECFF391FFEC187009608B3 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEECFF381FFEC187009608B3 /* SettingsViewController.swift */; };
 		F456629E200B9BC500C574AA /* ColorDisplayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F456629D200B9BC500C574AA /* ColorDisplayView.swift */; };
@@ -177,6 +179,7 @@
 		BE57BDCE207BE0CD00A60950 /* CommandManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommandManager.swift; sourceTree = "<group>"; };
 		BE57BDD1207BF3AA00A60950 /* SystemExecutorCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemExecutorCommand.swift; sourceTree = "<group>"; };
 		BE57BDD3207BF3B200A60950 /* EmptyExecutorCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyExecutorCommand.swift; sourceTree = "<group>"; };
+		BE57BDD5207BF9D800A60950 /* Say.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Say.swift; sourceTree = "<group>"; };
 		BE70DA2B204DD5D800DEFF10 /* ScriptEditViewController+AutoComplete.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ScriptEditViewController+AutoComplete.swift"; sourceTree = "<group>"; };
 		BE8E66FB206196A7007B14E6 /* Notification+Names.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Notification+Names.swift"; sourceTree = "<group>"; };
 		BE8E66FD206196B8007B14E6 /* UIDevice+Name.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIDevice+Name.swift"; sourceTree = "<group>"; };
@@ -204,6 +207,7 @@
 		BEC75BFA202B716600216462 /* OpenTermTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OpenTermTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		BEC75BFC202B716600216462 /* OpenTermTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenTermTests.swift; sourceTree = "<group>"; };
 		BEC75BFE202B716600216462 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		BEEAD9C5207E8C8500CBC254 /* Array+Safe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Safe.swift"; sourceTree = "<group>"; };
 		BEECFF091FFC1DC0009608B3 /* HistoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = HistoryViewController.swift; path = OpenTerm/Controller/History/HistoryViewController.swift; sourceTree = SOURCE_ROOT; };
 		BEECFF381FFEC187009608B3 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SettingsViewController.swift; path = OpenTerm/Controller/Settings/SettingsViewController.swift; sourceTree = SOURCE_ROOT; };
 		F456629D200B9BC500C574AA /* ColorDisplayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorDisplayView.swift; sourceTree = "<group>"; };
@@ -249,6 +253,7 @@
 				BE165407201909030067EC92 /* xCallBackUrl.swift */,
 				BE505065201E5ED900CDFC60 /* Share.swift */,
 				BEA14A66202CE5D300AB7351 /* Cub.swift */,
+				BE57BDD5207BF9D800A60950 /* Say.swift */,
 			);
 			path = Commands;
 			sourceTree = "<group>";
@@ -480,6 +485,7 @@
 				BE1643D32077F857002939B7 /* DirectoryObserver.swift */,
 				BE1643D52077FFC0002939B7 /* UICollectionView+Update.swift */,
 				BE102814207A372C005E965F /* String+C.swift */,
+				BEEAD9C5207E8C8500CBC254 /* Array+Safe.swift */,
 			);
 			path = Util;
 			sourceTree = "<group>";
@@ -681,6 +687,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BEEAD9C6207E8C8500CBC254 /* Array+Safe.swift in Sources */,
 				BE1D5F9D204C66F1008A1C36 /* Cub+Runner.swift in Sources */,
 				3CE57681202A52ED00760E43 /* TerminalViewController.swift in Sources */,
 				BEA8E2912001348C00002475 /* UIColor+AssetCatalog.swift in Sources */,
@@ -730,6 +737,7 @@
 				BE1643D22077E9D4002939B7 /* PridelandDocument.swift in Sources */,
 				BE3808561FD9BFB600393EB8 /* AppDelegate.swift in Sources */,
 				3C406E1A20207CE7005F97C4 /* CommandExecutor.swift in Sources */,
+				BE57BDD6207BF9D800A60950 /* Say.swift in Sources */,
 				3C905FCA20265BC60084BA63 /* StoreReviewPrompter.swift in Sources */,
 				BEA14A67202CE5D300AB7351 /* Cub.swift in Sources */,
 				BEB775642073F85600201EBB /* CustomColorBarPicker.swift in Sources */,

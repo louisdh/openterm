@@ -138,6 +138,7 @@ class TerminalViewController: UIViewController {
 		replaceCommand("pbpaste", mangleFunctionName("pbpaste"), true)
 		replaceCommand("cub", mangleFunctionName("cub"), true)
 		replaceCommand("credits", mangleFunctionName("credits"), true)
+		replaceCommand("say", mangleFunctionName("say"), true)
 
 		// Call reloadData for the added commands.
 		terminalView.autoCompleteManager.reloadData()
