@@ -8,9 +8,17 @@
 
 import UIKit
 
+enum CaretStyle {
+	case verticalBar
+	case block
+	case underline
+}
+
 /// UITextView that adopts the style of a terminal.
 class TerminalTextView: UITextView {
 
+	var caretStyle: CaretStyle = .verticalBar
+	
 	override init(frame: CGRect, textContainer: NSTextContainer?) {
 		super.init(frame: frame, textContainer: textContainer)
 
@@ -66,4 +74,31 @@ class TerminalTextView: UITextView {
 			self.keyboardAppearance = .light
 		}
 	}
+	
+	override func caretRect(for position: UITextPosition) -> CGRect {
+		var rect = super.caretRect(for: position)
+		
+		switch caretStyle {
+		case .verticalBar:
+			return rect
+			
+		case .block:
+			let dummyAtributedString = NSAttributedString(string: "X", attributes: [.font: font as Any])
+			let charWidth = dummyAtributedString.size().width
+			
+			rect.size.width = charWidth
+			
+		case .underline:
+			let dummyAtributedString = NSAttributedString(string: "X", attributes: [.font: font as Any])
+			let charWidth = dummyAtributedString.size().width
+
+			rect.origin.y = rect.size.height
+
+			rect.size.height = rect.width
+			rect.size.width = charWidth
+		}
+	
+		return rect
+	}
+	
 }
