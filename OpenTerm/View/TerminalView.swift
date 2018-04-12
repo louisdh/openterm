@@ -36,6 +36,50 @@ class TerminalView: UIView {
 		}
 	}
 	
+	func updateCompletion() {
+		
+		if let completion = self.autoCompleteManager.completions.first {
+			
+			let completionString: String
+			
+			switch autoCompleteManager.state {
+			case .executing:
+				completionString = ""
+				
+			default:
+				// Two options:
+				// - There is a space at the end => insert full word
+				// - Complete current word
+				
+				let currentCommand = self.currentCommand
+				if currentCommand.hasSuffix(" ") || currentCommand.hasSuffix("/") {
+					// This will be a new argument, or append to the end of a path. Just insert the text.
+					completionString = completion.name
+
+				} else {
+					// We need to complete the current argument
+					var components = currentCommand.components(separatedBy: CharacterSet.whitespaces)
+					if let lastComponent = components.popLast() {
+						// If the argument we are completing is a path, we must only replace the last part of the path
+						if lastComponent.contains("/") {
+							components.append(((lastComponent as NSString).deletingLastPathComponent as NSString).appendingPathComponent(completion.name))
+						} else {
+							components.append(completion.name)
+						}
+					}
+					completionString = String(components.joined(separator: " ").dropFirst(currentCommand.count))
+				}
+				
+			}
+			
+			textView.autoCompletion = completionString
+			
+		} else {
+			
+			textView.autoCompletion = ""
+		}
+	}
+	
 	var columnWidth: Int {
 		
 		guard let font = textView.font else {
@@ -460,6 +504,7 @@ extension TerminalView: UITextViewDelegate {
 
 	func textViewDidChange(_ textView: UITextView) {
 		updateAutoComplete()
+		updateCompletion()
 	}
 
 }

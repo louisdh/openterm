@@ -17,6 +17,14 @@ enum CaretStyle {
 /// UITextView that adopts the style of a terminal.
 class TerminalTextView: UITextView {
 
+	let autoCompleteLabel = UILabel()
+	
+	var autoCompletion: String = "" {
+		didSet {
+			autoCompleteLabel.text = autoCompletion
+		}
+	}
+	
 	var caretStyle: CaretStyle = .verticalBar
 	
 	override init(frame: CGRect, textContainer: NSTextContainer?) {
@@ -32,6 +40,8 @@ class TerminalTextView: UITextView {
 	}
 
 	private func setup() {
+		
+		self.addSubview(autoCompleteLabel)
 
 		// Show characters such as ^C
 		layoutManager.showsControlCharacters = true
@@ -47,8 +57,70 @@ class TerminalTextView: UITextView {
 		updateAppearanceFromSettings()
 
 		NotificationCenter.default.addObserver(self, selector: #selector(self.updateAppearanceFromSettingsAnimated), name: .appearanceDidChange, object: nil)
+		
+		let caDisplayLink = CADisplayLink(target: self, selector: #selector(update))
+		caDisplayLink.add(to: .main, forMode: .commonModes)
+		
 	}
 
+	@objc
+	private func update() {
+		
+		guard let rect = rectForAutoCompleteLabel() else {
+			autoCompleteLabel.isHidden = true
+			return
+		}
+		
+		autoCompleteLabel.isHidden = false
+		
+		var frame = rect
+		frame.origin.x = rect.maxX
+		frame.size.width = self.bounds.width - frame.origin.x
+		
+		autoCompleteLabel.font = self.font
+		autoCompleteLabel.textColor = self.textColor?.withAlphaComponent(0.5)
+		
+		autoCompleteLabel.frame = frame
+	}
+	
+	func rectForAutoCompleteLabel() -> CGRect? {
+		
+		guard let selectedTextRange = self.selectedTextRange else {
+			return nil
+		}
+		
+		let end = selectedTextRange.start
+		
+		guard let start = self.position(from: end, offset: -1) else {
+			return nil
+		}
+		
+		guard let range = self.textRange(from: start, to: end) else {
+			return nil
+		}
+		
+		let isOnEndOfLine: Bool
+		
+		let rect = self.firstRect(for: range)
+		
+		if let nextRangeEnd = self.position(from: end, offset: 1),
+			let nextRange = self.textRange(from: end, to: nextRangeEnd) {
+			
+			let nextRect = self.firstRect(for: nextRange)
+			
+			isOnEndOfLine = nextRect.origin.y != rect.origin.y
+			
+		} else {
+			isOnEndOfLine = true
+		}
+		
+		guard isOnEndOfLine else {
+			return nil
+		}
+		
+		return rect
+	}
+	
 	@objc
 	private func updateAppearanceFromSettingsAnimated() {
 		UIView.animate(withDuration: 0.35) {
