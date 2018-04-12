@@ -58,7 +58,7 @@ class TerminalView: UIView {
 
 				} else {
 					// We need to complete the current argument
-					var components = currentCommand.components(separatedBy: CharacterSet.whitespaces)
+					var components = currentCommand.components(separatedBy: .whitespaces)
 					if let lastComponent = components.popLast() {
 						// If the argument we are completing is a path, we must only replace the last part of the path
 						if lastComponent.contains("/") {
