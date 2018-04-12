@@ -240,7 +240,7 @@ extension TerminalView: AutoCompleteManagerDataSource {
 
 		do {
 			let contents = try DocumentManager.shared.fileManager.contentsOfDirectory(at: directory, includingPropertiesForKeys: [.isDirectoryKey], options: [])
-			return try contents.flatMap { url in
+			return try contents.compactMap { url in
 				let resourceValues = try url.resourceValues(forKeys: [.isDirectoryKey])
 				let isDirectory = resourceValues.isDirectory ?? false
 				if showFolders && isDirectory || showFiles && !isDirectory {
