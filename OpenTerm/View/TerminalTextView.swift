@@ -85,6 +85,10 @@ class TerminalTextView: UITextView {
 	
 	func rectForAutoCompleteLabel() -> CGRect? {
 		
+		guard isFirstResponder else {
+			return nil
+		}
+		
 		guard let selectedTextRange = self.selectedTextRange else {
 			return nil
 		}

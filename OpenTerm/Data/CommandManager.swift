@@ -64,4 +64,29 @@ class CommandManager {
 		return document
 	}
 	
+	func description(for command: String) -> String? {
+		
+		if let scriptDocument = script(named: command) {
+			return scriptDocument.metadata?.description ?? ""
+		}
+		
+		return CommandManager.descriptions[command]
+	}
+	
+	static private let descriptions = ["awk": "a powerful method for processing or analyzing text files",
+									   "cat": "read files",
+									   "cd": "change the current directory",
+									   "chflags": "change a file or folder's flags",
+									   "chksum": "display file checksums and block counts",
+									   "compress": "compress files",
+									   "cp": "copy a file or folder",
+									   "credits": "display the OpenTerm credits",
+									   "cub": "execute a Cub script",
+									   "curl": "transfer data from or to a server",
+									   "date": "get the current date and time",
+									   "dig": "a flexible tool for interrogating DNS name servers",
+									   "du": "display disk usage statistics",
+									   "echo": "display message on screen"]
+	// TODO: add descriptions for all commands.
+	
 }

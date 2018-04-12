@@ -32,52 +32,60 @@ class TerminalView: UIView {
 	var stderrParser = Parser()
 	var currentCommandStartIndex: String.Index! {
 		didSet {
-			self.updateAutoComplete()
+			updateAutoComplete()
+			updateCompletion()
 		}
 	}
 	
 	func updateCompletion() {
 		
-		if let completion = self.autoCompleteManager.completions.first {
+		guard let completion = self.autoCompleteManager.completions.first else {
+			textView.autoCompletion = ""
+			return
+		}
+		
+		let completionString: String
+		
+		switch autoCompleteManager.state {
+		case .executing:
+			completionString = ""
 			
-			let completionString: String
+		default:
+			// Two options:
+			// - There is a space at the end => insert full word
+			// - Complete current word
 			
-			switch autoCompleteManager.state {
-			case .executing:
-				completionString = ""
-				
-			default:
-				// Two options:
-				// - There is a space at the end => insert full word
-				// - Complete current word
-				
-				let currentCommand = self.currentCommand
-				if currentCommand.hasSuffix(" ") || currentCommand.hasSuffix("/") {
-					// This will be a new argument, or append to the end of a path. Just insert the text.
-					completionString = completion.name
+			let currentCommand = self.currentCommand
+			if currentCommand.hasSuffix(" ") || currentCommand.hasSuffix("/") {
+				// This will be a new argument, or append to the end of a path. Just insert the text.
+				completionString = completion.name
 
-				} else {
-					// We need to complete the current argument
-					var components = currentCommand.components(separatedBy: .whitespaces)
-					if let lastComponent = components.popLast() {
-						// If the argument we are completing is a path, we must only replace the last part of the path
-						if lastComponent.contains("/") {
-							components.append(((lastComponent as NSString).deletingLastPathComponent as NSString).appendingPathComponent(completion.name))
-						} else {
-							components.append(completion.name)
-						}
+			} else {
+				// We need to complete the current argument
+				var components = currentCommand.components(separatedBy: .whitespaces)
+				if let lastComponent = components.popLast() {
+					// If the argument we are completing is a path, we must only replace the last part of the path
+					if lastComponent.contains("/") {
+						components.append(((lastComponent as NSString).deletingLastPathComponent as NSString).appendingPathComponent(completion.name))
+					} else {
+						components.append(completion.name)
 					}
-					completionString = String(components.joined(separator: " ").dropFirst(currentCommand.count))
 				}
+				
+				var str = String(components.joined(separator: " ").dropFirst(currentCommand.count))
+				
+				if let description = CommandManager.shared.description(for: completion.name), !description.isEmpty {
+					str += " (\(description))"
+				}
+				
+				completionString = str
 				
 			}
 			
-			textView.autoCompletion = completionString
-			
-		} else {
-			
-			textView.autoCompletion = ""
 		}
+		
+		textView.autoCompletion = completionString
+		
 	}
 	
 	var columnWidth: Int {
@@ -149,6 +157,8 @@ class TerminalView: UIView {
 		keyboardObserver.observe { [weak self] (state) in
 			self?.adjustInsets(for: state)
 		}
+		
+		updateCompletion()
 
 	}
 	
