@@ -68,6 +68,21 @@ class UserDefaultsController {
 			userDefaults.synchronize()
 		}
 	}
+	
+	var caretStyle: Int {
+		get {
+			
+			guard let val = userDefaults.object(forKey: "caretStyle") as? Int else {
+				return 0
+			}
+			
+			return val
+		}
+		set {
+			userDefaults.set(newValue, forKey: "caretStyle")
+			userDefaults.synchronize()
+		}
+	}
 
 	var lastStoreReviewPrompt: Date? {
 		get {
@@ -77,4 +92,6 @@ class UserDefaultsController {
 			userDefaults.set(newValue, forKey: "lastStoreReviewPrompt")
 		}
 	}
+	
+	
 }
