@@ -40,10 +40,15 @@ class TerminalView: UIView {
 	func updateCompletion() {
 		
 		guard let completion = self.autoCompleteManager.completions.first, currentCommand != "" else {
-			textView.autoCompletion = ""
+			
+			if let description = CommandManager.shared.description(for: currentCommand), !description.isEmpty {
+				textView.autoCompletion = " (\(description))"
+			} else {
+				textView.autoCompletion = ""
+			}
+			
 			return
 		}
-		
 		
 		let completionString: String
 		
