@@ -26,6 +26,25 @@ class OpenTermTests: XCTestCase {
 		
     }
 	
+	func testCommandDescriptions() {
+		
+		let terminalVC = TerminalViewController()
+		
+		let commands = terminalVC.availableCommands()
+		
+		for command in commands {
+			
+			guard let description = CommandManager.shared.description(for: command) else {
+				XCTAssert(false, "Expected description for \(command)")
+				continue
+			}
+			
+			XCTAssertFalse(description.isEmpty)
+			
+		}
+		
+	}
+	
 	/// Test to make sure commands don't accidentally get added or removed.
 	func testAvailableCommands() {
 		
