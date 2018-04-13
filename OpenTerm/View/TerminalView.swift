@@ -39,10 +39,11 @@ class TerminalView: UIView {
 	
 	func updateCompletion() {
 		
-		guard let completion = self.autoCompleteManager.completions.first else {
+		guard let completion = self.autoCompleteManager.completions.first, currentCommand != "" else {
 			textView.autoCompletion = ""
 			return
 		}
+		
 		
 		let completionString: String
 		
