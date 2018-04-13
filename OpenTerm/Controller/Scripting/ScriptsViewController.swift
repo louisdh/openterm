@@ -9,7 +9,7 @@
 import UIKit
 import PanelKit
 
-struct PridelandOverview {
+struct PridelandOverview: Equatable {
 	
 	let url: URL
 	let metadata: PridelandMetadata
@@ -37,26 +37,10 @@ struct PridelandOverview {
 	
 }
 
-extension PridelandOverview: Equatable {
-	
-	static func ==(lhs: PridelandOverview, rhs: PridelandOverview) -> Bool {
-		return lhs.url == rhs.url &&
-			lhs.metadata == rhs.metadata
-	}
-	
-}
-
 class ScriptsViewController: UIViewController {
 
 	enum CellType: Equatable {
 		case prideland(PridelandOverview)
-		
-		static func ==(lhs: CellType, rhs: CellType) -> Bool {
-			switch (lhs, rhs) {
-			case let (.prideland(overview1), .prideland(overview2)):
-				return overview1 == overview2
-			}
-		}
 	}
 	
 	@IBOutlet weak var collectionView: UICollectionView!
