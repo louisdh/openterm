@@ -1,5 +1,5 @@
 PODS:
-  - Cub (0.7.2)
+  - Cub (0.7.3)
   - HueKit (1.0.1)
   - InputAssistant (1.0.2)
   - PanelKit (2.0.1)
@@ -30,7 +30,7 @@ SPEC REPOS:
     - TabView
 
 SPEC CHECKSUMS:
-  Cub: d17f2c6e13f2e1def2589c9869cccac1df2033f3
+  Cub: f1b2cc95e0791e8b6c3edb8380c251a7020c155f
   HueKit: a255770053f7028907db3e84d5cdecc7837197e4
   InputAssistant: b0b70cd0d69ef7013ecb2a1fa350b7a2786e2e01
   PanelKit: d05cecac1ab39af375b56ff21c7b5a9915a3eb5b

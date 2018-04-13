@@ -440,7 +440,7 @@ public class Lexer {
 				
 			}			
 			
-			if !updateCurrentString {				
+			if currentStringLength == 0 {
 				tokenCharIndex = charIndex
 			}
 			

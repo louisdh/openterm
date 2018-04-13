@@ -85,19 +85,11 @@ extension InterpreterErrorType {
 	
 }
 
-struct InterpreterError {
+struct InterpreterError: Equatable {
 	
 	let type: InterpreterErrorType
 	let range: Range<Int>?
 
-}
-
-extension InterpreterError: Equatable {
-	
-	static func ==(lhs: InterpreterError, rhs: InterpreterError) -> Bool {
-		return lhs.type == rhs.type && lhs.range == rhs.range
-	}
-	
 }
 
 extension InterpreterError: DisplayableError {
