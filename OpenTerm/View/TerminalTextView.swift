@@ -22,6 +22,7 @@ class TerminalTextView: UITextView {
 	var autoCompletion: String = "" {
 		didSet {
 			autoCompleteLabel.text = autoCompletion
+			update()
 		}
 	}
 	
