@@ -8,7 +8,7 @@
 
 import Foundation
 
-public struct Token: CustomStringConvertible {
+public struct Token: CustomStringConvertible, Equatable {
 
 	/// The token's type
 	public let type: TokenType
@@ -25,12 +25,4 @@ public struct Token: CustomStringConvertible {
 		return "\(type)"
 	}
 
-}
-
-extension Token: Equatable {
-	
-	public static func == (lhs: Token, rhs: Token) -> Bool {
-		return lhs.type == rhs.type && lhs.range == rhs.range
-	}
-	
 }

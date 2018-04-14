@@ -720,7 +720,7 @@ public class BytecodeInterpreter {
 
 	private func executeStructUpdate(_ instruction: BytecodeExecutionInstruction, pc: Int) throws -> Int {
 
-		let memberIds: [Int] = instruction.arguments.flatMap {
+		let memberIds: [Int] = instruction.arguments.compactMap {
 			if case let .index(i) = $0 {
 				return i
 			}

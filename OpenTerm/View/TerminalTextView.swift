@@ -8,9 +8,26 @@
 
 import UIKit
 
+enum CaretStyle {
+	case verticalBar
+	case block
+	case underline
+}
+
 /// UITextView that adopts the style of a terminal.
 class TerminalTextView: UITextView {
 
+	let autoCompleteLabel = UILabel()
+	
+	var autoCompletion: String = "" {
+		didSet {
+			autoCompleteLabel.text = autoCompletion
+			update()
+		}
+	}
+	
+	var caretStyle: CaretStyle = .verticalBar
+	
 	override init(frame: CGRect, textContainer: NSTextContainer?) {
 		super.init(frame: frame, textContainer: textContainer)
 
@@ -24,6 +41,8 @@ class TerminalTextView: UITextView {
 	}
 
 	private func setup() {
+		
+		self.addSubview(autoCompleteLabel)
 
 		// Show characters such as ^C
 		layoutManager.showsControlCharacters = true
@@ -39,8 +58,74 @@ class TerminalTextView: UITextView {
 		updateAppearanceFromSettings()
 
 		NotificationCenter.default.addObserver(self, selector: #selector(self.updateAppearanceFromSettingsAnimated), name: .appearanceDidChange, object: nil)
+		
+		let caDisplayLink = CADisplayLink(target: self, selector: #selector(update))
+		caDisplayLink.add(to: .main, forMode: .commonModes)
+		
 	}
 
+	@objc
+	private func update() {
+		
+		guard let rect = rectForAutoCompleteLabel() else {
+			autoCompleteLabel.isHidden = true
+			return
+		}
+		
+		autoCompleteLabel.isHidden = false
+		
+		var frame = rect
+		frame.origin.x = rect.maxX
+		frame.size.width = self.bounds.width - frame.origin.x
+		
+		autoCompleteLabel.font = self.font
+		autoCompleteLabel.textColor = self.textColor?.withAlphaComponent(0.5)
+		
+		autoCompleteLabel.frame = frame
+	}
+	
+	func rectForAutoCompleteLabel() -> CGRect? {
+		
+		guard isFirstResponder else {
+			return nil
+		}
+		
+		guard let selectedTextRange = self.selectedTextRange else {
+			return nil
+		}
+		
+		let end = selectedTextRange.start
+		
+		guard let start = self.position(from: end, offset: -1) else {
+			return nil
+		}
+		
+		guard let range = self.textRange(from: start, to: end) else {
+			return nil
+		}
+		
+		let isOnEndOfLine: Bool
+		
+		let rect = self.firstRect(for: range)
+		
+		if let nextRangeEnd = self.position(from: end, offset: 1),
+			let nextRange = self.textRange(from: end, to: nextRangeEnd) {
+			
+			let nextRect = self.firstRect(for: nextRange)
+			
+			isOnEndOfLine = nextRect.origin.y != rect.origin.y
+			
+		} else {
+			isOnEndOfLine = true
+		}
+		
+		guard isOnEndOfLine else {
+			return nil
+		}
+		
+		return rect
+	}
+	
 	@objc
 	private func updateAppearanceFromSettingsAnimated() {
 		UIView.animate(withDuration: 0.35) {
@@ -66,4 +151,31 @@ class TerminalTextView: UITextView {
 			self.keyboardAppearance = .light
 		}
 	}
+	
+	override func caretRect(for position: UITextPosition) -> CGRect {
+		var rect = super.caretRect(for: position)
+		
+		switch caretStyle {
+		case .verticalBar:
+			return rect
+			
+		case .block:
+			let dummyAtributedString = NSAttributedString(string: "X", attributes: [.font: font as Any])
+			let charWidth = dummyAtributedString.size().width
+			
+			rect.size.width = charWidth
+			
+		case .underline:
+			let dummyAtributedString = NSAttributedString(string: "X", attributes: [.font: font as Any])
+			let charWidth = dummyAtributedString.size().width
+
+			rect.origin.y = rect.size.height
+
+			rect.size.height = rect.width
+			rect.size.width = charWidth
+		}
+	
+		return rect
+	}
+	
 }
