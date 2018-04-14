@@ -40,6 +40,7 @@
 		3CE57681202A52ED00760E43 /* TerminalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE3808571FD9BFB600393EB8 /* TerminalViewController.swift */; };
 		3CE5769E202A7EC500760E43 /* Parser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CE5769D202A7EC500760E43 /* Parser.swift */; };
 		3CE576A0202A874C00760E43 /* OutputSanitizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CE5769F202A874C00760E43 /* OutputSanitizer.swift */; };
+		9F54B9012081C2F300639958 /* Notify.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F54B9002081C2F200639958 /* Notify.swift */; };
 		AEF20A4A223775F9F5101BF5 /* Pods_OpenTerm.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 064CE91D25CE0DA967737711 /* Pods_OpenTerm.framework */; };
 		BE102815207A372C005E965F /* String+C.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE102814207A372C005E965F /* String+C.swift */; };
 		BE1643D22077E9D4002939B7 /* PridelandDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE1643D12077E9D4002939B7 /* PridelandDocument.swift */; };
@@ -161,6 +162,7 @@
 		3CE5764720226A1500760E43 /* ANSITextState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ANSITextState.swift; sourceTree = "<group>"; };
 		3CE5769D202A7EC500760E43 /* Parser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Parser.swift; sourceTree = "<group>"; };
 		3CE5769F202A874C00760E43 /* OutputSanitizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutputSanitizer.swift; sourceTree = "<group>"; };
+		9F54B9002081C2F200639958 /* Notify.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Notify.swift; sourceTree = "<group>"; };
 		BE102814207A372C005E965F /* String+C.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+C.swift"; sourceTree = "<group>"; };
 		BE1643D12077E9D4002939B7 /* PridelandDocument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PridelandDocument.swift; sourceTree = "<group>"; };
 		BE1643D32077F857002939B7 /* DirectoryObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectoryObserver.swift; sourceTree = "<group>"; };
@@ -260,6 +262,7 @@
 				BE505065201E5ED900CDFC60 /* Share.swift */,
 				BEA14A66202CE5D300AB7351 /* Cub.swift */,
 				BE57BDD5207BF9D800A60950 /* Say.swift */,
+				9F54B9002081C2F200639958 /* Notify.swift */,
 			);
 			path = Commands;
 			sourceTree = "<group>";
@@ -726,6 +729,7 @@
 				BEB775662074095800201EBB /* ScriptMetadataViewController.swift in Sources */,
 				BE8E66FE206196B8007B14E6 /* UIDevice+Name.swift in Sources */,
 				3CE57680202A529200760E43 /* TerminalTabViewController.swift in Sources */,
+				9F54B9012081C2F300639958 /* Notify.swift in Sources */,
 				F4602B49200A63FC009D0547 /* UserDefaults+UIColor.swift in Sources */,
 				28CDA426202444CC0055206D /* BookmarkViewController.swift in Sources */,
 				3CA32105201FFC1300974B5F /* ScriptEditViewController.swift in Sources */,
