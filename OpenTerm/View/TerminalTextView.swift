@@ -175,7 +175,7 @@ class TerminalTextView: UITextView {
 			let dummyAtributedString = NSAttributedString(string: "X", attributes: [.font: font as Any])
 			let charWidth = dummyAtributedString.size().width
 
-			rect.origin.y = rect.size.height
+			rect.origin.y += self.font!.pointSize
 
 			rect.size.height = rect.width
 			rect.size.width = charWidth
