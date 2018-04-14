@@ -276,6 +276,15 @@ class TerminalView: UIView {
 		return textView.becomeFirstResponder()
 	}
 
+	@discardableResult
+	override func resignFirstResponder() -> Bool {
+		return textView.resignFirstResponder()
+	}
+	
+	override var canBecomeFirstResponder: Bool {
+		return textView.canBecomeFirstResponder
+	}
+	
 	var currentCommand: String {
 		get {
 

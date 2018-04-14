@@ -8,22 +8,35 @@
 
 import UIKit
 
+class GradientView: UIView {
+	
+	override class var layerClass: AnyClass {
+		return CAGradientLayer.self
+	}
+	
+}
+
 class PridelandCollectionViewCell: UICollectionViewCell {
 
-	let gradientLayer = CAGradientLayer()
+	let gradientView = GradientView()
 
+	var gradientLayer: CAGradientLayer? {
+		return gradientView.layer as? CAGradientLayer
+	}
+	
 	@IBOutlet weak var titleLbl: UILabel!
 	@IBOutlet weak var descriptionLbl: UILabel!
 	
 	override func awakeFromNib() {
         super.awakeFromNib()
 
-		gradientLayer.colors = [UIColor.white.cgColor, UIColor.black.cgColor]
-		gradientLayer.startPoint = .zero
-		gradientLayer.endPoint = CGPoint(x: 1, y: 1)
+		gradientView.translatesAutoresizingMaskIntoConstraints = true
+		self.contentView.insertSubview(gradientView, at: 0)
+
+		gradientLayer?.colors = [UIColor.white.cgColor, UIColor.black.cgColor]
+		gradientLayer?.startPoint = .zero
+		gradientLayer?.endPoint = CGPoint(x: 1, y: 1)
 		
-		self.contentView.layer.insertSublayer(gradientLayer, at: 0)
-	
 		self.contentView.layer.cornerRadius = 16.0
 		self.contentView.layer.masksToBounds = true
 		
@@ -32,7 +45,7 @@ class PridelandCollectionViewCell: UICollectionViewCell {
 	override func layoutSubviews() {
 		super.layoutSubviews()
 		
-		gradientLayer.frame = self.contentView.bounds
+		gradientView.frame = self.contentView.bounds
 
 	}
 	
@@ -92,11 +105,11 @@ class PridelandCollectionViewCell: UICollectionViewCell {
 		// Gradient should always be light -> dark
 		if grayscale1 < grayscale2 {
 			
-			gradientLayer.colors = [gradientColor2.cgColor, gradientColor1.cgColor]
+			gradientLayer?.colors = [gradientColor2.cgColor, gradientColor1.cgColor]
 
 		} else {
 			
-			gradientLayer.colors = [gradientColor1.cgColor, gradientColor2.cgColor]
+			gradientLayer?.colors = [gradientColor1.cgColor, gradientColor2.cgColor]
 
 		}
 

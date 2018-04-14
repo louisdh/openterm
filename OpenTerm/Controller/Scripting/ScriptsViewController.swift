@@ -8,6 +8,7 @@
 
 import UIKit
 import PanelKit
+import TabView
 
 struct PridelandOverview: Equatable {
 	
@@ -39,6 +40,8 @@ struct PridelandOverview: Equatable {
 
 class ScriptsViewController: UIViewController {
 
+	var panelManager: TerminalViewController!
+	
 	enum CellType: Equatable {
 		case prideland(PridelandOverview)
 	}
@@ -76,16 +79,17 @@ class ScriptsViewController: UIViewController {
 		reload()
 	}
 	
-	override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+	override func viewWillLayoutSubviews() {
+		super.viewWillLayoutSubviews()
 		
-		coordinator.animate(alongsideTransition: { (ctx) in
-			
-			
-		}, completion: { (ctx) in
-			
-			self.collectionView.collectionViewLayout.invalidateLayout()
+		self.collectionView.collectionViewLayout.invalidateLayout()
 
-		})
+	}
+	
+	override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+		super.viewWillTransition(to: size, with: coordinator)
+		
+		self.collectionView.collectionViewLayout.invalidateLayout()
 		
 	}
 
@@ -93,6 +97,175 @@ class ScriptsViewController: UIViewController {
 		return .lightContent
 	}
 
+	@objc
+	fileprivate func toggleFullscreen() {
+
+		guard let panelVC = self.panelNavigationController?.panelViewController else {
+			return
+		}
+		
+		if panelVC.isFloating || panelVC.isPinned {
+			
+			floatingModeToFullscreen()
+			
+		} else {
+			
+			fullscreenToFloatingMode()
+			
+		}
+		
+	}
+
+	func floatingModeToFullscreen() {
+
+		guard let panelVC = self.panelNavigationController?.panelViewController else {
+			return
+		}
+	
+		guard let panelManager = self.panelManager else {
+			return
+		}
+		
+		guard let terminalTabVC = panelManager.parent?.parent as? TabViewContainerViewController<TerminalTabViewController> else {
+			return
+		}
+		
+		panelVC.view.isUserInteractionEnabled = false
+		
+		let rectInManager = panelVC.view.frame
+
+		let rectInTabVC = terminalTabVC.view.convert(rectInManager, from: panelManager.contentWrapperView)
+
+		panelManager.close(panelVC)
+		
+		terminalTabVC.view.addSubview(panelVC.view)
+		panelVC.view.translatesAutoresizingMaskIntoConstraints = false
+
+		let heightConstraint = panelVC.view.heightAnchor.constraint(equalToConstant: rectInTabVC.height)
+		heightConstraint.isActive = true
+		
+		let widthConstraint = panelVC.view.widthAnchor.constraint(equalToConstant: rectInTabVC.width)
+		widthConstraint.isActive = true
+		
+		let leadingConstraint = panelVC.view.leadingAnchor.constraint(equalTo: terminalTabVC.view.leadingAnchor, constant: rectInTabVC.origin.x)
+		leadingConstraint.isActive = true
+		
+		let topConstraint = panelVC.view.topAnchor.constraint(equalTo: terminalTabVC.view.topAnchor, constant: rectInTabVC.origin.y)
+		topConstraint.isActive = true
+		
+		terminalTabVC.view.layoutIfNeeded()
+		
+		DispatchQueue.main.asyncAfter(deadline: .now() + 0.01, execute: {
+
+			heightConstraint.isActive = false
+			widthConstraint.isActive = false
+			leadingConstraint.isActive = false
+			topConstraint.isActive = false
+
+
+			let width1Constraint = panelVC.view.widthAnchor.constraint(equalTo: terminalTabVC.view.widthAnchor)
+			width1Constraint.isActive = true
+
+			let height1Constraint = panelVC.view.heightAnchor.constraint(equalTo: terminalTabVC.view.heightAnchor)
+			height1Constraint.isActive = true
+
+			panelVC.view.leadingAnchor.constraint(equalTo: terminalTabVC.view.leadingAnchor, constant: 0).isActive = true
+			panelVC.view.topAnchor.constraint(equalTo: terminalTabVC.view.topAnchor, constant: 0).isActive = true
+
+			UIView.animate(withDuration: 0.35, animations: {
+
+				terminalTabVC.view.layoutIfNeeded()
+
+			}, completion: { (completed) in
+
+				panelManager.present(panelVC, animated: false, completion: {
+
+					width1Constraint.isActive = false
+					height1Constraint.isActive = false
+
+					self.updateNavigationButtons()
+
+					panelVC.view.isUserInteractionEnabled = true
+
+				})
+
+			})
+
+		})
+
+	}
+	
+	func fullscreenToFloatingMode() {
+		
+		guard let terminalTabVC = self.presentingViewController as? TabViewContainerViewController<TerminalTabViewController> else {
+			return
+		}
+		
+		let primaryTabViewController = terminalTabVC.primaryTabViewController
+		
+		guard let panelManager = primaryTabViewController.visibleViewController as? TerminalViewController else {
+			return
+		}
+		
+		guard let panelVC = self.panelNavigationController?.panelViewController else {
+			return
+		}
+		
+		panelVC.view.isUserInteractionEnabled = false
+		
+		panelVC.dismiss(animated: false) {
+			
+			terminalTabVC.view.addSubview(panelVC.view)
+			
+			let heightConstraint = panelVC.view.heightAnchor.constraint(equalTo: terminalTabVC.view.heightAnchor)
+			heightConstraint.isActive = true
+			
+			let widthConstraint = panelVC.view.widthAnchor.constraint(equalTo: terminalTabVC.view.widthAnchor)
+			widthConstraint.isActive = true
+			
+			terminalTabVC.view.layoutIfNeeded()
+			
+			let rectInManager = CGRect(x: 100, y: 100, width: 400, height: 480)
+			
+			let rectInTabVC = terminalTabVC.view.convert(rectInManager, from: panelManager.contentWrapperView)
+			
+			DispatchQueue.main.asyncAfter(deadline: .now() + 0.01, execute: {
+				
+				heightConstraint.isActive = false
+				widthConstraint.isActive = false
+				
+				let width1Constraint = panelVC.view.widthAnchor.constraint(equalToConstant: rectInTabVC.width)
+				width1Constraint.isActive = true
+				
+				let height1Constraint = panelVC.view.heightAnchor.constraint(equalToConstant: rectInTabVC.height)
+				height1Constraint.isActive = true
+				
+				panelVC.view.leadingAnchor.constraint(equalTo: terminalTabVC.view.leadingAnchor, constant: rectInTabVC.origin.x).isActive = true
+				panelVC.view.topAnchor.constraint(equalTo: terminalTabVC.view.topAnchor, constant: rectInTabVC.origin.y).isActive = true
+				
+				UIView.animate(withDuration: 0.35, animations: {
+					
+					terminalTabVC.view.layoutIfNeeded()
+					
+				}, completion: { (completed) in
+					
+					panelVC.view.removeFromSuperview()
+					width1Constraint.isActive = false
+					height1Constraint.isActive = false
+					panelManager.float(panelVC, at: rectInManager)
+					
+					self.updateNavigationButtons()
+
+					panelVC.view.isUserInteractionEnabled = true
+
+				})
+				
+			})
+			
+		}
+		
+	}
+	
 	@objc
 	fileprivate func addScript() {
 		
@@ -261,7 +434,28 @@ extension ScriptsViewController: ScriptMetadataViewControllerDelegate {
 extension ScriptsViewController: PanelContentDelegate {
 
 	var rightBarButtonItems: [UIBarButtonItem] {
-		return [UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addScript))]
+		
+		let addBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addScript))
+		
+		guard self.panelManager.allowFloatingPanels else {
+			return [addBarButtonItem]
+		}
+		
+		let fullscreenImage: UIImage
+		
+		if self.panelNavigationController?.panelViewController?.isFloating == true {
+			
+			fullscreenImage = #imageLiteral(resourceName: "Fullscreen")
+
+		} else {
+
+			fullscreenImage = #imageLiteral(resourceName: "CloseFullscreen")
+			
+		}
+		
+		let fullscreenBarButtonItem = UIBarButtonItem(image: fullscreenImage, style: .done, target: self, action: #selector(toggleFullscreen))
+		
+		return [fullscreenBarButtonItem, addBarButtonItem]
 	}
 
 	var preferredPanelContentSize: CGSize {
@@ -277,6 +471,10 @@ extension ScriptsViewController: PanelContentDelegate {
 	}
 	
 	var shouldAdjustForKeyboard: Bool {
+		
+		if self.panelNavigationController?.panelViewController?.isPinned == true {
+			return true
+		}
 		
 		if let scriptVC = self.navigationController?.visibleViewController as? ScriptEditViewController {
 			return scriptVC.shouldAdjustForKeyboard

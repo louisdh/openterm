@@ -54,6 +54,8 @@ class TerminalViewController: UIViewController {
 		bookmarkViewController = storyboard.instantiateViewController(withIdentifier: "BookmarkViewController") as! BookmarkViewController
 
 		super.init(nibName: nil, bundle: nil)
+		
+		scriptsViewController.panelManager = self
 
 		let openFolderItem = OverflowItem(visibleInBar: true, icon: #imageLiteral(resourceName: "Open"), title: "Open", action: { [weak self] sender in
 			self?.showDocumentPicker(sender)
@@ -351,7 +353,19 @@ class TerminalViewController: UIViewController {
 	}
 	
 	private func showScripts(_ sender: UIView) {
-				
+		
+		// modalPresentationStyle needs to be overFullScreen so
+		// we can have a nice transition when switching from the fullscreen mode
+		// to the floating mode.
+		scriptsPanelViewController.modalPresentationStyle = .overFullScreen
+		scriptsPanelViewController.modalTransitionStyle = .coverVertical
+		
+		// A view controller with presentation style "overFullScreen" will
+		// cause the keyboard of the terminalView to be presented again
+		// when it's dismissed (which we don't want when switching from fullscreen mode
+		// to the floating mode).
+		terminalView.resignFirstResponder()
+
 		present(scriptsPanelViewController, animated: true, completion: nil)
 		
 	}
