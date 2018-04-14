@@ -1,4 +1,5 @@
 PODS:
+  - BezierPathLength (1.1.0)
   - Cub (0.7.3)
   - HueKit (1.0.1)
   - InputAssistant (1.0.2)
@@ -9,6 +10,7 @@ PODS:
   - TabView (1.0.1)
 
 DEPENDENCIES:
+  - BezierPathLength (~> 1.0)
   - Cub (~> 0.6)
   - HueKit (~> 1.0)
   - InputAssistant (~> 1.0)
@@ -20,6 +22,7 @@ DEPENDENCIES:
 
 SPEC REPOS:
   https://github.com/CocoaPods/Specs.git:
+    - BezierPathLength
     - Cub
     - HueKit
     - InputAssistant
@@ -30,6 +33,7 @@ SPEC REPOS:
     - TabView
 
 SPEC CHECKSUMS:
+  BezierPathLength: 2f21f2860b0817df3cf631e9a3a9273c8e8c3814
   Cub: f1b2cc95e0791e8b6c3edb8380c251a7020c155f
   HueKit: a255770053f7028907db3e84d5cdecc7837197e4
   InputAssistant: b0b70cd0d69ef7013ecb2a1fa350b7a2786e2e01
@@ -39,6 +43,6 @@ SPEC CHECKSUMS:
   SwiftLint: ce933681be10c3266e82576dad676fa815a602e9
   TabView: b8337b549e4b0f070a76cab141e258fa66e01fd1
 
-PODFILE CHECKSUM: 0fedffc18889a5b4bab714c39d586ffa8f3cd720
+PODFILE CHECKSUM: 8d1150ce05fa5e9edad9436f37d6df80173cfb24
 
 COCOAPODS: 1.5.0

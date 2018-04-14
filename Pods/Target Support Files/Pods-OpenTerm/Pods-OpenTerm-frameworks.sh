@@ -143,6 +143,7 @@ strip_invalid_archs() {
 
 
 if [[ "$CONFIGURATION" == "Debug" ]]; then
+  install_framework "${BUILT_PRODUCTS_DIR}/BezierPathLength/BezierPathLength.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/Cub/Cub.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/HueKit/HueKit.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/InputAssistant/InputAssistant.framework"
@@ -152,6 +153,7 @@ if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework "${BUILT_PRODUCTS_DIR}/TabView/TabView.framework"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
+  install_framework "${BUILT_PRODUCTS_DIR}/BezierPathLength/BezierPathLength.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/Cub/Cub.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/HueKit/HueKit.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/InputAssistant/InputAssistant.framework"

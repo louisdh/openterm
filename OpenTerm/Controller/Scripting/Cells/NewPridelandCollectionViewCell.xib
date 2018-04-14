@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="NewPridelandCollectionViewCell" id="gTV-IL-0wX" customClass="NewPridelandCollectionViewCell" customModule="OpenTerm" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="284" height="123"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                <rect key="frame" x="0.0" y="0.0" width="284" height="123"/>
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                <subviews>
+                    <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="etd-2C-lQt">
+                        <rect key="frame" x="61" y="25.5" width="162" height="72"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7BM-eO-qiv">
+                                <rect key="frame" x="0.0" y="0.0" width="72" height="72"/>
+                                <subviews>
+                                    <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" image="Add" translatesAutoresizingMaskIntoConstraints="NO" id="Xke-BK-0Wm">
+                                        <rect key="frame" x="-4" y="-4" width="80" height="80"/>
+                                    </imageView>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstItem="Xke-BK-0Wm" firstAttribute="leading" secondItem="7BM-eO-qiv" secondAttribute="leading" constant="-4" id="Tas-1f-U1G"/>
+                                    <constraint firstItem="Xke-BK-0Wm" firstAttribute="top" secondItem="7BM-eO-qiv" secondAttribute="top" constant="-4" id="hXE-Qe-qiA"/>
+                                    <constraint firstAttribute="trailing" secondItem="Xke-BK-0Wm" secondAttribute="trailing" constant="-4" id="oGa-pW-QeQ"/>
+                                    <constraint firstAttribute="bottom" secondItem="Xke-BK-0Wm" secondAttribute="bottom" constant="-4" id="rtn-3e-Eva"/>
+                                </constraints>
+                            </view>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="New script" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tw4-dU-Tcx">
+                                <rect key="frame" x="80" y="26" width="82" height="20.5"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                    </stackView>
+                </subviews>
+            </view>
+            <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstItem="etd-2C-lQt" firstAttribute="centerX" secondItem="gTV-IL-0wX" secondAttribute="centerX" id="E9b-Ni-DvY"/>
+                <constraint firstItem="etd-2C-lQt" firstAttribute="centerY" secondItem="gTV-IL-0wX" secondAttribute="centerY" id="uBQ-zT-z1H"/>
+            </constraints>
+            <viewLayoutGuide key="safeArea" id="ZTg-uK-7eu"/>
+            <size key="customSize" width="284" height="123"/>
+            <point key="canvasLocation" x="74" y="82"/>
+        </collectionViewCell>
+    </objects>
+    <resources>
+        <image name="Add" width="32" height="32"/>
+    </resources>
+</document>

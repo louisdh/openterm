@@ -1,0 +1,6 @@
+framework module BezierPathLength {
+  umbrella header "BezierPathLength-umbrella.h"
+
+  export *
+  module * { export * }
+}

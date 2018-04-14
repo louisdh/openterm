@@ -60,6 +60,8 @@
 		BE57BDD4207BF3B200A60950 /* EmptyExecutorCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE57BDD3207BF3B200A60950 /* EmptyExecutorCommand.swift */; };
 		BE57BDD6207BF9D800A60950 /* Say.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE57BDD5207BF9D800A60950 /* Say.swift */; };
 		BE70DA2C204DD5D900DEFF10 /* ScriptEditViewController+AutoComplete.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE70DA2B204DD5D800DEFF10 /* ScriptEditViewController+AutoComplete.swift */; };
+		BE740C1720826648001C1F24 /* NewPridelandCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE740C1520826648001C1F24 /* NewPridelandCollectionViewCell.swift */; };
+		BE740C1820826648001C1F24 /* NewPridelandCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = BE740C1620826648001C1F24 /* NewPridelandCollectionViewCell.xib */; };
 		BE8E66FC206196A7007B14E6 /* Notification+Names.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE8E66FB206196A7007B14E6 /* Notification+Names.swift */; };
 		BE8E66FE206196B8007B14E6 /* UIDevice+Name.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE8E66FD206196B8007B14E6 /* UIDevice+Name.swift */; };
 		BE8E6700206196D5007B14E6 /* Bundle+Info.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE8E66FF206196D5007B14E6 /* Bundle+Info.swift */; };
@@ -182,6 +184,8 @@
 		BE57BDD3207BF3B200A60950 /* EmptyExecutorCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyExecutorCommand.swift; sourceTree = "<group>"; };
 		BE57BDD5207BF9D800A60950 /* Say.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Say.swift; sourceTree = "<group>"; };
 		BE70DA2B204DD5D800DEFF10 /* ScriptEditViewController+AutoComplete.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ScriptEditViewController+AutoComplete.swift"; sourceTree = "<group>"; };
+		BE740C1520826648001C1F24 /* NewPridelandCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewPridelandCollectionViewCell.swift; sourceTree = "<group>"; };
+		BE740C1620826648001C1F24 /* NewPridelandCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NewPridelandCollectionViewCell.xib; sourceTree = "<group>"; };
 		BE8E66FB206196A7007B14E6 /* Notification+Names.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Notification+Names.swift"; sourceTree = "<group>"; };
 		BE8E66FD206196B8007B14E6 /* UIDevice+Name.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIDevice+Name.swift"; sourceTree = "<group>"; };
 		BE8E66FF206196D5007B14E6 /* Bundle+Info.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Bundle+Info.swift"; sourceTree = "<group>"; };
@@ -310,11 +314,10 @@
 		3CA32103201FFC0300974B5F /* Scripting */ = {
 			isa = PBXGroup;
 			children = (
+				BE740C192082664E001C1F24 /* Cells */,
 				3CA320FE201FE8E100974B5F /* ScriptsViewController.swift */,
 				3CA32104201FFC1300974B5F /* ScriptEditViewController.swift */,
 				BE70DA2B204DD5D800DEFF10 /* ScriptEditViewController+AutoComplete.swift */,
-				BEB7752320716B5200201EBB /* PridelandCollectionViewCell.swift */,
-				BEB7752420716B5200201EBB /* PridelandCollectionViewCell.xib */,
 				BEB775652074095800201EBB /* ScriptMetadataViewController.swift */,
 				BE1643D12077E9D4002939B7 /* PridelandDocument.swift */,
 			);
@@ -441,6 +444,17 @@
 				BE3808611FD9BFB600393EB8 /* Info.plist */,
 			);
 			path = OpenTerm;
+			sourceTree = "<group>";
+		};
+		BE740C192082664E001C1F24 /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				BEB7752320716B5200201EBB /* PridelandCollectionViewCell.swift */,
+				BEB7752420716B5200201EBB /* PridelandCollectionViewCell.xib */,
+				BE740C1520826648001C1F24 /* NewPridelandCollectionViewCell.swift */,
+				BE740C1620826648001C1F24 /* NewPridelandCollectionViewCell.xib */,
+			);
+			path = Cells;
 			sourceTree = "<group>";
 		};
 		BEA8E28D2001344400002475 /* Controller */ = {
@@ -600,6 +614,7 @@
 				22A808CB20664BF0001AB98D /* commandDictionary.plist in Resources */,
 				22A808CC20664BF0001AB98D /* extraCommandsDictionary.plist in Resources */,
 				BE3808601FD9BFB600393EB8 /* LaunchScreen.storyboard in Resources */,
+				BE740C1820826648001C1F24 /* NewPridelandCollectionViewCell.xib in Resources */,
 				BEB774F12070206E00201EBB /* Logo-small.txt in Resources */,
 				BE38085D1FD9BFB600393EB8 /* Assets.xcassets in Resources */,
 				BEA4992C1FDC0918001B9B9D /* icon-320.png in Resources */,
@@ -628,6 +643,7 @@
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-OpenTerm/Pods-OpenTerm-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/BezierPathLength/BezierPathLength.framework",
 				"${BUILT_PRODUCTS_DIR}/Cub/Cub.framework",
 				"${BUILT_PRODUCTS_DIR}/HueKit/HueKit.framework",
 				"${BUILT_PRODUCTS_DIR}/InputAssistant/InputAssistant.framework",
@@ -638,6 +654,7 @@
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/BezierPathLength.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Cub.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/HueKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/InputAssistant.framework",
@@ -691,6 +708,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				BEEAD9C6207E8C8500CBC254 /* Array+Safe.swift in Sources */,
+				BE740C1720826648001C1F24 /* NewPridelandCollectionViewCell.swift in Sources */,
 				BE1D5F9D204C66F1008A1C36 /* Cub+Runner.swift in Sources */,
 				3CE57681202A52ED00760E43 /* TerminalViewController.swift in Sources */,
 				BEA8E2912001348C00002475 /* UIColor+AssetCatalog.swift in Sources */,

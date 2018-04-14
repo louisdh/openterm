@@ -44,6 +44,7 @@ class ScriptsViewController: UIViewController {
 	
 	enum CellType: Equatable {
 		case prideland(PridelandOverview)
+		case addNew
 	}
 	
 	@IBOutlet weak var collectionView: UICollectionView!
@@ -58,10 +59,13 @@ class ScriptsViewController: UIViewController {
 		self.title = "Scripts"
 		
 		collectionView.register(UINib(nibName: "PridelandCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "PridelandCollectionViewCell")
-
+		collectionView.register(UINib(nibName: "NewPridelandCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "NewPridelandCollectionViewCell")
+		
 		collectionView.dataSource = self
 		collectionView.delegate = self
 
+		collectionView.delaysContentTouches = false
+		
 		self.view.tintColor = .defaultMainTintColor
 		self.navigationController?.navigationBar.barStyle = .blackTranslucent
 
@@ -324,7 +328,8 @@ class ScriptsViewController: UIViewController {
 	
 	func updatePridelandItems(_ overviews: [PridelandOverview]) {
 		
-		let newItems: [CellType] = overviews.map({ .prideland($0) })
+		var newItems: [CellType] = overviews.map({ .prideland($0) })
+		newItems.append(.addNew)
 		
 		guard let prevItems = cellItems else {
 			cellItems = newItems
@@ -341,6 +346,10 @@ class ScriptsViewController: UIViewController {
 			switch (p1, p2) {
 			case let (.prideland(overview1), .prideland(overview2)):
 				return overview1.url == overview2.url
+			case (.addNew, .addNew):
+				return true
+			default:
+				return false
 			}
 			
 		}, sameValueClosure: { (p1, p2) -> Bool in
@@ -361,18 +370,25 @@ extension ScriptsViewController: UICollectionViewDataSource {
 	
 	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 		
-		let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PridelandCollectionViewCell", for: indexPath) as! PridelandCollectionViewCell
-		
 		guard let cellItem = cellItems?[indexPath.row] else {
-			return cell
+			fatalError("Expected cellItem")
 		}
 		
 		switch cellItem {
 		case .prideland(let pridelandOverview):
+			
+			let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PridelandCollectionViewCell", for: indexPath) as! PridelandCollectionViewCell
+
 			cell.show(pridelandOverview)
+			return cell
+
+		case .addNew:
+			let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "NewPridelandCollectionViewCell", for: indexPath) as! NewPridelandCollectionViewCell
+			
+			return cell
+			
 		}
 		
-		return cell
 	}
 	
 }
@@ -403,8 +419,39 @@ extension ScriptsViewController: UICollectionViewDelegateFlowLayout {
 		switch cellItem {
 		case .prideland(let pridelandOverview):
 			openPrideland(url: pridelandOverview.url, title: pridelandOverview.metadata.name)
+		
+		case .addNew:
+			addScript()
 			
 		}
+
+	}
+	
+	func collectionView(_ collectionView: UICollectionView, didHighlightItemAt indexPath: IndexPath) {
+		
+		guard let cell = collectionView.cellForItem(at: indexPath) else {
+			return
+		}
+		
+		UIView.animate(withDuration: 0.5, delay: 0.0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0.8, options: [.allowUserInteraction], animations: {
+			
+			cell.transform = CGAffineTransform(scaleX: 0.9, y: 0.9)
+
+		}, completion: nil)
+		
+	}
+	
+	func collectionView(_ collectionView: UICollectionView, didUnhighlightItemAt indexPath: IndexPath) {
+	
+		guard let cell = collectionView.cellForItem(at: indexPath) else {
+			return
+		}
+		
+		UIView.animate(withDuration: 0.5, delay: 0.0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0.8, options: [.allowUserInteraction], animations: {
+			
+			cell.transform = .identity
+			
+		}, completion: nil)
 
 	}
 	
