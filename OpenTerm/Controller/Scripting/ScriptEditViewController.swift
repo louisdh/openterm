@@ -20,6 +20,8 @@ class ScriptEditViewController: UIViewController {
 	let autoCompleteManager: CubSyntaxAutoCompleteManager
 	let inputAssistantView: InputAssistantView
 
+	var cubManualPanelViewController: PanelViewController!
+
 	init(url: URL) {
 		self.url = url
 		self.textView = SyntaxTextView()
@@ -29,6 +31,11 @@ class ScriptEditViewController: UIViewController {
 
 		super.init(nibName: nil, bundle: nil)
 		
+		let cubManualURL = Bundle.main.url(forResource: "book", withExtension: "html", subdirectory: "cub-guide.htmlcontainer")!
+		let cubManualVC = UIStoryboard.main.manualWebViewController(htmlURL: cubManualURL)
+		cubManualPanelViewController = PanelViewController(with: cubManualVC, in: self)
+		cubManualVC.title = "The Cub Programming Language"
+
 	}
 
 	required init?(coder aDecoder: NSCoder) {
@@ -42,6 +49,7 @@ class ScriptEditViewController: UIViewController {
 	private var textViewSelectedRangeObserver: NSKeyValueObservation?
 
 	private let keyboardObserver = KeyboardObserver()
+	
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -66,11 +74,17 @@ class ScriptEditViewController: UIViewController {
 
 		}
 		
+		
+//		cubManualPanelViewController = PanelViewController(with: cubManualVC, in: self)
+		
+		let manualsBarButtonItem = UIBarButtonItem(barButtonSystemItem: .bookmarks, target: self, action: #selector(showManuals(_:)))
+		
 		let infoButton = UIButton(type: .infoLight)
 		infoButton.addTarget(self, action: #selector(showScriptMetadata), for: .touchUpInside)
 		
 		let infoBarButtonItem = UIBarButtonItem(customView: infoButton)
-		navigationItem.rightBarButtonItem = infoBarButtonItem
+		
+		navigationItem.rightBarButtonItems = [infoBarButtonItem, manualsBarButtonItem]
 		
 		document.open { [weak self] (success) in
 			
@@ -136,6 +150,22 @@ class ScriptEditViewController: UIViewController {
 			self.document.close(completionHandler: nil)
 		}
 		
+	}
+	
+	@objc
+	func showManuals(_ sender: UIBarButtonItem) {
+	
+		presentPopover(self.cubManualPanelViewController, from: sender)
+		
+	}
+	
+	private func presentPopover(_ viewController: UIViewController, from sender: UIBarButtonItem) {
+		viewController.modalPresentationStyle = .popover
+		viewController.popoverPresentationController?.barButtonItem = sender
+		viewController.popoverPresentationController?.permittedArrowDirections = .up
+		viewController.popoverPresentationController?.backgroundColor = viewController.view.backgroundColor
+		
+		present(viewController, animated: true, completion: nil)
 	}
 	
 	@objc
@@ -254,6 +284,22 @@ extension ScriptEditViewController: InputAssistantViewDelegate {
 
 		textView.contentTextView.selectedRange = NSRange(location: suggestion.insertionIndex + suggestion.cursorAfterInsertion, length: 0)
 
+	}
+	
+}
+
+extension ScriptEditViewController: PanelManager {
+	
+	var panels: [PanelViewController] {
+		return [cubManualPanelViewController]
+	}
+	
+	var panelContentWrapperView: UIView {
+		return self.view
+	}
+	
+	var panelContentView: UIView {
+		return textView
 	}
 	
 }

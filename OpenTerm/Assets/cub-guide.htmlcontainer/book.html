@@ -1,0 +1,461 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>{{title}}</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta name="description" content="{{description}}" />
+		<link href="cub.css" rel="stylesheet">
+	</head>
+	<body>
+		<div class="content clearfix"><div class="book-content">
+<center><img src="img/logo@2x.png"/></center>
+<center><h1>The Cub Programming Language</h1></center>
+<center><p style="margin-bottom: 4rem"><em>by Louis D'hauwe</em></p></center>
+<h2>Table of Contents</h2>
+<ol>
+<li><a href="#Intro">Intro</a></li>
+<li><a href="#Features">Features</a>
+<ol>
+<li><a href="#Features.Variables">Variables</a></li>
+<li><a href="#Features.Types">Types</a>
+<ol>
+<li><a href="#Features.Types.Number">Number</a></li>
+<li><a href="#Features.Types.Boolean">Boolean</a></li>
+<li><a href="#Features.Types.String">String</a></li>
+<li><a href="#Features.Types.Array">Array</a></li>
+<li><a href="#Features.Types.Struct">Struct</a></li>
+</ol>
+</li>
+<li><a href="#Features.ConditionalStatements">Conditional statements</a></li>
+<li><a href="#Features.Loops">Loops</a>
+<ol>
+<li><a href="#Features.Loops.For">For loop</a></li>
+<li><a href="#Features.Loops.While">While loop</a></li>
+<li><a href="#Features.Loops.DoTimes">Do times loop</a></li>
+<li><a href="#Features.Loops.RepeatWhile">Repeat while loop</a></li>
+<li><a href="#Features.Loops.Continue">Continue</a></li>
+<li><a href="#Features.Loops.Break">Break</a></li>
+</ol>
+</li>
+<li><a href="#Features.Functions">Functions</a></li>
+<li><a href="#Features.Unicode">Unicode support</a></li>
+</ol>
+</li>
+</ol>
+<p><a name="Intro"></a></p>
+<h2>Intro</h2>
+<p>Cub is a scripting language with a lightweight syntax. It was inspired by Swift. Cub is easy to learn and fast to write. This document guides you through all the language features of Cub and is suitable for people with little programming experience.</p>
+<p>A Cub script can be as simple as:</p>
+<pre><code class="language-swift">
+<span class="token function">print</span><span class="token punctuation">(</span><span class="token string">"Hello world"</span><span class="token punctuation">)</span>
+</code></pre>
+<p><a name="Features"></a></p>
+<h2>Features</h2>
+<p><a name="Features.Variables"></a></p>
+<h3>Variables</h3>
+<p>A variable can be declared in the following way:</p>
+<pre><code class="language-swift">
+myVariable <span class="token operator">=</span> <span class="token number">42</span>
+</code></pre>
+<p>A variable can change its value at any time:</p>
+<pre><code class="language-swift">
+myVariable <span class="token operator">=</span> <span class="token number">42</span>
+myVariable <span class="token operator">=</span> <span class="token number">10</span>
+</code></pre>
+<p>Values are copied on assignment:</p>
+<pre><code class="language-swift">
+a <span class="token operator">=</span> <span class="token number">10</span>
+b <span class="token operator">=</span> a
+a <span class="token operator">+</span><span class="token operator">=</span> <span class="token number">1</span>
+<span class="token comment" spellcheck="true">// a is now 11</span>
+<span class="token comment" spellcheck="true">// b is still 10</span>
+</code></pre>
+<p><a name="Features.Types"></a></p>
+<h3>Types</h3>
+<p>Cub is a dynamic language. This means that variables don't have a fixed type. A variable can change its type at any time:</p>
+<pre><code class="language-swift">
+myVariable <span class="token operator">=</span> <span class="token number">42</span>
+myVariable <span class="token operator">=</span> <span class="token string">"awesome!"</span> <span class="token comment" spellcheck="true">// this overrides the value from the previous line</span>
+</code></pre>
+<p><a name="Features.Types.Number"></a></p>
+<h4>Number</h4>
+<p>All numbers in Cub are floating point.</p>
+<pre><code class="language-swift">
+myNumber <span class="token operator">=</span> <span class="token number">3.14</span>
+</code></pre>
+<p>Numbers can be negative:</p>
+<pre><code class="language-swift">
+a <span class="token operator">=</span> <span class="token operator">-</span><span class="token number">10</span>
+</code></pre>
+<p>The following operators are supported:</p>
+<pre><code class="language-swift">
+a <span class="token operator">=</span> <span class="token number">1</span> <span class="token operator">+</span> <span class="token number">2</span> <span class="token comment" spellcheck="true">// 3</span>
+b <span class="token operator">=</span> <span class="token number">2</span> <span class="token operator">-</span> <span class="token number">1</span> <span class="token comment" spellcheck="true">// 1</span>
+c <span class="token operator">=</span> <span class="token number">2</span> <span class="token operator">*</span> <span class="token number">2</span> <span class="token comment" spellcheck="true">// 4</span>
+d <span class="token operator">=</span> <span class="token number">1</span> <span class="token operator">/</span> <span class="token number">2</span> <span class="token comment" spellcheck="true">// 0.5</span>
+e <span class="token operator">=</span> <span class="token number">2</span> <span class="token operator">^</span> <span class="token number">3</span> <span class="token comment" spellcheck="true">// = 2 * 2 * 2 = 8</span>
+</code></pre>
+<p><a name="Features.Types.Boolean"></a></p>
+<h4>Boolean</h4>
+<p>A boolean value can be obtained using a literal:</p>
+<pre><code class="language-swift">
+isAwesome <span class="token operator">=</span> <span class="token boolean">true</span>
+doEvil <span class="token operator">=</span> <span class="token boolean">false</span>
+</code></pre>
+<p>as well as using a condition:</p>
+<pre><code class="language-swift">
+myNumber <span class="token operator">=</span> <span class="token number">10</span>
+
+isLargeNumber <span class="token operator">=</span> myNumber <span class="token operator">></span> <span class="token number">5</span> <span class="token comment" spellcheck="true">// evaluates to true</span>
+</code></pre>
+<p>Cub supports the following comparison operators:</p>
+<pre><code class="language-swift">
+myNumber <span class="token operator">=</span> <span class="token number">10</span>
+
+isLargerThan10 <span class="token operator">=</span> myNumber <span class="token operator">></span> <span class="token number">10</span>
+isLargerThanOrEqual10 <span class="token operator">=</span> myNumber <span class="token operator">>=</span> <span class="token number">10</span>
+isSmallThan10 <span class="token operator">=</span> myNumber <span class="token operator">&lt;</span> <span class="token number">10</span>
+isSmallThanOrEqual10 <span class="token operator">=</span> myNumber <span class="token operator">&lt;=</span> <span class="token number">10</span>
+is10 <span class="token operator">=</span> myNumber <span class="token operator">==</span> <span class="token number">10</span>
+isNot10 <span class="token operator">=</span> myNumber <span class="token operator">!=</span> <span class="token number">10</span>
+</code></pre>
+<p>Cub supports three bitwise operators:</p>
+<ol>
+<li>The and operator (<code>&amp;&amp;</code>) results to true if both boolean values are true:</li>
+</ol>
+<pre><code class="language-swift">
+and <span class="token operator">=</span> <span class="token boolean">true</span> <span class="token operator">&amp;&amp;</span> <span class="token boolean">false</span> <span class="token comment" spellcheck="true">// equals false</span>
+and <span class="token operator">=</span> <span class="token boolean">true</span> <span class="token operator">&amp;&amp;</span> <span class="token boolean">true</span> <span class="token comment" spellcheck="true">// equals true</span>
+</code></pre>
+<p>This is very useful when combined with variables and statements:</p>
+<pre><code class="language-swift">
+isDragon <span class="token operator">=</span> <span class="token boolean">true</span>
+isGreen <span class="token operator">=</span> <span class="token boolean">true</span>
+
+<span class="token keyword">if</span> isDragon <span class="token operator">&amp;&amp;</span> isGreen <span class="token punctuation">{</span>
+	<span class="token comment" spellcheck="true">// A green dragon </span>
+<span class="token punctuation">}</span>
+</code></pre>
+<ol start="2">
+<li>The or operator (<code>||</code>) results to true if at least one of the boolean values is true:</li>
+</ol>
+<pre><code class="language-swift">
+isDragon <span class="token operator">=</span> <span class="token boolean">true</span>
+isGreen <span class="token operator">=</span> <span class="token boolean">false</span>
+
+<span class="token keyword">if</span> isDragon <span class="token operator">||</span> isGreen <span class="token punctuation">{</span>
+	<span class="token comment" spellcheck="true">// is a dragon, or is green, or both</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<ol start="3">
+<li>The not operator (<code>!</code>) negates a boolean value:</li>
+</ol>
+<pre><code class="language-swift">
+myNumber <span class="token operator">=</span> <span class="token number">10</span>
+
+isLargeNumber <span class="token operator">=</span> myNumber <span class="token operator">></span> <span class="token number">5</span> <span class="token comment" spellcheck="true">// evaluates to true</span>
+isSmallNumber <span class="token operator">=</span> <span class="token operator">!</span>isLargeNumber  <span class="token comment" spellcheck="true">// evaluates to false</span>
+</code></pre>
+<p><a name="Features.Types.String"></a></p>
+<h4>String</h4>
+<p>Strings are defined using quotes:</p>
+<pre><code class="language-swift">
+message <span class="token operator">=</span> <span class="token string">"Hello world!"</span>
+</code></pre>
+<p>Strings can be concatenated:</p>
+<pre><code class="language-swift">
+name <span class="token operator">=</span> <span class="token string">"Steve"</span>
+message <span class="token operator">=</span> <span class="token string">"Hello "</span> <span class="token operator">+</span> name <span class="token comment" spellcheck="true">// "Hello Steve"</span>
+</code></pre>
+<p><a name="Features.Types.Array"></a></p>
+<h4>Array</h4>
+<p>An array is defined using square brackets:</p>
+<pre><code class="language-swift">
+favoriteNumbers <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">,</span> <span class="token number">8</span><span class="token punctuation">]</span>
+</code></pre>
+<p>Arrays can contain different value types:</p>
+<pre><code class="language-swift">
+thingsILove <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">3.14</span><span class="token punctuation">,</span> <span class="token string">"pie"</span><span class="token punctuation">,</span> <span class="token boolean">true</span><span class="token punctuation">]</span>
+</code></pre>
+<p>Arrays can also contain other arrays:</p>
+<pre><code class="language-swift">
+square <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">]</span><span class="token punctuation">]</span>
+</code></pre>
+<p>Variables can be used in arrays like any other value:</p>
+<pre><code class="language-swift">
+favoriteColor <span class="token operator">=</span> <span class="token string">"red"</span>
+
+favorites <span class="token operator">=</span> <span class="token punctuation">[</span>favoriteColor<span class="token punctuation">,</span> <span class="token number">3.14</span><span class="token punctuation">]</span>
+</code></pre>
+<p>A value can be added to an array using the add operator:</p>
+<pre><code class="language-swift">
+thingsILove <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">3.14</span><span class="token punctuation">,</span> <span class="token string">"pie"</span><span class="token punctuation">]</span>
+thingsILove <span class="token operator">+</span><span class="token operator">=</span> <span class="token string">"Cub"</span> <span class="token comment" spellcheck="true">// thingsILove now equals [3.14, "pie", "Cub"]</span>
+</code></pre>
+<p>Adding two arrays results in one array:</p>
+<pre><code class="language-swift">
+thingsILove <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">3.14</span><span class="token punctuation">,</span> <span class="token string">"pie"</span><span class="token punctuation">]</span>
+thingsILove <span class="token operator">+</span><span class="token operator">=</span> <span class="token punctuation">[</span><span class="token string">"Cub"</span><span class="token punctuation">,</span> <span class="token string">"OpenTerm"</span><span class="token punctuation">]</span> 
+<span class="token comment" spellcheck="true">// thingsILove now equals [3.14, "pie", "Cub", "OpenTerm"]</span>
+</code></pre>
+<p>A value can also be added to the front of an array:</p>
+<pre><code class="language-swift">
+favoriteColor <span class="token operator">=</span> <span class="token string">"red"</span>
+thingsILove <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">3.14</span><span class="token punctuation">,</span> <span class="token string">"pie"</span><span class="token punctuation">]</span>
+thingsILove <span class="token operator">=</span> favoriteColor <span class="token operator">+</span> thingsILove
+<span class="token comment" spellcheck="true">// thingsILove now equals ["red", 3.14, "pie"]</span>
+</code></pre>
+<p>Accessing a value from an array is possible using a subscript:</p>
+<pre><code class="language-swift">
+thingsILove <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">3.14</span><span class="token punctuation">,</span> <span class="token string">"pie"</span><span class="token punctuation">]</span>
+firstThingILove <span class="token operator">=</span> thingsILove<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token comment" spellcheck="true">// arrays start counting from 0</span>
+</code></pre>
+<p>Trying to access a value at an invalid index results in a runtime crash:</p>
+<pre><code class="language-swift">
+thingsILove <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">3.14</span><span class="token punctuation">,</span> <span class="token string">"pie"</span><span class="token punctuation">]</span>
+thirdThingILove <span class="token operator">=</span> thingsILove<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span> <span class="token comment" spellcheck="true">// script will abort</span>
+</code></pre>
+<p>You can loop over all the values in an array:</p>
+<pre><code class="language-swift">
+numbers <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">]</span>
+<span class="token keyword">for</span> number <span class="token keyword">in</span> numbers <span class="token punctuation">{</span>
+    <span class="token comment" spellcheck="true">// do something</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p><a name="Features.Types.Struct"></a></p>
+<h4>Struct</h4>
+<p>A struct is a special value that contains other values. You define a struct like this:</p>
+<pre><code class="language-swift">
+<span class="token keyword">struct</span> <span class="token builtin">Point</span> <span class="token punctuation">{</span>
+    x<span class="token punctuation">,</span> y
+<span class="token punctuation">}</span>
+</code></pre>
+<p>You can create an instance of a struct by using the struct's name:</p>
+<pre><code class="language-swift">
+myPoint <span class="token operator">=</span> <span class="token function">Point</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">)</span>
+</code></pre>
+<p>You access a value in a struct using the name of that member:</p>
+<pre><code class="language-swift">
+myPoint <span class="token operator">=</span> <span class="token function">Point</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">)</span>
+
+x <span class="token operator">=</span> myPoint<span class="token punctuation">.</span>x
+</code></pre>
+<p>Structs can contain any value, including other structs:</p>
+<pre><code class="language-swift">
+<span class="token keyword">struct</span> <span class="token builtin">Point</span> <span class="token punctuation">{</span>
+    x<span class="token punctuation">,</span> y
+<span class="token punctuation">}</span>
+
+<span class="token keyword">struct</span> <span class="token builtin">Size</span> <span class="token punctuation">{</span>
+    width<span class="token punctuation">,</span> height
+<span class="token punctuation">}</span>
+
+<span class="token keyword">struct</span> <span class="token builtin">Rect</span> <span class="token punctuation">{</span>
+    origin<span class="token punctuation">,</span> size
+<span class="token punctuation">}</span>
+
+rect <span class="token operator">=</span> <span class="token function">Rect</span><span class="token punctuation">(</span><span class="token function">Point</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token function">Size</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+</code></pre>
+<p>The value of a struct can be edited by assigning to one of its members:</p>
+<pre><code class="language-swift">
+myPoint <span class="token operator">=</span> <span class="token function">Point</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">)</span>
+
+myPoint<span class="token punctuation">.</span>x <span class="token operator">=</span> <span class="token number">3</span>
+
+<span class="token comment" spellcheck="true">// myPoint now equals (3, 4)</span>
+</code></pre>
+<p><a name="Features.ConditionalStatements"></a></p>
+<h3>Conditional statements</h3>
+<p>Cub supports if statements:</p>
+<pre><code class="language-swift">
+myNumber <span class="token operator">=</span> <span class="token number">42</span>
+
+<span class="token keyword">if</span> myNumber <span class="token operator">></span> <span class="token number">10</span> <span class="token punctuation">{</span>
+    <span class="token comment" spellcheck="true">// do something</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>If statements can be followed by an else statement:</p>
+<pre><code class="language-swift">
+myNumber <span class="token operator">=</span> <span class="token number">42</span>
+
+<span class="token keyword">if</span> myNumber <span class="token operator">></span> <span class="token number">40</span> <span class="token punctuation">{</span>
+    <span class="token comment" spellcheck="true">// do something</span>
+<span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+    <span class="token comment" spellcheck="true">// do something else</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>If statements can also be followed by an else-if statement:</p>
+<pre><code class="language-swift">
+myNumber <span class="token operator">=</span> <span class="token number">42</span>
+
+<span class="token keyword">if</span> myNumber <span class="token operator">></span> <span class="token number">40</span> <span class="token punctuation">{</span>
+    <span class="token comment" spellcheck="true">// do something</span>
+<span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token keyword">if</span> myNumber <span class="token operator">></span> <span class="token number">30</span> <span class="token punctuation">{</span>
+    <span class="token comment" spellcheck="true">// do something else</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>An if statement can have an unlimited number of subsequent else-if statement:</p>
+<pre><code class="language-swift">
+myNumber <span class="token operator">=</span> <span class="token number">42</span>
+
+<span class="token keyword">if</span> myNumber <span class="token operator">></span> <span class="token number">40</span> <span class="token punctuation">{</span>
+    <span class="token comment" spellcheck="true">// do something</span>
+<span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token keyword">if</span> myNumber <span class="token operator">></span> <span class="token number">30</span> <span class="token punctuation">{</span>
+    <span class="token comment" spellcheck="true">// do something else</span>
+<span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token keyword">if</span> myNumber <span class="token operator">></span> <span class="token number">20</span> <span class="token punctuation">{</span>
+    <span class="token comment" spellcheck="true">// do something else</span>
+<span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token keyword">if</span> myNumber <span class="token operator">></span> <span class="token number">10</span> <span class="token punctuation">{</span>
+    <span class="token comment" spellcheck="true">// do something else</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>An else statement, if present, must be the last statement in an if statement:</p>
+<pre><code class="language-swift">
+myNumber <span class="token operator">=</span> <span class="token number">42</span>
+
+<span class="token keyword">if</span> myNumber <span class="token operator">></span> <span class="token number">40</span> <span class="token punctuation">{</span>
+    <span class="token comment" spellcheck="true">// do something</span>
+<span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token keyword">if</span> myNumber <span class="token operator">></span> <span class="token number">30</span> <span class="token punctuation">{</span>
+    <span class="token comment" spellcheck="true">// do something else</span>
+<span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token keyword">if</span> myNumber <span class="token operator">></span> <span class="token number">20</span> <span class="token punctuation">{</span>
+    <span class="token comment" spellcheck="true">// do something else</span>
+<span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token keyword">if</span> myNumber <span class="token operator">></span> <span class="token number">10</span> <span class="token punctuation">{</span>
+    <span class="token comment" spellcheck="true">// do something else</span>
+<span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+    <span class="token comment" spellcheck="true">// fallback</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p><a name="Features.Loops"></a></p>
+<h3>Loops</h3>
+<p>Since Cub is a scripting language, loops are an essential part.</p>
+<p><a name="Features.Loops.For"></a></p>
+<h4>For loop</h4>
+<p>A for loop executes its body using an iterator variable:</p>
+<pre><code class="language-swift">
+numbers <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+
+<span class="token keyword">for</span> i <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">,</span> i<span class="token operator">&lt;=</span><span class="token number">10</span><span class="token punctuation">,</span> i <span class="token operator">+</span><span class="token operator">=</span> <span class="token number">1</span> <span class="token punctuation">{</span>
+	numbers <span class="token operator">+</span><span class="token operator">=</span> i
+<span class="token punctuation">}</span>
+
+<span class="token comment" spellcheck="true">// numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]</span>
+</code></pre>
+<p><a name="Features.Loops.While"></a></p>
+<h4>While loop</h4>
+<p>A while loop executes its body until its condition is false:</p>
+<pre><code class="language-swift">
+a <span class="token operator">=</span> <span class="token number">10</span>
+i <span class="token operator">=</span> <span class="token number">0</span>
+<span class="token keyword">while</span> a <span class="token operator">></span> <span class="token number">2</span> <span class="token punctuation">{</span>
+	a <span class="token operator">-</span><span class="token operator">=</span> <span class="token number">2</span>
+	i <span class="token operator">+</span><span class="token operator">=</span> <span class="token number">1</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment" spellcheck="true">// a now equals 2</span>
+<span class="token comment" spellcheck="true">// i now equals 4</span>
+</code></pre>
+<p><a name="Features.Loops.DoTimes"></a></p>
+<h4>Do times loop</h4>
+<p>A do times loop executes its body a fixed number of times:</p>
+<pre><code class="language-swift">
+<span class="token keyword">do</span> <span class="token number">10</span> times <span class="token punctuation">{</span>
+    <span class="token comment" spellcheck="true">// this will be executed 10 times</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>You can also pass a variable:</p>
+<pre><code class="language-swift">
+n <span class="token operator">=</span> <span class="token number">10</span>
+<span class="token keyword">do</span> n times <span class="token punctuation">{</span>
+    <span class="token comment" spellcheck="true">// this will be executed n times</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p><a name="Features.Loops.RepeatWhile"></a></p>
+<h4>Repeat while loop</h4>
+<p>A repeat while loop executes its body at least once, until its condition is false:</p>
+<pre><code class="language-swift">
+i <span class="token operator">=</span> <span class="token number">10</span>
+
+<span class="token keyword">repeat</span> <span class="token punctuation">{</span>
+
+	i <span class="token operator">*</span><span class="token operator">=</span> <span class="token number">2</span>
+
+<span class="token punctuation">}</span> <span class="token keyword">while</span> i <span class="token operator">&lt;</span> <span class="token number">5</span>
+
+<span class="token comment" spellcheck="true">// i now equals 20</span>
+</code></pre>
+<p><a name="Features.Loops.Continue"></a></p>
+<h4>Continue</h4>
+<p>You can use a <code>continue</code> statement to skip an iteration in a loop:</p>
+<pre><code class="language-swift">
+numbers <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+
+<span class="token keyword">for</span> i <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">,</span> i<span class="token operator">&lt;=</span><span class="token number">10</span><span class="token punctuation">,</span> i <span class="token operator">+</span><span class="token operator">=</span> <span class="token number">1</span> <span class="token punctuation">{</span>
+	
+	<span class="token keyword">if</span> i <span class="token operator">==</span> <span class="token number">2</span> <span class="token punctuation">{</span>
+		<span class="token keyword">continue</span>
+	<span class="token punctuation">}</span>    
+
+	numbers <span class="token operator">+</span><span class="token operator">=</span> i
+<span class="token punctuation">}</span>
+
+<span class="token comment" spellcheck="true">// numbers = [1, 3, 4, 5, 6, 7, 8, 9, 10]</span>
+</code></pre>
+<p><a name="Features.Loops.Break"></a></p>
+<h4>Break</h4>
+<p>You can use a <code>break</code> statement to exit a loop early:</p>
+<pre><code class="language-swift">
+numbers <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+
+<span class="token keyword">for</span> i <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">,</span> i<span class="token operator">&lt;=</span><span class="token number">10</span><span class="token punctuation">,</span> i <span class="token operator">+</span><span class="token operator">=</span> <span class="token number">1</span> <span class="token punctuation">{</span>
+	
+	<span class="token keyword">if</span> i <span class="token operator">==</span> <span class="token number">2</span> <span class="token punctuation">{</span>
+		<span class="token keyword">break</span>
+	<span class="token punctuation">}</span>    
+
+	numbers <span class="token operator">+</span><span class="token operator">=</span> i
+<span class="token punctuation">}</span>
+
+<span class="token comment" spellcheck="true">// numbers = [1]</span>
+</code></pre>
+<p><a name="Features.Functions"></a></p>
+<h3>Functions</h3>
+<p>Functions provide reusable pieces of code:</p>
+<pre><code class="language-swift">
+<span class="token keyword">func</span> <span class="token function">doSomething</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+	<span class="token comment" spellcheck="true">// do something</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>A function can be called using its name:</p>
+<pre><code class="language-swift">
+<span class="token function">doSomething</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+</code></pre>
+<p>A function can return a value:</p>
+<pre><code class="language-swift">
+<span class="token keyword">func</span> <span class="token function">getNumber</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">returns</span> <span class="token punctuation">{</span>
+	<span class="token keyword">return</span> <span class="token number">10</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>A function can take arguments:</p>
+<pre><code class="language-swift">
+<span class="token keyword">func</span> <span class="token function">sum</span><span class="token punctuation">(</span>a<span class="token punctuation">,</span> b<span class="token punctuation">)</span> <span class="token keyword">returns</span> <span class="token punctuation">{</span>
+	<span class="token keyword">return</span> a <span class="token operator">+</span> b
+<span class="token punctuation">}</span>
+
+total <span class="token operator">=</span> <span class="token function">sum</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">)</span> <span class="token comment" spellcheck="true">// total = 6</span>
+
+</code></pre>
+<p><a name="Features.Unicode"></a></p>
+<h3>Unicode support</h3>
+<p>Cub supports all unicode characters, including emotioncons. You can even use emoticons as variable and function names:</p>
+<pre><code class="language-swift">
+<span class="token keyword">func</span> ∑<span class="token punctuation">(</span>a<span class="token punctuation">,</span> b<span class="token punctuation">)</span> <span class="token keyword">returns</span> <span class="token punctuation">{</span>
+	<span class="token keyword">return</span> a <span class="token operator">+</span> b
+<span class="token punctuation">}</span>
+
+😀 <span class="token operator">=</span> ∑<span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">)</span> <span class="token comment" spellcheck="true">// 😀 = 6</span>
+</code></pre>
+		</div>
+
+		</div>
+	</body>
+</html>

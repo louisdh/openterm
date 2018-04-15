@@ -408,6 +408,44 @@ This project uses the open source ios_system project by Nicolas Holzschuch. This
             </objects>
             <point key="canvasLocation" x="2337" y="909"/>
         </scene>
+        <!--Title-->
+        <scene sceneID="nMH-Fi-Wyp">
+            <objects>
+                <viewController storyboardIdentifier="ManualWebViewController" id="ItA-vu-jZO" customClass="ManualWebViewController" customModule="OpenTerm" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="M16-Mn-cqy">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <wkWebView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="RRu-cl-jFu">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                                <color key="backgroundColor" red="0.36078431370000003" green="0.38823529410000002" blue="0.4039215686" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <wkWebViewConfiguration key="configuration">
+                                    <audiovisualMediaTypes key="mediaTypesRequiringUserActionForPlayback" none="YES"/>
+                                    <wkPreferences key="preferences"/>
+                                </wkWebViewConfiguration>
+                            </wkWebView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="RRu-cl-jFu" firstAttribute="bottom" secondItem="tqF-Fz-tdk" secondAttribute="bottom" id="1oa-Xz-z5q"/>
+                            <constraint firstItem="RRu-cl-jFu" firstAttribute="leading" secondItem="tqF-Fz-tdk" secondAttribute="leading" id="Fqh-Rg-e7f"/>
+                            <constraint firstItem="RRu-cl-jFu" firstAttribute="trailing" secondItem="tqF-Fz-tdk" secondAttribute="trailing" id="uYo-EC-c3P"/>
+                            <constraint firstItem="RRu-cl-jFu" firstAttribute="top" secondItem="M16-Mn-cqy" secondAttribute="top" id="xXH-c1-MEk"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="tqF-Fz-tdk"/>
+                    </view>
+                    <navigationItem key="navigationItem" title="Title" id="SZs-6d-9oj">
+                        <barButtonItem key="rightBarButtonItem" systemItem="action" id="gum-z2-OOU"/>
+                    </navigationItem>
+                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
+                    <connections>
+                        <outlet property="webView" destination="RRu-cl-jFu" id="hkg-cW-4dF"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ANU-Kd-Yam" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3181.5999999999999" y="908.9955022488756"/>
+        </scene>
         <!--History View Controller-->
         <scene sceneID="ysT-04-NMd">
             <objects>

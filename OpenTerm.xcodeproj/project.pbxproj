@@ -41,6 +41,8 @@
 		3CE5769E202A7EC500760E43 /* Parser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CE5769D202A7EC500760E43 /* Parser.swift */; };
 		3CE576A0202A874C00760E43 /* OutputSanitizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CE5769F202A874C00760E43 /* OutputSanitizer.swift */; };
 		AEF20A4A223775F9F5101BF5 /* Pods_OpenTerm.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 064CE91D25CE0DA967737711 /* Pods_OpenTerm.framework */; };
+		BE0146EB2083B2F90072AAB5 /* ManualWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE0146EA2083B2F90072AAB5 /* ManualWebViewController.swift */; };
+		BE0146ED2083BA000072AAB5 /* cub-guide.htmlcontainer in Resources */ = {isa = PBXBuildFile; fileRef = BE0146EC2083BA000072AAB5 /* cub-guide.htmlcontainer */; };
 		BE102815207A372C005E965F /* String+C.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE102814207A372C005E965F /* String+C.swift */; };
 		BE1643D22077E9D4002939B7 /* PridelandDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE1643D12077E9D4002939B7 /* PridelandDocument.swift */; };
 		BE1643D42077F857002939B7 /* DirectoryObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE1643D32077F857002939B7 /* DirectoryObserver.swift */; };
@@ -161,6 +163,8 @@
 		3CE5764720226A1500760E43 /* ANSITextState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ANSITextState.swift; sourceTree = "<group>"; };
 		3CE5769D202A7EC500760E43 /* Parser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Parser.swift; sourceTree = "<group>"; };
 		3CE5769F202A874C00760E43 /* OutputSanitizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutputSanitizer.swift; sourceTree = "<group>"; };
+		BE0146EA2083B2F90072AAB5 /* ManualWebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualWebViewController.swift; sourceTree = "<group>"; };
+		BE0146EC2083BA000072AAB5 /* cub-guide.htmlcontainer */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "cub-guide.htmlcontainer"; sourceTree = "<group>"; };
 		BE102814207A372C005E965F /* String+C.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+C.swift"; sourceTree = "<group>"; };
 		BE1643D12077E9D4002939B7 /* PridelandDocument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PridelandDocument.swift; sourceTree = "<group>"; };
 		BE1643D32077F857002939B7 /* DirectoryObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectoryObserver.swift; sourceTree = "<group>"; };
@@ -320,6 +324,7 @@
 				BE70DA2B204DD5D800DEFF10 /* ScriptEditViewController+AutoComplete.swift */,
 				BEB775652074095800201EBB /* ScriptMetadataViewController.swift */,
 				BE1643D12077E9D4002939B7 /* PridelandDocument.swift */,
+				BE0146EA2083B2F90072AAB5 /* ManualWebViewController.swift */,
 			);
 			path = Scripting;
 			sourceTree = "<group>";
@@ -349,6 +354,16 @@
 				FDC5C7C341371B47A1DB68A2 /* Pods-OpenTerm.release.xcconfig */,
 			);
 			name = Pods;
+			sourceTree = "<group>";
+		};
+		BE0146E12083ACBB0072AAB5 /* Assets */ = {
+			isa = PBXGroup;
+			children = (
+				BE0146EC2083BA000072AAB5 /* cub-guide.htmlcontainer */,
+				BEA4992B1FDC0918001B9B9D /* icon-320.png */,
+				BE38085C1FD9BFB600393EB8 /* Assets.xcassets */,
+			);
+			path = Assets;
 			sourceTree = "<group>";
 		};
 		BE102813207A36A5005E965F /* Data */ = {
@@ -429,17 +444,16 @@
 		BE3808541FD9BFB600393EB8 /* OpenTerm */ = {
 			isa = PBXGroup;
 			children = (
+				BE0146E12083ACBB0072AAB5 /* Assets */,
 				3C15E37C2026CE4F003216CF /* Commands */,
 				BE244DC6201FBB4F00A7EA4E /* Default certs */,
 				BEA8E28F2001346D00002475 /* Util */,
 				BE102813207A36A5005E965F /* Data */,
 				BEA8E28E2001345700002475 /* View */,
 				BEA8E28D2001344400002475 /* Controller */,
-				BEA4992B1FDC0918001B9B9D /* icon-320.png */,
 				BEA499241FD9C46C001B9B9D /* OpenTerm.entitlements */,
 				BE3808551FD9BFB600393EB8 /* AppDelegate.swift */,
 				BE3808591FD9BFB600393EB8 /* Main.storyboard */,
-				BE38085C1FD9BFB600393EB8 /* Assets.xcassets */,
 				BE38085E1FD9BFB600393EB8 /* LaunchScreen.storyboard */,
 				BE3808611FD9BFB600393EB8 /* Info.plist */,
 			);
@@ -622,6 +636,7 @@
 				BE244DC8201FBB6000A7EA4E /* cacert.pem in Resources */,
 				BE189036206FF36500EE6739 /* Logo.txt in Resources */,
 				BEB774EF20701D8500201EBB /* authors.json in Resources */,
+				BE0146ED2083BA000072AAB5 /* cub-guide.htmlcontainer in Resources */,
 				BEB7752620716B5200201EBB /* PridelandCollectionViewCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -730,6 +745,7 @@
 				28CDA426202444CC0055206D /* BookmarkViewController.swift in Sources */,
 				3CA32105201FFC1300974B5F /* ScriptEditViewController.swift in Sources */,
 				3C2E4374201EF67C00E4254A /* TerminalView+AutoComplete.swift in Sources */,
+				BE0146EB2083B2F90072AAB5 /* ManualWebViewController.swift in Sources */,
 				BEECFF391FFEC187009608B3 /* SettingsViewController.swift in Sources */,
 				F456629E200B9BC500C574AA /* ColorDisplayView.swift in Sources */,
 				BE165408201909040067EC92 /* xCallBackUrl.swift in Sources */,

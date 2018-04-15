@@ -35,6 +35,12 @@ class MainStoryboard: StoryboardWrapper {
 		return vc
 	}
 	
+	func manualWebViewController(htmlURL: URL) -> ManualWebViewController {
+		let vc: ManualWebViewController = instantiateViewController()
+		vc.htmlURL = htmlURL
+		return vc
+	}
+	
 }
 
 protocol StoryboardWrapper {
