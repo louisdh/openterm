@@ -9,10 +9,8 @@
 import UIKit
 import TabView
 
-#if swift(>=4.1)
-	#if canImport(SimulatorStatusMagic)
-		import SimulatorStatusMagic
-	#endif
+#if canImport(SimulatorStatusMagic)
+	import SimulatorStatusMagic
 #endif
 
 @UIApplicationMain
@@ -28,10 +26,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		window?.tintColor = .defaultMainTintColor
 		window?.makeKeyAndVisible()
 
-		#if swift(>=4.1)
-			#if canImport(SimulatorStatusMagic)
-				SDStatusBarManager.sharedInstance().enableOverrides()
-			#endif
+		#if canImport(SimulatorStatusMagic)
+			SDStatusBarManager.sharedInstance().enableOverrides()
 		#endif
 		
 		return true
