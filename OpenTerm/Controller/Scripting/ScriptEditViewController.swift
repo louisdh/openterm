@@ -19,6 +19,7 @@ class ScriptEditViewController: UIViewController {
 	let textView: SyntaxTextView
 	let autoCompleteManager: CubSyntaxAutoCompleteManager
 	let inputAssistantView: InputAssistantView
+	let autoCompletor = AutoCompleter()
 
 	var cubManualPanelViewController: PanelViewController!
 
@@ -255,8 +256,6 @@ extension ScriptEditViewController: UITextViewDelegate {
 extension ScriptEditViewController: CubSyntaxAutoCompleteManagerDataSource {
 
 	func completions() -> [CubSyntaxAutoCompleteManager.Completion] {
-		
-		let autoCompletor = AutoCompleter()
 		
 		guard let text = textView.contentTextView.text else {
 			return []
