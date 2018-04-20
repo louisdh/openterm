@@ -13,11 +13,13 @@ public struct FunctionNode: ASTNode {
 	public let prototype: FunctionPrototypeNode
 	public let body: BodyNode
 	public let range: Range<Int>?
+	public let documentation: String?
 
-	public init(prototype: FunctionPrototypeNode, body: BodyNode, range: Range<Int>?) {
+	public init(prototype: FunctionPrototypeNode, body: BodyNode, range: Range<Int>?, documentation: String?) {
 		self.prototype = prototype
 		self.body = body
 		self.range = range
+		self.documentation = documentation
 	}
 
 	public func compile(with ctx: BytecodeCompiler, in parent: ASTNode?) throws -> BytecodeBody {
@@ -122,6 +124,7 @@ public struct FunctionNode: ASTNode {
 		var str = "FunctionNode(prototype: \(prototype), "
 
 		str += "\n    \(body.description)"
+		str += "\n    documentation: \(String(describing: documentation))"
 
 		return str + ")"
 	}

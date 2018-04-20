@@ -22,7 +22,10 @@ public struct Token: CustomStringConvertible, Equatable {
 	}
 
 	public var description: String {
-		return "\(type)"
+		if let range = range {
+			return "\(type) (\(range))"
+		}
+		return "\(type))"
 	}
 
 }

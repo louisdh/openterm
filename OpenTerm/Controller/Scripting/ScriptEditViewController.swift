@@ -228,6 +228,10 @@ extension ScriptEditViewController: PanelContentDelegate {
 }
 
 extension ScriptEditViewController: SyntaxTextViewDelegate {
+	
+	func didChangeSelectedRange(_ syntaxTextView: SyntaxTextView, selectedRange: NSRange) {
+		autoCompleteManager.reloadData()
+	}
 
 	func didChangeText(_ syntaxTextView: SyntaxTextView) {
 		save()

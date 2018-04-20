@@ -15,3 +15,10 @@ public protocol Token {
 	var range: Range<Int>? { get }
 	
 }
+
+struct CachedToken {
+	
+	let token: Token
+	let nsRange: NSRange?
+	
+}

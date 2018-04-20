@@ -10,6 +10,8 @@ import Foundation
 
 public class Parser {
 
+	private var potentialDocNodes = [CommentNode]()
+	
 	private let tokens: [Token]
 
 	/// Token index
@@ -17,13 +19,7 @@ public class Parser {
 
 	public init(tokens: [Token]) {
 
-		self.tokens = tokens.filter {
-			if case .comment = $0.type {
-				return false
-			}
-
-			return true
-		}
+		self.tokens = tokens
 
 	}
 
@@ -586,6 +582,14 @@ public class Parser {
 		guard let currentToken = peekCurrentToken() else {
 			throw error(.unexpectedToken)
 		}
+		
+		if case .comment = currentToken.type {
+			
+		} else if case .function = currentToken.type {
+			
+		} else {
+			potentialDocNodes = []
+		}
 
 		switch currentToken.type {
 			case .identifier:
@@ -639,10 +643,26 @@ public class Parser {
 			case .struct:
 				return try parseStruct()
 
+			case .comment:
+				return try parseComment()
+			
 			default:
 				throw error(.expectedExpression, token: currentToken)
 		}
 
+	}
+	
+	private func parseComment() throws -> CommentNode {
+		
+		guard let token = popCurrentToken(), case let .comment(commentString) = token.type else {
+			throw error(.internalInconsistencyOccurred, token: nil)
+		}
+		
+		let node = CommentNode(comment: commentString, range: token.range)
+		
+		potentialDocNodes.append(node)
+		
+		return node
 	}
 
 	private func parseContinue() throws -> ContinueNode {
@@ -995,15 +1015,50 @@ public class Parser {
 
 	private func parseFunction() throws -> FunctionNode {
 
-		try popCurrentToken(andExpect: .function)
+		let funcToken = try popCurrentToken(andExpect: .function)
+		
+		var documentation: String? = nil
+		
+		if !potentialDocNodes.isEmpty, let funcTokenRange = funcToken.range {
+			var docNodes = [CommentNode]()
+			
+			var currentLowerboundCheck = funcTokenRange.lowerBound
+			
+			for docCommentNode in potentialDocNodes.reversed() {
+				
+				guard docCommentNode.comment.hasPrefix("///") else {
+					break
+				}
+				
+				guard let range = docCommentNode.range else {
+					continue
+				}
+
+				// +1 for new line
+				guard range.upperBound + 1 == currentLowerboundCheck else {
+					break
+				}
+				
+				docNodes.insert(docCommentNode, at: 0)
+				currentLowerboundCheck = range.lowerBound
+				
+			}
+			
+			if !docNodes.isEmpty {
+				documentation = docNodes.map({ $0.comment }).joined(separator: "\n")
+			}
+			
+		}
+		
+		potentialDocNodes = []
 
 		let prototype = try parseFunctionPrototype()
 
 		let body = try parseBody()
 
 		try popCurrentToken(andExpect: .curlyClose, "}")
-
-		return FunctionNode(prototype: prototype, body: body, range: currentTokenRange())
+			
+		return FunctionNode(prototype: prototype, body: body, range: currentTokenRange(), documentation: documentation)
 	}
 
 	private func parseArray() throws -> ArrayNode {

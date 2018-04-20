@@ -82,9 +82,9 @@ func rem(x, y) returns {
 	return x
 }
 
-/// x is dividend
-/// y is divisor
-/// returns modules
+/// - Parameter x: dividend
+/// - Parameter y: divisor
+/// - Returns: modulus
 func mod(x, y) returns {
 	
 	if y == 0 || abs(y) > abs(x) {

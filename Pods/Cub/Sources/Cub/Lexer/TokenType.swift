@@ -12,7 +12,8 @@ public enum TokenType: Equatable {
 	
 	/// Token which has no effect on program, such as white space
 	case ignoreableToken
-	case comment
+	
+	case comment(String)
 	
 	case identifier(String)
 	case number(NumberType)

@@ -30,49 +30,78 @@ public struct CompletionSuggestion: Equatable {
 struct SourceInformation {
 	
 	let source: String
-	let globalCursor: Int
-	let lineNumber: Int
-	let lineCursor: Int
-	let lineSource: String
 	
 	let newLineIndices: [Int]
-	
-	var textOnLineBeforeCursor: String
 	
 	let lexer: Lexer
 	
 	let tokens: [Token]
 
-	var currentToken: Token?
-
-	init(source: String, cursor: Int) {
+	init(source: String) {
 		self.source = source
-		globalCursor = cursor
 		
 		lexer = Lexer(input: source)
 		tokens = lexer.tokenize()
 		
 		newLineIndices = source.newLineIndices
 		
-		lineNumber = source.lineNumber(of: cursor)
+	}
+	
+}
+
+struct CursorInformation {
+	
+	let sourceInfo: SourceInformation
+	
+	var source: String {
+		return sourceInfo.source
+	}
+	
+	var newLineIndices: [Int] {
+		return sourceInfo.newLineIndices
+	}
+	
+	let globalCursor: Int
+	let lineNumber: Int
+	let lineCursor: Int
+	let lineSource: String
+	
+	var textOnLineBeforeCursor: String
+	
+	var lexer: Lexer {
+		return sourceInfo.lexer
+	}
+	
+	var tokens: [Token] {
+		return sourceInfo.tokens
+	}
+	
+	var currentToken: Token?
+	
+	init(sourceInfo: SourceInformation, cursor: Int) {
+		self.sourceInfo = sourceInfo
 		
-		lineSource = source.getLine(lineNumber, newLineIndices: newLineIndices)
+		globalCursor = cursor
+		
+		lineNumber = sourceInfo.source.lineNumber(of: cursor)
+		
+		lineSource = sourceInfo.source.getLine(lineNumber, newLineIndices: sourceInfo.newLineIndices)
 		
 		var indexInLine = cursor
 		
 		if lineNumber > 1 {
 			for i in 1..<lineNumber {
 				// count + 1 because of "\n"
-				indexInLine -= (source.getLine(i, newLineIndices: newLineIndices).count + 1)
+				indexInLine -= (sourceInfo.source.getLine(i, newLineIndices: sourceInfo.newLineIndices).count + 1)
 			}
 		}
 		
 		lineCursor = indexInLine
 		
 		textOnLineBeforeCursor = String(lineSource[lineSource.startIndex..<lineSource.index(lineSource.startIndex, offsetBy: indexInLine)])
-
 		
-//		var previousToken: Token?
+		
+		//		var previousToken: Token?
 		
 		for token in tokens {
 			
@@ -85,7 +114,7 @@ struct SourceInformation {
 				break
 			}
 			
-//			previousToken = token
+			//			previousToken = token
 		}
 		
 		if let currentToken = currentToken {
@@ -106,7 +135,17 @@ struct SourceInformation {
 	
 }
 
+fileprivate struct Cached<T> {
+	
+	let source: String
+	let cache: T
+	
+}
+
 public class AutoCompleter {
+	
+	fileprivate var cachedSourceInfo: Cached<SourceInformation>?
+	fileprivate var cachedCursorInfo: Cached<CursorInformation>?
 	
 	public init() {
 		
@@ -114,17 +153,42 @@ public class AutoCompleter {
 	
 	public func completionSuggestions(for source: String, cursor: Int) -> [CompletionSuggestion] {
 		
+		let sourceInfo: SourceInformation
+		let cursorInfo: CursorInformation
+
+		if let cached = cachedSourceInfo, cached.source == source {
+			
+			sourceInfo = cached.cache
+			
+			if let cachedCursorInfo = self.cachedCursorInfo, cachedCursorInfo.cache.globalCursor == cursor {
+				
+				cursorInfo = cachedCursorInfo.cache
+				
+			} else {
+				
+				cursorInfo = CursorInformation(sourceInfo: sourceInfo, cursor: cursor)
+				cachedCursorInfo = Cached(source: source, cache: cursorInfo)
+				
+			}
+
+		} else {
+			
+			sourceInfo = SourceInformation(source: source)
+			cursorInfo = CursorInformation(sourceInfo: sourceInfo, cursor: cursor)
+			
+			cachedSourceInfo = Cached(source: source, cache: sourceInfo)
+			
+		}
+		
 		var suggestions = [CompletionSuggestion]()
 		
-		let sourceInfo = SourceInformation(source: source, cursor: cursor)
-		
-		if !sourceInfo.textOnLineBeforeCursor.isEmpty {
+		if !cursorInfo.textOnLineBeforeCursor.isEmpty {
 			
 			for keyword in Lexer.keywordTokens.keys {
 				
-				if keyword.hasPrefix(String(sourceInfo.textOnLineBeforeCursor)) {
+				if keyword.hasPrefix(String(cursorInfo.textOnLineBeforeCursor)) {
 					
-					let startIndex = keyword.index(keyword.startIndex, offsetBy: sourceInfo.textOnLineBeforeCursor.count)
+					let startIndex = keyword.index(keyword.startIndex, offsetBy: cursorInfo.textOnLineBeforeCursor.count)
 					let content = String(keyword[startIndex...])
 					
 					let suggestion = CompletionSuggestion(title: keyword, content: content, insertionIndex: cursor, cursorAfterInsertion: content.count)
@@ -136,8 +200,8 @@ public class AutoCompleter {
 			
 		}
 		
-		if sourceInfo.textOnLineBeforeCursor.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-			let statementSuggestions = self.statementSuggestions(cursor: cursor, prefix: sourceInfo.textOnLineBeforeCursor)
+		if cursorInfo.textOnLineBeforeCursor.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+			let statementSuggestions = self.statementSuggestions(cursor: cursor, prefix: cursorInfo.textOnLineBeforeCursor)
 			suggestions.append(contentsOf: statementSuggestions)
 		}
 
@@ -167,6 +231,18 @@ public class AutoCompleter {
 		
 		let whileStatement = CompletionSuggestion(title: "while ...", content: whileContent, insertionIndex: cursor, cursorAfterInsertion: 6)
 		suggestions.append(whileStatement)
+	
+		var forContent = ""
+		forContent += "for <#initialization"
+		forContent += "#>, <#condition"
+		forContent += "#>, <#increment"
+		forContent += "#> {\n"
+		forContent += "\(prefix)\t<#body"
+		forContent += "#>\n"
+		forContent += "\(prefix)}"
+		
+		let forStatement = CompletionSuggestion(title: "for ...", content: forContent, insertionIndex: cursor, cursorAfterInsertion: 4)
+		suggestions.append(forStatement)
 		
 		return suggestions
 

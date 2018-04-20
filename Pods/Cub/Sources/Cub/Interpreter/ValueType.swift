@@ -71,3 +71,47 @@ public extension ValueType {
 	}
 
 }
+
+extension ValueType {
+	
+	var isNumber: Bool {
+		if case .number = self {
+			return true
+		} else {
+			return false
+		}
+	}
+	
+	var isString: Bool {
+		if case .string = self {
+			return true
+		} else {
+			return false
+		}
+	}
+	
+	var isBool: Bool {
+		if case .bool = self {
+			return true
+		} else {
+			return false
+		}
+	}
+	
+	var isArray: Bool {
+		if case .array = self {
+			return true
+		} else {
+			return false
+		}
+	}
+	
+	var isStruct: Bool {
+		if case .struct = self {
+			return true
+		} else {
+			return false
+		}
+	}
+	
+}

@@ -28,6 +28,15 @@ internal func |><A, B, C>(lhs: @escaping (A) throws -> B,
 	return { try rhs(lhs($0)) }
 }
 
+struct ExternalFunctionDefinition {
+	
+	let name: String
+	let documentation: String?
+	let argumentNames: [String]
+	let callback: ExternalFunc
+	let returns: Bool
+	
+}
 
 /// Runs through full pipeline, from lexer to interpreter
 public class Runner {
@@ -41,8 +50,6 @@ public class Runner {
 
 	public let compiler: BytecodeCompiler
 	
-	public var executionFinishedCallback: (() -> Void)?
-
 	// MARK: -
 
 	public init(logDebug: Bool = false, logTime: Bool = false) {
@@ -51,15 +58,15 @@ public class Runner {
 		compiler = BytecodeCompiler()
 	}
 	
-	var externalFunctions = [Int: ([String], ExternalFunc)]()
+	var externalFunctions = [Int: ExternalFunctionDefinition]()
 	
-	public func registerExternalFunction(name: String, argumentNames: [String], returns: Bool, callback: @escaping ExternalFunc) {
+	public func registerExternalFunction(documentation: String?, name: String, argumentNames: [String], returns: Bool, callback: @escaping ExternalFunc) {
 
 		let prototype = FunctionPrototypeNode(name: name, argumentNames: argumentNames, returns: returns, range: nil)
-		let node = FunctionNode(prototype: prototype, body: BodyNode(nodes: [], range: nil), range: nil)
+		let node = FunctionNode(prototype: prototype, body: BodyNode(nodes: [], range: nil), range: nil, documentation: nil)
 		let id = compiler.getFunctionId(for: node)
 		
-		externalFunctions[id] = (argumentNames, callback)
+		externalFunctions[id] = ExternalFunctionDefinition(name: name, documentation: documentation, argumentNames: argumentNames, callback: callback, returns: returns)
 	}
 	
 	public func runSource(at path: String, get varName: String, useStdLib: Bool = true) throws -> ValueType {
@@ -101,8 +108,8 @@ public class Runner {
 
 		let interpreter = try BytecodeInterpreter(bytecode: executionBytecode)
 		
-		for (id, callback) in externalFunctions {
-			interpreter.registerExternalFunction(id: id, callback: callback)
+		for (id, definition) in externalFunctions {
+			interpreter.registerExternalFunction(id: id, callback: (definition.argumentNames, definition.callback))
 		}
 		
 		try interpreter.interpret()
@@ -323,11 +330,9 @@ public class Runner {
 		
 		let interpreter = try BytecodeInterpreter(bytecode: executionBytecode)
 		
-		for (id, callback) in externalFunctions {
-			interpreter.registerExternalFunction(id: id, callback: callback)
+		for (id, definition) in externalFunctions {
+			interpreter.registerExternalFunction(id: id, callback: (definition.argumentNames, definition.callback))
 		}
-		
-		interpreter.executionFinishedCallback = executionFinishedCallback
 		
 		self.interpreter = interpreter
 		

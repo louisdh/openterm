@@ -15,7 +15,7 @@ extension Runner {
 		
 		let runner = Runner(logDebug: false, logTime: false)
 		
-		runner.registerExternalFunction(name: "print", argumentNames: ["input"], returns: true) { (arguments, callback) in
+		runner.registerExternalFunction(documentation: nil, name: "print", argumentNames: ["input"], returns: true) { (arguments, callback) in
 			
 			for (_, arg) in arguments {
 				
@@ -32,7 +32,7 @@ extension Runner {
 			return
 		}
 		
-		runner.registerExternalFunction(name: "readNumber", argumentNames: [], returns: true) { (arguments, callback) in
+		runner.registerExternalFunction(documentation: nil, name: "readNumber", argumentNames: [], returns: true) { (arguments, callback) in
 			
 			executorDelegate.commandExecutor(executor, waitForInput: { (input) in
 				
@@ -47,7 +47,7 @@ extension Runner {
 			return
 		}
 		
-		runner.registerExternalFunction(name: "readLine", argumentNames: [], returns: true) { (arguments, callback) in
+		runner.registerExternalFunction(documentation: nil, name: "readLine", argumentNames: [], returns: true) { (arguments, callback) in
 			
 			executorDelegate.commandExecutor(executor, waitForInput: { (input) in
 				_ = callback(.string(input))
@@ -56,7 +56,7 @@ extension Runner {
 			return
 		}
 		
-		runner.registerExternalFunction(name: "exec", argumentNames: ["command"], returns: true) { (arguments, callback) in
+		runner.registerExternalFunction(documentation: nil, name: "exec", argumentNames: ["command"], returns: true) { (arguments, callback) in
 			
 			var arguments = arguments
 			

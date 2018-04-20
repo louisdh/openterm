@@ -1,10 +1,10 @@
 PODS:
   - BezierPathLength (1.1.0)
-  - Cub (0.7.3)
+  - Cub (0.8.0)
   - HueKit (1.0.1)
   - InputAssistant (1.0.2)
   - PanelKit (2.0.1)
-  - SavannaKit (0.7.0)
+  - SavannaKit (0.8.0)
   - SimulatorStatusMagic (2.1)
   - SwiftLint (0.25.1)
   - TabView (1.0.1)
@@ -34,11 +34,11 @@ SPEC REPOS:
 
 SPEC CHECKSUMS:
   BezierPathLength: 2f21f2860b0817df3cf631e9a3a9273c8e8c3814
-  Cub: f1b2cc95e0791e8b6c3edb8380c251a7020c155f
+  Cub: 39171334e2e24d97136400a742561b36f3829424
   HueKit: a255770053f7028907db3e84d5cdecc7837197e4
   InputAssistant: b0b70cd0d69ef7013ecb2a1fa350b7a2786e2e01
   PanelKit: d05cecac1ab39af375b56ff21c7b5a9915a3eb5b
-  SavannaKit: 8b9737cd714f8250881bbf38616455a9384bb35e
+  SavannaKit: ba35f9a0132d69959851401e581bfaeaf36b2271
   SimulatorStatusMagic: 481558caf2b9ccb2ceba2cc193728d4db3dcac07
   SwiftLint: ce933681be10c3266e82576dad676fa815a602e9
   TabView: b8337b549e4b0f070a76cab141e258fa66e01fd1

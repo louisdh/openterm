@@ -32,8 +32,6 @@ public class BytecodeInterpreter {
 
 	private(set) var pcTrace = [Int]()
 	
-	var executionFinishedCallback: (() -> Void)?
-
 	// MARK: - Init
 
 	/// Initalize a BytecodeInterpreter with an array of BytecodeExecutionInstruction
@@ -117,52 +115,28 @@ public class BytecodeInterpreter {
 
 	var pc = 0
 
-	var isPaused = false
-	
-	func pause() {
-		
-		isPaused = true
-		
-	}
-	
-	func resume() {
-		
-		isPaused = false
-		
-	}
-	
 	/// Interpret the bytecode passed in the initializer
 	///
 	/// - Throws: InterpreterError
 	public func interpret() throws {
 
 		while true {
-			
-			if isPaused {
-				Thread.sleep(forTimeInterval: 0.001)
-				continue
-			}
 
 			pcTrace.append(pc)
-			if let newPc = try executeInstruction(bytecode[pc], pc: pc) {
-				pc = newPc
+			let newPc = try executeInstruction(bytecode[pc], pc: pc)
+			pc = newPc
 				
-				if pc >= bytecode.count {
-					executionFinishedCallback?()
-					break
-				}
-				
-			} else {
-				continue
+			if pc >= bytecode.count {
+				break
 			}
 
 		}
 
 	}
 
-	private func executeInstruction(_ instruction: BytecodeExecutionInstruction, pc: Int) throws -> Int? {
+	private func executeInstruction(_ instruction: BytecodeExecutionInstruction, pc: Int) throws -> Int {
 
-		let newPc: Int?
+		let newPc: Int
 
 		// TODO: Cleaner (more generic) mapping possible?
 
@@ -593,7 +567,7 @@ public class BytecodeInterpreter {
 		return pc + 1
 	}
 
-	private func executeInvokeVirtual(_ instruction: BytecodeExecutionInstruction, pc: Int) throws -> Int? {
+	private func executeInvokeVirtual(_ instruction: BytecodeExecutionInstruction, pc: Int) throws -> Int {
 
 		guard let id = instruction.arguments.first else {
 			throw error(.unexpectedArgument)
@@ -612,8 +586,8 @@ public class BytecodeInterpreter {
 				arguments[argName] = arg
 			}
 			
-			pause()
-			
+			let semaphore = DispatchSemaphore(value: 0)
+
 			externalCallback(arguments, { (result) in
 				
 				do {
@@ -622,20 +596,22 @@ public class BytecodeInterpreter {
 						try self.stack.push(result)
 					}
 					
-					self.pc += 1
-					
-					self.resume()
+					semaphore.signal()
 
 					return true
 					
 				} catch {
 					
+					semaphore.signal()
+
 					return false
 				}
 			
 			})
 
-			return nil
+			_ = semaphore.wait(timeout: .distantFuture)
+
+			return pc + 1
 		}
 		
 		guard let idPc = virtualMap[i] else {
