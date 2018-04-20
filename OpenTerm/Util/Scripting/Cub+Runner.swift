@@ -27,7 +27,7 @@ extension Runner {
 				}
 			}
 			
-			Thread.sleep(forTimeInterval: 0.02)
+			Thread.sleep(forTimeInterval: 0.01)
 			_ = callback(.number(1))
 			return
 		}
