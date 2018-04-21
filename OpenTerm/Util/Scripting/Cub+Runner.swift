@@ -56,7 +56,13 @@ extension Runner {
 			return
 		}
 		
-		runner.registerExternalFunction(documentation: nil, name: "exec", argumentNames: ["command"], returns: true) { (arguments, callback) in
+		let shellCommand = """
+						Execute a shell command in the shell that the script is executed from.
+						- Parameter command: The command to execute.
+						- Returns: the exit code, 0 means no error.
+						"""
+		
+		runner.registerExternalFunction(documentation: shellCommand, name: "shell", argumentNames: ["command"], returns: true) { (arguments, callback) in
 			
 			var arguments = arguments
 			
