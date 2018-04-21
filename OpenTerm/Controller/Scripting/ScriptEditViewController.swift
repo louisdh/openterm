@@ -2,7 +2,7 @@
 //  ScriptEditViewController.swift
 //  OpenTerm
 //
-//  Created by iamcdowe on 1/29/18.
+//  Created by Louis D'hauwe on 21/04/2018.
 //  Copyright © 2018 Silver Fox. All rights reserved.
 //
 
@@ -15,6 +15,7 @@ import PanelKit
 class ScriptEditViewController: UIViewController {
 
 	var url: URL
+	let contentWrapperView = UIView()
 	let document: PridelandDocument
 	let textView: SyntaxTextView
 	let autoCompleteManager: CubSyntaxAutoCompleteManager
@@ -22,6 +23,7 @@ class ScriptEditViewController: UIViewController {
 	let autoCompletor = AutoCompleter()
 
 	var cubManualPanelViewController: PanelViewController!
+	var cubDocsPanelViewController: PanelViewController!
 
 	init(url: URL) {
 		self.url = url
@@ -36,25 +38,58 @@ class ScriptEditViewController: UIViewController {
 		let cubManualVC = UIStoryboard.main.manualWebViewController(htmlURL: cubManualURL)
 		cubManualPanelViewController = PanelViewController(with: cubManualVC, in: self)
 		cubManualVC.title = "The Cub Programming Language"
+		
+		let cubDocsVC = UIStoryboard.main.cubDocumentationViewController()
+		cubDocsPanelViewController = PanelViewController(with: cubDocsVC, in: self)
+		cubDocsVC.title = "Documentation"
 
+		cubDocsPanelViewController.panelNavigationController.view.backgroundColor = .panelBackgroundColor
+		cubDocsPanelViewController.view.backgroundColor = .clear
+		
+	}
+	
+	private func setupViews() {
+		
+		// Content wrapper is root view
+		contentWrapperView.translatesAutoresizingMaskIntoConstraints = false
+		view.addSubview(contentWrapperView)
+		
+		NSLayoutConstraint.activate([
+			contentWrapperView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+			contentWrapperView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+			contentWrapperView.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor),
+			contentWrapperView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+			])
+		
+		contentWrapperView.backgroundColor = .black
+		
+		textView.translatesAutoresizingMaskIntoConstraints = false
+		contentWrapperView.addSubview(textView)
+		
+		NSLayoutConstraint.activate([
+			textView.leadingAnchor.constraint(equalTo: contentWrapperView.leadingAnchor),
+			textView.trailingAnchor.constraint(equalTo: contentWrapperView.trailingAnchor),
+			textView.topAnchor.constraint(equalTo: contentWrapperView.topAnchor),
+			textView.bottomAnchor.constraint(equalTo: contentWrapperView.bottomAnchor)
+			])
+		
 	}
 
 	required init?(coder aDecoder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
 	}
 
-	override func loadView() {
-		view = textView
-	}
-
 	private var textViewSelectedRangeObserver: NSKeyValueObservation?
 
 	private let keyboardObserver = KeyboardObserver()
 	
+	var manualBarButtonItem: UIBarButtonItem!
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
+		setupViews()
+		
 		self.view.tintColor = .defaultMainTintColor
 		self.navigationController?.navigationBar.barStyle = .blackTranslucent
 		
@@ -77,15 +112,25 @@ class ScriptEditViewController: UIViewController {
 		
 		
 //		cubManualPanelViewController = PanelViewController(with: cubManualVC, in: self)
+
+		let manualButton = UIButton(type: .system)
+		manualButton.setTitle("?", for: .normal)
+		manualButton.titleLabel?.font = UIFont.systemFont(ofSize: 28)
 		
-		let manualsBarButtonItem = UIBarButtonItem(barButtonSystemItem: .bookmarks, target: self, action: #selector(showManuals(_:)))
+		manualButton.addTarget(self, action: #selector(showManual(_:)), for: .touchUpInside)
 		
-		let infoButton = UIButton(type: .infoLight)
+		manualBarButtonItem = UIBarButtonItem(customView: manualButton)
+		
+		let docsBarButtonItem = UIBarButtonItem(barButtonSystemItem: .bookmarks, target: self, action: #selector(showDocs(_:)))
+		
+		let infoButton = UIButton(type: .system)
+		infoButton.setImage(#imageLiteral(resourceName: "Settings"), for: .normal)
+		
 		infoButton.addTarget(self, action: #selector(showScriptMetadata), for: .touchUpInside)
 		
 		let infoBarButtonItem = UIBarButtonItem(customView: infoButton)
 		
-		navigationItem.rightBarButtonItems = [infoBarButtonItem, manualsBarButtonItem]
+		navigationItem.rightBarButtonItems = [infoBarButtonItem, manualBarButtonItem, docsBarButtonItem]
 		
 		document.open { [weak self] (success) in
 			
@@ -103,6 +148,45 @@ class ScriptEditViewController: UIViewController {
 		
 		keyboardObserver.observe { [weak self] (state) in
 			self?.adjustInsets(for: state)
+		}
+		
+	}
+	
+	override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+		super.viewWillTransition(to: size, with: coordinator)
+		
+		coordinator.animate(alongsideTransition: { (_) in
+			
+		}, completion: { (_) in
+			
+			if !self.allowFloatingPanels {
+				self.closeAllFloatingPanels()
+			}
+			
+			if !self.allowPanelPinning {
+				self.closeAllPinnedPanels()
+			}
+			
+		})
+		
+	}
+
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
+
+		textView.contentTextView.becomeFirstResponder()
+
+	}
+	
+	override func viewDidAppear(_ animated: Bool) {
+		super.viewDidAppear(animated)
+
+	}
+	
+	deinit {
+		
+		if self.document.documentState != .closed {
+			self.document.close(completionHandler: nil)
 		}
 		
 	}
@@ -133,38 +217,28 @@ class ScriptEditViewController: UIViewController {
 		
 	}
 
-	override func viewWillAppear(_ animated: Bool) {
-		super.viewWillAppear(animated)
-
-		textView.contentTextView.becomeFirstResponder()
-
-	}
-	
-	override func viewDidAppear(_ animated: Bool) {
-		super.viewDidAppear(animated)
-
-	}
-	
-	deinit {
+	@objc
+	func showDocs(_ sender: UIBarButtonItem) {
 		
-		if self.document.documentState != .closed {
-			self.document.close(completionHandler: nil)
-		}
+		presentPopover(self.cubDocsPanelViewController, from: sender, backgroundColor: .panelBackgroundColor)
 		
 	}
 	
 	@objc
-	func showManuals(_ sender: UIBarButtonItem) {
+	func showManual(_ sender: UIButton) {
 	
-		presentPopover(self.cubManualPanelViewController, from: sender)
+		presentPopover(self.cubManualPanelViewController, from: manualBarButtonItem, backgroundColor: .white)
 		
 	}
 	
-	private func presentPopover(_ viewController: UIViewController, from sender: UIBarButtonItem) {
+	private func presentPopover(_ viewController: UIViewController, from sender: UIBarButtonItem, backgroundColor: UIColor) {
+		
+		// prevent a crash when the panel is floating.
+		viewController.view.removeFromSuperview()
+		
 		viewController.modalPresentationStyle = .popover
 		viewController.popoverPresentationController?.barButtonItem = sender
-		viewController.popoverPresentationController?.permittedArrowDirections = .up
-		viewController.popoverPresentationController?.backgroundColor = viewController.view.backgroundColor
+		viewController.popoverPresentationController?.backgroundColor = backgroundColor
 		
 		present(viewController, animated: true, completion: nil)
 	}
@@ -294,15 +368,19 @@ extension ScriptEditViewController: InputAssistantViewDelegate {
 extension ScriptEditViewController: PanelManager {
 	
 	var panels: [PanelViewController] {
-		return [cubManualPanelViewController]
+		return [cubManualPanelViewController, cubDocsPanelViewController]
 	}
 	
 	var panelContentWrapperView: UIView {
-		return self.view
+		return self.contentWrapperView
 	}
 	
 	var panelContentView: UIView {
 		return textView
+	}
+	
+	func maximumNumberOfPanelsPinned(at side: PanelPinSide) -> Int {
+		return 2
 	}
 	
 }

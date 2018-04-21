@@ -19,8 +19,7 @@ class ManualWebViewController: UIViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		
-//		self.navigationController?.navigationBar.barStyle = .blackTranslucent
-
+		self.view.tintColor = UIColor(hexString: "#ef5433")
 		webView.loadFileURL(htmlURL, allowingReadAccessTo: htmlURL.deletingLastPathComponent())
 		
 	}

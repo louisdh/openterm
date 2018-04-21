@@ -17,8 +17,9 @@ public struct AssignmentNode: ASTNode {
 	public let variable: ASTNode
 	public let value: ASTNode
 	public let range: Range<Int>?
+	public let documentation: String?
 
-	public init(variable: ASTNode, value: ASTNode, range: Range<Int>?) throws {
+	public init(variable: ASTNode, value: ASTNode, range: Range<Int>?, documentation: String?) throws {
 
 		guard value is NumberNode || value is VariableNode || value is StructMemberNode || value is CallNode || value is BinaryOpNode || value is StringNode || value is ArrayNode || value is ArraySubscriptNode || value is BooleanNode else {
 			throw AssignmentNodeValidationError(invalidValueType: value.description)
@@ -27,6 +28,7 @@ public struct AssignmentNode: ASTNode {
 		self.variable = variable
 		self.value = value
 		self.range = range
+		self.documentation = documentation
 	}
 
 	public func compile(with ctx: BytecodeCompiler, in parent: ASTNode?) throws -> BytecodeBody {

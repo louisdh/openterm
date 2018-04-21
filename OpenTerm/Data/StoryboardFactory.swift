@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import Cub
 
 protocol StoryboardIdentifiable {
 	static var storyboardIdentifier: String { get }
@@ -38,6 +39,17 @@ class MainStoryboard: StoryboardWrapper {
 	func manualWebViewController(htmlURL: URL) -> ManualWebViewController {
 		let vc: ManualWebViewController = instantiateViewController()
 		vc.htmlURL = htmlURL
+		return vc
+	}
+	
+	func cubDocumentationViewController() -> CubDocumentationViewController {
+		let vc: CubDocumentationViewController = instantiateViewController()
+		return vc
+	}
+	
+	func cubDocumentationItemViewController(item: DocumentationItem) -> CubDocumentationItemViewController {
+		let vc: CubDocumentationItemViewController = instantiateViewController()
+		vc.item = item
 		return vc
 	}
 	

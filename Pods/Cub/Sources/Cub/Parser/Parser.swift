@@ -259,7 +259,7 @@ public class Parser {
 			throw error(.unexpectedToken)
 		}
 
-		guard let assignmentNode = try parseVariable(with: varName) as? AssignmentNode else {
+		guard let assignmentNode = try parseVariable(with: varName, identifierToken: currentToken) as? AssignmentNode else {
 			throw self.error(.unexpectedToken)
 		}
 
@@ -311,7 +311,7 @@ public class Parser {
 			
 			do {
 				
-				let assign = try AssignmentNode(variable: node, value: expr, range: currentToken.range)
+				let assign = try AssignmentNode(variable: node, value: expr, range: currentToken.range, documentation: nil)
 				return assign
 				
 			} catch let error as AssignmentNodeValidationError {
@@ -345,7 +345,7 @@ public class Parser {
 				throw self.error(.illegalBinaryOperation, token: currentToken)
 			}
 
-			let assignment = try AssignmentNode(variable: node, value: operation, range: currentToken.range)
+			let assignment = try AssignmentNode(variable: node, value: operation, range: currentToken.range, documentation: nil)
 
 			return assignment
 
@@ -407,8 +407,16 @@ public class Parser {
 
 	}
 
-	private func parseVariable(with name: String) throws -> ASTNode {
+	private func parseVariable(with name: String, identifierToken: Token) throws -> ASTNode {
 
+		var documentation: String? = nil
+		
+		if !potentialDocNodes.isEmpty, let funcTokenRange = identifierToken.range {
+			documentation = getDocumentation(for: funcTokenRange)
+		}
+		
+		potentialDocNodes = []
+		
 		let varNode = VariableNode(name: name, range: currentTokenRange())
 
 		if let currentToken = peekCurrentToken(), case .equals = currentToken.type {
@@ -423,7 +431,7 @@ public class Parser {
 			
 			do {
 				
-				let assign = try AssignmentNode(variable: varNode, value: binaryOp, range: currentToken.range)
+				let assign = try AssignmentNode(variable: varNode, value: binaryOp, range: currentToken.range, documentation: documentation)
 				return assign
 				
 			} catch let error as AssignmentNodeValidationError {
@@ -539,7 +547,7 @@ public class Parser {
 		}
 
 		guard let currentToken = peekCurrentToken(), case .parensOpen = currentToken.type else {
-			return try parseVariable(with: name)
+			return try parseVariable(with: name, identifierToken: idToken)
 		}
 
 		popCurrentToken()
@@ -586,7 +594,11 @@ public class Parser {
 		if case .comment = currentToken.type {
 			
 		} else if case .function = currentToken.type {
-			
+
+		} else if case .identifier = currentToken.type {
+
+		} else if case .struct = currentToken.type {
+
 		} else {
 			potentialDocNodes = []
 		}
@@ -1012,6 +1024,40 @@ public class Parser {
 
 		return FunctionPrototypeNode(name: name, argumentNames: argumentNames, returns: returns, range: idToken.range)
 	}
+	
+	private func getDocumentation(for range: Range<Int>) -> String? {
+		
+		var docNodes = [CommentNode]()
+		
+		var currentLowerboundCheck = range.lowerBound
+		
+		for docCommentNode in potentialDocNodes.reversed() {
+			
+			guard docCommentNode.comment.hasPrefix("///") else {
+				break
+			}
+			
+			guard let range = docCommentNode.range else {
+				continue
+			}
+			
+			// +1 for new line
+			guard range.upperBound + 1 == currentLowerboundCheck else {
+				break
+			}
+			
+			docNodes.insert(docCommentNode, at: 0)
+			currentLowerboundCheck = range.lowerBound
+			
+		}
+		
+		if !docNodes.isEmpty {
+			return docNodes.map({ $0.comment }).joined(separator: "\n")
+		} else {
+			return nil
+		}
+		
+	}
 
 	private func parseFunction() throws -> FunctionNode {
 
@@ -1020,34 +1066,7 @@ public class Parser {
 		var documentation: String? = nil
 		
 		if !potentialDocNodes.isEmpty, let funcTokenRange = funcToken.range {
-			var docNodes = [CommentNode]()
-			
-			var currentLowerboundCheck = funcTokenRange.lowerBound
-			
-			for docCommentNode in potentialDocNodes.reversed() {
-				
-				guard docCommentNode.comment.hasPrefix("///") else {
-					break
-				}
-				
-				guard let range = docCommentNode.range else {
-					continue
-				}
-
-				// +1 for new line
-				guard range.upperBound + 1 == currentLowerboundCheck else {
-					break
-				}
-				
-				docNodes.insert(docCommentNode, at: 0)
-				currentLowerboundCheck = range.lowerBound
-				
-			}
-			
-			if !docNodes.isEmpty {
-				documentation = docNodes.map({ $0.comment }).joined(separator: "\n")
-			}
-			
+			documentation = getDocumentation(for: funcTokenRange)
 		}
 		
 		potentialDocNodes = []
@@ -1100,7 +1119,15 @@ public class Parser {
 	
 	private func parseStruct() throws -> StructNode {
 
-		try popCurrentToken(andExpect: .struct)
+		let structToken = try popCurrentToken(andExpect: .struct)
+		
+		var documentation: String? = nil
+		
+		if !potentialDocNodes.isEmpty, let structTokenRange = structToken.range {
+			documentation = getDocumentation(for: structTokenRange)
+		}
+		
+		potentialDocNodes = []
 
 		guard let idToken = popCurrentToken() else {
 			throw error(.expectedFunctionName)
@@ -1135,7 +1162,7 @@ public class Parser {
 
 		try popCurrentToken(andExpect: .curlyClose, "}")
 
-		return StructNode(prototype: prototype, range: idToken.range)
+		return StructNode(prototype: prototype, range: idToken.range, documentation: documentation)
 	}
 
 	// MARK: -

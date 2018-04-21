@@ -11,12 +11,13 @@ import Foundation
 public struct StructNode: ASTNode {
 
 	public let prototype: StructPrototypeNode
-
 	public let range: Range<Int>?
+	public let documentation: String?
 
-	init(prototype: StructPrototypeNode, range: Range<Int>?) {
+	init(prototype: StructPrototypeNode, range: Range<Int>?, documentation: String?) {
 		self.prototype = prototype
 		self.range = range
+		self.documentation = documentation
 	}
 
 	public func compile(with ctx: BytecodeCompiler, in parent: ASTNode?) throws -> BytecodeBody {

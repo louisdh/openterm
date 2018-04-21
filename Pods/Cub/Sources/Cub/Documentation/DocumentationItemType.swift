@@ -11,4 +11,5 @@ import Foundation
 public enum DocumentationItemType: String, Equatable, Codable {
 	case function
 	case variable
+	case `struct`
 }

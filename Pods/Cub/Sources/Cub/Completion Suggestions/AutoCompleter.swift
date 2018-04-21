@@ -229,7 +229,7 @@ public class AutoCompleter {
 		whileContent += "#>\n"
 		whileContent += "\(prefix)}"
 		
-		let whileStatement = CompletionSuggestion(title: "while ...", content: whileContent, insertionIndex: cursor, cursorAfterInsertion: 6)
+		let whileStatement = CompletionSuggestion(title: "while ...", content: whileContent, insertionIndex: cursor, cursorAfterInsertion: 7)
 		suggestions.append(whileStatement)
 	
 		var forContent = ""

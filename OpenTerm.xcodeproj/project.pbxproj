@@ -56,6 +56,13 @@
 		BE38085B1FD9BFB600393EB8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BE3808591FD9BFB600393EB8 /* Main.storyboard */; };
 		BE38085D1FD9BFB600393EB8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BE38085C1FD9BFB600393EB8 /* Assets.xcassets */; };
 		BE3808601FD9BFB600393EB8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BE38085E1FD9BFB600393EB8 /* LaunchScreen.storyboard */; };
+		BE3A62DD208B3B570014A498 /* CubDocumentationBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE3A62DC208B3B570014A498 /* CubDocumentationBundle.swift */; };
+		BE3A62DF208B3BB70014A498 /* CubDocumentationUpdater.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE3A62DE208B3BB70014A498 /* CubDocumentationUpdater.swift */; };
+		BE3A62E1208B49EF0014A498 /* cub-docs.json in Resources */ = {isa = PBXBuildFile; fileRef = BE3A62E0208B49EF0014A498 /* cub-docs.json */; };
+		BE3A62E3208B4A7D0014A498 /* CubDocumentationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE3A62E2208B4A7D0014A498 /* CubDocumentationViewController.swift */; };
+		BE3A62E7208B54D00014A498 /* CubDocumentationItemTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE3A62E5208B54D00014A498 /* CubDocumentationItemTableViewCell.swift */; };
+		BE3A62E8208B54D00014A498 /* CubDocumentationItemTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = BE3A62E6208B54D00014A498 /* CubDocumentationItemTableViewCell.xib */; };
+		BE3A62EA208B57C80014A498 /* CubDocumentationItemViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE3A62E9208B57C80014A498 /* CubDocumentationItemViewController.swift */; };
 		BE505066201E5ED900CDFC60 /* Share.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE505065201E5ED900CDFC60 /* Share.swift */; };
 		BE57BDCF207BE0CD00A60950 /* CommandManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE57BDCE207BE0CD00A60950 /* CommandManager.swift */; };
 		BE57BDD2207BF3AA00A60950 /* SystemExecutorCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE57BDD1207BF3AA00A60950 /* SystemExecutorCommand.swift */; };
@@ -182,6 +189,13 @@
 		BE38085C1FD9BFB600393EB8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		BE38085F1FD9BFB600393EB8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		BE3808611FD9BFB600393EB8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		BE3A62DC208B3B570014A498 /* CubDocumentationBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CubDocumentationBundle.swift; sourceTree = "<group>"; };
+		BE3A62DE208B3BB70014A498 /* CubDocumentationUpdater.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CubDocumentationUpdater.swift; sourceTree = "<group>"; };
+		BE3A62E0208B49EF0014A498 /* cub-docs.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "cub-docs.json"; sourceTree = "<group>"; };
+		BE3A62E2208B4A7D0014A498 /* CubDocumentationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CubDocumentationViewController.swift; sourceTree = "<group>"; };
+		BE3A62E5208B54D00014A498 /* CubDocumentationItemTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CubDocumentationItemTableViewCell.swift; sourceTree = "<group>"; };
+		BE3A62E6208B54D00014A498 /* CubDocumentationItemTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CubDocumentationItemTableViewCell.xib; sourceTree = "<group>"; };
+		BE3A62E9208B57C80014A498 /* CubDocumentationItemViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CubDocumentationItemViewController.swift; sourceTree = "<group>"; };
 		BE505065201E5ED900CDFC60 /* Share.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Share.swift; sourceTree = "<group>"; };
 		BE57BDCE207BE0CD00A60950 /* CommandManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommandManager.swift; sourceTree = "<group>"; };
 		BE57BDD1207BF3AA00A60950 /* SystemExecutorCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemExecutorCommand.swift; sourceTree = "<group>"; };
@@ -318,6 +332,7 @@
 		3CA32103201FFC0300974B5F /* Scripting */ = {
 			isa = PBXGroup;
 			children = (
+				BE3A62DB208B3B120014A498 /* Documentation */,
 				BE740C192082664E001C1F24 /* Cells */,
 				3CA320FE201FE8E100974B5F /* ScriptsViewController.swift */,
 				3CA32104201FFC1300974B5F /* ScriptEditViewController.swift */,
@@ -362,6 +377,7 @@
 				BE0146EC2083BA000072AAB5 /* cub-guide.htmlcontainer */,
 				BEA4992B1FDC0918001B9B9D /* icon-320.png */,
 				BE38085C1FD9BFB600393EB8 /* Assets.xcassets */,
+				BE3A62E0208B49EF0014A498 /* cub-docs.json */,
 			);
 			path = Assets;
 			sourceTree = "<group>";
@@ -458,6 +474,27 @@
 				BE3808611FD9BFB600393EB8 /* Info.plist */,
 			);
 			path = OpenTerm;
+			sourceTree = "<group>";
+		};
+		BE3A62DB208B3B120014A498 /* Documentation */ = {
+			isa = PBXGroup;
+			children = (
+				BE3A62E4208B54B70014A498 /* Cells */,
+				BE3A62DC208B3B570014A498 /* CubDocumentationBundle.swift */,
+				BE3A62DE208B3BB70014A498 /* CubDocumentationUpdater.swift */,
+				BE3A62E2208B4A7D0014A498 /* CubDocumentationViewController.swift */,
+				BE3A62E9208B57C80014A498 /* CubDocumentationItemViewController.swift */,
+			);
+			path = Documentation;
+			sourceTree = "<group>";
+		};
+		BE3A62E4208B54B70014A498 /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				BE3A62E5208B54D00014A498 /* CubDocumentationItemTableViewCell.swift */,
+				BE3A62E6208B54D00014A498 /* CubDocumentationItemTableViewCell.xib */,
+			);
+			path = Cells;
 			sourceTree = "<group>";
 		};
 		BE740C192082664E001C1F24 /* Cells */ = {
@@ -634,6 +671,8 @@
 				BEA4992C1FDC0918001B9B9D /* icon-320.png in Resources */,
 				BE38085B1FD9BFB600393EB8 /* Main.storyboard in Resources */,
 				BE244DC8201FBB6000A7EA4E /* cacert.pem in Resources */,
+				BE3A62E8208B54D00014A498 /* CubDocumentationItemTableViewCell.xib in Resources */,
+				BE3A62E1208B49EF0014A498 /* cub-docs.json in Resources */,
 				BE189036206FF36500EE6739 /* Logo.txt in Resources */,
 				BEB774EF20701D8500201EBB /* authors.json in Resources */,
 				BE0146ED2083BA000072AAB5 /* cub-guide.htmlcontainer in Resources */,
@@ -723,17 +762,20 @@
 			buildActionMask = 2147483647;
 			files = (
 				BEEAD9C6207E8C8500CBC254 /* Array+Safe.swift in Sources */,
+				BE3A62DD208B3B570014A498 /* CubDocumentationBundle.swift in Sources */,
 				BE740C1720826648001C1F24 /* NewPridelandCollectionViewCell.swift in Sources */,
 				BE1D5F9D204C66F1008A1C36 /* Cub+Runner.swift in Sources */,
 				3CE57681202A52ED00760E43 /* TerminalViewController.swift in Sources */,
 				BEA8E2912001348C00002475 /* UIColor+AssetCatalog.swift in Sources */,
 				28CDA4292024B3510055206D /* BookmarkManager.swift in Sources */,
 				BEB7752220714E2C00201EBB /* UIViewController+Alerts.swift in Sources */,
+				BE3A62E7208B54D00014A498 /* CubDocumentationItemTableViewCell.swift in Sources */,
 				BEEAD9C8207EA09700CBC254 /* Stdin+Read.swift in Sources */,
 				BE8E66FC206196A7007B14E6 /* Notification+Names.swift in Sources */,
 				BE1643D62077FFC0002939B7 /* UICollectionView+Update.swift in Sources */,
 				3CA320FF201FE8E100974B5F /* ScriptsViewController.swift in Sources */,
 				BEBD36E720755B0400C9725C /* StoryboardFactory.swift in Sources */,
+				BE3A62DF208B3BB70014A498 /* CubDocumentationUpdater.swift in Sources */,
 				BE102815207A372C005E965F /* String+C.swift in Sources */,
 				3C2E4385201EFF4700E4254A /* AutoCompleteManager.swift in Sources */,
 				BEA499301FDC3B93001B9B9D /* TerminalView.swift in Sources */,
@@ -755,6 +797,7 @@
 				BEB7756820740DFE00201EBB /* CustomTextView.swift in Sources */,
 				3CE5764820226A1500760E43 /* ANSITextState.swift in Sources */,
 				BEB77528207172D100201EBB /* UIColor+Hex.swift in Sources */,
+				BE3A62E3208B4A7D0014A498 /* CubDocumentationViewController.swift in Sources */,
 				3CE576A0202A874C00760E43 /* OutputSanitizer.swift in Sources */,
 				BEECFF0A1FFC1DC0009608B3 /* HistoryViewController.swift in Sources */,
 				BE8E6700206196D5007B14E6 /* Bundle+Info.swift in Sources */,
@@ -782,6 +825,7 @@
 				BEB774ED20701D2900201EBB /* Credits.swift in Sources */,
 				BE1643D42077F857002939B7 /* DirectoryObserver.swift in Sources */,
 				3CE5764320225E1B00760E43 /* HistoryManager.swift in Sources */,
+				BE3A62EA208B57C80014A498 /* CubDocumentationItemViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

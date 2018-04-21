@@ -10,8 +10,9 @@ import Foundation
 
 public struct FunctionDocumentation: Equatable, Codable {
 	
-	let description: String?
-	let argumentDescriptions: [String: String?]
-	let returnDescription: String?
+	public let description: String?
+	public let arguments: [String]
+	public let argumentDescriptions: [String: String?]
+	public let returnDescription: String?
 	
 }

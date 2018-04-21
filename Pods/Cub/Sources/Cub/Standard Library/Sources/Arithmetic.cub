@@ -3,6 +3,12 @@
 //  Cub Standard Library
 //
 
+/// The mathematical constant pi.
+pi = 3.14159265358979
+
+/// The mathematical constant tau, which equals 2*pi.
+tau = pi * 2
+
 func abs(x) returns {
 	if x < 0 {
 		return x * -1
