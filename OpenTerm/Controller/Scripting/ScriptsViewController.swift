@@ -289,6 +289,10 @@ class ScriptsViewController: UIViewController {
 		let fileManager = DocumentManager.shared.fileManager
 		
 		do {
+			
+			if !fileManager.fileExists(atPath: DocumentManager.shared.scriptsURL.path) {
+				try fileManager.createDirectory(at: DocumentManager.shared.scriptsURL, withIntermediateDirectories: true, attributes: nil)
+			}
 
 			let documentsURLs = try fileManager.contentsOfDirectory(at: DocumentManager.shared.scriptsURL, includingPropertiesForKeys: [], options: .skipsPackageDescendants)
 			
