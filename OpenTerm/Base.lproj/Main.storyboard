@@ -20,7 +20,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" name="Panel Background Color"/>
-                        <color key="separatorColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="separatorColor" name="Panel Background Color"/>
                         <sections>
                             <tableViewSection footerTitle="" id="Hq6-eS-OXR">
                                 <cells>
@@ -718,7 +718,7 @@ This project uses the open source ios_system project by Nicolas Holzschuch. This
                                 </constraints>
                             </scrollView>
                         </subviews>
-                        <color key="backgroundColor" cocoaTouchSystemColor="viewFlipsideBackgroundColor"/>
+                        <color key="backgroundColor" name="Panel Background Color"/>
                         <constraints>
                             <constraint firstItem="EQ7-0x-lIs" firstAttribute="leading" secondItem="LdS-hg-0br" secondAttribute="leading" id="5EZ-4J-G7a"/>
                             <constraint firstItem="EQ7-0x-lIs" firstAttribute="top" secondItem="8EZ-gg-qCG" secondAttribute="top" id="5bN-uD-PYd"/>
@@ -773,7 +773,7 @@ This project uses the open source ios_system project by Nicolas Holzschuch. This
                                 <cells/>
                             </collectionView>
                         </subviews>
-                        <color key="backgroundColor" cocoaTouchSystemColor="viewFlipsideBackgroundColor"/>
+                        <color key="backgroundColor" name="Panel Background Color"/>
                         <constraints>
                             <constraint firstItem="I1w-LQ-Yti" firstAttribute="bottom" secondItem="S39-X2-PFn" secondAttribute="bottom" id="16u-fn-xIl"/>
                             <constraint firstItem="I1w-LQ-Yti" firstAttribute="top" secondItem="GQF-u8-gyc" secondAttribute="top" id="4bu-jm-Ugo"/>
@@ -832,7 +832,7 @@ This project uses the open source ios_system project by Nicolas Holzschuch. This
             <color red="0.0" green="0.9137254901960784" blue="0.42745098039215684" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="Panel Background Color">
-            <color white="0.064999997615814209" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <color red="0.12156862745098039" green="0.12941176470588237" blue="0.14117647058823529" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
     </resources>
     <color key="tintColor" name="Main Tint Color"/>

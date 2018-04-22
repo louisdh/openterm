@@ -27,6 +27,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="291" height="74"/>
                                 <fontDescription key="fontDescription" name="Menlo-Regular" family="Menlo" pointSize="17"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="highlightedColor" name="Panel Background Color"/>
                             </label>
                         </subviews>
                         <constraints>
