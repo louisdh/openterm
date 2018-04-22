@@ -11,6 +11,7 @@ import Cub
 import ios_system
 import TabView
 
+@_cdecl("cub")
 public func cub(argc: Int32, argv: UnsafeMutablePointer<UnsafeMutablePointer<Int8>?>?) -> Int32 {
 
 	guard let tabViewContainer = UIApplication.shared.keyWindow?.rootViewController as? TabViewContainerViewController<TerminalTabViewController> else {

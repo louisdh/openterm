@@ -10,6 +10,7 @@ import Foundation
 import ios_system
 import AVFoundation
 
+@_cdecl("say")
 public func say(argc: Int32, argv: UnsafeMutablePointer<UnsafeMutablePointer<Int8>?>?) -> Int32 {
 
 	guard let args = convertCArguments(argc: argc, argv: argv) else {
