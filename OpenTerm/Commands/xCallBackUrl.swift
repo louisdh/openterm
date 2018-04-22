@@ -62,6 +62,7 @@ public func xCallbackUrlOpen(_ url: URL) -> Bool {
 	}
 }
 
+@_cdecl("openUrl")
 public func openUrl(argc: Int32, argv: UnsafeMutablePointer<UnsafeMutablePointer<Int8>?>?) -> Int32 {
 	var url: URL? = nil
 	if argc == 2 {

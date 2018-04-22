@@ -11,6 +11,7 @@ import ios_system
 
 public weak var shareFileViewController: UIViewController?
 
+@_cdecl("shareFile")
 public func shareFile(argc: Int32, argv: UnsafeMutablePointer<UnsafeMutablePointer<Int8>?>?) -> Int32 {
 	var itemsToShare = [Any]()
 

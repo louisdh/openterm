@@ -10,6 +10,7 @@ import Foundation
 import ios_system
 import TabView
 
+@_cdecl("credits")
 public func credits(argc: Int32, argv: UnsafeMutablePointer<UnsafeMutablePointer<Int8>?>?) -> Int32 {
 	
 	let logoFileName: String
