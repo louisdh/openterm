@@ -280,6 +280,10 @@ extension ScriptEditViewController: ScriptMetadataViewControllerDelegate {
 		
 	}
 	
+	func didDeleteScript() {
+		self.navigationController?.popViewController(animated: true)
+	}
+	
 }
 
 extension ScriptEditViewController: PanelContentDelegate {
