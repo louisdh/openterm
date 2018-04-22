@@ -834,9 +834,6 @@ This project uses the open source ios_system project by Nicolas Holzschuch. This
         <namedColor name="Panel Background Color">
             <color white="0.064999997615814209" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </namedColor>
-        <namedColor name="Panel Background Color">
-            <color white="0.064999997615814209" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-        </namedColor>
     </resources>
     <color key="tintColor" name="Main Tint Color"/>
 </document>
