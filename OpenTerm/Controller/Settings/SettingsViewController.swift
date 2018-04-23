@@ -44,9 +44,8 @@ class SettingsViewController: UITableViewController {
 		terminalBackgroundColorView.backgroundColor = UserDefaultsController.shared.terminalBackgroundColor
 
 		useDarkKeyboardSwitch.isOn = UserDefaultsController.shared.useDarkKeyboard
-		caretStylePicker.selectedSegmentIndex = UserDefaultsController.shared.caretStyle
+		caretStylePicker.selectedSegmentIndex = UserDefaultsController.shared.caretStyle.rawValue
 		
-
 	}
 
 	@IBAction func fontSizeStepperDidChange(_ sender: UIStepper) {
@@ -68,8 +67,7 @@ class SettingsViewController: UITableViewController {
 	}
 
     @IBAction func caretStyleDidChange(_ sender: UISegmentedControl) {
-		let pickerValue : Int = sender.selectedSegmentIndex
-		UserDefaultsController.shared.caretStyle = pickerValue
+		UserDefaultsController.shared.caretStyle = CaretStyle.allCases[sender.selectedSegmentIndex]
 		NotificationCenter.default.post(name: .caretStyleDidChange, object: nil)
     }
 	

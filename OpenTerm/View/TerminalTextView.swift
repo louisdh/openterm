@@ -8,10 +8,14 @@
 
 import UIKit
 
-enum CaretStyle : Int {
+enum CaretStyle: Int {
 	case verticalBar = 0
 	case block = 1
 	case underline = 2
+	
+	static var allCases: [CaretStyle] {
+		return [.verticalBar, .block, .underline]
+	}
 }
 
 /// UITextView that adopts the style of a terminal.
@@ -26,7 +30,7 @@ class TerminalTextView: UITextView {
 		}
 	}
 	
-	var caretStyle : CaretStyle = .verticalBar
+	var caretStyle: CaretStyle = .verticalBar
 	
 	override init(frame: CGRect, textContainer: NSTextContainer?) {
 		super.init(frame: frame, textContainer: textContainer)
@@ -62,12 +66,12 @@ class TerminalTextView: UITextView {
 		let caDisplayLink = CADisplayLink(target: self, selector: #selector(update))
 		caDisplayLink.add(to: .main, forMode: .commonModes)
 		
-		NotificationCenter.default.addObserver(self, selector: #selector(setCaretStyle), name: .caretStyleDidChange , object: nil)
+		NotificationCenter.default.addObserver(self, selector: #selector(setCaretStyle), name: .caretStyleDidChange, object: nil)
 	}
 	
 	@objc
-	func setCaretStyle(){
-		caretStyle = CaretStyle(rawValue: UserDefaultsController.shared.caretStyle)!
+	func setCaretStyle() {
+		caretStyle = UserDefaultsController.shared.caretStyle
 	}
 
 	@objc

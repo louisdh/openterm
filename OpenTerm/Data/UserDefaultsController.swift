@@ -69,17 +69,17 @@ class UserDefaultsController {
 		}
 	}
 	
-	var caretStyle: Int {
+	var caretStyle: CaretStyle {
 		get {
 			
-			guard let val = userDefaults.object(forKey: "caretStyle") as? Int else {
-				return 0
+			guard let rawValue = userDefaults.object(forKey: "caretStyle") as? Int else {
+				return .verticalBar
 			}
 			
-			return val
+			return CaretStyle(rawValue: rawValue) ?? .verticalBar
 		}
 		set {
-			userDefaults.set(newValue, forKey: "caretStyle")
+			userDefaults.set(newValue.rawValue, forKey: "caretStyle")
 			userDefaults.synchronize()
 		}
 	}
