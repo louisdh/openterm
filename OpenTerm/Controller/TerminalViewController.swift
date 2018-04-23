@@ -141,6 +141,7 @@ class TerminalViewController: UIViewController {
 		replaceCommand("cub", "cub", true)
 		replaceCommand("credits", "credits", true)
 		replaceCommand("say", "say", true)
+		replaceCommand("sleep", "sleepCMD", true)
 
 		// Call reloadData for the added commands.
 		terminalView.autoCompleteManager.reloadData()

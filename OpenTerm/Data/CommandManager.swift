@@ -117,6 +117,7 @@ class CommandManager {
 									   "setenv": "adds or changes the value of an environment variable",
 									   "sftp": "transfer files securely over a network connection",
 									   "share": "share text or a file using a native share sheet",
+									   "sleep": "suspend execution for an interval of time",
 									   "ssh": "provides a secure encrypted connection between two hosts over an insecure network",
 									   "ssh-keygen": "creates a key pair for public key authentication",
 									   "stat": "display the status of a file",

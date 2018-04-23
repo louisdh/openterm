@@ -52,6 +52,7 @@
 		BE18903B20700EFA00EE6739 /* Author.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE18903A20700EFA00EE6739 /* Author.swift */; };
 		BE1D5F9D204C66F1008A1C36 /* Cub+Runner.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE1D5F9C204C66F1008A1C36 /* Cub+Runner.swift */; };
 		BE244DC8201FBB6000A7EA4E /* cacert.pem in Resources */ = {isa = PBXBuildFile; fileRef = BE244DC7201FBB6000A7EA4E /* cacert.pem */; };
+		BE2AA98B208E692600B85CFE /* Sleep.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE2AA98A208E692600B85CFE /* Sleep.swift */; };
 		BE3808561FD9BFB600393EB8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE3808551FD9BFB600393EB8 /* AppDelegate.swift */; };
 		BE38085B1FD9BFB600393EB8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BE3808591FD9BFB600393EB8 /* Main.storyboard */; };
 		BE38085D1FD9BFB600393EB8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BE38085C1FD9BFB600393EB8 /* Assets.xcassets */; };
@@ -181,6 +182,7 @@
 		BE18903A20700EFA00EE6739 /* Author.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Author.swift; sourceTree = "<group>"; };
 		BE1D5F9C204C66F1008A1C36 /* Cub+Runner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Cub+Runner.swift"; sourceTree = "<group>"; };
 		BE244DC7201FBB6000A7EA4E /* cacert.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = cacert.pem; sourceTree = "<group>"; };
+		BE2AA98A208E692600B85CFE /* Sleep.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sleep.swift; sourceTree = "<group>"; };
 		BE3768EE1FEC4DCE00D5A2D1 /* ios_system.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = ios_system.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		BE3808521FD9BFB600393EB8 /* OpenTerm.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OpenTerm.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BE3808551FD9BFB600393EB8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -278,6 +280,7 @@
 				BE505065201E5ED900CDFC60 /* Share.swift */,
 				BEA14A66202CE5D300AB7351 /* Cub.swift */,
 				BE57BDD5207BF9D800A60950 /* Say.swift */,
+				BE2AA98A208E692600B85CFE /* Sleep.swift */,
 			);
 			path = Commands;
 			sourceTree = "<group>";
@@ -772,6 +775,7 @@
 				BE3A62E7208B54D00014A498 /* CubDocumentationItemTableViewCell.swift in Sources */,
 				BEEAD9C8207EA09700CBC254 /* Stdin+Read.swift in Sources */,
 				BE8E66FC206196A7007B14E6 /* Notification+Names.swift in Sources */,
+				BE2AA98B208E692600B85CFE /* Sleep.swift in Sources */,
 				BE1643D62077FFC0002939B7 /* UICollectionView+Update.swift in Sources */,
 				3CA320FF201FE8E100974B5F /* ScriptsViewController.swift in Sources */,
 				BEBD36E720755B0400C9725C /* StoryboardFactory.swift in Sources */,
