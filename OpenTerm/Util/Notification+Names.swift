@@ -10,7 +10,7 @@ import Foundation
 
 extension Notification.Name {
 	
-	static let appearanceDidChange = Notification.Name(rawValue: "appearanceDidChange")
+	static let appearanceDidChange = Notification.Name("appearanceDidChange")
 	static let historyDidChange = Notification.Name("HistoryManagerHistoryDidChangeNotification")
-
+	static let caretStyleDidChange = Notification.Name("caretStyleDidChange")
 }

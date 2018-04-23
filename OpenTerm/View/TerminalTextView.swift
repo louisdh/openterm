@@ -8,10 +8,10 @@
 
 import UIKit
 
-enum CaretStyle {
-	case verticalBar
-	case block
-	case underline
+enum CaretStyle : Int {
+	case verticalBar = 0
+	case block = 1
+	case underline = 2
 }
 
 /// UITextView that adopts the style of a terminal.
@@ -26,7 +26,7 @@ class TerminalTextView: UITextView {
 		}
 	}
 	
-	var caretStyle: CaretStyle = .verticalBar
+	var caretStyle : CaretStyle = .verticalBar
 	
 	override init(frame: CGRect, textContainer: NSTextContainer?) {
 		super.init(frame: frame, textContainer: textContainer)
@@ -36,7 +36,7 @@ class TerminalTextView: UITextView {
 
 	required init?(coder aDecoder: NSCoder) {
 		super.init(coder: aDecoder)
-
+		
 		setup()
 	}
 
@@ -52,16 +52,22 @@ class TerminalTextView: UITextView {
 		smartQuotesType = .no
 		autocapitalizationType = .none
 		spellCheckingType = .no
-
 		indicatorStyle = .white
-
+		
 		updateAppearanceFromSettings()
+		setCaretStyle()
 
 		NotificationCenter.default.addObserver(self, selector: #selector(self.updateAppearanceFromSettingsAnimated), name: .appearanceDidChange, object: nil)
 		
 		let caDisplayLink = CADisplayLink(target: self, selector: #selector(update))
 		caDisplayLink.add(to: .main, forMode: .commonModes)
 		
+		NotificationCenter.default.addObserver(self, selector: #selector(setCaretStyle), name: .caretStyleDidChange , object: nil)
+	}
+	
+	@objc
+	func setCaretStyle(){
+		caretStyle = CaretStyle(rawValue: UserDefaultsController.shared.caretStyle)!
 	}
 
 	@objc
@@ -169,7 +175,7 @@ class TerminalTextView: UITextView {
 			let dummyAtributedString = NSAttributedString(string: "X", attributes: [.font: font as Any])
 			let charWidth = dummyAtributedString.size().width
 
-			rect.origin.y = rect.size.height
+			rect.origin.y += self.font!.pointSize
 
 			rect.size.height = rect.width
 			rect.size.width = charWidth

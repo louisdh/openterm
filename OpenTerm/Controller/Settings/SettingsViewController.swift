@@ -16,10 +16,12 @@ class SettingsViewController: UITableViewController {
 
 	@IBOutlet weak var terminalTextColorView: UIView!
 	@IBOutlet weak var terminalBackgroundColorView: UIView!
-
-	@IBOutlet weak var useDarkKeyboardSwitch: UISwitch!
-
-	override func viewDidLoad() {
+    
+    @IBOutlet weak var useDarkKeyboardSwitch: UISwitch!
+	
+	@IBOutlet weak var caretStylePicker: UISegmentedControl!
+	
+    override func viewDidLoad() {
 		super.viewDidLoad()
 
 	}
@@ -42,6 +44,8 @@ class SettingsViewController: UITableViewController {
 		terminalBackgroundColorView.backgroundColor = UserDefaultsController.shared.terminalBackgroundColor
 
 		useDarkKeyboardSwitch.isOn = UserDefaultsController.shared.useDarkKeyboard
+		caretStylePicker.selectedSegmentIndex = UserDefaultsController.shared.caretStyle
+		
 
 	}
 
@@ -63,7 +67,13 @@ class SettingsViewController: UITableViewController {
 
 	}
 
-	@IBAction func close(_ sender: UIBarButtonItem) {
+    @IBAction func caretStyleDidChange(_ sender: UISegmentedControl) {
+		let pickerValue : Int = sender.selectedSegmentIndex
+		UserDefaultsController.shared.caretStyle = pickerValue
+		NotificationCenter.default.post(name: .caretStyleDidChange, object: nil)
+    }
+	
+    @IBAction func close(_ sender: UIBarButtonItem) {
 
 		self.dismiss(animated: true, completion: nil)
 
