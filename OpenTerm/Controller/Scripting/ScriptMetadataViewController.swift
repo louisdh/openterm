@@ -59,9 +59,7 @@ class ScriptMetadataViewController: UIViewController {
 		case .create:
 			self.title = "New script"
 			saveBarButtonItem.title = "Create"
-			deleteBarButtonItem.title = "Delete"
-			deleteBarButtonItem.isEnabled = false
-			deleteBarButtonItem.tintColor = UIColor.clear
+			self.navigationItem.rightBarButtonItems = [saveBarButtonItem]
 			
 		case .update(let document):
 			
@@ -141,27 +139,31 @@ class ScriptMetadataViewController: UIViewController {
 		
 	}
 	
-    
-    
     @IBAction func deletePrideland(_ sender: UIBarButtonItem) {
         
         let metadata = self.metadata()
         
         let url = DocumentManager.shared.scriptsURL.appendingPathComponent("\(metadata.name).prideland")
 		
-		let deleteAlert = UIAlertController(title: "Delete Script", message: "Action can't be undone", preferredStyle: UIAlertControllerStyle.alert)
-		deleteAlert.addAction(UIAlertAction(title: "Delete", style: UIAlertActionStyle.destructive, handler: { (handler) in
+		let deleteAlert = UIAlertController(title: "Are you sure you want to delete “\(metadata.name)”?", message: "This action can't be undone.", preferredStyle: .alert)
+		
+		deleteAlert.addAction(UIAlertAction(title: "Delete", style: .destructive, handler: { (handler) in
+			
 			do {
 				try DocumentManager.shared.fileManager.removeItem(at: url)
+				
+				self.dismiss(animated: true, completion: {
+					self.delegate?.didDeleteScript()
+				})
+				
 			} catch {
 				self.showErrorAlert(error)
 			}
-			self.dismiss(animated: true, completion: {
-				self.delegate?.didDeleteScript()
-			})
+			
 		}))
 		
-		deleteAlert.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel, handler: nil))
+		deleteAlert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+		
 		self.present(deleteAlert, animated: true, completion: nil)
 		
     }
