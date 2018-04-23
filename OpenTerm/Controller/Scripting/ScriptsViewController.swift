@@ -480,6 +480,10 @@ extension ScriptsViewController: ScriptMetadataViewControllerDelegate {
 		openPrideland(url: document.fileURL, title: document.metadata?.name ?? "")
 	}
 	
+	func didDeleteScript() {
+		
+	}
+	
 }
 
 extension ScriptsViewController: PanelContentDelegate {
