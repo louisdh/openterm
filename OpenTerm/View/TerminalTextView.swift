@@ -165,21 +165,26 @@ class TerminalTextView: UITextView {
 	override func caretRect(for position: UITextPosition) -> CGRect {
 		var rect = super.caretRect(for: position)
 		
+		guard let font = self.font else {
+			assertionFailure("Could not get font")
+			return rect
+		}
+		
 		switch caretStyle {
 		case .verticalBar:
 			return rect
 			
 		case .block:
-			let dummyAtributedString = NSAttributedString(string: "X", attributes: [.font: font as Any])
+			let dummyAtributedString = NSAttributedString(string: "X", attributes: [.font: font])
 			let charWidth = dummyAtributedString.size().width
 			
 			rect.size.width = charWidth
 			
 		case .underline:
-			let dummyAtributedString = NSAttributedString(string: "X", attributes: [.font: font as Any])
+			let dummyAtributedString = NSAttributedString(string: "X", attributes: [.font: font])
 			let charWidth = dummyAtributedString.size().width
 
-			rect.origin.y += self.font!.pointSize
+			rect.origin.y += font.pointSize
 
 			rect.size.height = rect.width
 			rect.size.width = charWidth
