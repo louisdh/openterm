@@ -113,9 +113,9 @@ class CommandExecutor {
 			let newDirectory = DocumentManager.shared.currentDirectoryURL
 			if newDirectory != self.currentWorkingDirectory {
 				self.currentWorkingDirectory = newDirectory
+				// Reset the process-wide CWD back to documents folder
+				DocumentManager.shared.currentDirectoryURL = DocumentManager.shared.activeDocumentsFolderURL
 			}
-			// Reset the process-wide CWD back to documents folder
-			DocumentManager.shared.currentDirectoryURL = DocumentManager.shared.activeDocumentsFolderURL
 
 			// Save return code into the context
 			self.context[.status] = "\(returnCode)"
