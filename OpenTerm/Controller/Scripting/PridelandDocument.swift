@@ -96,6 +96,12 @@ class PridelandDocument: UIDocument {
 		self.metadata = metadata
 		
 	}
+
+	// Disable document reverting, which can cause internal exceptions
+	// when an open document is edited from a different app or device.
+	override func revert(toContentsOf url: URL, completionHandler: ((Bool) -> Void)? = nil) {
+		completionHandler?(false)
+	}
 	
 }
 
