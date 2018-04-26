@@ -44,6 +44,8 @@ class TerminalViewController: UIViewController {
 		}
 	}
 
+	var overflowItem: UIBarButtonItem!
+
 	init() {
 		terminalView = TerminalView()
 		contentWrapperView = UIView()
@@ -95,6 +97,8 @@ class TerminalViewController: UIViewController {
 		historyViewController.delegate = self
 		bookmarkViewController.delegate = self
 		terminalView.delegate = self
+		
+		overflowItem = UIBarButtonItem(image: #imageLiteral(resourceName: "More"), style: .plain, target: self, action: #selector(showOverflowMenu(_:)))
 	}
 
 	required init?(coder aDecoder: NSCoder) {
@@ -578,13 +582,14 @@ private extension TerminalViewController {
 	}
 
 	func applyOverflowState() {
-		let overflowItem = UIBarButtonItem(image: #imageLiteral(resourceName: "More"), style: .plain, target: self, action: #selector(showOverflowMenu(_:)))
 		switch self.overflowState {
 		case .expanded:
 			let visibleItems = overflowItems.filter { $0.visibleInBar }.map { OverflowBarButtonItem(item: $0) }
 			self.navigationItem.rightBarButtonItems = visibleItems + (visibleItems.count != overflowItems.count ? [overflowItem] : [])
 		case .compact:
-			self.navigationItem.rightBarButtonItems = [overflowItem]
+			if self.navigationItem.rightBarButtonItems != [overflowItem] {
+				self.navigationItem.rightBarButtonItems = [overflowItem]
+			}
 		}
 	}
 
