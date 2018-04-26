@@ -30,7 +30,8 @@ class TerminalView: UIView {
 
 	var stdoutParser = Parser()
 	var stderrParser = Parser()
-	var currentCommandStartIndex: String.Index! {
+	
+	private var currentCommandStartIndex: String.Index! {
 		didSet {
 			updateAutoComplete()
 			updateCompletion()
