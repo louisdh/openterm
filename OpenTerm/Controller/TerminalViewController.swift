@@ -632,6 +632,7 @@ private extension TerminalViewController {
 		override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 			return items.count
 		}
+		
 		override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 			let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
 
@@ -641,13 +642,15 @@ private extension TerminalViewController {
 			cell.imageView?.backgroundColor = .darkGray
 			cell.imageView?.layer.cornerRadius = 5
 			cell.backgroundColor = .clear
-			cell.selectionStyle = .none
+			cell.selectionStyle = .default
 
 			return cell
 		}
 
 		override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 			tableView.deselectRow(at: indexPath, animated: true)
+
+			tableView.cellForRow(at: indexPath)?.imageView?.backgroundColor = .darkGray
 
 			// Get the view that presented this popover
 			guard let presentingView = popoverPresentationController?.sourceView else {
@@ -662,11 +665,7 @@ private extension TerminalViewController {
 		}
 
 		override func tableView(_ tableView: UITableView, didHighlightRowAt indexPath: IndexPath) {
-			tableView.cellForRow(at: indexPath)?.backgroundColor = UIColor.black.withAlphaComponent(0.1)
-		}
-
-		override func tableView(_ tableView: UITableView, didUnhighlightRowAt indexPath: IndexPath) {
-			tableView.cellForRow(at: indexPath)?.backgroundColor = .clear
+			tableView.cellForRow(at: indexPath)?.imageView?.backgroundColor = .darkGray
 		}
 
 		// Always show in popover, even on iPhone
