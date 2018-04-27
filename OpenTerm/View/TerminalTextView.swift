@@ -57,6 +57,7 @@ class TerminalTextView: UITextView {
 		autocapitalizationType = .none
 		spellCheckingType = .no
 		indicatorStyle = .white
+		smartInsertDeleteType = .no
 		
 		updateAppearanceFromSettings()
 		setCaretStyle()
