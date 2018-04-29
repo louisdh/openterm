@@ -34,6 +34,8 @@ class ScriptEditViewController: UIViewController {
 
 		super.init(nibName: nil, bundle: nil)
 		
+		self.textView.contentTextView.indicatorStyle = .white
+		
 		let cubManualURL = Bundle.main.url(forResource: "book", withExtension: "html", subdirectory: "cub-guide.htmlcontainer")!
 		let cubManualVC = UIStoryboard.main.manualWebViewController(htmlURL: cubManualURL)
 		cubManualPanelViewController = PanelViewController(with: cubManualVC, in: self)
