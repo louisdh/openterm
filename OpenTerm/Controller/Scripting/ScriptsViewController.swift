@@ -311,12 +311,20 @@ class ScriptsViewController: UIViewController {
 					continue
 				}
 				
-				let fileWrapper = try FileWrapper(url: documentURL, options: [])
+				do {
 				
-				let overview = try PridelandOverview(url: documentURL, fileWrapper: fileWrapper)
-				
-				pridelandOverviews.append(overview)
-				
+					let fileWrapper = try FileWrapper(url: documentURL, options: [])
+					
+					let overview = try PridelandOverview(url: documentURL, fileWrapper: fileWrapper)
+					
+					pridelandOverviews.append(overview)
+					
+				} catch {
+					
+					self.showAlert(documentURL.lastPathComponent, message: error.localizedDescription)
+
+				}
+			
 			}
 			
 			pridelandOverviews.sort(by: { $0.metadata.name < $1.metadata.name })
