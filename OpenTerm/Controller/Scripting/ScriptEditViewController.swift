@@ -34,6 +34,10 @@ class ScriptEditViewController: UIViewController {
 
 		super.init(nibName: nil, bundle: nil)
 		
+		inputAssistantView.leadingActions = [
+			InputAssistantAction(image: ScriptEditViewController.tabImage, target: self, action: #selector(insertTab))
+		]
+		
 		self.textView.contentTextView.indicatorStyle = .white
 		
 		let cubManualURL = Bundle.main.url(forResource: "book", withExtension: "html", subdirectory: "cub-guide.htmlcontainer")!
@@ -79,6 +83,37 @@ class ScriptEditViewController: UIViewController {
 
 	required init?(coder aDecoder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
+	}
+	
+	private static var tabImage: UIImage {
+		return UIGraphicsImageRenderer(size: .init(width: 24, height: 24)).image(actions: { context in
+			
+			let path = UIBezierPath()
+			path.move(to: CGPoint(x: 1, y: 12))
+			path.addLine(to: CGPoint(x: 20, y: 12))
+			path.addLine(to: CGPoint(x: 15, y: 6))
+			
+			path.move(to: CGPoint(x: 20, y: 12))
+			path.addLine(to: CGPoint(x: 15, y: 18))
+			
+			path.move(to: CGPoint(x: 23, y: 6))
+			path.addLine(to: CGPoint(x: 23, y: 18))
+			
+			UIColor.white.setStroke()
+			path.lineWidth = 2
+			path.lineCapStyle = .butt
+			path.lineJoinStyle = .round
+			path.stroke()
+			
+			context.cgContext.addPath(path.cgPath)
+			
+		}).withRenderingMode(.alwaysOriginal)
+	}
+	
+	@objc func insertTab() {
+		
+		textView.insertText("\t")
+		
 	}
 
 	private var textViewSelectedRangeObserver: NSKeyValueObservation?
