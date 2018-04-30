@@ -82,23 +82,27 @@ For x-callback-url's the command does not terminate until either x-success or x-
 		return 1
 	}
 
+	var urlString = url!.absoluteString
+
 	// shorthand to URL escape parameters
 	let escape: (String) -> String = { str in str.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)! }
 
-	// read everything from stdin and put this on url
-	var bytes = [Int8]()
-	while true {
-		var byte: Int8 = 0
-		let count = read(fileno(thread_stdin), &byte, 1)
-		guard count == 1 else {
-			break
+	// when stdin is not the terminal, we read everything from stdin and put this on url
+	let readStandardInput = ios_isatty(fileno(thread_stdin)) == 0
+	if readStandardInput {
+		var bytes = [Int8]()
+		while true {
+			var byte: Int8 = 0
+			let count = read(fileno(thread_stdin), &byte, 1)
+			guard count == 1 else {
+				break
+			}
+			bytes.append(byte)
 		}
-		bytes.append(byte)
-	}
-	var urlString = url!.absoluteString
-	let data = Data(bytes: bytes, count: bytes.count)
-	if let string = String(data: data, encoding: .utf8) {
-		urlString.append(escape(string))
+		let data = Data(bytes: bytes, count: bytes.count)
+		if let string = String(data: data, encoding: .utf8) {
+			urlString.append(escape(string))
+		}
 	}
 
 	let waitForCallback = url!.host == "x-callback-url"
