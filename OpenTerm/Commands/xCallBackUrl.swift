@@ -64,21 +64,27 @@ public func xCallbackUrlOpen(_ url: URL) -> Bool {
 
 @_cdecl("openUrl")
 public func openUrl(argc: Int32, argv: UnsafeMutablePointer<UnsafeMutablePointer<Int8>?>?) -> Int32 {
+	
+	guard let args = convertCArguments(argc: argc, argv: argv) else {
+		return 1
+	}
+	
 	var url: URL? = nil
-	if argc == 2 {
-		let urlString = String(cString: argv![1]!)
-		url = URL(string: urlString)
+	if args.count == 2 {
+		url = URL(string: args[1])
 	}
 
+	let usage = """
+				usage: open-url app://x-callback-url/cmd
+
+				where standard input is url encoded and appended to url.
+
+				For x-callback-url's the command does not terminate until either x-success or x-error has been called and these parameters are automatically appended to the url.
+
+				"""
+	
 	guard url != nil else {
-		fputs("""
-usage: open-url app://x-callback-url/cmd
-
-where standard input is url encoded and appended to url.
-
-For x-callback-url's the command does not terminate until either x-success or x-error has been called and these parameters are automatically appended to the url.
-
-""", thread_stderr)
+		fputs(usage, thread_stderr)
 		return 1
 	}
 
