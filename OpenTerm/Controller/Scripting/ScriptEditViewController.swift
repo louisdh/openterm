@@ -167,7 +167,9 @@ class ScriptEditViewController: UIViewController {
 		
 		let infoBarButtonItem = UIBarButtonItem(customView: infoButton)
 		
-		navigationItem.rightBarButtonItems = [infoBarButtonItem, manualBarButtonItem, docsBarButtonItem]
+		let shareBarButtonItem = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(shareDocument(_:)))
+
+		navigationItem.rightBarButtonItems = [infoBarButtonItem, shareBarButtonItem, manualBarButtonItem, docsBarButtonItem]
 		
 		document.open { [weak self] (success) in
 			
@@ -254,6 +256,21 @@ class ScriptEditViewController: UIViewController {
 		
 	}
 
+	@objc
+	func shareDocument(_ sender: UIBarButtonItem) {
+
+		textView.contentTextView.resignFirstResponder()
+		
+		let activityItems: [Any] = [url]
+		
+		let activityVC = UIActivityViewController(activityItems: activityItems, applicationActivities: nil)
+		
+		activityVC.popoverPresentationController?.barButtonItem = sender
+		
+		self.present(activityVC, animated: true, completion: nil)
+		
+	}
+	
 	@objc
 	func showDocs(_ sender: UIBarButtonItem) {
 		
