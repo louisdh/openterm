@@ -445,11 +445,24 @@ extension ScriptsViewController: UICollectionViewDelegateFlowLayout {
 			return
 		}
 		
-		UIView.animate(withDuration: 0.5, delay: 0.0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0.8, options: [.allowUserInteraction], animations: {
+		guard let cellItem = cellItems?[indexPath.row] else {
+			return
+		}
+		
+		switch cellItem {
+		case .prideland:
 			
-			cell.transform = CGAffineTransform(scaleX: 0.9, y: 0.9)
+			UIView.animate(withDuration: 0.5, delay: 0.0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0.8, options: [.allowUserInteraction], animations: {
+				
+				cell.transform = CGAffineTransform(scaleX: 0.9, y: 0.9)
+				
+			}, completion: nil)
+			
+		case .addNew:
+			
+			cell.alpha = 0.3
 
-		}, completion: nil)
+		}
 		
 	}
 	
@@ -459,11 +472,28 @@ extension ScriptsViewController: UICollectionViewDelegateFlowLayout {
 			return
 		}
 		
-		UIView.animate(withDuration: 0.5, delay: 0.0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0.8, options: [.allowUserInteraction], animations: {
+		guard let cellItem = cellItems?[indexPath.row] else {
+			return
+		}
+		
+		switch cellItem {
+		case .prideland:
 			
-			cell.transform = .identity
+			UIView.animate(withDuration: 0.5, delay: 0.0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0.8, options: [.allowUserInteraction], animations: {
+				
+				cell.transform = .identity
+				
+			}, completion: nil)
 			
-		}, completion: nil)
+		case .addNew:
+			
+			UIView.animate(withDuration: 0.3) {
+				
+				cell.alpha = 1.0
+				
+			}
+			
+		}
 
 	}
 	
