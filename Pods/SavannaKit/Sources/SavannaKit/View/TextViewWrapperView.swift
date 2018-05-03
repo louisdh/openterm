@@ -46,6 +46,11 @@ import Foundation
 				return
 			}
 			
+			guard let lineNumbersStyle = textView.theme.lineNumbersStyle else {
+				textView.hideGutter()
+				return
+			}
+			
 			let contentHeight = textView.enclosingScrollView!.documentView!.bounds.height
 			
 			let yOffset = self.bounds.height - contentHeight
@@ -73,7 +78,7 @@ import Foundation
 			
 			textView.updateGutterWidth(for: maxNumberOfDigits)
 			
-			Color.black.setFill()
+			lineNumbersStyle.backgroundColor.setFill()
 			
 			let gutterRect = CGRect(x: 0, y: 0, width: textView.gutterWidth, height: rect.height)
 			let path = BezierPath(rect: gutterRect)

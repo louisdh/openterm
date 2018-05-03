@@ -1174,8 +1174,13 @@ public class Parser {
 	private func error(_ type: ParseErrorType, token: Token? = nil) -> ParseError {
 
 		let token = token ?? peekCurrentToken() ?? peekPreviousToken()
+		
 		let range = token?.range
 
+		if let type = token?.type, case .editorPlaceholder = type {
+			return ParseError(type: .editorPlaceholder, range: range)
+		}
+		
 		return ParseError(type: type, range: range)
 	}
 

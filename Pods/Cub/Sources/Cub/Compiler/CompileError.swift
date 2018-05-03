@@ -14,55 +14,44 @@ public enum CompileErrorType {
 	case unexpectedBinaryOperator
 	case functionNotFound(String)
 	case unbalancedScope
-	
+	case variableNotFound(String)
 }
 
-extension CompileErrorType{
+extension CompileErrorType {
 	
 	func description(atLine line: Int? = nil) -> String {
 		
 		if let line = line {
-			
-			switch self {
-			case .unexpectedCommand:
-				return "Found an unexpected command on line \(line) while compiling."
-				
-			case .emptyStruct:
-				return "Structs may not be empty. Found an empty struct on line \(line)."
-				
-			case .unexpectedBinaryOperator:
-				return "Found an unexpected binary operation on line \(line)."
-				
-			case .functionNotFound(let name):
-				return "Function \"\(name)\" not found on line \(line)."
-				
-			case .unbalancedScope:
-				return "Unbalanced scope on line \(line)."
-				
-			}
-			
+			return "Error on line \(line): \(description())"
 		} else {
-			
-			switch self {
-			case .unexpectedCommand:
-				return "Found an unexpected command while compiling."
-				
-			case .emptyStruct:
-				return "Structs may not be empty."
-				
-			case .unexpectedBinaryOperator:
-				return "Found an unexpected binary operation."
-				
-			case .functionNotFound(let name):
-				return "Function \"\(name)\" not found."
-				
-			case .unbalancedScope:
-				return "Unbalanced scope."
-				
-			}
-			
+			return description()
 		}
-	
+		
+	}
+			
+	func description() -> String {
+
+		switch self {
+		case .unexpectedCommand:
+			return "Found an unexpected command while compiling."
+			
+		case .emptyStruct:
+			return "Structs may not be empty."
+			
+		case .unexpectedBinaryOperator:
+			return "Found an unexpected binary operation."
+			
+		case .functionNotFound(let name):
+			return "Function \"\(name)\" not found."
+			
+		case .unbalancedScope:
+			return "Unbalanced scope."
+			
+		case .variableNotFound(let name):
+			return "Variable \"\(name)\" not found."
+
+		}
+		
 	}
 	
 }

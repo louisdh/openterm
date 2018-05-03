@@ -89,7 +89,7 @@ public class SyntaxTextView: View {
 	
 	#endif
 	
-	override convenience init(frame: CGRect) {
+	public override convenience init(frame: CGRect) {
 		self.init(.frame(frame))!
 	}
 	
@@ -202,8 +202,12 @@ public class SyntaxTextView: View {
 			textView.leadingAnchor.constraint(equalTo: self.leadingAnchor).isActive = true
 			textView.trailingAnchor.constraint(equalTo: self.trailingAnchor).isActive = true
 		
+			self.contentMode = .redraw
+			textView.contentMode = .topLeft
+		
 		#endif
 		
+		textView.innerDelegate = self
 		textView.delegate = self
 		
 		textView.text = ""
@@ -213,6 +217,8 @@ public class SyntaxTextView: View {
 		
 		#if os(iOS)
 
+		backgroundColor = theme.backgroundColor
+
 		textView.autocapitalizationType = .none
 		textView.keyboardType = .default
 		textView.autocorrectionType = .no
@@ -220,6 +226,7 @@ public class SyntaxTextView: View {
 			
 		if #available(iOS 11.0, *) {
 			textView.smartQuotesType = .no
+			textView.smartInsertDeleteType = .no
 		}
 			
 		textView.keyboardAppearance = .dark

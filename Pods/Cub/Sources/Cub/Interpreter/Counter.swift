@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct Counter {
+struct Counter: Equatable, Codable {
 
 	private var i: UInt
 

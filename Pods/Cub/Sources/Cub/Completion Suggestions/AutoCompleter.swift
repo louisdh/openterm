@@ -200,11 +200,19 @@ public class AutoCompleter {
 			
 		}
 		
-		if cursorInfo.textOnLineBeforeCursor.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-			let statementSuggestions = self.statementSuggestions(cursor: cursor, prefix: cursorInfo.textOnLineBeforeCursor)
-			suggestions.append(contentsOf: statementSuggestions)
+		var editorPlaceholderTitle: String?
+		
+		if let currentToken = cursorInfo.currentToken, case let .editorPlaceholder(value) = currentToken.type {
+			editorPlaceholderTitle = value
 		}
-
+		
+		if editorPlaceholderTitle != "name" {
+			if cursorInfo.textOnLineBeforeCursor.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+				let statementSuggestions = self.statementSuggestions(cursor: cursor, prefix: cursorInfo.textOnLineBeforeCursor)
+				suggestions.append(contentsOf: statementSuggestions)
+			}
+		}
+		
 		return suggestions
 	}
 	
@@ -241,8 +249,16 @@ public class AutoCompleter {
 		forContent += "#>\n"
 		forContent += "\(prefix)}"
 		
-		let forStatement = CompletionSuggestion(title: "for ...", content: forContent, insertionIndex: cursor, cursorAfterInsertion: 4)
+		let forStatement = CompletionSuggestion(title: "for ...", content: forContent, insertionIndex: cursor, cursorAfterInsertion: 5)
 		suggestions.append(forStatement)
+		
+		var varContent = ""
+		varContent += "<#name"
+		varContent += "#> = <#value"
+		varContent += "#>"
+		
+		let varStatement = CompletionSuggestion(title: "var ...", content: varContent, insertionIndex: cursor, cursorAfterInsertion: 1)
+		suggestions.append(varStatement)
 		
 		return suggestions
 

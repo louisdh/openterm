@@ -79,7 +79,8 @@ func generateParagraphs(for textView: InnerTextView, flipRects: Bool = false) ->
 		
 		if let last = paragraphs.last {
 			
-			rect = CGRect(x: 0, y: last.rect.origin.y + last.rect.height, width: gutterWidth, height: last.rect.height)
+			// FIXME: don't use hardcoded "2" as line spacing
+			rect = CGRect(x: 0, y: last.rect.origin.y + last.rect.height + 2, width: gutterWidth, height: last.rect.height)
 			
 		} else {
 			
@@ -144,18 +145,21 @@ func offsetParagraphs(_ paragraphs: [Paragraph], for textView: InnerTextView, yO
 
 func drawLineNumbers(_ paragraphs: [Paragraph], in rect: CGRect, for textView: InnerTextView) {
 	
+	guard let style = textView.theme.lineNumbersStyle else {
+		return
+	}
+	
 	for paragraph in paragraphs {
 		
 		guard paragraph.rect.intersects(rect) else {
 			continue
 		}
 		
-		let attr = paragraph.attributedString(for: textView.theme)
+		let attr = paragraph.attributedString(for: style)
 		
 		var drawRect = paragraph.rect
 		
 		let gutterWidth = textView.gutterWidth
-		
 		
 		let drawSize = attr.size()
 		
@@ -175,5 +179,5 @@ func drawLineNumbers(_ paragraphs: [Paragraph], in rect: CGRect, for textView: I
 		attr.draw(in: drawRect)
 		
 	}
-	
+
 }

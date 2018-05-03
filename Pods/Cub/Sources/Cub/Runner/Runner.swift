@@ -11,6 +11,8 @@ import CoreFoundation
 
 public typealias ExternalFunc = ([String: ValueType], _ callback: @escaping (ValueType?) -> Bool) -> Void
 
+public typealias ExternalVarCallback = () -> ValueType
+
 precedencegroup Pipe {
 	associativity: left
 	higherThan: AdditionPrecedence
@@ -36,6 +38,47 @@ struct ExternalFunctionDefinition {
 	let callback: ExternalFunc
 	let returns: Bool
 	
+}
+
+struct ExternalVariableDefinition {
+	
+	let name: String
+	let callback: ExternalVarCallback
+	let documentation: String?
+
+	func source(runner: Runner) -> String {
+		
+		let value = callback()
+		
+		return "\(name) = \(runner.source(for: value))"
+	}
+	
+}
+
+extension Runner {
+	
+	func source(for value: ValueType) -> String {
+		
+		switch value {
+		case .array(let array):
+			return "[\(array.map({ source(for: $0) }).joined(separator: ", "))]"
+			
+		case .bool(let bool):
+			return "\(bool)"
+			
+		case .number(let number):
+			return "\(number)"
+
+		case .string(let string):
+			return "\"\(string)\""
+
+		case .struct:
+			fatalError("Struct code gen is currently unavailable")
+			
+		}
+		
+	}
+
 }
 
 /// Runs through full pipeline, from lexer to interpreter
@@ -69,6 +112,15 @@ public class Runner {
 		externalFunctions[id] = ExternalFunctionDefinition(name: name, documentation: documentation, argumentNames: argumentNames, callback: callback, returns: returns)
 	}
 	
+	var externalVariables = [String: ExternalVariableDefinition]()
+	
+	public func registerExternalVariable(documentation: String?, name: String, callback: @escaping ExternalVarCallback) {
+		
+		let def = ExternalVariableDefinition(name: name, callback: callback, documentation: documentation)
+		
+		externalVariables[name] = def
+	}
+	
 	public func runSource(at path: String, get varName: String, useStdLib: Bool = true) throws -> ValueType {
 
 		let source = try String(contentsOfFile: path, encoding: .utf8)
@@ -80,6 +132,10 @@ public class Runner {
 
 		let bytecode: BytecodeBody
 
+		let externalVarsSource = externalVariables.values.map({ $0.source(runner: self) }).joined(separator: "\n")
+
+		let externalVarsBytecode = try compileCubSourceCode(externalVarsSource)
+		
 		if useStdLib {
 
 			let stdLib = StdLib()
@@ -94,13 +150,13 @@ public class Runner {
 
 			let compiledSource = try compileCubSourceCode(source)
 
-			bytecode = compiledStdLib + compiledSource
+			bytecode = compiledStdLib + externalVarsBytecode + compiledSource
 
 		} else {
 
 			let compiledSource = try compileCubSourceCode(source)
 
-			bytecode = compiledSource
+			bytecode = externalVarsBytecode + compiledSource
 
 		}
 
@@ -153,9 +209,13 @@ public class Runner {
 			logSourceCode(source)
 		}
 
+		let externalVarsSource = externalVariables.values.map({ $0.source(runner: self) }).joined(separator: "\n")
+		
+		let externalVarsBytecode = try compileCubSourceCode(externalVarsSource)
+		
 		let compiledSource = try compileCubSourceCode(source)
-
-		let fullBytecode = compiledStdLib + compiledSource
+		
+		let fullBytecode = compiledStdLib + externalVarsBytecode + compiledSource
 
 		let interpretStartTime = CFAbsoluteTimeGetCurrent()
 

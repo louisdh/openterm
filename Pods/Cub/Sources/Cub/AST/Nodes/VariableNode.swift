@@ -22,7 +22,12 @@ public struct VariableNode: ASTNode {
 
 		var bytecode = BytecodeBody()
 
-		let (varReg, _) = ctx.getRegister(for: name)
+		let (varReg, isNew) = ctx.getRegister(for: name)
+		
+		guard !isNew else {
+			throw compileError(.variableNotFound(name))
+		}
+		
 		let load = BytecodeInstruction(label: ctx.nextIndexLabel(), type: .registerLoad, arguments: [.index(varReg)], comment: name, range: range)
 
 		bytecode.append(load)

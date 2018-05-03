@@ -9,6 +9,8 @@ pi = 3.14159265358979
 /// The mathematical constant tau, which equals 2*pi.
 tau = pi * 2
 
+/// - Parameter x: A number.
+/// - Returns: The absolute value of x.
 func abs(x) returns {
 	if x < 0 {
 		return x * -1
@@ -17,6 +19,9 @@ func abs(x) returns {
 	return x
 }
 
+/// - Parameter a: A number to compare.
+/// - Parameter b: Another number to compare.
+/// - Returns: The lesser of a and b.
 func min(a, b) returns {
 	if a < b {
 		return a
@@ -25,6 +30,9 @@ func min(a, b) returns {
 	return b
 }
 
+/// - Parameter a: A number to compare.
+/// - Parameter b: Another number to compare.
+/// - Returns: The greater of a and b.
 func max(a, b) returns {
 	if a > b {
 		return a
@@ -33,40 +41,52 @@ func max(a, b) returns {
 	return b
 }
 
+/// - Parameter x: a number.
+/// - Returns: wether x is positive.
 func isPositive(x) returns {
 	return x > 0
 }
 
+/// - Parameter x: a number.
+/// - Returns: wether x is negative.
 func isNegative(x) returns {
 	return x < 0
 }
 
+/// - Parameter x: a number.
+/// - Returns: wether x is even.
 func isEven(x) returns {
 	return mod(x, 2) == 0
 }
 
+/// - Parameter x: a number.
+/// - Returns: wether x is uneven.
 func isUneven(x) returns {
 	return !isEven(x)
 }
 
-/// Root `n` of `x`
+/// - Parameter n: the root.
+/// - Parameter x: a number.
+/// - Returns: the n-root of x.
 func root(n, x) returns {
 	return x ^ (1 / n)
 }
 
-/// Square root of `x`
+/// - Parameter x: a number.
+/// - Returns: the square root of x.
 func sqrt(x) returns {
 	return root(2, x)
 }
 
-/// Cube root of `x`
+/// - Parameter x: a number.
+/// - Returns: the cube root of x.
 func cbrt(x) returns {
 	return root(3, x)
 }
 
-/// x is dividend
-/// y is divisor
-/// returns remainder
+/// - Parameter x: dividend
+/// - Parameter y: divisor
+/// - Returns: remainder
 func rem(x, y) returns {
 	
 	y = abs(y)
@@ -120,6 +140,8 @@ func mod(x, y) returns {
 	return x
 }
 
+/// - Parameter x: a number.
+/// - Returns: the greatest whole number less than x.
 func floor(x) returns {
 	return x - mod(x, 1)
 }
@@ -129,9 +151,13 @@ func floor(x) returns {
 //	return x
 //}
 
-// TODO: fix for negative numbers!
-// e.g. round(-2.423) should give -2
+/// - Parameter x: a number.
+/// - Returns: the rounded value of x
 func round(x) returns {
+	
+	// TODO: fix for negative numbers!
+	// e.g. round(-2.423) should give -2
+	
 	if x < 0.0 {
 		return floor(x - 0.5)
 	} else {

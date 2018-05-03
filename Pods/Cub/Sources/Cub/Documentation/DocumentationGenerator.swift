@@ -36,6 +36,13 @@ public class DocumentationGenerator {
 
 		}
 		
+		for externalVarDef in runner.externalVariables.values {
+			
+			let item = parsedDocumentation(for: externalVarDef)
+			items.append(item)
+			
+		}
+		
 		return items
 	}
 	
@@ -103,6 +110,28 @@ public class DocumentationGenerator {
 		return varItem
 	}
 
+	private func parsedDocumentation(for externalVarDefinition: ExternalVariableDefinition) -> DocumentationItem {
+
+		let definition = externalVarDefinition.name
+		let title = externalVarDefinition.name
+		
+		let variableDocumentation: VariableDocumentation?
+		
+		let rawDocumentation = externalVarDefinition.documentation
+		if let rawDocumentation = rawDocumentation {
+			
+			variableDocumentation = parsedVariableDocumentation(rawDocumentation: rawDocumentation)
+			
+		} else {
+			
+			variableDocumentation = nil
+		}
+		
+		let varItem = DocumentationItem(definition: definition, rawDocumentation: rawDocumentation, type: .variable, functionDocumentation: nil, variableDocumentation: variableDocumentation, structDocumentation: nil, title: title)
+		
+		return varItem
+	}
+	
 	private func parsedDocumentation(for externalFunctionDefinition: ExternalFunctionDefinition) -> DocumentationItem {
 
 		let args = externalFunctionDefinition.argumentNames.joined(separator: ", ")

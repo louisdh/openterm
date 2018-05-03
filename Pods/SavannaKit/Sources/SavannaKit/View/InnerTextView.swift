@@ -15,7 +15,13 @@ import CoreGraphics
 	import UIKit
 #endif
 
+protocol InnerTextViewDelegate: class {
+	func didUpdateCursorFloatingState()
+}
+
 class InnerTextView: TextView {
+	
+	weak var innerDelegate: InnerTextViewDelegate?
 	
 	lazy var theme: SyntaxColorTheme = {
 		return DefaultTheme()
@@ -25,6 +31,10 @@ class InnerTextView: TextView {
 	
 	func invalidateCachedParagraphs() {
 		cachedParagraphs = nil
+	}
+	
+	func hideGutter() {
+		gutterWidth = 0
 	}
 	
 	func updateGutterWidth(for numberOfCharacters: Int) {
@@ -39,7 +49,32 @@ class InnerTextView: TextView {
 	}
 	
 	#if os(iOS)
+	
+	var isCursorFloating = false
+	
+	override func beginFloatingCursor(at point: CGPoint) {
+		super.beginFloatingCursor(at: point)
+		
+		isCursorFloating = true
+		innerDelegate?.didUpdateCursorFloatingState()
+
+	}
+	
+	override func endFloatingCursor() {
+		super.endFloatingCursor()
+		
+		isCursorFloating = false
+		innerDelegate?.didUpdateCursorFloatingState()
+
+	}
+	
 	override public func draw(_ rect: CGRect) {
+		
+		guard let lineNumbersStyle = theme.lineNumbersStyle else {
+			hideGutter()
+			super.draw(rect)
+			return
+		}
 		
 		let textView = self
 		
@@ -64,12 +99,11 @@ class InnerTextView: TextView {
 		
 		textView.updateGutterWidth(for: maxNumberOfDigits)
 		
-		Color.black.setFill()
+		lineNumbersStyle.backgroundColor.setFill()
 		
 		let gutterRect = CGRect(x: 0, y: rect.minY, width: textView.gutterWidth, height: rect.height)
 		let path = BezierPath(rect: gutterRect)
 		path.fill()
-		
 		
 		drawLineNumbers(paragraphs, in: self.bounds, for: self)
 		

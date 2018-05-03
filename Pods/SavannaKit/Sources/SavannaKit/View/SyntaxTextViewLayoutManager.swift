@@ -15,14 +15,14 @@ import CoreGraphics
 	import UIKit
 #endif
 
-enum EditorPlaceholderState {
+public enum EditorPlaceholderState {
 	case active
 	case inactive
 }
 
-extension NSAttributedStringKey {
+public extension NSAttributedStringKey {
 	
-	static let editorPlaceholder = NSAttributedStringKey("editorPlaceholder")
+	static public let editorPlaceholder = NSAttributedStringKey("editorPlaceholder")
 
 }
 

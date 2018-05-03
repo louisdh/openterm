@@ -31,6 +31,8 @@ public enum ParseErrorType {
 	case internalInconsistencyOccurred
 
 	case invalidAssignmentValue(value: String)
+	
+	case editorPlaceholder
 
 }
 
@@ -39,56 +41,14 @@ extension ParseErrorType {
 	func description(atLine line: Int? = nil) -> String {
 		
 		if let line = line {
-			
-			switch self {
-			case .unexpectedToken:
-				return "Unexpected token on line \(line)"
-				
-			case .undefinedOperator(let op):
-				return "Undefined operator (\"\(op)\") on line \(line)"
-				
-			case .expectedCharacter(let c):
-				return "Expected character \"\(c)\" on line \(line)"
-				
-			case .expectedCharacterButFound(let c1, let c2):
-				return "Expected character \"\(c1)\" but found \"\(c2)\" on line \(line)"
-				
-			case .expectedExpression:
-				return "Expected expression on line \(line)"
-				
-			case .expectedArgumentList:
-				return "Expected argument list on line \(line)"
-				
-			case .expectedMemberList:
-				return "Expected member list on line \(line)"
-				
-			case .expectedFunctionName:
-				return "Expected function name on line \(line)"
-				
-			case .expectedStructName:
-				return "Expected struct name on line \(line)"
-				
-			case .internalInconsistencyOccurred:
-				return "Internal inconsistency occured on line \(line)"
-				
-			case .illegalBinaryOperation:
-				return "Illegal binary operation on line \(line)"
-				
-			case .illegalStatement:
-				return "Illegal statement on line \(line)"
-				
-			case .expectedVariable:
-				return "Expected variable on line \(line)"
-				
-			case .emptyStructNotAllowed:
-				return "Struct with no members found on line \(line), structs may not be empty"
-			
-			case .invalidAssignmentValue(let value):
-				return "Cannot assign \(value) on line \(line)"
-				
-			}
-			
+			return "Error on line \(line): \(description())"
+		} else {
+			return description()
 		}
+		
+	}
+		
+	func description() -> String {
 		
 		switch self {
 		case .unexpectedToken:
@@ -101,7 +61,7 @@ extension ParseErrorType {
 			return "Expected character \"\(c)\""
 			
 		case .expectedCharacterButFound(let c1, let c2):
-			return "Expected character \"\(c1)\" but found \"\(c2)\""
+			return "Expected character \"\(c1)\" but found \"\(c2.type)\""
 			
 		case .expectedExpression:
 			return "Expected expression"
@@ -133,8 +93,12 @@ extension ParseErrorType {
 		case .emptyStructNotAllowed:
 			return "Struct with no members found, structs may not be empty"
 		
-		case .invalidAssignmentValue:
-			return "Invalid assignment value"
+		case .invalidAssignmentValue(let value):
+			return "Cannot assign \(value)"
+			
+		case .editorPlaceholder:
+			return "Editor placeholder in source file"
+			
 		}
 	}
 }
