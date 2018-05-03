@@ -51,6 +51,8 @@
 		BE189036206FF36500EE6739 /* Logo.txt in Resources */ = {isa = PBXBuildFile; fileRef = BE189035206FF36500EE6739 /* Logo.txt */; };
 		BE18903B20700EFA00EE6739 /* Author.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE18903A20700EFA00EE6739 /* Author.swift */; };
 		BE1D5F9D204C66F1008A1C36 /* Cub+Runner.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE1D5F9C204C66F1008A1C36 /* Cub+Runner.swift */; };
+		BE1E979B209B9F3E000BDB1F /* cub-64.png in Resources */ = {isa = PBXBuildFile; fileRef = BE1E9799209B9F3C000BDB1F /* cub-64.png */; };
+		BE1E979C209B9F3E000BDB1F /* cub-320.png in Resources */ = {isa = PBXBuildFile; fileRef = BE1E979A209B9F3D000BDB1F /* cub-320.png */; };
 		BE244DC8201FBB6000A7EA4E /* cacert.pem in Resources */ = {isa = PBXBuildFile; fileRef = BE244DC7201FBB6000A7EA4E /* cacert.pem */; };
 		BE2AA98B208E692600B85CFE /* Sleep.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE2AA98A208E692600B85CFE /* Sleep.swift */; };
 		BE3808561FD9BFB600393EB8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE3808551FD9BFB600393EB8 /* AppDelegate.swift */; };
@@ -181,6 +183,8 @@
 		BE189035206FF36500EE6739 /* Logo.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = Logo.txt; sourceTree = "<group>"; };
 		BE18903A20700EFA00EE6739 /* Author.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Author.swift; sourceTree = "<group>"; };
 		BE1D5F9C204C66F1008A1C36 /* Cub+Runner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Cub+Runner.swift"; sourceTree = "<group>"; };
+		BE1E9799209B9F3C000BDB1F /* cub-64.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cub-64.png"; sourceTree = "<group>"; };
+		BE1E979A209B9F3D000BDB1F /* cub-320.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cub-320.png"; sourceTree = "<group>"; };
 		BE244DC7201FBB6000A7EA4E /* cacert.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = cacert.pem; sourceTree = "<group>"; };
 		BE2AA98A208E692600B85CFE /* Sleep.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sleep.swift; sourceTree = "<group>"; };
 		BE3768EE1FEC4DCE00D5A2D1 /* ios_system.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = ios_system.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -377,6 +381,8 @@
 		BE0146E12083ACBB0072AAB5 /* Assets */ = {
 			isa = PBXGroup;
 			children = (
+				BE1E9799209B9F3C000BDB1F /* cub-64.png */,
+				BE1E979A209B9F3D000BDB1F /* cub-320.png */,
 				BE0146EC2083BA000072AAB5 /* cub-guide.htmlcontainer */,
 				BEA4992B1FDC0918001B9B9D /* icon-320.png */,
 				BE38085C1FD9BFB600393EB8 /* Assets.xcassets */,
@@ -675,10 +681,12 @@
 				BE38085B1FD9BFB600393EB8 /* Main.storyboard in Resources */,
 				BE244DC8201FBB6000A7EA4E /* cacert.pem in Resources */,
 				BE3A62E8208B54D00014A498 /* CubDocumentationItemTableViewCell.xib in Resources */,
+				BE1E979C209B9F3E000BDB1F /* cub-320.png in Resources */,
 				BE3A62E1208B49EF0014A498 /* cub-docs.json in Resources */,
 				BE189036206FF36500EE6739 /* Logo.txt in Resources */,
 				BEB774EF20701D8500201EBB /* authors.json in Resources */,
 				BE0146ED2083BA000072AAB5 /* cub-guide.htmlcontainer in Resources */,
+				BE1E979B209B9F3E000BDB1F /* cub-64.png in Resources */,
 				BEB7752620716B5200201EBB /* PridelandCollectionViewCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -23,6 +23,34 @@
 				<string>public.item</string>
 			</array>
 		</dict>
+		<dict>
+			<key>CFBundleTypeIconFiles</key>
+			<array>
+				<string>cub-320.png</string>
+			</array>
+			<key>CFBundleTypeName</key>
+			<string>Cub Source File</string>
+			<key>LSHandlerRank</key>
+			<string>Alternate</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>be.silverfox.cub</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeIconFiles</key>
+			<array>
+				<string>cub-320.png</string>
+			</array>
+			<key>CFBundleTypeName</key>
+			<string>Prideland Script</string>
+			<key>LSHandlerRank</key>
+			<string>Alternate</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>be.silverfox.prideland</string>
+			</array>
+		</dict>
 	</array>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
@@ -113,6 +141,58 @@
 				</array>
 				<key>public.mime-type</key>
 				<string>application/svg</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.source-code</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Cub Source File</string>
+			<key>UTTypeIconFiles</key>
+			<array>
+				<string>cub-64</string>
+				<string>cub-320</string>
+			</array>
+			<key>UTTypeIdentifier</key>
+			<string>be.silverfox.cub</string>
+			<key>UTTypeSize320IconFile</key>
+			<string>cub-320</string>
+			<key>UTTypeSize64IconFile</key>
+			<string>cub-64</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>cub</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.source-code</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Prideland Script</string>
+			<key>UTTypeIconFiles</key>
+			<array>
+				<string>cub-64</string>
+				<string>cub-320</string>
+			</array>
+			<key>UTTypeIdentifier</key>
+			<string>be.silverfox.prideland</string>
+			<key>UTTypeSize320IconFile</key>
+			<string>cub-320</string>
+			<key>UTTypeSize64IconFile</key>
+			<string>cub-64</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>prideland</string>
+				</array>
 			</dict>
 		</dict>
 	</array>
