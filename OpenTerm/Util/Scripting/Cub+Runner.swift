@@ -11,11 +11,22 @@ import Cub
 
 extension Runner {
 	
-	static func runner(executor: CommandExecutor, executorDelegate: CommandExecutorDelegate) -> Runner {
+	static func runner(executor: CommandExecutor, executorDelegate: CommandExecutorDelegate, parametersCallback: @escaping ExternalVarCallback) -> Runner {
 		
 		let runner = Runner(logDebug: false, logTime: false)
+
+		let parametersDoc = """
+						An array of values that were passed to this script.
+						"""
 		
-		runner.registerExternalFunction(documentation: nil, name: "print", argumentNames: ["input"], returns: true) { (arguments, callback) in
+		runner.registerExternalVariable(documentation: parametersDoc, name: "parameters", callback: parametersCallback)
+		
+		let printDoc = """
+						Display something on screen.
+						- Parameter input: the value you want to print.
+						"""
+		
+		runner.registerExternalFunction(documentation: printDoc, name: "print", argumentNames: ["input"], returns: true) { (arguments, callback) in
 			
 			for (_, arg) in arguments {
 				
@@ -32,7 +43,12 @@ extension Runner {
 			return
 		}
 		
-		runner.registerExternalFunction(documentation: nil, name: "readNumber", argumentNames: [], returns: true) { (arguments, callback) in
+		let readNumberDoc = """
+						Pause the script and continue when the user enters a number.
+						- Returns: the number that the user entered.
+						"""
+		
+		runner.registerExternalFunction(documentation: readNumberDoc, name: "readNumber", argumentNames: [], returns: true) { (arguments, callback) in
 			
 			executorDelegate.commandExecutor(executor, waitForInput: { (input) in
 				
@@ -47,7 +63,12 @@ extension Runner {
 			return
 		}
 		
-		runner.registerExternalFunction(documentation: nil, name: "readLine", argumentNames: [], returns: true) { (arguments, callback) in
+		let readLineDoc = """
+						Pause the script and continue when the user enters a string.
+						- Returns: the string that the user entered.
+						"""
+		
+		runner.registerExternalFunction(documentation: readLineDoc, name: "readLine", argumentNames: [], returns: true) { (arguments, callback) in
 			
 			executorDelegate.commandExecutor(executor, waitForInput: { (input) in
 				_ = callback(.string(input))

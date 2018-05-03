@@ -36,7 +36,9 @@ func getCubDocumentationBundleAsJSON() -> String? {
 	let dummyCmdExecutor = CommandExecutor()
 	let dummyDelegate = TerminalView()
 	
-	let runner = Runner.runner(executor: dummyCmdExecutor, executorDelegate: dummyDelegate)
+	let runner = Runner.runner(executor: dummyCmdExecutor, executorDelegate: dummyDelegate, parametersCallback: {
+		return .array([])
+	})
 
 	guard let json = try? getCubDocumentationBundleAsJSON(for: runner) else {
 		return nil

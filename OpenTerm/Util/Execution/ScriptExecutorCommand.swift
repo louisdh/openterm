@@ -30,7 +30,17 @@ class ScriptExecutorCommand: CommandExecutorCommand {
 			return 1
 		}
 		
-		let runner = Runner.runner(executor: executor, executorDelegate: executorDelegate)
+		let runner = Runner.runner(executor: executor, executorDelegate: executorDelegate, parametersCallback: {
+			
+			var parameters = [ValueType]()
+			
+			for arg in self.arguments {
+				// TODO: parse numbers here?
+				parameters.append(.string(arg))
+			}
+			
+			return .array(parameters)
+		})
 		
 		let source = script.text
 		

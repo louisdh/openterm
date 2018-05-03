@@ -14,6 +14,10 @@ import TabView
 @_cdecl("cub")
 public func cub(argc: Int32, argv: UnsafeMutablePointer<UnsafeMutablePointer<Int8>?>?) -> Int32 {
 
+	guard let args = convertCArguments(argc: argc, argv: argv) else {
+		return 1
+	}
+	
 	guard let tabViewContainer = UIApplication.shared.keyWindow?.rootViewController as? TabViewContainerViewController<TerminalTabViewController> else {
 		return 1
 	}
@@ -50,7 +54,17 @@ public func cub(argc: Int32, argv: UnsafeMutablePointer<UnsafeMutablePointer<Int
 		return 1
 	}
 
-	let runner = Runner.runner(executor: terminalView.executor, executorDelegate: terminalView)
+	let runner = Runner.runner(executor: terminalView.executor, executorDelegate: terminalView, parametersCallback: {
+		
+		var parameters = [ValueType]()
+		
+		for arg in args {
+			// TODO: parse numbers here?
+			parameters.append(.string(arg))
+		}
+		
+		return .array(parameters)
+	})
 
 	do {
 
