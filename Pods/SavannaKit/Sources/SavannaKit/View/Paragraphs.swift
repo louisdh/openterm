@@ -49,7 +49,7 @@ extension TextView {
 
 func generateParagraphs(for textView: InnerTextView, flipRects: Bool = false) -> [Paragraph] {
 	
-	let range = NSRange(location: 0, length: textView.text.count)
+	let range = NSRange(location: 0, length: (textView.text as NSString).length)
 	
 	var paragraphs = [Paragraph]()
 	var i = 0

@@ -4,7 +4,7 @@ PODS:
   - HueKit (1.0.1)
   - InputAssistant (1.0.2)
   - PanelKit (2.0.1)
-  - SavannaKit (0.8.1)
+  - SavannaKit (0.8.2)
   - SimulatorStatusMagic (2.1)
   - SwiftLint (0.25.1)
   - TabView (1.0.1)
@@ -38,7 +38,7 @@ SPEC CHECKSUMS:
   HueKit: a255770053f7028907db3e84d5cdecc7837197e4
   InputAssistant: b0b70cd0d69ef7013ecb2a1fa350b7a2786e2e01
   PanelKit: d05cecac1ab39af375b56ff21c7b5a9915a3eb5b
-  SavannaKit: ca481a4c030f72de2ac56e9fbe54c4e097ef06a6
+  SavannaKit: 4a511f018ea2f0bf30746ea215619c9e94b74c7c
   SimulatorStatusMagic: 481558caf2b9ccb2ceba2cc193728d4db3dcac07
   SwiftLint: ce933681be10c3266e82576dad676fa815a602e9
   TabView: b8337b549e4b0f070a76cab141e258fa66e01fd1

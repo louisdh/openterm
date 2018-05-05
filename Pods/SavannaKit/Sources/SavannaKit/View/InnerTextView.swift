@@ -131,6 +131,14 @@ class InnerTextView: TextView {
 			
 		}
 	}
+//	var gutterWidth: CGFloat = 0.0 {
+//		didSet {
+//
+//			textContainer.exclusionPaths = [UIBezierPath(rect: CGRect(x: 0.0, y: 0.0, width: gutterWidth, height: .greatestFiniteMagnitude))]
+//
+//		}
+//
+//	}
 	
 	#if os(iOS)
 	

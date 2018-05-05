@@ -116,8 +116,6 @@ class ScriptEditViewController: UIViewController {
 		
 	}
 
-	private var textViewSelectedRangeObserver: NSKeyValueObservation?
-
 	private let keyboardObserver = KeyboardObserver()
 	
 	var manualBarButtonItem: UIBarButtonItem!
@@ -141,13 +139,6 @@ class ScriptEditViewController: UIViewController {
 		inputAssistantView.dataSource = autoCompleteManager
 		inputAssistantView.attach(to: textView.contentTextView)
 
-		textViewSelectedRangeObserver = textView.contentTextView.observe(\UITextView.selectedTextRange) { [weak self] (textView, value) in
-			
-			self?.autoCompleteManager.reloadData()
-
-		}
-		
-		
 //		cubManualPanelViewController = PanelViewController(with: cubManualVC, in: self)
 
 		let manualButton = UIButton(type: .system)

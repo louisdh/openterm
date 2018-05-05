@@ -45,6 +45,8 @@ public class SyntaxTextView: View {
 
 	var previousSelectedRange: NSRange?
 	
+	private var textViewSelectedRangeObserver: NSKeyValueObservation?
+
 	let textView: InnerTextView
 	
 	public var contentTextView: TextView {
@@ -205,6 +207,14 @@ public class SyntaxTextView: View {
 			self.contentMode = .redraw
 			textView.contentMode = .topLeft
 		
+			textViewSelectedRangeObserver = contentTextView.observe(\UITextView.selectedTextRange) { [weak self] (textView, value) in
+			
+				if let `self` = self {
+					self.delegate?.didChangeSelectedRange(self, selectedRange: self.contentTextView.selectedRange)
+				}
+
+			}
+			
 		#endif
 		
 		textView.innerDelegate = self
@@ -449,7 +459,7 @@ public class SyntaxTextView: View {
 
 		let selectedRange = textView.selectedRange
 		
-		let fullRange = NSRange(location: 0, length: source.count)
+		let fullRange = NSRange(location: 0, length: (source as NSString).length)
 		
 		var rangesToUpdate = [(NSRange, EditorPlaceholderState)]()
 		
@@ -504,7 +514,7 @@ public class SyntaxTextView: View {
 		paragraphStyle.defaultTabInterval = themeInfo.spaceWidth * 4
 		paragraphStyle.tabStops = []
 		
-		let wholeRange = NSRange(location: 0, length: source.count)
+		let wholeRange = NSRange(location: 0, length: (source as NSString).length)
 		
 		attributes[.foregroundColor] = theme.color(for: .plain)
 		attributes[.font] = theme.font
