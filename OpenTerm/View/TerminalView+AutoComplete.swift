@@ -185,6 +185,13 @@ extension TerminalView: AutoCompleteManagerDataSource {
 			let flag = "-" + String(c)
 			flags.append(flag)
 		}
+		// special cases:
+		switch (command) {
+		case "awk":
+			flags.append("{")
+			flags.append("}")
+		}
+
 		completions += flags.map { AutoCompleteManager.Completion($0) }
 
 		return completions
