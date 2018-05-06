@@ -190,6 +190,8 @@ extension TerminalView: AutoCompleteManagerDataSource {
 		case "awk":
 			flags.append("{")
 			flags.append("}")
+		default:
+			break
 		}
 
 		completions += flags.map { AutoCompleteManager.Completion($0) }
