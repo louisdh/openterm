@@ -363,10 +363,9 @@ extension TerminalView {
 
 	@objc func completeCommand() {
 
-		guard
-			let firstCompletion = autoCompleteManager.completions.first,
-			currentCommand != firstCompletion.name
-			else { return }
+		guard let firstCompletion = autoCompleteManager.completions.first, currentCommand != firstCompletion.name else {
+			return
+		}
 
 		insertCompletion(firstCompletion)
 	}
