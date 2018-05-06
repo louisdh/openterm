@@ -21,10 +21,10 @@ struct CommandTypes: OptionSet {
 	/// Get the types of the given command name.
 	/// If the command is unknown, it defaults to .affectsFiles.
 	static func forCommand(_ command: String) -> CommandTypes {
-		switch command {
-		case "cd", "ls", "rmdir": return [.affectsFolders]
-		case "compress", "cp", "curl", "gunzip", "gzip", "link", "ln", "mv", "rm", "scp", "sftp", "tar", "uncompress": return [.affectsFiles, .affectsFolders]
-		case "du", "env", "mkdir", "printenv", "pwd", "setenv", "ssh", "tr", "uname", "unsetenv", "uptime", "whoami", "help", "clear": return []
+		switch (operatesOn(command)) {
+		case "directory": return [.affectsFolders]
+		case "file": return [.affectsFiles, .affectsFolders]
+		case "no": return []
 		default: return [.affectsFiles]
 		}
 	}
@@ -174,18 +174,26 @@ extension TerminalView: AutoCompleteManagerDataSource {
 			completions += fileSystemCompletions(inDirectory: currentURL, showFolders: commandTypes.contains(.affectsFolders), showFiles: commandTypes.contains(.affectsFiles))
 		}
 
-		// TODO: There must be a better way to add flags. Don't want to hard code these per command. Parsing man pages could automate this.
-		let flags: [String]
-		switch command {
-		case "awk":
-			flags = ["-F", "-v", "-f", "'{", "}'"]
-		case "cat":
-			flags = ["-b", "-e", "-n", "-s", "-t", "-u", "-v"]
-		case "ls":
-			flags = ["-@", "-1", "-A", "-a", "-B", "-b", "-C", "-c", "-d", "-e", "-F", "-f", "-G", "-g", "-H", "-h", "-i", "-k", "-L", "-l", "-m", "-n", "-O", "-P", "-q", "-R", "-r", "-S", "-s", "-T", "-t", "-u", "-U", "-v", "-W", "-w", "-x"]
-		default:
-			flags = []
+		// get flags from ios_system commandDictionary.plist:
+		var flags: [String]
+		flags = []
+		let optionsFromCode = getoptString(command)
+		for c in optionsFromCode!.characters {
+			if (c == ":") {
+				continue
+			}
+			let flag = "-" + String(c)
+			flags.append(flag)
 		}
+		// special cases:
+		switch (command) {
+		case "awk":
+			flags.append("{")
+			flags.append("}")
+		default:
+			break
+		}
+
 		completions += flags.map { AutoCompleteManager.Completion($0) }
 
 		return completions
