@@ -407,9 +407,18 @@ extension ScriptEditViewController: InputAssistantViewDelegate {
 		let suggestion = completion.data
 		
 		textView.insertText(suggestion.content)
-
-		textView.contentTextView.selectedRange = NSRange(location: suggestion.insertionIndex + suggestion.cursorAfterInsertion, length: 0)
-
+		
+		let newSource = textView.text
+		
+		let insertStart = newSource.index(newSource.startIndex, offsetBy: suggestion.insertionIndex)
+		let cursorAfterInsertion = newSource.index(insertStart, offsetBy: suggestion.cursorAfterInsertion)
+		
+		if let utf16Index = cursorAfterInsertion.samePosition(in: newSource) {
+			let distance = newSource.utf16.distance(from: newSource.utf16.startIndex, to: utf16Index)
+			
+			textView.contentTextView.selectedRange = NSRange(location: distance, length: 0)
+		}
+		
 	}
 	
 }
