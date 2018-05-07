@@ -21,7 +21,7 @@
 </p>
 
 ## About
-This is a sandboxed command line interface for iOS. 
+OpenTerm is a sandboxed command line interface for iOS. 
 
 
 Commands included:
@@ -42,23 +42,13 @@ Commands included:
 | unsetenv   | uptime     | wc         | whoami     |
 
 ## Dependencies
-This project uses a modified version of [ios_system](https://github.com/holzschu/ios_system), which requires OpenSSL.
-
 To set up dependencies, run `bootstrap.sh`.
 
 ## Running
 Open `OpenTerm.xcworkspace`, change the bundle identifier to an identifier linked to your Apple developer account in order to run. Build using the `OpenTerm` scheme. 
 
-### Device
-Please note that by default you can only build for arm64. No further action is required.
-
-### Simulator
-To build for the iOS simulator, run:
-
-```bash
-./Dependencies/ios_system/Frameworks/prepare_simulator.sh
-```
-This will copy the necessary dependencies for the x86_64 architecture.
+### Running on device
+To run on a device, you will have to run `resign-frameworks.sh`, but first change `iPhone Developer: Louis D'hauwe (5U7B95VS8G)` with the name of your own certificate. 
 
 ## License
 
