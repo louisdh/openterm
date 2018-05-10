@@ -64,6 +64,10 @@ class PridelandDocument: UIDocument {
 			throw PridelandDocumentError.invalidDocument
 		}
 		
+		guard fileWrapper.isDirectory else {
+			throw PridelandDocumentError.invalidDocument
+		}
+		
 		guard let wrappers = fileWrapper.fileWrappers else {
 			throw PridelandDocumentError.invalidDocument
 		}

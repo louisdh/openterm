@@ -12,8 +12,14 @@ import Cub
 import SavannaKit
 import PanelKit
 
+protocol ScriptEditViewControllerDelegate: class {
+	func didImportExample()
+}
+
 class ScriptEditViewController: UIViewController {
 
+	weak var delegate: ScriptEditViewControllerDelegate?
+	
 	var url: URL
 	let contentWrapperView = UIView()
 	let document: PridelandDocument
@@ -25,8 +31,12 @@ class ScriptEditViewController: UIViewController {
 	var cubManualPanelViewController: PanelViewController!
 	var cubDocsPanelViewController: PanelViewController!
 
-	init(url: URL) {
+	let isExample: Bool
+	
+	init(url: URL, isExample: Bool) {
 		self.url = url
+		self.isExample = isExample
+		
 		self.textView = SyntaxTextView()
 		self.autoCompleteManager = CubSyntaxAutoCompleteManager()
 		self.inputAssistantView = InputAssistantView()
@@ -53,6 +63,12 @@ class ScriptEditViewController: UIViewController {
 		cubDocsPanelViewController.view.backgroundColor = .clear
 		
 		autoCompleter = AutoCompleter(documentation: cubDocsVC.docBundle.items)
+		
+		if isExample {
+			
+			self.textView.contentTextView.isEditable = false
+			
+		}
 		
 	}
 	
@@ -139,7 +155,10 @@ class ScriptEditViewController: UIViewController {
 		// Set up input assistant and text view for auto completion
 		inputAssistantView.delegate = self
 		inputAssistantView.dataSource = autoCompleteManager
-		inputAssistantView.attach(to: textView.contentTextView)
+		
+		if !isExample {
+			inputAssistantView.attach(to: textView.contentTextView)
+		}
 
 //		cubManualPanelViewController = PanelViewController(with: cubManualVC, in: self)
 
@@ -162,7 +181,17 @@ class ScriptEditViewController: UIViewController {
 		
 		let shareBarButtonItem = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(shareDocument(_:)))
 
-		navigationItem.rightBarButtonItems = [infoBarButtonItem, shareBarButtonItem, manualBarButtonItem, docsBarButtonItem]
+
+		if isExample {
+
+			let importBarButtonItem = UIBarButtonItem(title: "Import", style: .done, target: self, action: #selector(importExample(_:)))
+			navigationItem.rightBarButtonItems = [importBarButtonItem]
+
+		} else {
+			
+			navigationItem.rightBarButtonItems = [infoBarButtonItem, shareBarButtonItem, manualBarButtonItem, docsBarButtonItem]
+
+		}
 		
 		document.open { [weak self] (success) in
 			
@@ -249,6 +278,27 @@ class ScriptEditViewController: UIViewController {
 		
 	}
 
+	@objc
+	func importExample(_ sender: UIBarButtonItem) {
+		
+		guard let metadata = document.metadata else {
+			return
+		}
+		
+		let newUrl = DocumentManager.shared.scriptsURL.appendingPathComponent("\(metadata.name).prideland")
+		
+		do {
+			
+			try FileManager.default.copyItem(at: url, to: newUrl)
+			self.navigationController?.popViewController(animated: true)
+			delegate?.didImportExample()
+			
+		} catch {
+			self.showErrorAlert(error)
+		}
+	
+	}
+	
 	@objc
 	func shareDocument(_ sender: UIBarButtonItem) {
 

@@ -841,10 +841,22 @@ This project uses the open source ios_system project by Nicolas Holzschuch. This
                     </view>
                     <navigationItem key="navigationItem" id="QCl-xP-dn8">
                         <nil key="title"/>
+                        <segmentedControl key="titleView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="bar" selectedSegmentIndex="0" id="9sw-37-htB">
+                            <rect key="frame" x="108" y="7" width="159" height="30"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <segments>
+                                <segment title="My Scripts"/>
+                                <segment title="Examples"/>
+                            </segments>
+                            <connections>
+                                <action selector="segmentedControlValueChanged:" destination="EpP-OH-xVH" eventType="valueChanged" id="0qj-5P-Jxp"/>
+                            </connections>
+                        </segmentedControl>
                     </navigationItem>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" barStyle="black" prompted="NO"/>
                     <connections>
                         <outlet property="collectionView" destination="I1w-LQ-Yti" id="MMS-ZT-Ze4"/>
+                        <outlet property="segmentedControl" destination="9sw-37-htB" id="WvN-jR-K9q"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="PMe-5v-SKd" userLabel="First Responder" sceneMemberID="firstResponder"/>

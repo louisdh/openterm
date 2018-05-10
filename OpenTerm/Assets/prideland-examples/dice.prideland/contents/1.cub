@@ -1,0 +1,9 @@
+// Get a random number between 1 and 6
+n = randomNumber(1, 6)
+
+// All numbers are floating point. 
+// The format function allows us to convert a number to a string. "%.f" removes the decimal numbers, for example: 5.0 becomes "5"
+formatted = format("%.f", n)
+
+// The print function displays something on screen.
+print(formatted)

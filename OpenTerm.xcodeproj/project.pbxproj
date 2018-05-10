@@ -96,6 +96,7 @@
 		BEB775662074095800201EBB /* ScriptMetadataViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEB775652074095800201EBB /* ScriptMetadataViewController.swift */; };
 		BEB7756820740DFE00201EBB /* CustomTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEB7756720740DFE00201EBB /* CustomTextView.swift */; };
 		BEBD36E720755B0400C9725C /* StoryboardFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEBD36E620755B0400C9725C /* StoryboardFactory.swift */; };
+		BEC2712220A4D6FD006D36DE /* prideland-examples in Resources */ = {isa = PBXBuildFile; fileRef = BEC2712120A4D6FC006D36DE /* prideland-examples */; };
 		BEC75BFD202B716600216462 /* OpenTermTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEC75BFC202B716600216462 /* OpenTermTests.swift */; };
 		BEEAD9C6207E8C8500CBC254 /* Array+Safe.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEEAD9C5207E8C8500CBC254 /* Array+Safe.swift */; };
 		BEEAD9C8207EA09700CBC254 /* Stdin+Read.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEEAD9C7207EA09700CBC254 /* Stdin+Read.swift */; };
@@ -233,6 +234,7 @@
 		BEB775652074095800201EBB /* ScriptMetadataViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScriptMetadataViewController.swift; sourceTree = "<group>"; };
 		BEB7756720740DFE00201EBB /* CustomTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTextView.swift; sourceTree = "<group>"; };
 		BEBD36E620755B0400C9725C /* StoryboardFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoryboardFactory.swift; sourceTree = "<group>"; };
+		BEC2712120A4D6FC006D36DE /* prideland-examples */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "prideland-examples"; sourceTree = "<group>"; };
 		BEC75BFA202B716600216462 /* OpenTermTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OpenTermTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		BEC75BFC202B716600216462 /* OpenTermTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenTermTests.swift; sourceTree = "<group>"; };
 		BEC75BFE202B716600216462 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -387,6 +389,7 @@
 				BEA4992B1FDC0918001B9B9D /* icon-320.png */,
 				BE38085C1FD9BFB600393EB8 /* Assets.xcassets */,
 				BE3A62E0208B49EF0014A498 /* cub-docs.json */,
+				BEC2712120A4D6FC006D36DE /* prideland-examples */,
 			);
 			path = Assets;
 			sourceTree = "<group>";
@@ -672,6 +675,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				22A808CB20664BF0001AB98D /* commandDictionary.plist in Resources */,
+				BEC2712220A4D6FD006D36DE /* prideland-examples in Resources */,
 				22A808CC20664BF0001AB98D /* extraCommandsDictionary.plist in Resources */,
 				BE3808601FD9BFB600393EB8 /* LaunchScreen.storyboard in Resources */,
 				BE740C1820826648001C1F24 /* NewPridelandCollectionViewCell.xib in Resources */,

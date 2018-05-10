@@ -16,6 +16,10 @@ struct PridelandOverview: Equatable {
 	let metadata: PridelandMetadata
 
 	init(url: URL, fileWrapper: FileWrapper) throws {
+		
+		guard fileWrapper.isDirectory else {
+			throw PridelandDocumentError.invalidDocument
+		}
 
 		guard let wrappers = fileWrapper.fileWrappers else {
 			throw PridelandDocumentError.invalidDocument
@@ -42,22 +46,81 @@ class ScriptsViewController: UIViewController {
 
 	var panelManager: TerminalViewController!
 	
+	enum Tab: Equatable {
+		case myScripts
+		case examples
+	}
+	
 	enum CellType: Equatable {
 		case prideland(PridelandOverview)
 		case addNew
 	}
 	
+	@IBOutlet var segmentedControl: UISegmentedControl!
 	@IBOutlet weak var collectionView: UICollectionView!
+	
+	var selectedTab: Tab = .myScripts {
+		didSet {
+			updateTitle()
+		}
+	}
+	
+	func updateTitle() {
+		
+		switch selectedTab {
+		case .myScripts:
+			self.title = "My Scripts"
+			
+		case .examples:
+			self.title = "Examples"
+		}
+		
+	}
 	
 	var cellItems: [CellType]?
 	
 	var directoryObserver: DirectoryObserver?
+	
+	lazy var examples: [PridelandOverview] = {
+		
+		guard let examplesURL = Bundle.main.url(forResource: "prideland-examples", withExtension: nil) else {
+			fatalError("Couldn't get examplesURL")
+		}
+		
+		guard let urls = try? FileManager.default.contentsOfDirectory(at: examplesURL, includingPropertiesForKeys: nil, options: []) else {
+			fatalError("Couldn't get data")
+		}
+		
+		var overviews = [PridelandOverview]()
+		
+		for documentURL in urls {
+			
+			let pathExtension = documentURL.pathExtension.lowercased()
+			
+			guard pathExtension == "prideland" else {
+				continue
+			}
+
+			if let fileWrapper = try? FileWrapper(url: documentURL, options: []) {
+				
+				if let overview = try? PridelandOverview(url: documentURL, fileWrapper: fileWrapper) {
+				
+					overviews.append(overview)
+				
+				}
+				
+			}
+			
+		}
+		
+		return overviews
+	}()
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		
-		self.title = "Scripts"
-		
+		updateTitle()
+
 		collectionView.register(UINib(nibName: "PridelandCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "PridelandCollectionViewCell")
 		collectionView.register(UINib(nibName: "NewPridelandCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "NewPridelandCollectionViewCell")
 		
@@ -70,7 +133,7 @@ class ScriptsViewController: UIViewController {
 		self.navigationController?.navigationBar.barStyle = .blackTranslucent
 
 		directoryObserver = DirectoryObserver(pathToWatch: DocumentManager.shared.scriptsURL) { [weak self] in
-			self?.reload()
+			self?.reloadMyScripts()
 		}
 		
 		try? directoryObserver?.startObserving()
@@ -80,7 +143,7 @@ class ScriptsViewController: UIViewController {
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 
-		reload()
+		reloadMyScripts()
 	}
 	
 	override func viewWillLayoutSubviews() {
@@ -99,6 +162,17 @@ class ScriptsViewController: UIViewController {
 
 	override var preferredStatusBarStyle: UIStatusBarStyle {
 		return .lightContent
+	}
+	
+	@IBAction func segmentedControlValueChanged(_ sender: UISegmentedControl) {
+		
+		if sender.selectedSegmentIndex == 0 {
+			selectedTab = .myScripts
+		} else {
+			selectedTab = .examples
+		}
+		
+		reload()
 	}
 
 	@objc
@@ -283,8 +357,22 @@ class ScriptsViewController: UIViewController {
 		self.present(navController, animated: true, completion: nil)
 		
 	}
-
+	
 	private func reload() {
+		
+		switch selectedTab {
+		case .myScripts:
+			reloadMyScripts()
+			
+		case .examples:
+			cellItems = examples.map({ .prideland($0) })
+			collectionView.reloadData()
+			
+		}
+		
+	}
+
+	private func reloadMyScripts() {
 		
 		let fileManager = DocumentManager.shared.fileManager
 		
@@ -328,7 +416,10 @@ class ScriptsViewController: UIViewController {
 			}
 			
 			pridelandOverviews.sort(by: { $0.metadata.name < $1.metadata.name })
-			updatePridelandItems(pridelandOverviews)
+			
+			if selectedTab == .myScripts {
+				updatePridelandItems(pridelandOverviews)
+			}
 			
 		} catch {
 			
@@ -499,7 +590,8 @@ extension ScriptsViewController: UICollectionViewDelegateFlowLayout {
 	
 	func openPrideland(url: URL, title: String) {
 		
-		let scriptVC = ScriptEditViewController(url: url)
+		let scriptVC = ScriptEditViewController(url: url, isExample: selectedTab == .examples)
+		scriptVC.delegate = self
 		scriptVC.title = title
 		self.navigationController?.pushViewController(scriptVC, animated: true)
 		
@@ -576,6 +668,18 @@ extension ScriptsViewController: PanelContentDelegate {
 		return false
 	}
 
+}
+
+extension ScriptsViewController: ScriptEditViewControllerDelegate {
+	
+	func didImportExample() {
+		
+		segmentedControl.selectedSegmentIndex = 0
+		selectedTab = .myScripts
+		reload()
+
+	}
+	
 }
 
 extension ScriptsViewController: PanelStateCoder {
