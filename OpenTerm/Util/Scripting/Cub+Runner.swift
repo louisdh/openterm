@@ -55,7 +55,7 @@ extension Runner {
 				if let i = NumberType(input) {
 					_ = callback(.number(i))
 				} else {
-					_ = callback(.number(0))
+					_ = callback(.nil)
 				}
 				
 			})
@@ -88,12 +88,12 @@ extension Runner {
 			var arguments = arguments
 			
 			guard let command = arguments.removeValue(forKey: "command") else {
-				_ = callback(.number(1))
+				_ = callback(.nil)
 				return
 			}
 			
 			guard case let .string(commandStr) = command else {
-				_ = callback(.number(1))
+				_ = callback(.nil)
 				return
 			}
 
