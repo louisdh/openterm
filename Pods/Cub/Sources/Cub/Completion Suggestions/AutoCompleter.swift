@@ -16,14 +16,16 @@ public struct CompletionSuggestion: Equatable {
 	public let title: String
 	
 	/// The source code to be inserted.
-	public let content: String
+	public var content: String
 	
 	/// Where this suggestion's content should be inserted,
 	/// in the source code.
+	/// This index is in terms of Swift characters.
 	public let insertionIndex: Int
 	
 	/// Relative to the suggestion.
-	public let cursorAfterInsertion: Int
+	/// This index is in terms of Swift characters.
+	public var cursorAfterInsertion: Int
 	
 }
 
@@ -67,7 +69,8 @@ struct CursorInformation {
 	let lineSource: String
 	
 	var textOnLineBeforeCursor: String
-	
+	var textInWordBeforeCursor: String
+
 	var lexer: Lexer {
 		return sourceInfo.lexer
 	}
@@ -98,7 +101,18 @@ struct CursorInformation {
 		
 		lineCursor = indexInLine
 		
-		textOnLineBeforeCursor = String(lineSource[lineSource.startIndex..<lineSource.index(lineSource.startIndex, offsetBy: indexInLine)])
+		textOnLineBeforeCursor = String(lineSource[..<lineSource.index(lineSource.startIndex, offsetBy: indexInLine)])
+		
+		textInWordBeforeCursor = ""
+		
+		for char in textOnLineBeforeCursor {
+			
+			textInWordBeforeCursor += String(char)
+			
+			if char == " " || char  == "\t" {
+				textInWordBeforeCursor = ""
+			}
+		}
 		
 		
 		//		var previousToken: Token?
@@ -124,6 +138,7 @@ struct CursorInformation {
 				if let range = currentToken.range, range.contains(cursor) {
 					
 					textOnLineBeforeCursor.removeLast(cursor - range.lowerBound)
+					textInWordBeforeCursor = ""
 					
 				}
 				
@@ -147,7 +162,11 @@ public class AutoCompleter {
 	fileprivate var cachedSourceInfo: Cached<SourceInformation>?
 	fileprivate var cachedCursorInfo: Cached<CursorInformation>?
 	
-	public init() {
+	let documentation: [DocumentationItem]
+	
+	public init(documentation: [DocumentationItem] = []) {
+		
+		self.documentation = documentation
 		
 	}
 	
@@ -182,13 +201,13 @@ public class AutoCompleter {
 		
 		var suggestions = [CompletionSuggestion]()
 		
-		if !cursorInfo.textOnLineBeforeCursor.isEmpty {
+		if !cursorInfo.textInWordBeforeCursor.isEmpty {
 			
 			for keyword in Lexer.keywordTokens.keys {
 				
-				if keyword.hasPrefix(String(cursorInfo.textOnLineBeforeCursor)) {
+				if keyword.hasPrefix(String(cursorInfo.textInWordBeforeCursor)) {
 					
-					let startIndex = keyword.index(keyword.startIndex, offsetBy: cursorInfo.textOnLineBeforeCursor.count)
+					let startIndex = keyword.index(keyword.startIndex, offsetBy: cursorInfo.textInWordBeforeCursor.count)
 					let content = String(keyword[startIndex...])
 					
 					let suggestion = CompletionSuggestion(title: keyword, content: content, insertionIndex: cursor, cursorAfterInsertion: content.count)
@@ -206,14 +225,112 @@ public class AutoCompleter {
 			editorPlaceholderTitle = value
 		}
 		
-		if editorPlaceholderTitle != "name" {
-			if cursorInfo.textOnLineBeforeCursor.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-				let statementSuggestions = self.statementSuggestions(cursor: cursor, prefix: cursorInfo.textOnLineBeforeCursor)
-				suggestions.append(contentsOf: statementSuggestions)
-			}
+		let legalEditorPlaceholdersForStatements = ["body"]
+		
+		let suggestStatements: Bool
+
+		if let editorPlaceholderTitle = editorPlaceholderTitle {
+			
+			suggestStatements = legalEditorPlaceholdersForStatements.contains(editorPlaceholderTitle)
+			
+		} else {
+			
+			suggestStatements = true
 		}
 		
-		return suggestions
+		if suggestStatements {
+			
+			var indentationWhitespace = ""
+			
+			for char in cursorInfo.textOnLineBeforeCursor {
+				
+				if char == "\t" {
+					indentationWhitespace += "\t"
+				} else if char == " " {
+					indentationWhitespace += " "
+				} else {
+					break
+				}
+				
+			}
+			
+			let statementSuggestions = self.statementSuggestions(cursor: cursor, prefix: indentationWhitespace)
+
+			suggestions.append(contentsOf: statementSuggestions.filter({ $0.content.hasPrefix(cursorInfo.textInWordBeforeCursor) }))
+		}
+		
+		for docItem in documentation {
+			suggestions.append(documentationSuggestions(cursor: cursor, docItem: docItem))
+		}
+		
+		var filteredSuggestions = suggestions.filter({ $0.content.hasPrefix(cursorInfo.textInWordBeforeCursor) && $0.content != cursorInfo.textInWordBeforeCursor })
+		
+		for idx in filteredSuggestions.indices {
+			filteredSuggestions[idx].content.removeFirst(cursorInfo.textInWordBeforeCursor.count)
+			filteredSuggestions[idx].cursorAfterInsertion -= cursorInfo.textInWordBeforeCursor.count
+		}
+		
+		return filteredSuggestions
+	}
+
+	private func documentationSuggestions(cursor: Int, docItem: DocumentationItem) -> CompletionSuggestion {
+		
+		switch docItem.type {
+		case .function(let funcDoc):
+			
+			var content = funcDoc.name + "("
+			
+			let argPlaceholders = funcDoc.arguments.map({
+				return "<#" +
+						$0 +
+						"#>"
+			})
+			
+			content.append(argPlaceholders.joined(separator: ", "))
+		
+			content += ")"
+			
+			let cursorAfterInsertion: Int
+			
+			if funcDoc.arguments.isEmpty {
+				cursorAfterInsertion = content.count
+			} else {
+				cursorAfterInsertion = funcDoc.name.count + 3
+			}
+			
+			return CompletionSuggestion(title: funcDoc.name + "(...)", content: content, insertionIndex: cursor, cursorAfterInsertion: cursorAfterInsertion)
+		
+		case .variable(let varDoc):
+
+			let content = varDoc.name
+			
+			return CompletionSuggestion(title: varDoc.name, content: content, insertionIndex: cursor, cursorAfterInsertion: content.count)
+		
+		case .struct(let structDoc):
+
+			var content = structDoc.name + "("
+			
+			let memberPlaceholders = structDoc.members.map({
+				return "<#" +
+					$0 +
+				"#>"
+			})
+			
+			content.append(memberPlaceholders.joined(separator: ", "))
+			
+			content += ")"
+			
+			let cursorAfterInsertion: Int
+
+			if structDoc.members.isEmpty {
+				cursorAfterInsertion = content.count
+			} else {
+				cursorAfterInsertion = structDoc.name.count + 3
+			}
+			
+			return CompletionSuggestion(title: structDoc.name + "(...)", content: content, insertionIndex: cursor, cursorAfterInsertion: cursorAfterInsertion)
+		}
+		
 	}
 	
 	private func statementSuggestions(cursor: Int, prefix: String) -> [CompletionSuggestion] {

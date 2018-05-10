@@ -90,7 +90,7 @@ public class Lexer {
 
 	private static let invertedValidNumberCharSet = validNumberCharSet.inverted
 	
-	private let input: String
+	public let input: String
 	private var content: String
 
 	private var isInLineComment = false

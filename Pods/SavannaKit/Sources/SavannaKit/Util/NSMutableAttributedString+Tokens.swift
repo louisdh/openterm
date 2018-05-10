@@ -32,6 +32,10 @@ public extension NSMutableAttributedString {
 		paragraphStyle.defaultTabInterval = themeInfo.spaceWidth * 4
 		paragraphStyle.tabStops = []
 		
+		// Improve performance by manually specifying writing direction.
+		paragraphStyle.baseWritingDirection = .leftToRight
+		paragraphStyle.alignment = .left
+		
 		let wholeRange = NSRange(location: 0, length: source.count)
 		
 		attributes[.foregroundColor] = theme.color(for: .plain)
@@ -52,9 +56,7 @@ public extension NSMutableAttributedString {
 				continue
 			}
 			
-			guard let range = source.nsRange(fromRange: tokenRange) else {
-				continue
-			}
+			let range = source.nsRange(fromRange: tokenRange)
 			
 			if case .editorPlaceholder = syntaxColorType {
 				

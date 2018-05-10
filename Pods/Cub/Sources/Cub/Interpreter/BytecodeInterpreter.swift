@@ -912,6 +912,9 @@ public class BytecodeInterpreter {
 			
 		case .struct(let stru):
 			size = NumberType(stru.count)
+			
+		case .nil:
+			size = 0
 
 		}
 		

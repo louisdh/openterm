@@ -10,6 +10,7 @@ import Foundation
 
 public struct StructDocumentation: Equatable, Codable {
 	
+	public let name: String
 	public let description: String?
 	public let members: [String]
 	public let memberDescriptions: [String: String?]

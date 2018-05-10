@@ -93,19 +93,11 @@ public class DocumentationGenerator {
 		let definition = varNode.name
 		let title = varNode.name
 		
-		let variableDocumentation: VariableDocumentation?
-		
 		let rawDocumentation = assignmentNode.documentation
-		if let rawDocumentation = rawDocumentation {
-			
-			variableDocumentation = parsedVariableDocumentation(rawDocumentation: rawDocumentation)
-			
-		} else {
-			
-			variableDocumentation = nil
-		}
 		
-		let varItem = DocumentationItem(definition: definition, rawDocumentation: rawDocumentation, type: .variable, functionDocumentation: nil, variableDocumentation: variableDocumentation, structDocumentation: nil, title: title)
+		let variableDocumentation = parsedVariableDocumentation(name: varNode.name, rawDocumentation: rawDocumentation)
+		
+		let varItem = DocumentationItem(definition: definition, rawDocumentation: rawDocumentation, type: .variable(variableDocumentation), title: title)
 		
 		return varItem
 	}
@@ -115,19 +107,11 @@ public class DocumentationGenerator {
 		let definition = externalVarDefinition.name
 		let title = externalVarDefinition.name
 		
-		let variableDocumentation: VariableDocumentation?
-		
 		let rawDocumentation = externalVarDefinition.documentation
-		if let rawDocumentation = rawDocumentation {
-			
-			variableDocumentation = parsedVariableDocumentation(rawDocumentation: rawDocumentation)
-			
-		} else {
-			
-			variableDocumentation = nil
-		}
+
+		let variableDocumentation = parsedVariableDocumentation(name: externalVarDefinition.name, rawDocumentation: rawDocumentation)
 		
-		let varItem = DocumentationItem(definition: definition, rawDocumentation: rawDocumentation, type: .variable, functionDocumentation: nil, variableDocumentation: variableDocumentation, structDocumentation: nil, title: title)
+		let varItem = DocumentationItem(definition: definition, rawDocumentation: rawDocumentation, type: .variable(variableDocumentation), title: title)
 		
 		return varItem
 	}
@@ -143,22 +127,11 @@ public class DocumentationGenerator {
 			title += " returns"
 		}
 		
-		let functionDocumentation: FunctionDocumentation?
+		let functionDocumentation = parsedFunctionDocumentation(name: externalFunctionDefinition.name, rawDocumentation: externalFunctionDefinition.documentation, arguments: externalFunctionDefinition.argumentNames, returns: externalFunctionDefinition.returns)
 		
-		let rawDocumentation = externalFunctionDefinition.documentation
-		if let rawDocumentation = rawDocumentation {
-			
-			functionDocumentation = parsedFunctionDocumentation(rawDocumentation: rawDocumentation, arguments: externalFunctionDefinition.argumentNames, returns: externalFunctionDefinition.returns)
-			
-		} else {
-			
-			functionDocumentation = nil
-		}
-		
-		let functionItem = DocumentationItem(definition: definition, rawDocumentation: rawDocumentation, type: .function, functionDocumentation: functionDocumentation, variableDocumentation: nil, structDocumentation: nil, title: title)
+		let functionItem = DocumentationItem(definition: definition, rawDocumentation: externalFunctionDefinition.documentation, type: .function(functionDocumentation), title: title)
 		
 		return functionItem
-		
 	}
 	
 	private func parsedDocumentation(for structNode: StructNode) -> DocumentationItem {
@@ -167,19 +140,11 @@ public class DocumentationGenerator {
 		let definition = "struct \(structNode.prototype.name)(\(args))"
 		let title = "\(structNode.prototype.name)(\(args))"
 		
-		let structDocumentation: StructDocumentation?
-		
 		let rawDocumentation = structNode.documentation
-		if let rawDocumentation = rawDocumentation {
-			
-			structDocumentation = parsedStructDocumentation(rawDocumentation: rawDocumentation, members: structNode.prototype.members)
-			
-		} else {
-			
-			structDocumentation = nil
-		}
+
+		let structDocumentation = parsedStructDocumentation(name: structNode.prototype.name, rawDocumentation: rawDocumentation, members: structNode.prototype.members)
 		
-		let functionItem = DocumentationItem(definition: definition, rawDocumentation: rawDocumentation, type: .struct, functionDocumentation: nil, variableDocumentation: nil, structDocumentation: structDocumentation, title: title)
+		let functionItem = DocumentationItem(definition: definition, rawDocumentation: rawDocumentation, type: .struct(structDocumentation), title: title)
 		
 		return functionItem
 	}
@@ -195,181 +160,119 @@ public class DocumentationGenerator {
 			title += " returns"
 		}
 		
-		let functionDocumentation: FunctionDocumentation?
-		
 		let rawDocumentation = functionNode.documentation
-		if let rawDocumentation = rawDocumentation {
-			
-			functionDocumentation = parsedFunctionDocumentation(rawDocumentation: rawDocumentation, arguments: functionNode.prototype.argumentNames, returns: functionNode.prototype.returns)
- 
-		} else {
-			
-			functionDocumentation = nil
-		}
+
+		let functionDocumentation = parsedFunctionDocumentation(name: functionNode.prototype.name, rawDocumentation: rawDocumentation, arguments: functionNode.prototype.argumentNames, returns: functionNode.prototype.returns)
 		
-		let functionItem = DocumentationItem(definition: definition, rawDocumentation: rawDocumentation, type: .function, functionDocumentation: functionDocumentation, variableDocumentation: nil, structDocumentation: nil, title: title)
+		let functionItem = DocumentationItem(definition: definition, rawDocumentation: rawDocumentation, type: .function(functionDocumentation), title: title)
 		
 		return functionItem
 	}
 	
-	private func parsedFunctionDocumentation(rawDocumentation: String, arguments: [String], returns: Bool) -> FunctionDocumentation? {
+	private func parsedFunctionDocumentation(name: String, rawDocumentation: String?, arguments: [String], returns: Bool) -> FunctionDocumentation {
 		
-		let rawDocLines = rawDocumentation.split(separator: "\n").map({ String($0) })
-		
-		let cleanedUpRawDocLines: [String] = rawDocLines.map({
-			var cleanedUp = $0
-			if cleanedUp.hasPrefix("///") {
-				cleanedUp.removeFirst(3)
+		if let rawDocumentation = rawDocumentation {
+			
+			let rawDocLines = rawDocumentation.split(separator: "\n").map({ String($0) })
+			
+			let cleanedUpRawDocLines: [String] = rawDocLines.map({
+				var cleanedUp = $0
+				if cleanedUp.hasPrefix("///") {
+					cleanedUp.removeFirst(3)
+				}
+				
+				cleanedUp = cleanedUp.trimmingCharacters(in: .whitespaces)
+				
+				return cleanedUp
+			})
+			
+			var description: String? = nil
+			var endDescriptionParsing = false
+			
+			var argumentDescriptions = [String: String]()
+			var returnDescription: String? = nil
+			
+			var legalDocFields = [String: String]()
+			
+			for argumentName in arguments {
+				
+				legalDocFields["- Parameter \(argumentName):"] = argumentName
+				
 			}
 			
-			cleanedUp = cleanedUp.trimmingCharacters(in: .whitespaces)
+			if returns {
+				legalDocFields["- Returns:"] = "returns"
+			}
 			
-			return cleanedUp
-		})
-		
-		var description: String? = nil
-		var endDescriptionParsing = false
-		
-		var argumentDescriptions = [String: String?]()
-		var returnDescription: String? = nil
-		
-		var legalDocFields = [String: String]()
-		
-		for argumentName in arguments {
-			
-			legalDocFields["- Parameter \(argumentName):"] = argumentName
-			
-		}
-		
-		if returns {
-			legalDocFields["- Returns:"] = "returns"
-		}
-		
-		for line in cleanedUpRawDocLines {
-			
-			if line.starts(with: "-") {
+			for line in cleanedUpRawDocLines {
 				
-				endDescriptionParsing = true
-				
-				for (legalDocField, name) in legalDocFields {
+				if line.starts(with: "-") {
 					
-					if line.starts(with: legalDocField) {
+					endDescriptionParsing = true
+					
+					for (legalDocField, name) in legalDocFields {
 						
-						let value = String(line.dropFirst(legalDocField.count))
-						
-						let cleanedUpValue = value.trimmingCharacters(in: .whitespaces)
-						
-						if name == "returns" {
-							returnDescription = cleanedUpValue
-						} else {
-							argumentDescriptions[name] = cleanedUpValue
+						if line.starts(with: legalDocField) {
+							
+							let value = String(line.dropFirst(legalDocField.count))
+							
+							let cleanedUpValue = value.trimmingCharacters(in: .whitespaces)
+							
+							if name == "returns" {
+								returnDescription = cleanedUpValue
+							} else {
+								argumentDescriptions[name] = cleanedUpValue
+							}
+							
 						}
 						
 					}
 					
-				}
-				
-			} else if !endDescriptionParsing {
-				
-				if description == nil {
-					description = line
-				} else {
+				} else if !endDescriptionParsing {
 					
-					description?.append("\n")
-					description?.append(line)
-					
-				}
-				
-			}
-			
-		}
-		
-		return FunctionDocumentation(description: description, arguments: arguments, argumentDescriptions: argumentDescriptions, returnDescription: returnDescription)
-	}
-	
-	private func parsedVariableDocumentation(rawDocumentation: String) -> VariableDocumentation? {
-		
-		let rawDocLines = rawDocumentation.split(separator: "\n").map({ String($0) })
-		
-		let cleanedUpRawDocLines: [String] = rawDocLines.map({
-			var cleanedUp = $0
-			if cleanedUp.hasPrefix("///") {
-				cleanedUp.removeFirst(3)
-			}
-			
-			cleanedUp = cleanedUp.trimmingCharacters(in: .whitespaces)
-			
-			return cleanedUp
-		})
-		
-		var description: String? = nil
-		
-		for line in cleanedUpRawDocLines {
-			
-			if description == nil {
-				description = line
-			} else {
-				
-				description?.append("\n")
-				description?.append(line)
-				
-			}
-			
-		}
-		
-		return VariableDocumentation(description: description)
-	}
-	
-	private func parsedStructDocumentation(rawDocumentation: String, members: [String]) -> StructDocumentation? {
-
-		let rawDocLines = rawDocumentation.split(separator: "\n").map({ String($0) })
-		
-		let cleanedUpRawDocLines: [String] = rawDocLines.map({
-			var cleanedUp = $0
-			if cleanedUp.hasPrefix("///") {
-				cleanedUp.removeFirst(3)
-			}
-			
-			cleanedUp = cleanedUp.trimmingCharacters(in: .whitespaces)
-			
-			return cleanedUp
-		})
-		
-		var description: String? = nil
-		var endDescriptionParsing = false
-		
-		var argumentDescriptions = [String: String?]()
-		
-		var legalDocFields = [String: String]()
-		
-		for memberName in members {
-			
-			legalDocFields["- \(memberName):"] = memberName
-			
-		}
-		
-		for line in cleanedUpRawDocLines {
-			
-			if line.starts(with: "-") {
-				
-				endDescriptionParsing = true
-				
-				for (legalDocField, name) in legalDocFields {
-					
-					if line.starts(with: legalDocField) {
+					if description == nil {
+						description = line
+					} else {
 						
-						let value = String(line.dropFirst(legalDocField.count))
-						
-						let cleanedUpValue = value.trimmingCharacters(in: .whitespaces)
-						
-						argumentDescriptions[name] = cleanedUpValue
-
+						description?.append("\n")
+						description?.append(line)
 						
 					}
 					
 				}
 				
-			} else if !endDescriptionParsing {
+			}
+			
+			return FunctionDocumentation(name: name, arguments: arguments, returns: returns, description: description, argumentDescriptions: argumentDescriptions, returnDescription: returnDescription)
+
+		} else {
+			
+			return FunctionDocumentation(name: name, arguments: arguments, returns: returns, description: nil, argumentDescriptions: [:], returnDescription: nil)
+
+		}
+
+	}
+	
+	private func parsedVariableDocumentation(name: String, rawDocumentation: String?) -> VariableDocumentation {
+		
+		if let rawDocumentation = rawDocumentation {
+			
+			let rawDocLines = rawDocumentation.split(separator: "\n").map({ String($0) })
+			
+			let cleanedUpRawDocLines: [String] = rawDocLines.map({
+				var cleanedUp = $0
+				if cleanedUp.hasPrefix("///") {
+					cleanedUp.removeFirst(3)
+				}
+				
+				cleanedUp = cleanedUp.trimmingCharacters(in: .whitespaces)
+				
+				return cleanedUp
+			})
+			
+			var description: String? = nil
+			
+			for line in cleanedUpRawDocLines {
 				
 				if description == nil {
 					description = line
@@ -382,9 +285,91 @@ public class DocumentationGenerator {
 				
 			}
 			
+			return VariableDocumentation(name: name, description: description)
+
+		} else {
+			
+			return VariableDocumentation(name: name, description: nil)
+
 		}
 		
-		return StructDocumentation(description: description, members: members, memberDescriptions: argumentDescriptions)
+	}
+	
+	private func parsedStructDocumentation(name: String, rawDocumentation: String?, members: [String]) -> StructDocumentation {
+
+		if let rawDocumentation = rawDocumentation {
+			
+			
+			let rawDocLines = rawDocumentation.split(separator: "\n").map({ String($0) })
+			
+			let cleanedUpRawDocLines: [String] = rawDocLines.map({
+				var cleanedUp = $0
+				if cleanedUp.hasPrefix("///") {
+					cleanedUp.removeFirst(3)
+				}
+				
+				cleanedUp = cleanedUp.trimmingCharacters(in: .whitespaces)
+				
+				return cleanedUp
+			})
+			
+			var description: String? = nil
+			var endDescriptionParsing = false
+			
+			var argumentDescriptions = [String: String?]()
+			
+			var legalDocFields = [String: String]()
+			
+			for memberName in members {
+				
+				legalDocFields["- \(memberName):"] = memberName
+				
+			}
+			
+			for line in cleanedUpRawDocLines {
+				
+				if line.starts(with: "-") {
+					
+					endDescriptionParsing = true
+					
+					for (legalDocField, name) in legalDocFields {
+						
+						if line.starts(with: legalDocField) {
+							
+							let value = String(line.dropFirst(legalDocField.count))
+							
+							let cleanedUpValue = value.trimmingCharacters(in: .whitespaces)
+							
+							argumentDescriptions[name] = cleanedUpValue
+							
+							
+						}
+						
+					}
+					
+				} else if !endDescriptionParsing {
+					
+					if description == nil {
+						description = line
+					} else {
+						
+						description?.append("\n")
+						description?.append(line)
+						
+					}
+					
+				}
+				
+			}
+			
+			return StructDocumentation(name: name, description: description, members: members, memberDescriptions: argumentDescriptions)
+			
+		} else {
+			
+			return StructDocumentation(name: name, description: nil, members: members, memberDescriptions: [:])
+
+		}
+		
 	}
 	
 }

@@ -57,19 +57,34 @@ class CubDocumentationViewController: UIViewController {
 			sortedItems = sortedItems.filter({ $0.title.lowercased().contains(searchText) })
 		}
 		
-		let functionItemsToShow = sortedItems.filter({ $0.type == .function })
+		let functionItemsToShow = sortedItems.filter({
+			if case .function = $0.type {
+				return true
+			}
+			return false
+		})
 		
 		if !functionItemsToShow.isEmpty {
 			sections.append(.functions(functionItemsToShow))
 		}
 		
-		let variableItemsToShow = sortedItems.filter({ $0.type == .variable })
+		let variableItemsToShow = sortedItems.filter({
+			if case .variable = $0.type {
+				return true
+			}
+			return false
+		})
 		
 		if !variableItemsToShow.isEmpty {
 			sections.append(.variables(variableItemsToShow))
 		}
 		
-		let structItemsToShow = sortedItems.filter({ $0.type == .struct })
+		let structItemsToShow = sortedItems.filter({
+			if case .struct = $0.type {
+				return true
+			}
+			return false
+		})
 		
 		if !structItemsToShow.isEmpty {
 			sections.append(.structs(structItemsToShow))

@@ -41,7 +41,7 @@ struct ThemeInfo {
 }
 
 @IBDesignable
-public class SyntaxTextView: View {
+open class SyntaxTextView: View {
 
 	var previousSelectedRange: NSRange?
 	
@@ -72,9 +72,9 @@ public class SyntaxTextView: View {
 		}
 	}
 	
-	public override var tintColor: UIColor! {
+	open override var tintColor: UIColor! {
 		didSet {
-			keyboardToolbar.tintColor = tintColor
+
 		}
 	}
 	
@@ -119,12 +119,6 @@ public class SyntaxTextView: View {
 		
 		setup()
 	}
-	
-	#if os(iOS)
-
-		private var keyboardToolbar: UIToolbar!
-	
-	#endif
 
 	#if os(macOS)
 
@@ -240,23 +234,7 @@ public class SyntaxTextView: View {
 		}
 			
 		textView.keyboardAppearance = .dark
-		
-		
-		keyboardToolbar = UIToolbar(frame: CGRect(x: 0, y: 0, width: 300, height: 50.0))
-		
-		let equalsBtn = UIBarButtonItem(title: "=", style: .plain, target: self, action: #selector(test))
-		
-		let font = UIFont.systemFont(ofSize: 44.0)
-		let attributes = [NSAttributedStringKey.font : font]
 
-		equalsBtn.setTitleTextAttributes(attributes, for: .normal)
-		
-		keyboardToolbar.items = [equalsBtn]
-		
-//		textView.inputAccessoryView = keyboardToolbar
-		
-//		equalsBtn.tintColor = .red
-		
 		self.clipsToBounds = true
 		
 		#endif
@@ -265,7 +243,7 @@ public class SyntaxTextView: View {
 	
 	#if os(macOS)
 	
-	public override func viewDidMoveToSuperview() {
+	open override func viewDidMoveToSuperview() {
 		super.viewDidMoveToSuperview()
 	
 	}
@@ -291,7 +269,7 @@ public class SyntaxTextView: View {
 	
 	#if os(iOS)
 
-	public override var isFirstResponder: Bool {
+	override open var isFirstResponder: Bool {
 		return textView.isFirstResponder
 	}
 	
@@ -367,7 +345,7 @@ public class SyntaxTextView: View {
 		self.textView.setNeedsDisplay()
 	}
 	
-	override public func layoutSubviews() {
+	override open func layoutSubviews() {
 		super.layoutSubviews()
 		
 		self.textView.invalidateCachedParagraphs()

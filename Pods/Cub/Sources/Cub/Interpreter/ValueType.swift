@@ -15,6 +15,7 @@ public enum ValueType: Equatable {
 	case bool(Bool)
 	case string(String)
 	case array([ValueType])
+	case `nil`
 
 }
 
@@ -66,6 +67,10 @@ public extension ValueType {
 			descr += "]"
 			
 			return descr
+			
+		case .nil:
+			return "nil"
+
 		}
 
 	}
@@ -108,6 +113,14 @@ extension ValueType {
 	
 	var isStruct: Bool {
 		if case .struct = self {
+			return true
+		} else {
+			return false
+		}
+	}
+	
+	var isNil: Bool {
+		if case .nil = self {
 			return true
 		} else {
 			return false

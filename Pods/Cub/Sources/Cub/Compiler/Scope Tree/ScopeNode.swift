@@ -81,6 +81,7 @@ struct FunctionMapped {
 
 	let id: Int
 	let exitId: Int
+	let arguments: [String]
 	let returns: Bool
 
 }

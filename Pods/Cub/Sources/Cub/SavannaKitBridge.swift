@@ -1,14 +1,16 @@
 //
-//  Cub+SavannaKit.swift
-//  OpenTerm
+//  SavannaKitBridge.swift
+//  Cub
 //
-//  Created by Louis D'hauwe on 04/02/2018.
+//  Created by Louis D'hauwe on 10/05/2018.
 //  Copyright © 2018 Silver Fox. All rights reserved.
 //
 
 import Foundation
+
+#if canImport(SavannaKit)
+
 import SavannaKit
-import Cub
 
 extension Cub.TokenType: SavannaKit.TokenType {
 	
@@ -97,3 +99,5 @@ extension Cub.Lexer: SavannaKit.Lexer {
 	}
 	
 }
+
+#endif

@@ -34,6 +34,8 @@ public enum ParseErrorType {
 	
 	case editorPlaceholder
 
+	case stackOverflow
+
 }
 
 extension ParseErrorType {
@@ -98,6 +100,9 @@ extension ParseErrorType {
 			
 		case .editorPlaceholder:
 			return "Editor placeholder in source file"
+			
+		case .stackOverflow:
+			return "Parser stack overflow"
 			
 		}
 	}

@@ -13,7 +13,8 @@ public struct Token: CustomStringConvertible, Equatable {
 	/// The token's type
 	public let type: TokenType
 
-	/// The range of the token in the original source code
+	/// The range of the token in the original source code.
+	/// The indices of this range are in terms of Swift characters.
 	public let range: Range<Int>?
 
 	public init(type: TokenType, range: Range<Int>? = nil) {

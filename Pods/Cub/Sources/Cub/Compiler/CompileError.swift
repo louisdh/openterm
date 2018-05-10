@@ -15,6 +15,7 @@ public enum CompileErrorType {
 	case functionNotFound(String)
 	case unbalancedScope
 	case variableNotFound(String)
+	case incorrectNumberOfArgumentsToFunction(functionName: String, expected: Int, actual: Int)
 }
 
 extension CompileErrorType {
@@ -50,6 +51,8 @@ extension CompileErrorType {
 		case .variableNotFound(let name):
 			return "Variable \"\(name)\" not found."
 
+		case .incorrectNumberOfArgumentsToFunction(let functionName, let expected, let actual):
+			return "The function \"\(functionName)\" expects \(expected) argument(s), not \(actual)."
 		}
 		
 	}

@@ -75,6 +75,9 @@ extension Runner {
 		case .struct:
 			fatalError("Struct code gen is currently unavailable")
 			
+		case .nil:
+			return "nil"
+			
 		}
 		
 	}

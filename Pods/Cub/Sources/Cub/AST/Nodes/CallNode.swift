@@ -29,6 +29,14 @@ public struct CallNode: ASTNode {
 			throw compileError(.functionNotFound(callee))
 		}
 
+		guard let functionMapped = ctx.getMappedFunction(named: callee) else {
+			throw compileError(.functionNotFound(callee))
+		}
+		
+		guard arguments.count == functionMapped.arguments.count else {
+			throw compileError(.incorrectNumberOfArgumentsToFunction(functionName: callee, expected: functionMapped.arguments.count, actual: arguments.count))
+		}
+		
 		for arg in arguments {
 
 			let argInstructions = try arg.compile(with: ctx, in: self)

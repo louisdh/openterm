@@ -20,7 +20,7 @@ class ScriptEditViewController: UIViewController {
 	let textView: SyntaxTextView
 	let autoCompleteManager: CubSyntaxAutoCompleteManager
 	let inputAssistantView: InputAssistantView
-	let autoCompletor = AutoCompleter()
+	var autoCompleter: AutoCompleter!
 
 	var cubManualPanelViewController: PanelViewController!
 	var cubDocsPanelViewController: PanelViewController!
@@ -51,6 +51,8 @@ class ScriptEditViewController: UIViewController {
 
 		cubDocsPanelViewController.panelNavigationController.view.backgroundColor = .panelBackgroundColor
 		cubDocsPanelViewController.view.backgroundColor = .clear
+		
+		autoCompleter = AutoCompleter(documentation: cubDocsVC.docBundle.items)
 		
 	}
 	
@@ -392,7 +394,7 @@ extension ScriptEditViewController: CubSyntaxAutoCompleteManagerDataSource {
 		
 		let cursor = text.distance(from: text.startIndex, to: swiftRange.lowerBound)
 		
-		let suggestions = autoCompletor.completionSuggestions(for: textView.text, cursor: cursor)
+		let suggestions = autoCompleter.completionSuggestions(for: textView.text, cursor: cursor)
 		
 		return suggestions.map({ CubSyntaxAutoCompleteManager.Completion($0.content, data: $0) })
 	}

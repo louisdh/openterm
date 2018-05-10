@@ -10,6 +10,7 @@ import Foundation
 
 public struct VariableDocumentation: Equatable, Codable {
 	
+	public let name: String
 	public let description: String?
 
 }

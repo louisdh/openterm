@@ -398,7 +398,7 @@ public class BytecodeCompiler {
 		let newReg = getNewFunctionId()
 		let exitReg = getNewFunctionId()
 
-		currentScopeNode.functionMap[name] = FunctionMapped(id: newReg, exitId: exitReg, returns: true)
+		currentScopeNode.functionMap[name] = FunctionMapped(id: newReg, exitId: exitReg, arguments: structNode.prototype.members, returns: true)
 
 		return newReg
 	}
@@ -415,9 +415,13 @@ public class BytecodeCompiler {
 		let newReg = getNewFunctionId()
 		let exitReg = getNewFunctionId()
 
-		currentScopeNode.functionMap[name] = FunctionMapped(id: newReg, exitId: exitReg, returns: functionNode.prototype.returns)
+		currentScopeNode.functionMap[name] = FunctionMapped(id: newReg, exitId: exitReg, arguments: functionNode.prototype.argumentNames,  returns: functionNode.prototype.returns)
 
 		return newReg
+	}
+
+	func getMappedFunction(named name: String) -> FunctionMapped? {
+		return currentScopeNode.deepFunctionMap()[name]
 	}
 
 	func getExitScopeFunctionId(for functionNode: FunctionNode) throws -> Int {

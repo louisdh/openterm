@@ -21,7 +21,7 @@ public struct AssignmentNode: ASTNode {
 
 	public init(variable: ASTNode, value: ASTNode, range: Range<Int>?, documentation: String?) throws {
 
-		guard value is NumberNode || value is VariableNode || value is StructMemberNode || value is CallNode || value is BinaryOpNode || value is StringNode || value is ArrayNode || value is ArraySubscriptNode || value is BooleanNode else {
+		guard value is NumberNode || value is VariableNode || value is StructMemberNode || value is CallNode || value is BinaryOpNode || value is StringNode || value is ArrayNode || value is ArraySubscriptNode || value is BooleanNode || value is NilNode else {
 			throw AssignmentNodeValidationError(invalidValueType: value.nodeDescription ?? "")
 		}
 

@@ -157,7 +157,7 @@ public class StdLib {
 			guard case let .number(value)? = arguments["value"],
 				case let .string(unit)? = arguments["unit"],
 				case let .number(dateString)? = arguments["date"] else {
-				_ = callback(.number(0))
+				_ = callback(.nil)
 				return
 			}
 			
@@ -173,12 +173,12 @@ public class StdLib {
 																  "year": .year]
 
 			guard let component = componentMapping[unit] else {
-				_ = callback(.number(0))
+				_ = callback(.nil)
 				return
 			}
 			
 			guard let newDate = Calendar.current.date(byAdding: component, value: intValue, to: date) else {
-				_ = callback(.number(0))
+				_ = callback(.nil)
 				return
 			}
 			
@@ -209,7 +209,7 @@ public class StdLib {
 		runner.registerExternalFunction(documentation: dateFromFormatDoc, name: "dateFromFormat", argumentNames: ["dateString", "format"], returns: true) { (arguments, callback) in
 			
 			guard case let .string(dateString)? = arguments["dateString"], case let .string(format)? = arguments["format"] else {
-				_ = callback(.number(0))
+				_ = callback(.nil)
 				return
 			}
 			
@@ -239,7 +239,7 @@ public class StdLib {
 		runner.registerExternalFunction(documentation: formattedDateDoc, name: "formattedDate", argumentNames: ["date", "format"], returns: true) { (arguments, callback) in
 
 			guard case let .number(timeInterval)? = arguments["date"], case let .string(format)? = arguments["format"] else {
-				_ = callback(.number(0))
+				_ = callback(.nil)
 				return
 			}
 			
@@ -306,12 +306,12 @@ public class StdLib {
 			var arguments = arguments
 			
 			guard let input = arguments.removeValue(forKey: "input") else {
-				_ = callback(.string(""))
+				_ = callback(.nil)
 				return
 			}
 			
 			guard case let .string(inputStr) = input else {
-				_ = callback(.string(""))
+				_ = callback(.nil)
 				return
 			}
 			
@@ -331,6 +331,8 @@ public class StdLib {
 				case .struct:
 					break
 				case .array:
+					break
+				case .nil:
 					break
 				}
 				

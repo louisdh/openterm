@@ -40,98 +40,71 @@ class CubDocumentationItemViewController: UIViewController {
 		attributedString.append(definitionAttrString)
 		
 		switch item.type {
-		case .function:
+		case .function(let functionDocumentation):
 			
-			let descr: String
-			
-			if let functionDoc = item.functionDocumentation {
-				descr = functionDoc.description ?? "No description"
-			} else {
-				descr = "No description"
-			}
+			let descr = functionDocumentation.description ?? "No description"
 			
 			let descrAttrString = NSAttributedString(string: descr + "\n", attributes: [.font: font])
 			
 			attributedString.append(descrAttrString)
 			
-			if let functionDoc = item.functionDocumentation {
-
-				for arg in functionDoc.arguments {
-					
-					let argDescr: String
-					
-					if let argDescription = functionDoc.argumentDescriptions[arg] {
-						argDescr = "\(arg): " + (argDescription ?? "No description")
-					} else {
-						argDescr = "\(arg): No description"
-					}
-					
-					let argDescrAttrString = NSAttributedString(string: argDescr + "\n", attributes: [.font: font])
-					
-					attributedString.append(argDescrAttrString)
-					
+			for arg in functionDocumentation.arguments {
+				
+				let argDescr: String
+				
+				if let argDescription = functionDocumentation.argumentDescriptions[arg] {
+					argDescr = "\(arg): " + argDescription
+				} else {
+					argDescr = "\(arg): No description"
 				}
 				
-				if let returnDescription = functionDoc.returnDescription {
-					
-					let returnsDescr = "Returns: " + returnDescription
-
-					let returnsDescrAttrString = NSAttributedString(string: returnsDescr + "\n", attributes: [.font: font])
-					
-					attributedString.append(returnsDescrAttrString)
-					
-				}
+				let argDescrAttrString = NSAttributedString(string: argDescr + "\n", attributes: [.font: font])
+				
+				attributedString.append(argDescrAttrString)
 				
 			}
-						
-		case .variable:
 			
-			let descr: String
-			
-			if let variableDoc = item.variableDocumentation {
-				descr = variableDoc.description ?? "No description"
-			} else {
-				descr = "No description"
+			if let returnDescription = functionDocumentation.returnDescription {
+				
+				let returnsDescr = "Returns: " + returnDescription
+				
+				let returnsDescrAttrString = NSAttributedString(string: returnsDescr + "\n", attributes: [.font: font])
+				
+				attributedString.append(returnsDescrAttrString)
+				
 			}
+			
+		case .variable(let variableDocumentation):
+			
+			let descr = variableDocumentation.description ?? "No description"
 			
 			let descrAttrString = NSAttributedString(string: descr + "\n", attributes: [.font: font])
 			
 			attributedString.append(descrAttrString)
 			
-		case .struct:
+		case .struct(let structDocumentation):
 			
-			let descr: String
-			
-			if let structDoc = item.structDocumentation {
-				descr = structDoc.description ?? "No description"
-			} else {
-				descr = "No description"
-			}
+			let descr = structDocumentation.description ?? "No description"
 			
 			let descrAttrString = NSAttributedString(string: descr + "\n", attributes: [.font: font])
 			
 			attributedString.append(descrAttrString)
 			
-			if let structDoc = item.structDocumentation {
+			for member in structDocumentation.members {
 				
-				for member in structDoc.members {
-					
-					let memberDescr: String
-					
-					if let memberDescription = structDoc.memberDescriptions[member] {
-						memberDescr = "\(member): " + (memberDescription ?? "No description")
-					} else {
-						memberDescr = "\(member): No description"
-					}
-					
-					let memberDescrAttrString = NSAttributedString(string: memberDescr + "\n", attributes: [.font: font])
-					
-					attributedString.append(memberDescrAttrString)
-					
+				let memberDescr: String
+				
+				if let memberDescription = structDocumentation.memberDescriptions[member] {
+					memberDescr = "\(member): " + (memberDescription ?? "No description")
+				} else {
+					memberDescr = "\(member): No description"
 				}
 				
+				let memberDescrAttrString = NSAttributedString(string: memberDescr + "\n", attributes: [.font: font])
+				
+				attributedString.append(memberDescrAttrString)
+				
 			}
-			
 		}
 		
 		return attributedString
