@@ -74,6 +74,8 @@ public enum BytecodeInstructionType: UInt8, CustomStringConvertible {
 
 	case sizeOf = 36
 
+	case exit = 37
+
 	public var opCode: UInt8 {
 		return self.rawValue
 	}
@@ -192,6 +194,9 @@ public enum BytecodeInstructionType: UInt8, CustomStringConvertible {
 			
 		case .sizeOf:
 			return "size_of"
+			
+		case .exit:
+			return "exit"
 			
 		}
 

@@ -10,7 +10,7 @@ import Foundation
 
 public class StdLib {
 
-	private let sources = ["Arithmetic", "Graphics"]
+	private let sources = ["Arithmetic"]
 
 	public init() {
 
@@ -53,6 +53,57 @@ public class StdLib {
 	}
 	
 	func registerExternalFunctions(_ runner: Runner) {
+
+		let splitDoc = """
+						Split a string in smaller strings.
+						- Parameter string: the string to split.
+						- Parameter separator: the separator to split by.
+						- Returns: an array of strings.
+						"""
+		
+		runner.registerExternalFunction(documentation: splitDoc, name: "split", argumentNames: ["string", "separator"], returns: true) { (arguments, callback) in
+			
+			guard case let .string(value)? = arguments["string"], case let .string(separator)? = arguments["separator"]  else {
+				_ = callback(.nil)
+				return
+			}
+			
+			let splitted = value.components(separatedBy: separator)
+			_ = callback(.array(splitted.map({ ValueType.string($0) })))
+
+		}
+		
+		let exitDoc = """
+						Terminate the program.
+						"""
+		
+		runner.registerExternalFunction(documentation: exitDoc, name: "exit", argumentNames: [], returns: true) { (arguments, callback) in
+			
+			runner.interpreter?.isManuallyTerminated = true
+			_ = callback(.nil)
+			
+		}
+		
+		let parseNumberDoc = """
+						Parses a string to a number.
+						- Parameter value: the string to parse.
+						- Returns: a number if the string could be parsed, otherwise nil.
+						"""
+		
+		runner.registerExternalFunction(documentation: parseNumberDoc, name: "parseNumber", argumentNames: ["string"], returns: true) { (arguments, callback) in
+			
+			guard case let .string(value)? = arguments["value"] else {
+				_ = callback(.nil)
+				return
+			}
+			
+			if let numberValue = NumberType(value) {
+				_ = callback(.number(numberValue))
+			} else {
+				_ = callback(.nil)
+			}
+				
+		}
 		
 		let isNumberDoc = """
 						Checks if the value is a number.

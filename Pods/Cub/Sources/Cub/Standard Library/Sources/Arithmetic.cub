@@ -4,10 +4,10 @@
 //
 
 /// The mathematical constant pi.
-pi = 3.14159265358979
+//pi = 3.14159265358979
 
 /// The mathematical constant tau, which equals 2*pi.
-tau = pi * 2
+//tau = pi * 2
 
 /// - Parameter x: A number.
 /// - Returns: The absolute value of x.

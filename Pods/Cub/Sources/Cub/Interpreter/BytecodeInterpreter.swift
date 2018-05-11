@@ -112,6 +112,8 @@ public class BytecodeInterpreter {
 
 		externalFunctions[id] = callback
 	}
+	
+	var isManuallyTerminated = false
 
 	var pc = 0
 
@@ -121,12 +123,16 @@ public class BytecodeInterpreter {
 	public func interpret() throws {
 
 		while true {
+			
+			if isManuallyTerminated {
+				break
+			}
 
 			pcTrace.append(pc)
 			let newPc = try executeInstruction(bytecode[pc], pc: pc)
 			pc = newPc
 				
-			if pc >= bytecode.count {
+			if pc < 0 || pc >= bytecode.count {
 				break
 			}
 
@@ -252,6 +258,9 @@ public class BytecodeInterpreter {
 			
 			case .sizeOf:
 				newPc = try sizeOf(instruction, pc: pc)
+			
+			case .exit:
+				newPc = try exit(instruction, pc: pc)
 
 		}
 
@@ -921,6 +930,10 @@ public class BytecodeInterpreter {
 		try stack.push(.number(size))
 		
 		return pc + 1
+	}
+	
+	private func exit(_ instruction: BytecodeExecutionInstruction, pc: Int) throws -> Int {
+		return -1
 	}
 
 	// MARK: - Structs

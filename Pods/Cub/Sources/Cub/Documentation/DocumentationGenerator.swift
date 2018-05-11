@@ -316,7 +316,7 @@ public class DocumentationGenerator {
 			var description: String? = nil
 			var endDescriptionParsing = false
 			
-			var argumentDescriptions = [String: String?]()
+			var argumentDescriptions = [String: String]()
 			
 			var legalDocFields = [String: String]()
 			

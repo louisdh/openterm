@@ -158,7 +158,7 @@ class CubDocumentationItemViewController: UIViewController {
 				argDescrParagraphStyle.headIndent = 16
 				argDescrParagraphStyle.firstLineHeadIndent = 16
 				
-				let argDescr = ((structDocumentation.memberDescriptions[member] ?? "No description") ?? "No description") + "\n"
+				let argDescr = (structDocumentation.memberDescriptions[member] ?? "No description") + "\n"
 				
 				let argDescrAttrString = NSAttributedString(string: argDescr + "\n", attributes: [.font: font,
 																								  .paragraphStyle: argDescrParagraphStyle])
