@@ -128,3 +128,31 @@ extension ValueType {
 	}
 	
 }
+
+extension ValueType {
+
+	var size: NumberType {
+		
+		switch self {
+		case .array(let array):
+			return NumberType(array.count)
+			
+		case .bool:
+			return 1
+			
+		case .number(let number):
+			return number
+			
+		case .string(let string):
+			return NumberType(string.count)
+			
+		case .struct(let stru):
+			return NumberType(stru.count)
+			
+		case .nil:
+			return 0
+			
+		}
+	}
+	
+}

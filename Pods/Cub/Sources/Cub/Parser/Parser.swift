@@ -719,7 +719,7 @@ public class Parser {
 
 	private func parseIfStatement() throws -> ConditionalStatementNode {
 
-		try popCurrentToken(andExpect: .if)
+		let ifToken = try popCurrentToken(andExpect: .if)
 
 		let condition = try parseExpression()
 
@@ -744,7 +744,7 @@ public class Parser {
 
 		} else {
 
-			return ConditionalStatementNode(condition: condition, body: body, range: currentTokenRange())
+			return ConditionalStatementNode(condition: condition, body: body, range: ifToken.range)
 
 		}
 

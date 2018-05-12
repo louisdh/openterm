@@ -24,6 +24,10 @@ public struct ConditionalStatementNode: ASTNode {
 
 	public func compile(with ctx: BytecodeCompiler, in parent: ASTNode?) throws -> BytecodeBody {
 
+		if condition is AssignmentNode {
+			throw compileError(.assignmentAsCondition)
+		}
+		
 		var bytecode = BytecodeBody()
 
 		let conditionInstruction = try condition.compile(with: ctx, in: self)

@@ -282,8 +282,8 @@ public class BytecodeInterpreter {
 
 	private func executeAdd(pc: Int) throws -> Int {
 
-		let lhs = try stack.pop()
-		let rhs = try stack.pop()
+		let lhs = try popStack()
+		let rhs = try popStack()
 
 		switch (lhs, rhs) {
 		case let (.number(n1), .number(n2)):
@@ -402,8 +402,8 @@ public class BytecodeInterpreter {
 
 	private func executeEqual(pc: Int) throws -> Int {
 
-		let rhs = try stack.pop()
-		let lhs = try stack.pop()
+		let rhs = try popStack()
+		let lhs = try popStack()
 
 		let eq: Bool = lhs == rhs
 
@@ -414,8 +414,8 @@ public class BytecodeInterpreter {
 
 	private func executeNotEqual(pc: Int) throws -> Int {
 
-		let rhs = try stack.pop()
-		let lhs = try stack.pop()
+		let rhs = try popStack()
+		let lhs = try popStack()
 
 		let neq: Bool = lhs != rhs
 
@@ -524,7 +524,7 @@ public class BytecodeInterpreter {
 			throw error(.unexpectedArgument)
 		}
 
-		setRegValue(try stack.pop(), for: i)
+		setRegValue(try popStack(), for: i)
 
 		return pc + 1
 	}
@@ -539,7 +539,7 @@ public class BytecodeInterpreter {
 			throw error(.unexpectedArgument)
 		}
 
-		try updateRegValue(try stack.pop(), for: i)
+		try updateRegValue(try popStack(), for: i)
 
 		return pc + 1
 	}
@@ -591,7 +591,7 @@ public class BytecodeInterpreter {
 			var arguments = [String: ValueType]()
 			
 			for argName in argumentNames.reversed() {
-				let arg = try stack.pop()
+				let arg = try popStack()
 				arguments[argName] = arg
 			}
 			
@@ -651,7 +651,7 @@ public class BytecodeInterpreter {
 
 	private func executePop(_ instruction: BytecodeExecutionInstruction, pc: Int) throws -> Int {
 
-		_ = try stack.pop()
+		_ = try popStack()
 
 		return pc + 1
 	}
@@ -690,13 +690,13 @@ public class BytecodeInterpreter {
 			throw error(.unexpectedArgument)
 		}
 
-		guard case let ValueType.struct(v) = try stack.pop() else {
+		guard case let ValueType.struct(v) = try popStack() else {
 			throw error(.unexpectedArgument)
 		}
 
 		var newStruct = v
 
-		newStruct[key] = try stack.pop()
+		newStruct[key] = try popStack()
 
 		try stack.push(.struct(newStruct))
 
@@ -712,11 +712,11 @@ public class BytecodeInterpreter {
 			return nil
 		}
 
-		guard case let ValueType.struct(v) = try stack.pop() else {
+		guard case let ValueType.struct(v) = try popStack() else {
 			throw error(.unexpectedArgument)
 		}
 
-		let updateValue = try stack.pop()
+		let updateValue = try popStack()
 
 		let newStruct = try updatedDict(for: v, keyPath: memberIds, newValue: updateValue)
 
@@ -731,7 +731,7 @@ public class BytecodeInterpreter {
 			throw error(.unexpectedArgument)
 		}
 
-		guard case let ValueType.struct(v) = try stack.pop() else {
+		guard case let ValueType.struct(v) = try popStack() else {
 			throw error(.unexpectedArgument)
 		}
 
@@ -803,9 +803,9 @@ public class BytecodeInterpreter {
 			throw error(.unexpectedArgument)
 		}
 		
-		let newValue = try stack.pop()
+		let newValue = try popStack()
 		
-		guard case let ValueType.array(v) = try stack.pop() else {
+		guard case let ValueType.array(v) = try popStack() else {
 			throw error(.unexpectedArgument)
 		}
 		
@@ -824,12 +824,12 @@ public class BytecodeInterpreter {
 	
 	private func executeArrayUpdate(_ instruction: BytecodeExecutionInstruction, pc: Int) throws -> Int {
 		
-		let v2 = try stack.pop()
+		let v2 = try popStack()
 
 		let index = try popNumber()
 		let i = Int(index)
 		
-		let updateValue = try stack.pop()
+		let updateValue = try popStack()
 
 		if case let ValueType.array(v) = v2 {
 			
@@ -868,11 +868,11 @@ public class BytecodeInterpreter {
 	
 	private func executeArrayGet(_ instruction: BytecodeExecutionInstruction, pc: Int) throws -> Int {
 		
-		guard case let ValueType.number(i) = try stack.pop() else {
+		guard case let ValueType.number(i) = try popStack() else {
 			throw error(.unexpectedArgument)
 		}
 		
-		let v2 = try stack.pop()
+		let v2 = try popStack()
 		if case let ValueType.array(v) = v2 {
 
 			guard let memberValue = v[safe: Int(i)] else {
@@ -902,31 +902,10 @@ public class BytecodeInterpreter {
 	
 	private func sizeOf(_ instruction: BytecodeExecutionInstruction, pc: Int) throws -> Int {
 
-		let value = try stack.pop()
+		let value = try popStack()
 		
-		let size: NumberType
-		
-		switch value {
-		case .array(let array):
-			size = NumberType(array.count)
-			
-		case .bool:
-			size = 1
-			
-		case .number(let number):
-			size = number
-			
-		case .string(let string):
-			size = NumberType(string.count)
-			
-		case .struct(let stru):
-			size = NumberType(stru.count)
-			
-		case .nil:
-			size = 0
-
-		}
-		
+		let size = value.size
+	
 		try stack.push(.number(size))
 		
 		return pc + 1
@@ -1150,9 +1129,19 @@ public class BytecodeInterpreter {
 
 	// MARK: - Stack
 
+	private func popStack() throws -> ValueType {
+		
+		do {
+			return try stack.pop()
+		} catch {
+			throw self.error(.illegalStackOperation)
+
+		}
+	}
+
 	private func popNumber() throws -> NumberType {
 
-		let last = try stack.pop()
+		let last = try popStack()
 
 		guard case let ValueType.number(number) = last else {
 			throw error(.unexpectedArgument)
@@ -1163,7 +1152,7 @@ public class BytecodeInterpreter {
 
 	private func popBool() throws -> Bool {
 
-		let last = try stack.pop()
+		let last = try popStack()
 
 		guard case let ValueType.bool(bool) = last else {
 			throw error(.unexpectedArgument)

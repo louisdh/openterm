@@ -54,6 +54,25 @@ public class StdLib {
 	
 	func registerExternalFunctions(_ runner: Runner) {
 
+		let sizeOfDoc = """
+						Get the size of a value.
+						For arrays this returns the number of elements in the array.
+						For strings this returns the length.
+						- Parameter value: the value to get the size of.
+						- Returns: size of value.
+						"""
+		
+		runner.registerExternalFunction(documentation: sizeOfDoc, name: "sizeOf", argumentNames: ["value"], returns: true) { (arguments, callback) in
+			
+			guard let value = arguments["value"] else {
+				_ = callback(.nil)
+				return
+			}
+			
+			_ = callback(.number(value.size))
+			
+		}
+		
 		let splitDoc = """
 						Split a string in smaller strings.
 						- Parameter string: the string to split.
@@ -63,12 +82,12 @@ public class StdLib {
 		
 		runner.registerExternalFunction(documentation: splitDoc, name: "split", argumentNames: ["string", "separator"], returns: true) { (arguments, callback) in
 			
-			guard case let .string(value)? = arguments["string"], case let .string(separator)? = arguments["separator"]  else {
+			guard case let .string(value)? = arguments["string"], case let .string(separator)? = arguments["separator"] else {
 				_ = callback(.nil)
 				return
 			}
 			
-			let splitted = value.components(separatedBy: separator)
+			let splitted = value.unescaped.components(separatedBy: separator.unescaped)
 			_ = callback(.array(splitted.map({ ValueType.string($0) })))
 
 		}
@@ -389,7 +408,7 @@ public class StdLib {
 				
 			}
 			
-			let output = String(format: inputStr, arguments: varArgs)
+			let output = String(format: inputStr.unescaped, arguments: varArgs)
 			
 			_ = callback(.string(output))
 			return
@@ -403,4 +422,19 @@ public class StdLib {
 		case resourceNotFound
 	}
 
+}
+
+public extension String {
+	
+	public var unescaped: String {
+		let entities = ["\0", "\t", "\n", "\r", "\"", "\'", "\\"]
+		var current = self
+		for entity in entities {
+			let descriptionCharacters = entity.debugDescription.dropFirst().dropLast()
+			let description = String(descriptionCharacters)
+			current = current.replacingOccurrences(of: description, with: entity)
+		}
+		return current
+	}
+	
 }

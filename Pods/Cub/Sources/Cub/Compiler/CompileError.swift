@@ -16,6 +16,7 @@ public enum CompileErrorType {
 	case unbalancedScope
 	case variableNotFound(String)
 	case incorrectNumberOfArgumentsToFunction(functionName: String, expected: Int, actual: Int)
+	case assignmentAsCondition
 }
 
 extension CompileErrorType {
@@ -53,6 +54,10 @@ extension CompileErrorType {
 
 		case .incorrectNumberOfArgumentsToFunction(let functionName, let expected, let actual):
 			return "The function \"\(functionName)\" expects \(expected) argument(s), not \(actual)."
+			
+		case .assignmentAsCondition:
+			return "A condition is performed using \"==\", not \"=\"."
+			
 		}
 		
 	}
