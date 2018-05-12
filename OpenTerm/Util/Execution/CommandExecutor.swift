@@ -15,7 +15,8 @@ protocol CommandExecutorDelegate: class {
 	func commandExecutor(_ commandExecutor: CommandExecutor, didChangeWorkingDirectory to: URL)
 	func commandExecutor(_ commandExecutor: CommandExecutor, stateDidChange newState: CommandExecutor.State)
 	func commandExecutor(_ commandExecutor: CommandExecutor, waitForInput callback: @escaping (String) -> Void)
-	func commandExecutor(_ commandExecutor: CommandExecutor, executeSubCommand subCommand: String, callback: @escaping () -> Void)
+	func commandExecutor(_ commandExecutor: CommandExecutor, executeSubCommand subCommand: String, callback: @escaping (Int) -> Void)
+	func commandExecutor(_ commandExecutor: CommandExecutor, executeSubCommand subCommand: String, capturingOutput callback: @escaping (String) -> Void)
 }
 
 // Exit status from an ios_system command
@@ -65,7 +66,7 @@ class CommandExecutor {
 	private let stderr_file: UnsafeMutablePointer<FILE>
 
 	/// Context from commands run by this executor
-	private var context = CommandExecutionContext()
+	var context = CommandExecutionContext()
 
 	init() {
 		self.currentWorkingDirectory = DocumentManager.shared.activeDocumentsFolderURL

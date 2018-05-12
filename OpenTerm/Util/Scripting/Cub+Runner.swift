@@ -20,6 +20,28 @@ extension Runner {
 						"""
 		
 		runner.registerExternalVariable(documentation: parametersDoc, name: "parameters", callback: parametersCallback)
+
+		let printlnDoc = """
+						Display something on screen with a new line added at the end.
+						- Parameter input: the value you want to print.
+						"""
+		
+		runner.registerExternalFunction(documentation: printlnDoc, name: "println", argumentNames: ["input"], returns: true) { (arguments, callback) in
+			
+			for (_, arg) in arguments {
+				
+				var input = arg.description(with: runner.compiler) + "\n"
+				input = input.replacingOccurrences(of: "\\n", with: "\n")
+				
+				if let data = input.data(using: .utf8) {
+					executorDelegate.commandExecutor(executor, receivedStdout: data)
+				}
+			}
+			
+			Thread.sleep(forTimeInterval: 0.01)
+			_ = callback(.number(1))
+			return
+		}
 		
 		let printDoc = """
 						Display something on screen.
@@ -76,6 +98,38 @@ extension Runner {
 
 			return
 		}
+
+		let captureShellCommand = """
+						Execute a shell command in the shell that the script is executed from, while capturing the output. The output will not be printed to the screen, it will be returned from this function as a string.
+						- Parameter command: The command to execute.
+						- Returns: the output from the command.
+						"""
+		
+		runner.registerExternalFunction(documentation: captureShellCommand, name: "captureShell", argumentNames: ["command"], returns: true) { (arguments, callback) in
+			
+			var arguments = arguments
+			
+			guard let command = arguments.removeValue(forKey: "command") else {
+				_ = callback(.nil)
+				return
+			}
+			
+			guard case let .string(commandStr) = command else {
+				_ = callback(.nil)
+				return
+			}
+			
+			executorDelegate.commandExecutor(executor, executeSubCommand: commandStr, capturingOutput: { (output) in
+				
+				DispatchQueue.main.async {
+					
+					_ = callback(.string(output))
+				}
+
+			})
+			
+		}
+
 		
 		let shellCommand = """
 						Execute a shell command in the shell that the script is executed from.
@@ -97,11 +151,11 @@ extension Runner {
 				return
 			}
 
-			executorDelegate.commandExecutor(executor, executeSubCommand: commandStr, callback: {
+			executorDelegate.commandExecutor(executor, executeSubCommand: commandStr, callback: { result in
 				
 				DispatchQueue.main.async {
 					
-					_ = callback(.number(1))
+					_ = callback(.number(NumberType(result)))
 				}
 
 			})

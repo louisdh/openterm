@@ -114,7 +114,11 @@ class TerminalView: UIView {
 
 	var didEnterInput: ((String) -> Void)?
 	var subCommandParserDidEndTransmissionCallback: (() -> Void)?
+	var subCommandParserDidEndTransmissionCallbackCapturingOutput: ((String) -> Void)?
 
+	var captureOutput = false
+	var capturedOutput: String?
+	
 	weak var delegate: TerminalViewDelegate?
 
 	init() {
@@ -209,6 +213,11 @@ class TerminalView: UIView {
 	func appendText(_ text: NSAttributedString) {
 		
 		if text.string.isEmpty {
+			return
+		}
+		
+		if captureOutput {
+			capturedOutput = (capturedOutput ?? "") + text.string
 			return
 		}
 		
@@ -375,12 +384,18 @@ extension TerminalView: ParserDelegate {
 
 	func parserDidEndTransmission(_ parser: Parser) {
 
-		if let callback = subCommandParserDidEndTransmissionCallback {
-			callback()
-			return
-		}
-		
 		DispatchQueue.main.async {
+
+			if let callback = self.subCommandParserDidEndTransmissionCallbackCapturingOutput {
+				callback(self.capturedOutput ?? "")
+				return
+			}
+			
+			if let callback = self.subCommandParserDidEndTransmissionCallback {
+				callback()
+				return
+			}
+			
 			self.writePrompt()
 		}
 	}
@@ -420,12 +435,37 @@ extension TerminalView: CommandExecutorDelegate {
 		
 	}
 	
-	func commandExecutor(_ commandExecutor: CommandExecutor, executeSubCommand subCommand: String, callback: @escaping () -> Void) {
+	func commandExecutor(_ commandExecutor: CommandExecutor, executeSubCommand subCommand: String, callback: @escaping (Int) -> Void) {
 		
 		subCommandParserDidEndTransmissionCallback = { [weak self] in
 			
 			self?.subCommandParserDidEndTransmissionCallback = nil
-			callback()
+			
+			let intStatus: Int
+			
+			if let status = self?.executor.context[.status] {
+				intStatus = Int(status) ?? 1
+			} else {
+				intStatus = 1
+			}
+			
+			callback(intStatus)
+		}
+		
+		commandExecutor.dispatch(subCommand)
+		
+	}
+	
+	func commandExecutor(_ commandExecutor: CommandExecutor, executeSubCommand subCommand: String, capturingOutput callback: @escaping (String) -> Void) {
+		
+		captureOutput = true
+		
+		subCommandParserDidEndTransmissionCallbackCapturingOutput = { [weak self] (output) in
+			
+			self?.subCommandParserDidEndTransmissionCallbackCapturingOutput = nil
+			self?.capturedOutput = nil
+			self?.captureOutput = false
+			callback(output)
 		}
 		
 		commandExecutor.dispatch(subCommand)
