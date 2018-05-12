@@ -215,7 +215,11 @@ class CallbackCommandExecutor: CommandExecutorDelegate, ParserDelegate {
 		
 	}
 	
-	func commandExecutor(_ commandExecutor: CommandExecutor, executeSubCommand subCommand: String, callback: @escaping () -> Void) {
+	func commandExecutor(_ commandExecutor: CommandExecutor, executeSubCommand subCommand: String, callback: @escaping (Int) -> Void) {
+		
+	}
+	
+	func commandExecutor(_ commandExecutor: CommandExecutor, executeSubCommand subCommand: String, capturingOutput callback: @escaping (String) -> Void) {
 		
 	}
 	
