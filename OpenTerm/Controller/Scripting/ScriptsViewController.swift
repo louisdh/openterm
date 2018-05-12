@@ -362,7 +362,7 @@ class ScriptsViewController: UIViewController {
 		
 		switch selectedTab {
 		case .myScripts:
-			reloadMyScripts()
+			reloadMyScripts(hardReset: true)
 			
 		case .examples:
 			cellItems = examples.map({ .prideland($0) })
@@ -372,7 +372,7 @@ class ScriptsViewController: UIViewController {
 		
 	}
 
-	private func reloadMyScripts() {
+	private func reloadMyScripts(hardReset: Bool = false) {
 		
 		let fileManager = DocumentManager.shared.fileManager
 		
@@ -418,7 +418,7 @@ class ScriptsViewController: UIViewController {
 			pridelandOverviews.sort(by: { $0.metadata.name < $1.metadata.name })
 			
 			if selectedTab == .myScripts {
-				updatePridelandItems(pridelandOverviews)
+				updatePridelandItems(pridelandOverviews, hardReset: hardReset)
 			}
 			
 		} catch {
@@ -429,12 +429,12 @@ class ScriptsViewController: UIViewController {
 			
 	}
 	
-	func updatePridelandItems(_ overviews: [PridelandOverview]) {
+	func updatePridelandItems(_ overviews: [PridelandOverview], hardReset: Bool = false) {
 		
 		var newItems: [CellType] = overviews.map({ .prideland($0) })
 		newItems.append(.addNew)
 		
-		guard let prevItems = cellItems else {
+		guard let prevItems = cellItems, !hardReset else {
 			cellItems = newItems
 			collectionView.reloadData()
 			return
