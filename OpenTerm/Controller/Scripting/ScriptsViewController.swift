@@ -510,7 +510,11 @@ extension ScriptsViewController: UICollectionViewDelegateFlowLayout {
 		
 		let width: CGFloat = (availableWidth - ((CGFloat(columns) - 1.0) * spacing)) / CGFloat(columns)
 		
-		return CGSize(width: width, height: 100)
+		let preferredCellArea: CGFloat = 240 * 120
+		
+		let height = max(100, preferredCellArea / width)
+		
+		return CGSize(width: width, height: height)
 	}
 	
 	func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
@@ -653,6 +657,10 @@ extension ScriptsViewController: PanelContentDelegate {
 
 	var maximumPanelContentSize: CGSize {
 		return CGSize(width: 600, height: 800)
+	}
+	
+	var preferredPanelPinnedWidth: CGFloat {
+		return 420
 	}
 	
 	var shouldAdjustForKeyboard: Bool {
