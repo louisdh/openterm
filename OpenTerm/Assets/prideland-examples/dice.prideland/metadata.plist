@@ -5,7 +5,7 @@
 	<key>description</key>
 	<string>🎲 Get a random number between 1 and 6</string>
 	<key>hueTint</key>
-	<real>0.15671641791044777</real>
+	<real>0.81428571428571428</real>
 	<key>name</key>
 	<string>dice</string>
 </dict>
