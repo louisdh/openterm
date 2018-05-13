@@ -1,4 +1,4 @@
-/// This scripts moves the contents of the current directory to a new folder.
+/// This script moves the contents of the current directory to a new folder.
 
 filesRaw = captureShell("ls -1")
 files = split(filesRaw, "\n")

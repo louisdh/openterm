@@ -3,10 +3,10 @@
 <plist version="1.0">
 <dict>
 	<key>description</key>
-	<string>Move the contents of the current directory to a new folder.</string>
+	<string>🎅 Tells you how many days are left till Christmas.</string>
 	<key>hueTint</key>
-	<real>0.74196428571428574</real>
+	<real>0.0</real>
 	<key>name</key>
-	<string>cleanup-files</string>
+	<string>christmas_countdown</string>
 </dict>
 </plist>
