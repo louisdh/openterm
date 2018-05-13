@@ -516,7 +516,9 @@ extension TerminalView: UITextViewDelegate {
 			executor.sendInput(text)
 			return true
 		case .idle:
-			let i = textView.text.distance(from: textView.text.startIndex, to: currentCommandStartIndex)
+			
+			// Use utf16, because NSRange uses that, and we need to compare its location.
+			let i = textView.text.utf16.distance(from: textView.text.utf16.startIndex, to: currentCommandStartIndex)
 
 			if range.location < i {
 				return false
