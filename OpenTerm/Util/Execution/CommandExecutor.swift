@@ -171,10 +171,60 @@ class CommandExecutor {
 		
 		let program = components[0]
 		let args = Array(components[1..<components.endIndex])
+		
+		var parsedArgs = [String]()
+		
+		var currentArg = ""
+		
+		for arg in args {
+			
+			if arg.hasPrefix("\"") {
+				
+				if currentArg.isEmpty {
+
+					currentArg = arg
+					currentArg.removeFirst()
+					
+				} else {
+					
+					currentArg.append(" " + arg)
+					
+				}
+				
+			} else if arg.hasSuffix("\"") {
+
+				if currentArg.isEmpty {
+
+					currentArg.append(arg)
+
+				} else {
+					
+					currentArg.append(" " + arg)
+					currentArg.removeLast()
+					parsedArgs.append(currentArg)
+					currentArg = ""
+
+				}
+
+			} else {
+				
+				if currentArg.isEmpty {
+					parsedArgs.append(arg)
+				} else {
+					currentArg.append(" " + arg)
+				}
+				
+			}
+		
+		}
+		
+		if !currentArg.isEmpty {
+			parsedArgs.append(currentArg)
+		}
 
 		// Special case for scripts
 		if let scriptDocument = CommandManager.shared.script(named: program) {
-			return ScriptExecutorCommand(script: scriptDocument, arguments: args, context: context)
+			return ScriptExecutorCommand(script: scriptDocument, arguments: parsedArgs, context: context)
 		}
 
 		// Default case: Just execute the string itself
