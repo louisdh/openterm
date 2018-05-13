@@ -600,7 +600,7 @@ public class Parser {
 		}
 		
 		guard let currentToken = peekCurrentToken() else {
-			throw error(.unexpectedToken)
+			throw error(.expectedExpression)
 		}
 		
 		if case .comment = currentToken.type {

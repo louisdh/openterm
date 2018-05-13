@@ -98,6 +98,7 @@ public class Lexer {
 	private var isInIdentifier = false
 	private var isInNumber = false
 	private var isInString = false
+	private var isInEscapedSubstring = false
 	private var isInEditorPlaceholder = false
 
 	private var charIndex = 0
@@ -341,15 +342,34 @@ public class Lexer {
 				continue
 			}
 			
+			if isInEscapedSubstring && (content.hasPrefix("\"") || content.hasPrefix("\\")) {
+				
+				consumeCharactersAtStart(1, updateCurrentString: true)
+				isInEscapedSubstring = false
+
+				continue
+			}
+			
 			if isInString && content.hasPrefix("\"") {
 				
 				consumeCharactersAtStart(1, updateCurrentString: true)
 				isInString = false
+				isInEscapedSubstring = false
 				
 				var rawString = currentString
 				rawString.removeFirst()
 				rawString.removeLast()
 				addToken(type: .string(rawString))
+				continue
+			}
+			
+			if isInString && !isInEscapedSubstring && content.hasPrefix("\\") {
+
+				isInEscapedSubstring = true
+			
+				consumeCharactersAtStart(1, updateCurrentString: true)
+				currentString.removeLast()
+				
 				continue
 			}
 			

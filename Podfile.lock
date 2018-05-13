@@ -1,6 +1,6 @@
 PODS:
   - BezierPathLength (1.1.0)
-  - Cub (0.9.5)
+  - Cub (0.9.7)
   - HueKit (1.0.1)
   - InputAssistant (1.0.2)
   - PanelKit (2.0.1)
@@ -34,7 +34,7 @@ SPEC REPOS:
 
 SPEC CHECKSUMS:
   BezierPathLength: 2f21f2860b0817df3cf631e9a3a9273c8e8c3814
-  Cub: a8db76a4cb72f9c124c2e6fa3d476b2af6a15cff
+  Cub: e53f5ce01439f0b40f608fa3191c23a20f2bb8b7
   HueKit: a255770053f7028907db3e84d5cdecc7837197e4
   InputAssistant: b0b70cd0d69ef7013ecb2a1fa350b7a2786e2e01
   PanelKit: d05cecac1ab39af375b56ff21c7b5a9915a3eb5b
