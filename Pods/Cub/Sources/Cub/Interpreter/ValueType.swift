@@ -8,10 +8,16 @@
 
 import Foundation
 
+public struct StructData: Equatable {
+	
+	var members: [Int: ValueType]
+	
+}
+
 public enum ValueType: Equatable {
 
 	case number(NumberType)
-	case `struct`([Int: ValueType])
+	case `struct`(StructData)
 	case bool(Bool)
 	case string(String)
 	case array([ValueType])
@@ -32,7 +38,7 @@ public extension ValueType {
 
 			var descr = "{ "
 
-			for (k, v) in val {
+			for (k, v) in val.members {
 
 				if let memberName = ctx.getStructMemberName(for: k) {
 					descr += "\(memberName) = "
@@ -147,7 +153,7 @@ extension ValueType {
 			return NumberType(string.count)
 			
 		case .struct(let stru):
-			return NumberType(stru.count)
+			return NumberType(stru.members.count)
 			
 		case .nil:
 			return 0

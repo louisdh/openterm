@@ -10,7 +10,7 @@ import Foundation
 
 public class StdLib {
 
-	private let sources = ["Arithmetic"]
+	private let sources = ["Arithmetic", "String"]
 
 	public init() {
 
@@ -53,7 +53,131 @@ public class StdLib {
 	}
 	
 	func registerExternalFunctions(_ runner: Runner) {
+		
+		let stringAtRangeDoc = """
+							Returns part of a string, given a range.
+							- Parameter string: the string to get a part from.
+							- Parameter range: the range of the part in the string you want.
+							- Returns: the part of the string, for the given range.
+							"""
+		runner.registerExternalFunction(documentation: stringAtRangeDoc, name: "stringAtRange", argumentNames: ["string", "range"], returns: true) { (arguments, callback) in
+			
+			guard case let .string(string)? = arguments["string"], case let .struct(rangeData)? = arguments["range"] else {
+				_ = callback(.nil)
+				return
+			}
+		
+			guard let lowerboundId = runner.compiler.getStructMemberId(for: "lowerbound") else {
+				_ = callback(.nil)
+				return
+			}
+			
+			guard let upperboundId = runner.compiler.getStructMemberId(for: "upperbound") else {
+				_ = callback(.nil)
+				return
+			}
+			
+			guard let lowerboundRaw = rangeData.members[lowerboundId], case let .number(lowerbound) = lowerboundRaw else {
+				_ = callback(.nil)
+				return
+			}
+			
+			guard let upperboundRaw = rangeData.members[upperboundId], case let .number(upperbound) = upperboundRaw else {
+				_ = callback(.nil)
+				return
+			}
+			
+			guard Int(lowerbound) < Int(upperbound) else {
+				_ = callback(.nil)
+				return
+			}
+			
+			guard Int(lowerbound) >= 0 else {
+				_ = callback(.nil)
+				return
+			}
+			
+			guard Int(upperbound) <= string.count else {
+				_ = callback(.nil)
+				return
+			}
+			
+			let rangeLower = string.index(string.startIndex, offsetBy: Int(lowerbound))
+			let rangeUpper = string.index(string.startIndex, offsetBy: Int(upperbound))
 
+			let range = rangeLower..<rangeUpper
+			
+			_ = callback(.string(String(string[range])))
+
+		}
+		
+		#if !os(Linux)
+		
+			let regexDoc = """
+							Get an array of ranges for all the matches of a regular expression in a given string.
+							- Parameter pattern: the regular expression pattern. Cub uses the same regular expressions as Apple does, more info can be found here: https://developer.apple.com/documentation/foundation/nsregularexpression#1965589.
+							- Parameter string: the string to match the regular expression on.
+							- Returns: an array of ranges for all the matches of the regular expression in the provided string.
+							"""
+		
+			runner.registerExternalFunction(documentation: regexDoc, name: "regex", argumentNames: ["pattern", "string"], returns: true) { (arguments, callback) in
+				
+				guard case let .string(pattern)? = arguments["pattern"], case let .string(text)? = arguments["string"] else {
+					_ = callback(.nil)
+					return
+				}
+
+				guard let regEx = try? NSRegularExpression(pattern: pattern, options: []) else {
+					_ = callback(.nil)
+					return
+				}
+				
+				let matches = regEx.matches(in: text, options: [], range: NSRange(location: 0, length: text.utf16.count))
+				
+				let ranges = matches.compactMap({ Range<String.Index>.init($0.range, in: text) })
+				
+				var cubRanges = [ValueType]()
+				
+				for range in ranges {
+					
+					guard let lowerboundId = runner.compiler.getStructMemberId(for: "lowerbound") else {
+						continue
+					}
+					
+					guard let upperboundId = runner.compiler.getStructMemberId(for: "upperbound") else {
+						continue
+					}
+					
+					let lowerbound = text.distance(from: text.startIndex, to: range.lowerBound)
+					let upperbound = text.distance(from: text.startIndex, to: range.upperBound)
+
+					cubRanges.append(.struct(StructData(members: [lowerboundId: .number(NumberType(lowerbound)),
+																  upperboundId: .number(NumberType(upperbound))])))
+				}
+				
+				_ = callback(.array(cubRanges))
+				
+			}
+		
+		#endif
+		
+		let isEmptyDoc = """
+						Check if a value is empty.
+						- Parameter value: the value to check wether it's empty.
+						- Returns: true if the value is empty, false otherwise.
+						"""
+		
+		runner.registerExternalFunction(documentation: isEmptyDoc, name: "isEmpty", argumentNames: ["value"], returns: true) { (arguments, callback) in
+			
+			guard let value = arguments["value"] else {
+				_ = callback(.nil)
+				return
+			}
+			
+			_ = callback(.bool(value.size == 0))
+			
+		}
+		
 		let sizeOfDoc = """
 						Get the size of a value.
 						For arrays this returns the number of elements in the array.
@@ -74,7 +198,7 @@ public class StdLib {
 		}
 		
 		let splitDoc = """
-						Split a string in smaller strings.
+						Split a string into smaller strings.
 						- Parameter string: the string to split.
 						- Parameter separator: the separator to split by.
 						- Returns: an array of strings.
@@ -104,7 +228,7 @@ public class StdLib {
 		}
 		
 		let parseNumberDoc = """
-						Parses a string to a number.
+						Tries to parse a string to a number.
 						- Parameter value: the string to parse.
 						- Returns: a number if the string could be parsed, otherwise nil.
 						"""

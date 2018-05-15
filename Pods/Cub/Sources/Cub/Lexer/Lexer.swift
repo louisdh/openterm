@@ -342,8 +342,8 @@ public class Lexer {
 				continue
 			}
 			
-			if isInEscapedSubstring && (content.hasPrefix("\"") || content.hasPrefix("\\")) {
-				
+			if isInEscapedSubstring {
+
 				consumeCharactersAtStart(1, updateCurrentString: true)
 				isInEscapedSubstring = false
 
@@ -356,10 +356,7 @@ public class Lexer {
 				isInString = false
 				isInEscapedSubstring = false
 				
-				var rawString = currentString
-				rawString.removeFirst()
-				rawString.removeLast()
-				addToken(type: .string(rawString))
+				addToken(type: .string(currentString))
 				continue
 			}
 			
@@ -368,7 +365,6 @@ public class Lexer {
 				isInEscapedSubstring = true
 			
 				consumeCharactersAtStart(1, updateCurrentString: true)
-				currentString.removeLast()
 				
 				continue
 			}
@@ -456,6 +452,12 @@ public class Lexer {
 			
 			let updateCurrentString = isInString || isInBlockComment
 
+			if isInString {
+				isInString = false
+				isInEscapedSubstring = false
+				addToken(type: .string(currentString))
+			}
+			
 			consumeCharactersAtStart(1, updateCurrentString: updateCurrentString)
 			
 			if isInLineComment {

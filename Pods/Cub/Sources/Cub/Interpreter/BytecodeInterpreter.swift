@@ -677,7 +677,7 @@ public class BytecodeInterpreter {
 
 	private func executeStructInit(_ instruction: BytecodeExecutionInstruction, pc: Int) throws -> Int {
 
-		let newStruct = ValueType.struct([:])
+		let newStruct = ValueType.struct(StructData(members: [:]))
 
 		try stack.push(newStruct)
 
@@ -696,7 +696,7 @@ public class BytecodeInterpreter {
 
 		var newStruct = v
 
-		newStruct[key] = try popStack()
+		newStruct.members[key] = try popStack()
 
 		try stack.push(.struct(newStruct))
 
@@ -718,9 +718,9 @@ public class BytecodeInterpreter {
 
 		let updateValue = try popStack()
 
-		let newStruct = try updatedDict(for: v, keyPath: memberIds, newValue: updateValue)
+		let newStruct = try updatedDict(for: v.members, keyPath: memberIds, newValue: updateValue)
 
-		try stack.push(.struct(newStruct))
+		try stack.push(.struct(StructData(members: newStruct)))
 
 		return pc + 1
 	}
@@ -735,7 +735,7 @@ public class BytecodeInterpreter {
 			throw error(.unexpectedArgument)
 		}
 
-		guard let memberValue = v[key] else {
+		guard let memberValue = v.members[key] else {
 			throw error(.unexpectedArgument)
 		}
 
@@ -944,7 +944,7 @@ public class BytecodeInterpreter {
 			}
 
 			var newDict = lastTrace
-			newDict[idPassed] = .struct(dict)
+			newDict[idPassed] = .struct(StructData(members: dict))
 
 			return try updatedDict(for: newDict, keyPath: keyPath, newValue: newValue, isReconstructing: true, trace: trace, keyPathPassed: keyPathPassed)
 		}
@@ -982,7 +982,7 @@ public class BytecodeInterpreter {
 
 			keyPath.removeLast()
 
-			return try updatedDict(for: dictToUpdate, keyPath: keyPath, newValue: newValue, trace: trace, keyPathPassed: keyPathPassed)
+			return try updatedDict(for: dictToUpdate.members, keyPath: keyPath, newValue: newValue, trace: trace, keyPathPassed: keyPathPassed)
 		}
 
 	}

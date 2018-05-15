@@ -36,6 +36,10 @@ public enum ParseErrorType {
 
 	case stackOverflow
 
+	case invalidEscapeSequenceInStringLiteral(sequence: String)
+
+	case unterminatedStringLiteral
+
 }
 
 extension ParseErrorType {
@@ -103,6 +107,12 @@ extension ParseErrorType {
 			
 		case .stackOverflow:
 			return "Parser stack overflow"
+			
+		case .invalidEscapeSequenceInStringLiteral(let sequence):
+			return "Invalid escape sequence \"\(sequence)\" in literal"
+
+		case .unterminatedStringLiteral:
+			return "Unterminated string literal"
 			
 		}
 	}

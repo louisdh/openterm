@@ -289,7 +289,78 @@ public class Parser {
 			throw error(.unexpectedToken)
 		}
 		
-		return StringNode(value: value, range: currentToken.range)
+		var unescapedString = ""
+		
+		let validEscapingChars = ["0", "t", "n", "r", "'", "\"", "\\"]
+		
+		var isInEscape = false
+		
+		for (index, char) in value.enumerated() {
+			
+			if index == 0 {
+				
+				guard char == "\"" else {
+					throw error(.unexpectedToken, token: currentToken)
+				}
+				
+				continue
+			}
+			
+			if isInEscape {
+				
+				if index == value.count - 1 {
+					throw error(.unterminatedStringLiteral, token: currentToken)
+				}
+				
+				let charStr = String(char)
+				
+				guard validEscapingChars.contains(charStr) else {
+					throw error(.invalidEscapeSequenceInStringLiteral(sequence: charStr), token: currentToken)
+				}
+				
+				switch charStr {
+					
+				case "0":
+					unescapedString.append("\0")
+
+				case "t":
+					unescapedString.append("\t")
+
+				case "n":
+					unescapedString.append("\n")
+
+				case "r":
+					unescapedString.append("\r")
+
+				case "'":
+					unescapedString.append("\'")
+
+				default:
+					unescapedString.append(char)
+
+				}
+				
+				isInEscape = false
+				
+			} else if index == value.count - 1 {
+				
+				guard char == "\"" else {
+					throw error(.unterminatedStringLiteral, token: currentToken)
+				}
+				
+			} else {
+				
+				if char == "\\" {
+					isInEscape = true
+				} else {
+					unescapedString.append(char)
+				}
+			
+			}
+						
+		}
+		
+		return StringNode(value: unescapedString, range: currentToken.range)
 	}
 	
 	/// Expression can be a binary/bool op, member
