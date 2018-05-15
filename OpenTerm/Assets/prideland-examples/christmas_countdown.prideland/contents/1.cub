@@ -13,7 +13,7 @@ if daysLeft == 0 {
 	print("Just " + daysLeftFormatted + " more days until Christmas 🎄")
 }
 
-/// Get the number of days between two days.
+/// Get the number of days between two dates.
 func numberOfDaysBetween(date1, date2) returns {
 
     days = 0
@@ -28,4 +28,3 @@ func numberOfDaysBetween(date1, date2) returns {
 
 	return days
 }
-

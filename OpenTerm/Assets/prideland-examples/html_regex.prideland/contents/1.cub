@@ -1,0 +1,16 @@
+
+if isEmpty(parameters) {
+	print("usage: html_regex file")
+	exit()
+}
+
+fileName = parameters[0]
+
+html = captureShell("cat " + fileName)
+
+pattern = "<([a-z][a-z0-9]*)\\b[^>]*>(.*?)</\\1>"
+rangesMatched = regex(pattern, html)
+
+for range in rangesMatched {
+	println(stringAtRange(html, range))
+}
