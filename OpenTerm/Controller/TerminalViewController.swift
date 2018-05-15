@@ -224,6 +224,13 @@ class TerminalViewController: UIViewController {
 
 			let certsFolderURL = DocumentManager.shared.activeDocumentsFolderURL.appendingPathComponent(".certs")
 
+			let iCloudURL = certsFolderURL.appendingPathComponent("cacert.pem.icloud")
+			
+			if fileManager.fileExists(atPath: iCloudURL.path) {
+				try? fileManager.startDownloadingUbiquitousItem(at: iCloudURL)
+				return
+			}
+
 			let newURL = certsFolderURL.appendingPathComponent("cacert.pem")
 
 			do {
