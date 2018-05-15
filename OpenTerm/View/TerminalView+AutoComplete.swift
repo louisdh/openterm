@@ -247,15 +247,18 @@ extension TerminalView: AutoCompleteManagerDataSource {
 		if !showFolders && !showFiles { return [] }
 
 		do {
+			
 			let contents = try DocumentManager.shared.fileManager.contentsOfDirectory(at: directory, includingPropertiesForKeys: [.isDirectoryKey], options: [])
+			
 			return try contents.compactMap { url in
 				let resourceValues = try url.resourceValues(forKeys: [.isDirectoryKey])
 				let isDirectory = resourceValues.isDirectory ?? false
 				if showFolders && isDirectory || showFiles && !isDirectory {
-					return AutoCompleteManager.Completion(url.lastPathComponent, appendingSuffix: isDirectory ? "/" : " ", data: url.standardizedFileURL)
+					return AutoCompleteManager.Completion(url.lastPathComponent.replacingOccurrences(of: " ", with: "\\ "), appendingSuffix: isDirectory ? "/" : " ", data: url.standardizedFileURL)
 				}
 				return nil
 			}
+			
 		} catch {
 			return []
 		}
