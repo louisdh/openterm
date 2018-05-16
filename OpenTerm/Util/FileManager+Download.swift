@@ -18,7 +18,7 @@ extension FileManager {
 			return true
 		}
 		
-		if url.isFileURL {
+		guard url.hasDirectoryPath else {
 			return false
 		}
 		
