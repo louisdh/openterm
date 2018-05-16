@@ -159,13 +159,16 @@ class SettingsViewController: UITableViewController {
 			let url: String?
 			switch indexPath.row {
 			case 0:
+				// Donate
+				url = "https://paypal.me/LouisDhauwe/"
+			case 1:
 				// Review on App Store
 				let appId = "1323205755"
 				url = "itms-apps://itunes.apple.com/us/app/terminal/id\(appId)?action=write-review"
-			case 1:
+			case 2:
 				// Twitter
 				url = "https://twitter.com/LouisDhauwe"
-			case 2:
+			case 3:
 				// Contact Us
 				url = nil
 
