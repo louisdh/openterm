@@ -26,6 +26,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		window?.tintColor = .defaultMainTintColor
 		window?.makeKeyAndVisible()
 
+		do {
+			try FileManager.default.downloadAllFromCloud(at: DocumentManager.shared.scriptsURL)
+		} catch {
+			print(error)
+		}
+		
 		#if canImport(SimulatorStatusMagic)
 			SDStatusBarManager.sharedInstance().enableOverrides()
 		#endif

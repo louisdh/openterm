@@ -80,6 +80,7 @@
 		BE9275062013961D00BD2761 /* UserDefaultsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE9275052013961D00BD2761 /* UserDefaultsController.swift */; };
 		BEA14A65202CE5B700AB7351 /* Cub+SavannaKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEA14A64202CE5B600AB7351 /* Cub+SavannaKit.swift */; };
 		BEA14A67202CE5D300AB7351 /* Cub.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEA14A66202CE5D300AB7351 /* Cub.swift */; };
+		BEA23E8E20AC9B5800755723 /* FileManager+Download.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEA23E8D20AC9B5800755723 /* FileManager+Download.swift */; };
 		BEA499261FD9C4D7001B9B9D /* DocumentManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEA499251FD9C4D7001B9B9D /* DocumentManager.swift */; };
 		BEA4992C1FDC0918001B9B9D /* icon-320.png in Resources */ = {isa = PBXBuildFile; fileRef = BEA4992B1FDC0918001B9B9D /* icon-320.png */; };
 		BEA4992E1FDC305B001B9B9D /* KeyboardObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEA4992D1FDC305B001B9B9D /* KeyboardObserver.swift */; };
@@ -217,6 +218,7 @@
 		BE9275052013961D00BD2761 /* UserDefaultsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsController.swift; sourceTree = "<group>"; };
 		BEA14A64202CE5B600AB7351 /* Cub+SavannaKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Cub+SavannaKit.swift"; sourceTree = "<group>"; };
 		BEA14A66202CE5D300AB7351 /* Cub.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Cub.swift; sourceTree = "<group>"; };
+		BEA23E8D20AC9B5800755723 /* FileManager+Download.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FileManager+Download.swift"; sourceTree = "<group>"; };
 		BEA499241FD9C46C001B9B9D /* OpenTerm.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = OpenTerm.entitlements; sourceTree = "<group>"; };
 		BEA499251FD9C4D7001B9B9D /* DocumentManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentManager.swift; sourceTree = "<group>"; };
 		BEA4992B1FDC0918001B9B9D /* icon-320.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-320.png"; sourceTree = "<group>"; };
@@ -566,6 +568,7 @@
 				BE102814207A372C005E965F /* String+C.swift */,
 				BEEAD9C5207E8C8500CBC254 /* Array+Safe.swift */,
 				BEEAD9C7207EA09700CBC254 /* Stdin+Read.swift */,
+				BEA23E8D20AC9B5800755723 /* FileManager+Download.swift */,
 			);
 			path = Util;
 			sourceTree = "<group>";
@@ -813,6 +816,7 @@
 				BEB7756820740DFE00201EBB /* CustomTextView.swift in Sources */,
 				3CE5764820226A1500760E43 /* ANSITextState.swift in Sources */,
 				BEB77528207172D100201EBB /* UIColor+Hex.swift in Sources */,
+				BEA23E8E20AC9B5800755723 /* FileManager+Download.swift in Sources */,
 				BE3A62E3208B4A7D0014A498 /* CubDocumentationViewController.swift in Sources */,
 				3CE576A0202A874C00760E43 /* OutputSanitizer.swift in Sources */,
 				BEECFF0A1FFC1DC0009608B3 /* HistoryViewController.swift in Sources */,
