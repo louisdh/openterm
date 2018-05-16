@@ -391,7 +391,11 @@ class ScriptsViewController: UIViewController {
 				let pathExtension = documentURL.pathExtension.lowercased()
 				
 				if pathExtension == "icloud" {
-					try fileManager.startDownloadingUbiquitousItem(at: documentURL)
+					do {
+						try fileManager.startDownloadingUbiquitousItem(at: documentURL)
+					} catch {
+						self.showErrorAlert(error)
+					}
 					continue
 				}
 				
