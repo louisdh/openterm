@@ -30,16 +30,20 @@ Commands included:
 | ---------- | ---------- | ---------- | ---------- |
 | awk        | cat        | cd         | chflags    |
 | chksum     | clear      | compress   | cp         |
-| curl       | date       | du         | echo       |
-| egrep      | env        | fgrep      | grep       |
-| gunzip     | gzip       | help       | link       |
+| credits    | cub        | curl       | date       |
+| dig        | du         | echo       | egrep      |
+| env        | fgrep      | grep       | gunzip     |
+| gzip       | help       | host       | link       |
 | ln         | ls         | mkdir      | mv         |
-| open-url   | printenv   | pwd        | readlink   |
-| rm         | rmdir      | scp        | sed        |
-| setenv     | sftp       | share      | ssh        |
-| stat       | sum        | tar        | tee        |
-| touch      | tr         | uname      | uncompress |
-| unsetenv   | uptime     | wc         | whoami     |
+| nc         | nslookup   | open-url   | pbcopy     |
+| pbpaste    | ping       | printenv   | pwd        |
+| readlink   | rlogin     | rm         | rmdir      |
+| say        | scp        | sed        | setenv     |
+| sftp       | share      | sleep      | ssh        |
+| ssh-keygen | stat       | sum        | tar        |
+| tee        | telnet     | touch      | tr         |
+| uname      | uncompress | unlink     | unsetenv   |
+| uptime     | wc         | whoami     |            |
 
 ## Dependencies
 To set up dependencies, run `bootstrap.sh`.
