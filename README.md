@@ -56,6 +56,6 @@ To run on a device, you will have to run `resign-frameworks.sh`, but first chang
 
 ## License
 
-OpenTerm is under the GPLv2 (or later) and the MPLv2 license.
+OpenTerm is available under the GPLv2 (or later) and the MPLv2 license.
 
 See [COPYING](./COPYING) for more license info.
