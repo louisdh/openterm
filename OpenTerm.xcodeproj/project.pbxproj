@@ -71,6 +71,7 @@
 		BE57BDD2207BF3AA00A60950 /* SystemExecutorCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE57BDD1207BF3AA00A60950 /* SystemExecutorCommand.swift */; };
 		BE57BDD4207BF3B200A60950 /* EmptyExecutorCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE57BDD3207BF3B200A60950 /* EmptyExecutorCommand.swift */; };
 		BE57BDD6207BF9D800A60950 /* Say.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE57BDD5207BF9D800A60950 /* Say.swift */; };
+		BE5F510220B34AB500A0B470 /* PridelandOverview.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE5F510120B34AB500A0B470 /* PridelandOverview.swift */; };
 		BE70DA2C204DD5D900DEFF10 /* ScriptEditViewController+AutoComplete.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE70DA2B204DD5D800DEFF10 /* ScriptEditViewController+AutoComplete.swift */; };
 		BE740C1720826648001C1F24 /* NewPridelandCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE740C1520826648001C1F24 /* NewPridelandCollectionViewCell.swift */; };
 		BE740C1820826648001C1F24 /* NewPridelandCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = BE740C1620826648001C1F24 /* NewPridelandCollectionViewCell.xib */; };
@@ -209,6 +210,7 @@
 		BE57BDD1207BF3AA00A60950 /* SystemExecutorCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemExecutorCommand.swift; sourceTree = "<group>"; };
 		BE57BDD3207BF3B200A60950 /* EmptyExecutorCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyExecutorCommand.swift; sourceTree = "<group>"; };
 		BE57BDD5207BF9D800A60950 /* Say.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Say.swift; sourceTree = "<group>"; };
+		BE5F510120B34AB500A0B470 /* PridelandOverview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PridelandOverview.swift; sourceTree = "<group>"; };
 		BE70DA2B204DD5D800DEFF10 /* ScriptEditViewController+AutoComplete.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ScriptEditViewController+AutoComplete.swift"; sourceTree = "<group>"; };
 		BE740C1520826648001C1F24 /* NewPridelandCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewPridelandCollectionViewCell.swift; sourceTree = "<group>"; };
 		BE740C1620826648001C1F24 /* NewPridelandCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NewPridelandCollectionViewCell.xib; sourceTree = "<group>"; };
@@ -351,6 +353,7 @@
 				BEB775652074095800201EBB /* ScriptMetadataViewController.swift */,
 				BE1643D12077E9D4002939B7 /* PridelandDocument.swift */,
 				BE0146EA2083B2F90072AAB5 /* ManualWebViewController.swift */,
+				BE5F510120B34AB500A0B470 /* PridelandOverview.swift */,
 			);
 			path = Scripting;
 			sourceTree = "<group>";
@@ -783,6 +786,7 @@
 				BE3A62DD208B3B570014A498 /* CubDocumentationBundle.swift in Sources */,
 				BE740C1720826648001C1F24 /* NewPridelandCollectionViewCell.swift in Sources */,
 				BE1D5F9D204C66F1008A1C36 /* Cub+Runner.swift in Sources */,
+				BE5F510220B34AB500A0B470 /* PridelandOverview.swift in Sources */,
 				3CE57681202A52ED00760E43 /* TerminalViewController.swift in Sources */,
 				BEA8E2912001348C00002475 /* UIColor+AssetCatalog.swift in Sources */,
 				28CDA4292024B3510055206D /* BookmarkManager.swift in Sources */,
