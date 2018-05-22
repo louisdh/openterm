@@ -511,18 +511,18 @@ extension TerminalView: UITextViewDelegate {
 
 	func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
 
+		// Use utf16, because NSRange uses that, and we need to compare its location.
+		let i = textView.text.utf16.distance(from: textView.text.utf16.startIndex, to: currentCommandStartIndex)
+		
+		if range.location < i {
+			return false
+		}
+		
 		switch executor.state {
 		case .running:
 			executor.sendInput(text)
 			return true
 		case .idle:
-			
-			// Use utf16, because NSRange uses that, and we need to compare its location.
-			let i = textView.text.utf16.distance(from: textView.text.utf16.startIndex, to: currentCommandStartIndex)
-
-			if range.location < i {
-				return false
-			}
 
 			if text == "\n" {
 
