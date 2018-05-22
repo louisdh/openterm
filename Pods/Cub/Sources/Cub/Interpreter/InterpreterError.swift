@@ -9,10 +9,16 @@
 import Foundation
 
 /// Interpreter Error
-public enum InterpreterErrorType: Error {
+public enum InterpreterErrorType: Error, Equatable {
 
 	/// Unexpected argument
 	case unexpectedArgument
+
+	/// Unexpected argument
+	case unexpectedArgumentExpectedNumber(found: ValueType)
+
+	/// Unexpected argument
+	case unexpectedArgumentExpectedBool
 
 	/// Illegal stack operation
 	case illegalStackOperation
@@ -27,7 +33,10 @@ public enum InterpreterErrorType: Error {
 	case underflow
 	
 	/// Array out of bounds
-	case arrayOutOfBounds
+	case arrayOutOfBounds(index: Int, arraySize: Int)
+
+	/// Out of memory
+	case outOfMemory
 
 }
 
@@ -49,6 +58,12 @@ extension InterpreterErrorType {
 		case .unexpectedArgument:
 			return "An unexpected argument was found during interpretation."
 			
+		case .unexpectedArgumentExpectedNumber(let foundValue):
+			return "Expected a number during interpretation but found \(foundValue)."
+			
+		case .unexpectedArgumentExpectedBool:
+			return "An unexpected argument was found during interpretation, expected a boolean."
+			
 		case .illegalStackOperation:
 			return "An illegal stack operation was performed during interpretation."
 			
@@ -61,8 +76,11 @@ extension InterpreterErrorType {
 		case .underflow:
 			return "An underflow occurred during interpretation."
 			
-		case .arrayOutOfBounds:
-			return "An array was accessed outside its bounds during interpretation."
+		case .arrayOutOfBounds(let index, let arraySize):
+			return "An array was accessed outside its bounds during interpretation, tried to access index \(index) in an array of length \(arraySize)."
+			
+		case .outOfMemory:
+			return "Out of memory."
 			
 		}
 		

@@ -32,7 +32,7 @@ public enum ParseErrorType {
 
 	case invalidAssignmentValue(value: String)
 	
-	case editorPlaceholder
+	case editorPlaceholder(placeholder: String)
 
 	case stackOverflow
 
@@ -102,8 +102,8 @@ extension ParseErrorType {
 		case .invalidAssignmentValue(let value):
 			return "Cannot assign \(value)"
 			
-		case .editorPlaceholder:
-			return "Editor placeholder in source file"
+		case .editorPlaceholder(let placeholder):
+			return "Editor placeholder \"\(placeholder)\" in source file"
 			
 		case .stackOverflow:
 			return "Parser stack overflow"

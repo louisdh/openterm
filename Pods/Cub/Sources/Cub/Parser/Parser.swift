@@ -1274,12 +1274,12 @@ public class Parser {
 		
 		let range = token?.range
 
-		if let type = peekPreviousToken()?.type, case .editorPlaceholder = type {
-			return ParseError(type: .editorPlaceholder, range: range)
+		if let type = peekPreviousToken()?.type, case let .editorPlaceholder(placeholder) = type {
+			return ParseError(type: .editorPlaceholder(placeholder: placeholder), range: range)
 		}
 		
-		if let type = token?.type, case .editorPlaceholder = type {
-			return ParseError(type: .editorPlaceholder, range: range)
+		if let type = token?.type, case let .editorPlaceholder(placeholder) = type {
+			return ParseError(type: .editorPlaceholder(placeholder: placeholder), range: range)
 		}
 		
 		return ParseError(type: type, range: range)

@@ -235,7 +235,7 @@ public class StdLib {
 		
 		runner.registerExternalFunction(documentation: parseNumberDoc, name: "parseNumber", argumentNames: ["string"], returns: true) { (arguments, callback) in
 			
-			guard case let .string(value)? = arguments["value"] else {
+			guard case let .string(value)? = arguments["string"] else {
 				_ = callback(.nil)
 				return
 			}

@@ -127,6 +127,12 @@ public class BytecodeInterpreter {
 			if isManuallyTerminated {
 				break
 			}
+			
+			// Prevent Swift array crash when appending too much.
+			// TODO: find better way to find limit, instead of hardcoded 50M.
+			if pcTrace.count > 50_000_000 {
+				throw error(.outOfMemory)
+			}
 
 			pcTrace.append(pc)
 			let newPc = try executeInstruction(bytecode[pc], pc: pc)
@@ -812,7 +818,7 @@ public class BytecodeInterpreter {
 		var newArray = v
 		
 		guard i >= 0 && i < newArray.count else {
-			throw error(.arrayOutOfBounds)
+			throw error(.arrayOutOfBounds(index: i, arraySize: newArray.count))
 		}
 		
 		newArray[i] = newValue
@@ -836,7 +842,7 @@ public class BytecodeInterpreter {
 			var newArray = v
 			
 			guard i >= 0 && i < newArray.count else {
-				throw error(.arrayOutOfBounds)
+				throw error(.arrayOutOfBounds(index: i, arraySize: newArray.count))
 			}
 			
 			newArray[i] = updateValue
@@ -850,7 +856,7 @@ public class BytecodeInterpreter {
 			}
 			
 			guard i >= 0 && i < v.count else {
-				throw error(.arrayOutOfBounds)
+				throw error(.arrayOutOfBounds(index: i, arraySize: v.count))
 			}
 			
 			let newString = String(v.prefix(i)) + insertString + String(v.dropFirst(i + 1))
@@ -876,7 +882,7 @@ public class BytecodeInterpreter {
 		if case let ValueType.array(v) = v2 {
 
 			guard let memberValue = v[safe: Int(i)] else {
-				throw error(.arrayOutOfBounds)
+				throw error(.arrayOutOfBounds(index: Int(i), arraySize: v.count))
 			}
 			
 			try stack.push(memberValue)
@@ -884,7 +890,7 @@ public class BytecodeInterpreter {
 		} else if case let ValueType.string(v) = v2 {
 
 			guard i >= 0 && Int(i) < v.count else {
-				throw error(.arrayOutOfBounds)
+				throw error(.arrayOutOfBounds(index: Int(i), arraySize: v.count))
 			}
 			
 			let memberValue = v[v.index(v.startIndex, offsetBy: Int(i))]
@@ -1144,7 +1150,7 @@ public class BytecodeInterpreter {
 		let last = try popStack()
 
 		guard case let ValueType.number(number) = last else {
-			throw error(.unexpectedArgument)
+			throw error(.unexpectedArgumentExpectedNumber(found: last))
 		}
 
 		return number
@@ -1155,7 +1161,7 @@ public class BytecodeInterpreter {
 		let last = try popStack()
 
 		guard case let ValueType.bool(bool) = last else {
-			throw error(.unexpectedArgument)
+			throw error(.unexpectedArgumentExpectedBool)
 		}
 
 		return bool

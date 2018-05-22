@@ -344,7 +344,10 @@ public class Lexer {
 			
 			if isInEscapedSubstring {
 
-				consumeCharactersAtStart(1, updateCurrentString: true)
+				if !content.isEmpty {
+					consumeCharactersAtStart(1, updateCurrentString: true)
+				}
+				
 				isInEscapedSubstring = false
 
 				continue
