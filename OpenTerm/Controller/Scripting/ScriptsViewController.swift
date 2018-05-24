@@ -102,6 +102,7 @@ class ScriptsViewController: UIViewController {
 
 		directoryObserver = DirectoryObserver(pathToWatch: DocumentManager.shared.scriptsURL) { [weak self] in
 			self?.reloadMyScripts()
+			(UIApplication.shared.delegate as? AppDelegate)?.indexCommands()
 		}
 		
 		try? directoryObserver?.startObserving()
