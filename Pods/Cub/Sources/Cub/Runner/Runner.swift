@@ -3,13 +3,15 @@
 //  Cub
 //
 //  Created by Louis D'hauwe on 15/10/2016.
-//  Copyright © 2016 - 2017 Silver Fox. All rights reserved.
+//  Copyright © 2016 - 2018 Silver Fox. All rights reserved.
 //
 
 import Foundation
 import CoreFoundation
 
 public typealias ExternalFunc = ([String: ValueType], _ callback: @escaping (ValueType?) -> Bool) -> Void
+
+public typealias ExternalVarCallback = () -> ValueType
 
 precedencegroup Pipe {
 	associativity: left
@@ -28,6 +30,59 @@ internal func |><A, B, C>(lhs: @escaping (A) throws -> B,
 	return { try rhs(lhs($0)) }
 }
 
+struct ExternalFunctionDefinition {
+	
+	let name: String
+	let documentation: String?
+	let argumentNames: [String]
+	let callback: ExternalFunc
+	let returns: Bool
+	
+}
+
+struct ExternalVariableDefinition {
+	
+	let name: String
+	let callback: ExternalVarCallback
+	let documentation: String?
+
+	func source(runner: Runner) -> String {
+		
+		let value = callback()
+		
+		return "\(name) = \(runner.source(for: value))"
+	}
+	
+}
+
+extension Runner {
+	
+	func source(for value: ValueType) -> String {
+		
+		switch value {
+		case .array(let array):
+			return "[\(array.map({ source(for: $0) }).joined(separator: ", "))]"
+			
+		case .bool(let bool):
+			return "\(bool)"
+			
+		case .number(let number):
+			return "\(number)"
+
+		case .string(let string):
+			return "\"\(string)\""
+
+		case .struct:
+			fatalError("Struct code gen is currently unavailable")
+			
+		case .nil:
+			return "nil"
+			
+		}
+		
+	}
+
+}
 
 /// Runs through full pipeline, from lexer to interpreter
 public class Runner {
@@ -39,10 +94,8 @@ public class Runner {
 
 	public var delegate: RunnerDelegate?
 
-	let compiler: BytecodeCompiler
+	public let compiler: BytecodeCompiler
 	
-	public var executionFinishedCallback: (() -> Void)?
-
 	// MARK: -
 
 	public init(logDebug: Bool = false, logTime: Bool = false) {
@@ -51,15 +104,24 @@ public class Runner {
 		compiler = BytecodeCompiler()
 	}
 	
-	var externalFunctions = [Int: ([String], ExternalFunc)]()
+	var externalFunctions = [Int: ExternalFunctionDefinition]()
 	
-	public func registerExternalFunction(name: String, argumentNames: [String], returns: Bool, callback: @escaping ExternalFunc) {
+	public func registerExternalFunction(documentation: String?, name: String, argumentNames: [String], returns: Bool, callback: @escaping ExternalFunc) {
 
-		let prototype = FunctionPrototypeNode(name: name, argumentNames: argumentNames, returns: returns)
-		let node = FunctionNode(prototype: prototype, body: BodyNode(nodes: []))
+		let prototype = FunctionPrototypeNode(name: name, argumentNames: argumentNames, returns: returns, range: nil)
+		let node = FunctionNode(prototype: prototype, body: BodyNode(nodes: [], range: nil), range: nil, documentation: nil)
 		let id = compiler.getFunctionId(for: node)
 		
-		externalFunctions[id] = (argumentNames, callback)
+		externalFunctions[id] = ExternalFunctionDefinition(name: name, documentation: documentation, argumentNames: argumentNames, callback: callback, returns: returns)
+	}
+	
+	var externalVariables = [String: ExternalVariableDefinition]()
+	
+	public func registerExternalVariable(documentation: String?, name: String, callback: @escaping ExternalVarCallback) {
+		
+		let def = ExternalVariableDefinition(name: name, callback: callback, documentation: documentation)
+		
+		externalVariables[name] = def
 	}
 	
 	public func runSource(at path: String, get varName: String, useStdLib: Bool = true) throws -> ValueType {
@@ -73,33 +135,42 @@ public class Runner {
 
 		let bytecode: BytecodeBody
 
+		let externalVarsSource = externalVariables.values.map({ $0.source(runner: self) }).joined(separator: "\n")
+
+		let externalVarsBytecode = try compileCubSourceCode(externalVarsSource)
+		
 		if useStdLib {
 
-			let stdLib = try StdLib().stdLibCode()
+			let stdLib = StdLib()
+			
+			stdLib.registerExternalFunctions(self)
+			
+			let stdLibCode = try stdLib.stdLibCode()
 
-			guard let compiledStdLib = compileLionessSourceCode(stdLib) else {
+			guard let compiledStdLib = try? compileCubSourceCode(stdLibCode) else {
 				throw RunnerError.stdlibFailed
 			}
 
-			guard let compiledSource = compileLionessSourceCode(source) else {
-				throw RunnerError.runFailed
-			}
+			let compiledSource = try compileCubSourceCode(source)
 
-			bytecode = compiledStdLib + compiledSource
+			bytecode = compiledStdLib + externalVarsBytecode + compiledSource
 
 		} else {
 
-			guard let compiledSource = compileLionessSourceCode(source) else {
-				throw RunnerError.runFailed
-			}
+			let compiledSource = try compileCubSourceCode(source)
 
-			bytecode = compiledSource
+			bytecode = externalVarsBytecode + compiledSource
 
 		}
 
 		let executionBytecode = bytecode.map { $0.executionInstruction }
 
 		let interpreter = try BytecodeInterpreter(bytecode: executionBytecode)
+		
+		for (id, definition) in externalFunctions {
+			interpreter.registerExternalFunction(id: id, callback: (definition.argumentNames, definition.callback))
+		}
+		
 		try interpreter.interpret()
 
 		guard let reg = compiler.getCompiledRegister(for: varName) else {
@@ -125,9 +196,13 @@ public class Runner {
 
 		let startTime = CFAbsoluteTimeGetCurrent()
 
-		let stdLib = try StdLib().stdLibCode()
-
-		guard let compiledStdLib = compileLionessSourceCode(stdLib) else {
+		let stdLib = StdLib()
+		
+		stdLib.registerExternalFunctions(self)
+		
+		let stdLibCode = try stdLib.stdLibCode()
+		
+		guard let compiledStdLib = try? compileCubSourceCode(stdLibCode) else {
 			throw RunnerError.stdlibFailed
 		}
 
@@ -137,15 +212,17 @@ public class Runner {
 			logSourceCode(source)
 		}
 
-		guard let compiledSource = compileLionessSourceCode(source) else {
-			throw RunnerError.runFailed
-		}
-
-		let fullBytecode = compiledStdLib + compiledSource
+		let externalVarsSource = externalVariables.values.map({ $0.source(runner: self) }).joined(separator: "\n")
+		
+		let externalVarsBytecode = try compileCubSourceCode(externalVarsSource)
+		
+		let compiledSource = try compileCubSourceCode(source)
+		
+		let fullBytecode = compiledStdLib + externalVarsBytecode + compiledSource
 
 		let interpretStartTime = CFAbsoluteTimeGetCurrent()
 
-		interpret(fullBytecode)
+		try interpret(fullBytecode)
 
 		if logTime {
 
@@ -173,15 +250,13 @@ public class Runner {
 			logSourceCode(source)
 		}
 
-		guard let compiledSource = compileLionessSourceCode(source) else {
-			throw RunnerError.runFailed
-		}
+		let compiledSource = try compileCubSourceCode(source)
 
 		let fullBytecode = compiledSource
 
 		let interpretStartTime = CFAbsoluteTimeGetCurrent()
 
-		interpret(fullBytecode)
+		try interpret(fullBytecode)
 
 		if logDebug {
 
@@ -199,36 +274,24 @@ public class Runner {
 
 	// MARK: -
 	
-	func parseAST(_ source: String) -> [ASTNode]? {
-		
-		guard let ast = (runLexer |> parseTokens)(source) else {
-			return nil
-		}
-		
-		return ast
+	func parseAST(_ source: String) throws -> [ASTNode] {
+		return try (runLexer |> parseTokens)(source)
 	}
 	
-	func compileLionessSourceCode(_ source: String) -> BytecodeBody? {
+	func compileCubSourceCode(_ source: String) throws -> BytecodeBody {
 
-		guard let ast = parseAST(source) else {
-			return nil
-		}
+		let ast = try parseAST(source)
 
-		guard let bytecode = compileToBytecode(ast: ast) else {
-			return nil
-		}
-
+		let bytecode = try compileToBytecode(ast: ast)
+		
 		return bytecode
-
 	}
 
-	private func runLionessSourceCode(_ source: String) {
+	private func runCubSourceCode(_ source: String) throws {
 
-		guard let bytecode = compileLionessSourceCode(source) else {
-			return
-		}
+		let bytecode = try compileCubSourceCode(source)
 
-		interpret(bytecode)
+		try interpret(bytecode)
 
 	}
 
@@ -280,7 +343,7 @@ public class Runner {
 	
 	// MARK: -
 
-	private func parseTokens(_ tokens: [Token]) -> [ASTNode]? {
+	private func parseTokens(_ tokens: [Token]) throws -> [ASTNode] {
 
 		if logDebug {
 			logTitle("Start parser")
@@ -288,122 +351,76 @@ public class Runner {
 
 		let parser = Parser(tokens: tokens)
 
-		var ast: [ASTNode]? = nil
-
-		do {
-
-			ast = try parser.parse()
-
-			if logDebug {
-
-				log("Parsed AST:")
-
-				if let ast = ast {
-					for a in ast {
-						log(a.description)
-					}
-				}
-
+		let ast = try parser.parse()
+		
+		if logDebug {
+			
+			log("Parsed AST:")
+			
+			for a in ast {
+				log(a.description)
 			}
-
-			return ast
-
-		} catch {
-
-			if logDebug {
-				log(error)
-			}
-
-			return nil
-
+			
 		}
-
+		
+		return ast
 	}
 
-	private func compileToBytecode(ast: [ASTNode]) -> BytecodeBody? {
+	private func compileToBytecode(ast: [ASTNode]) throws -> BytecodeBody {
 
 		if logDebug {
 			logTitle("Start bytecode compiler")
 		}
 
-		do {
-
-			let bytecode = try compiler.compile(ast)
-
-			if logDebug {
-				logBytecode(bytecode)
-			}
-
-			return bytecode
-
-		} catch {
-
-			if logDebug {
-
-				log(error)
-
-			}
-
-			return nil
-
+		let bytecode = try compiler.compile(ast)
+		
+		if logDebug {
+			logBytecode(bytecode)
 		}
-
+		
+		return bytecode
 	}
 
 	var interpreter: BytecodeInterpreter?
 
-	private func interpret(_ bytecode: BytecodeBody) {
+	private func interpret(_ bytecode: BytecodeBody) throws {
 
 		if logDebug {
 			logTitle("Start bytecode interpreter")
 		}
 
-		do {
-
-			let executionBytecode = bytecode.map { $0.executionInstruction }
-
-			let interpreter = try BytecodeInterpreter(bytecode: executionBytecode)
-
-			for (id, callback) in externalFunctions {
-				interpreter.registerExternalFunction(id: id, callback: callback)
-			}
-			
-			interpreter.executionFinishedCallback = executionFinishedCallback
-			
-			self.interpreter = interpreter
-
-			try interpreter.interpret()
-
-			if logDebug {
-				logInterpreter(interpreter)
-			}
-
-		} catch {
-
-			if logDebug {
-
-				log("pc trace:")
-
-				if let interpreter = interpreter {
-					for pc in interpreter.pcTrace {
-						log(bytecode[pc].description)
-					}
-				}
-
-				log("\n")
-
-				log(error)
-
-			}
-
+		let executionBytecode = bytecode.map { $0.executionInstruction }
+		
+		let interpreter = try BytecodeInterpreter(bytecode: executionBytecode)
+		
+		for (id, definition) in externalFunctions {
+			interpreter.registerExternalFunction(id: id, callback: (definition.argumentNames, definition.callback))
+		}
+		
+		self.interpreter = interpreter
+		
+		try interpreter.interpret()
+		
+		if logDebug {
+			logInterpreter(interpreter)
 		}
 
+	}
+	
+	func printTrace(_ bytecode: BytecodeBody) {
+		
+		if let interpreter = interpreter {
+			for pc in interpreter.pcTrace {
+				log(bytecode[pc].description)
+			}
+		}
+		
 	}
 
 	// MARK: -
 	// MARK: Logging
 
-	private func logInterpreter(_ interpreter: BytecodeInterpreter) {
+	func logInterpreter(_ interpreter: BytecodeInterpreter) {
 
 		log("Stack at end of execution:\n\(interpreter.stack)\n")
 

@@ -3,7 +3,7 @@
 //  Cub
 //
 //  Created by Louis D'hauwe on 13/11/2016.
-//  Copyright © 2016 - 2017 Silver Fox. All rights reserved.
+//  Copyright © 2016 - 2018 Silver Fox. All rights reserved.
 //
 
 import Foundation
@@ -16,21 +16,24 @@ public struct ForStatementNode: LoopNode {
 
 	public let body: BodyNode
 
-	public init(assignment: AssignmentNode, condition: ASTNode, interval: ASTNode, body: BodyNode) throws {
+	public let range: Range<Int>?
 
-		guard condition.isValidConditionNode else {
-			throw CompileError.unexpectedCommand
-		}
-
-		guard interval is AssignmentNode else {
-			throw CompileError.unexpectedCommand
-		}
+	public init(assignment: AssignmentNode, condition: ASTNode, interval: ASTNode, body: BodyNode, range: Range<Int>?) throws {
 
 		self.assignment = assignment
 		self.condition = condition
 		self.interval = interval
 
 		self.body = body
+		self.range = range
+		
+		guard condition.isValidConditionNode else {
+			throw compileError(.unexpectedCommand)
+		}
+		
+		guard interval is AssignmentNode else {
+			throw compileError(.unexpectedCommand)
+		}
 	}
 
 	func compileLoop(with ctx: BytecodeCompiler, scopeStart: Int) throws -> BytecodeBody {
@@ -52,7 +55,7 @@ public struct ForStatementNode: LoopNode {
 
 		ctx.pushLoopContinue(startOfLoopLabel)
 
-		let skipFirstInterval = BytecodeInstruction(label: skipFirstIntervalLabel, type: .goto, arguments: [.index(skippedIntervalLabel)], comment: "skip first interval")
+		let skipFirstInterval = BytecodeInstruction(label: skipFirstIntervalLabel, type: .goto, arguments: [.index(skippedIntervalLabel)], comment: "skip first interval", range: range)
 		bytecode.append(skipFirstInterval)
 
 		bytecode.append(contentsOf: intervalInstructions)
@@ -69,18 +72,18 @@ public struct ForStatementNode: LoopNode {
 		let goToEndLabel = ctx.nextIndexLabel()
 
 		let peekNextLabel = ctx.peekNextIndexLabel()
-		let ifeq = BytecodeInstruction(label: ifeqLabel, type: .ifFalse, arguments: [.index(peekNextLabel)])
+		let ifeq = BytecodeInstruction(label: ifeqLabel, type: .ifFalse, arguments: [.index(peekNextLabel)], range: range)
 
 		bytecode.append(ifeq)
 		bytecode.append(contentsOf: bodyBytecode)
 
-		let goToStart = BytecodeInstruction(label: goToEndLabel, type: .goto, arguments: [.index(startOfLoopLabel)], comment: "go to start of loop")
+		let goToStart = BytecodeInstruction(label: goToEndLabel, type: .goto, arguments: [.index(startOfLoopLabel)], comment: "go to start of loop", range: range)
 		bytecode.append(goToStart)
 
 		// End of loop
 
 		guard let _ = ctx.popLoopContinue() else {
-			throw CompileError.unexpectedCommand
+			throw compileError(.unexpectedCommand)
 		}
 
 		return bytecode

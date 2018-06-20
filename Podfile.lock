@@ -1,27 +1,48 @@
 PODS:
-  - Cub (0.6.0)
-  - InputAssistant (1.0.1)
+  - BezierPathLength (1.1.0)
+  - Cub (1.0.1)
+  - HueKit (1.0.1)
+  - InputAssistant (1.0.2)
   - PanelKit (2.0.1)
-  - SavannaKit (0.6.0)
-  - SwiftLint (0.24.2)
+  - SavannaKit (0.8.3)
+  - SimulatorStatusMagic (2.1)
+  - SwiftLint (0.25.1)
   - TabView (1.0.1)
 
 DEPENDENCIES:
-  - Cub (~> 0.6)
+  - BezierPathLength (~> 1.0)
+  - Cub (~> 1.0)
+  - HueKit (~> 1.0)
   - InputAssistant (~> 1.0)
   - PanelKit (~> 2.0)
   - SavannaKit (~> 0.6)
+  - SimulatorStatusMagic (~> 2.0)
   - SwiftLint
   - TabView (~> 1.0)
 
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - BezierPathLength
+    - Cub
+    - HueKit
+    - InputAssistant
+    - PanelKit
+    - SavannaKit
+    - SimulatorStatusMagic
+    - SwiftLint
+    - TabView
+
 SPEC CHECKSUMS:
-  Cub: 249c3cd02a996d65dff3a89813837e1f635cebd3
-  InputAssistant: b5ddd7fc23e38eaabdeaef115f6f7b023fb5dfc0
+  BezierPathLength: 2f21f2860b0817df3cf631e9a3a9273c8e8c3814
+  Cub: 2855a4c362fe208692397182d67bb75ca5371521
+  HueKit: a255770053f7028907db3e84d5cdecc7837197e4
+  InputAssistant: b0b70cd0d69ef7013ecb2a1fa350b7a2786e2e01
   PanelKit: d05cecac1ab39af375b56ff21c7b5a9915a3eb5b
-  SavannaKit: 409b6f55cc282b9f2788357108b5379538e0520c
-  SwiftLint: 2aa21b96c8d13396a051bc1cb659d2ce1e0075b0
+  SavannaKit: d985d281aa8eca06bc5c0744875ef31e423192bb
+  SimulatorStatusMagic: 481558caf2b9ccb2ceba2cc193728d4db3dcac07
+  SwiftLint: ce933681be10c3266e82576dad676fa815a602e9
   TabView: b8337b549e4b0f070a76cab141e258fa66e01fd1
 
-PODFILE CHECKSUM: 541616255e35f0ef7f1d2fc9ea790f7c66498694
+PODFILE CHECKSUM: f8d3f349342d6a44b72d6d8b35ebc6c80e36bcde
 
-COCOAPODS: 1.4.0
+COCOAPODS: 1.5.2

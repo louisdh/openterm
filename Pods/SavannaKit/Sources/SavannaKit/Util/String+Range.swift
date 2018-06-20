@@ -10,11 +10,8 @@ import Foundation
 
 extension String {
 	
-	func nsRange(fromRange range: Range<Int>) -> NSRange {
-		let from = range.lowerBound
-		let to = range.upperBound
-		
-		return NSRange(location: from, length: to - from)
+	func nsRange(fromRange range: Range<Index>) -> NSRange {
+		return NSRange(range, in: self)
 	}
-	
+
 }

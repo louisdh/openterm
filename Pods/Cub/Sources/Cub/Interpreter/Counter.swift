@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct Counter {
+struct Counter: Equatable, Codable {
 
 	private var i: UInt
 
@@ -27,7 +27,7 @@ struct Counter {
 	mutating func decrement() throws {
 
 		guard i > 0 else {
-			throw InterpreterError.underflow
+			throw InterpreterError(type: .underflow, range: nil)
 		}
 
 		i -= 1

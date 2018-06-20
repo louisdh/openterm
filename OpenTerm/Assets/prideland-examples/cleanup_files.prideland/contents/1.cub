@@ -1,0 +1,37 @@
+/// This script moves the contents of the current directory to a new folder.
+
+filesRaw = captureShell("ls -1")
+files = split(filesRaw, "\n")
+
+date = currentDate()
+folderName = formattedDate(date, "yyyy-MM-dd")
+
+// If return code is not 0, an error occurred.
+if shell("mkdir " + folderName) != 0 {
+	exit()
+}
+
+for file in files {
+
+	// Ignore empty file names, which can be caused by the "ls" output.
+	if file == "" {
+		continue
+	}
+	
+	shell("mv " + escapeFileName(file) + " " + folderName)
+}
+
+/// Add "\" to escape spaces in a file name, so shell commands work. 
+func escapeFileName(name) returns {
+	newName = ""
+	
+	for char in name {
+		if char == " " {
+			newName += "\"
+		}
+		
+		newName += char
+	}
+
+	return newName
+}

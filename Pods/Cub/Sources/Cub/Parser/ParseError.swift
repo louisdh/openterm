@@ -3,7 +3,7 @@
 //  Cub
 //
 //  Created by Louis D'hauwe on 22/10/2016.
-//  Copyright © 2016 - 2017 Silver Fox. All rights reserved.
+//  Copyright © 2016 - 2018 Silver Fox. All rights reserved.
 //
 
 import Foundation
@@ -40,49 +40,6 @@ public struct ParseError: DisplayableError, CustomStringConvertible {
 
 	public var description: String {
 		return "\(type)"
-	}
-
-}
-
-extension String {
-
-	func lineNumber(of index: Int) -> Int {
-
-		let i = self.distance(from: self.startIndex, to: self.index(self.startIndex, offsetBy: index))
-
-		let newLineIndices = self.indices(of: "\n").map { (index) -> Int in
-			return self.distance(from: self.startIndex, to: index)
-		}
-
-		var lineNumber = 1
-
-		for newLineIndex in newLineIndices {
-
-			if i > newLineIndex {
-
-				lineNumber += 1
-
-			} else {
-
-				break
-
-			}
-
-		}
-
-		return lineNumber
-	}
-
-	func indices(of string: String, options: String.CompareOptions = .literal) -> [String.Index] {
-		var result: [String.Index] = []
-		var start = startIndex
-
-		while let range = range(of: string, options: options, range: start..<endIndex) {
-			result.append(range.lowerBound)
-			start = range.upperBound
-		}
-
-		return result
 	}
 
 }

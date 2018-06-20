@@ -12,9 +12,9 @@ class OutputSanitizer {
 
 	static func sanitize(_ output: NSMutableString) {
 		// Replace $HOME with "~"
-		output.replaceOccurrences(of: DocumentManager.shared.activeDocumentsFolderURL.path, with: "~", options: .caseInsensitive, range: NSRange.init(location: 0, length: output.length))
+		output.replaceOccurrences(of: DocumentManager.shared.activeDocumentsFolderURL.path, with: "~", options: .caseInsensitive, range: NSRange(location: 0, length: output.length))
 
 		// Sometimes, fileManager adds /private in front of the directory
-		output.replaceOccurrences(of: "/private", with: "", options: .caseInsensitive, range: NSRange.init(location: 0, length: output.length))
+		output.replaceOccurrences(of: "/private", with: "", options: .caseInsensitive, range: NSRange(location: 0, length: output.length))
 	}
 }

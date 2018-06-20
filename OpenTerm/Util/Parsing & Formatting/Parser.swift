@@ -146,7 +146,7 @@ class Parser {
 			}
 		}
 
-		let remaining = Data.init(bytes: byteArray.suffix(from: decodedByteCount))
+		let remaining = Data(bytes: byteArray.suffix(from: decodedByteCount))
 		return (str, remaining, didEnd)
 	}
 
@@ -155,15 +155,15 @@ class Parser {
 	/// return an attributed string that renders the character
 	private func handle(_ character: Character) -> (output: NSAttributedString?, didEnd: Bool) {
 		// Create a string with the given character
-		let str = String.init(character)
+		let str = String(character)
 
 		// Try to parse a code
 		switch self.state {
 		case .normal:
-			guard let code = Code.init(rawValue: str) else {
+			guard let code = Code(rawValue: str) else {
 				// While in normal mode, unless we found a code, we should return a string using the current
 				// textState's attributes.
-				return (NSAttributedString.init(string: str, attributes: textState.attributes), false)
+				return (NSAttributedString(string: str, attributes: textState.attributes), false)
 			}
 			switch code {
 			case .endOfTransmission:
@@ -190,7 +190,7 @@ class Parser {
 		case .csiSequence(let parameters):
 			// We are in the middle of parsing a csi sequence
 
-			if let suffix = Code.ControlSequenceSuffix.init(rawValue: str) {
+			if let suffix = Code.ControlSequenceSuffix(rawValue: str) {
 				switch suffix {
 				case .selectGraphicRendition:
 					textState.parse(escapeCodes: parameters)

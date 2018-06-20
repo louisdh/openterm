@@ -50,7 +50,10 @@ class BookmarkViewController: UIViewController {
 	/// When the + button is pressed, we notify the delegate to save the current
 	/// directory as URL.
 	@objc func addBookmarkForCurrentDirectory() {
-		guard let url = self.delegate?.currentDirectoryURL else { return }
+		guard let url = self.delegate?.currentDirectoryURL else {
+			return
+		}
+		
 		do {
 			try self.bookmarkManager.saveBookmarkURL(url: url)
 		} catch {
@@ -92,7 +95,7 @@ extension BookmarkViewController: UITableViewDataSource {
 		//  Show the name of the bookmark (last path component) and the actual file path in the cell.
 		let bookmarkURL = bookmarks[indexPath.row]
 
-		let urlDescription = NSMutableString.init(string: bookmarkURL.absoluteURL.path)
+		let urlDescription = NSMutableString(string: bookmarkURL.absoluteURL.path)
 		OutputSanitizer.sanitize(urlDescription)
 
 		cell.textLabel?.text = "\(bookmarkURL.lastPathComponent): \(urlDescription)"

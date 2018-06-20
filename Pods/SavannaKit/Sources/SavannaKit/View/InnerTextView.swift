@@ -15,7 +15,13 @@ import CoreGraphics
 	import UIKit
 #endif
 
+protocol InnerTextViewDelegate: class {
+	func didUpdateCursorFloatingState()
+}
+
 class InnerTextView: TextView {
+	
+	weak var innerDelegate: InnerTextViewDelegate?
 	
 	lazy var theme: SyntaxColorTheme = {
 		return DefaultTheme()
@@ -25,6 +31,10 @@ class InnerTextView: TextView {
 	
 	func invalidateCachedParagraphs() {
 		cachedParagraphs = nil
+	}
+	
+	func hideGutter() {
+		gutterWidth = 0
 	}
 	
 	func updateGutterWidth(for numberOfCharacters: Int) {
@@ -39,7 +49,32 @@ class InnerTextView: TextView {
 	}
 	
 	#if os(iOS)
+	
+	var isCursorFloating = false
+	
+	override func beginFloatingCursor(at point: CGPoint) {
+		super.beginFloatingCursor(at: point)
+		
+		isCursorFloating = true
+		innerDelegate?.didUpdateCursorFloatingState()
+
+	}
+	
+	override func endFloatingCursor() {
+		super.endFloatingCursor()
+		
+		isCursorFloating = false
+		innerDelegate?.didUpdateCursorFloatingState()
+
+	}
+	
 	override public func draw(_ rect: CGRect) {
+		
+		guard let lineNumbersStyle = theme.lineNumbersStyle else {
+			hideGutter()
+			super.draw(rect)
+			return
+		}
 		
 		let textView = self
 		
@@ -64,12 +99,11 @@ class InnerTextView: TextView {
 		
 		textView.updateGutterWidth(for: maxNumberOfDigits)
 		
-		Color.black.setFill()
+		lineNumbersStyle.backgroundColor.setFill()
 		
-		let gutterRect = CGRect(x: 0, y: 0, width: textView.gutterWidth, height: rect.height)
+		let gutterRect = CGRect(x: 0, y: rect.minY, width: textView.gutterWidth, height: rect.height)
 		let path = BezierPath(rect: gutterRect)
 		path.fill()
-		
 		
 		drawLineNumbers(paragraphs, in: self.bounds, for: self)
 		
@@ -97,5 +131,30 @@ class InnerTextView: TextView {
 			
 		}
 	}
+//	var gutterWidth: CGFloat = 0.0 {
+//		didSet {
+//
+//			textContainer.exclusionPaths = [UIBezierPath(rect: CGRect(x: 0.0, y: 0.0, width: gutterWidth, height: .greatestFiniteMagnitude))]
+//
+//		}
+//
+//	}
+	
+	#if os(iOS)
+	
+	override func caretRect(for position: UITextPosition) -> CGRect {
+		
+		var superRect = super.caretRect(for: position)
+		
+		let font = self.theme.font
+		
+		// "descender" is expressed as a negative value,
+		// so to add its height you must subtract its value
+		superRect.size.height = font.pointSize - font.descender
+		
+		return superRect
+	}
+	
+	#endif
 	
 }

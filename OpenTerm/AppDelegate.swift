@@ -8,6 +8,13 @@
 
 import UIKit
 import TabView
+import CoreSpotlight
+import MobileCoreServices
+import ios_system
+
+#if canImport(SimulatorStatusMagic)
+	import SimulatorStatusMagic
+#endif
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -22,11 +29,76 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		window?.tintColor = .defaultMainTintColor
 		window?.makeKeyAndVisible()
 
-		UserDefaultsController.shared.registerDefaults()
-
+		do {
+			try FileManager.default.downloadAllFromCloud(at: DocumentManager.shared.scriptsURL)
+		} catch {
+			print(error)
+		}
+		
+		#if canImport(SimulatorStatusMagic)
+			SDStatusBarManager.sharedInstance().enableOverrides()
+		#endif
+		
+		indexCommands()
+		
 		return true
 	}
+	
+	func indexCommands() {
+		
+		CSSearchableIndex.default().deleteAllSearchableItems { (error) in
+			
+			let systemCommands = (commandsAsArray() as? [String] ?? []).sorted()
+			let commands = systemCommands + CommandManager.shared.scriptCommands
+			
+			for command in commands {
+				
+				let attributeSet = CSSearchableItemAttributeSet(itemContentType: kUTTypeText as String)
+				attributeSet.title = command
+				attributeSet.contentDescription = CommandManager.shared.description(for: command)
+				
+				let item = CSSearchableItem(uniqueIdentifier: "\(command)", domainIdentifier: "com.silverfox.Terminal", attributeSet: attributeSet)
+				CSSearchableIndex.default().indexSearchableItems([item]) { error in
+					if let error = error {
+						print("Indexing error: \(error.localizedDescription)")
+					} else {
+						print("Search item successfully indexed!")
+					}
+				}
+				
+			}
+			
+		}
+		
+	}
 
+	func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([Any]?) -> Void) -> Bool {
+		
+		if userActivity.activityType == CSSearchableItemActionType {
+			
+			guard let command = userActivity.userInfo?[CSSearchableItemActivityIdentifier] as? String else {
+				return false
+			}
+		
+			guard let navigationController = window?.rootViewController as? TabViewContainerViewController<TerminalTabViewController> else {
+				return false
+			}
+			
+			guard let viewController = navigationController.primaryTabViewController.visibleViewController as? TerminalViewController else {
+				return false
+			}
+				
+			viewController.terminalView.currentCommand = command
+			
+			if viewController.presentedViewController == nil {
+				viewController.terminalView.becomeFirstResponder()
+			}
+			
+		}
+		
+		return true
+	}
+	
 	func applicationWillResignActive(_ application: UIApplication) {
 		// Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
 		// Use this method to pause ongoing tasks, disable timers, and invalidate graphics rendering callbacks. Games should use this method to pause the game.
@@ -52,7 +124,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey: Any] = [:]) -> Bool {
 		// feed x-callback-url data into xCallbackUrl logic, where it is safe to pass in other URL's
 		// as xCallbackUrlOpen returns false for stuff it does not understand.
-		if xCallbackUrlOpen(url) { return true }
+		if xCallbackUrlOpen(url) {
+			return true
+		}
 
 		// we could not do anything with this URL
 		return false

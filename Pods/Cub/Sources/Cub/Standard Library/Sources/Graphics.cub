@@ -3,30 +3,50 @@
 //  Cub Standard Library
 //
 
+/// A struct that stores color data in RGBA.
+/// - r: the red component, in range 0...1
+/// - g: the green component, in range 0...1
+/// - b: the blue component, in range 0...1
+/// - a: the alpha component, in range 0...1
 struct Color {
 	r, g, b, a
 }
 
-// Color convenience init
-
+/// Color convenience init.
 func rgb(r, g, b) returns {
 	return Color(r, g, b, 1.0)
 }
 
+/// Color convenience init.
 func rgba(r, g, b, a) returns {
 	return Color(r, g, b, a)
 }
 
 // Predefined colors
 
+/// A color value whose RGB values are 1.0, 0.0, and 0.0 and whose alpha value is 1.0.
 red = Color(1.0, 0.0, 0.0, 1.0)
+
+/// A color value whose RGB values are 0.0, 1.0, and 0.0 and whose alpha value is 1.0.
 green = Color(0.0, 1.0, 0.0, 1.0)
+
+/// A color value whose RGB values are 0.0, 0.0, and 1.0 and whose alpha value is 1.0.
 blue = Color(0.0, 0.0, 1.0, 1.0)
 
+/// A color value whose RGB values are 0.0, 1.0, and 1.0 and whose alpha value is 1.0.
 cyan = Color(0.0, 1.0, 1.0, 1.0)
+
+/// A color value whose RGB values are 1.0, 0.0, and 1.0 and whose alpha value is 1.0.
 magenta = Color(1.0, 0.0, 1.0, 1.0)
+
+/// A color value whose RGB values are 1.0, 1.0, and 0.0 and whose alpha value is 1.0.
 yellow = Color(1.0, 1.0, 0.0, 1.0)
 
+/// A color value whose RGB values are 0.0, 0.0, and 0.0 and whose alpha value is 1.0.
 black = Color(0.0, 0.0, 0.0, 1.0)
+
+/// A color value whose RGB values are 1.0, 1.0, and 1.0 and whose alpha value is 1.0.
 white = Color(1.0, 1.0, 1.0, 1.0)
+
+/// A color value whose RGB values are 0.0, 0.0, and 0.0 and whose alpha value is 0.0.
 clear = Color(0.0, 0.0, 0.0, 0.0)

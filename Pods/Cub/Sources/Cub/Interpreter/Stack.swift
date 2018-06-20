@@ -31,7 +31,7 @@ public struct Stack<Element>: CustomStringConvertible {
 	mutating func push(_ item: Element) throws {
 
 		guard size < limit else {
-			throw InterpreterError.stackOverflow
+			throw InterpreterError(type: .stackOverflow, range: nil)
 		}
 
 		items.append(item)
@@ -41,7 +41,7 @@ public struct Stack<Element>: CustomStringConvertible {
 	mutating func pop() throws -> Element {
 
 		guard size > 0 else {
-			throw InterpreterError.illegalStackOperation
+			throw InterpreterError(type: .illegalStackOperation, range: nil)
 		}
 
 		size -= 1

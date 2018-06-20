@@ -24,14 +24,14 @@ struct Paragraph {
 		return "\(number)"
 	}
 	
-	func attributedString(for theme: SyntaxColorTheme) -> NSAttributedString {
+	func attributedString(for style: LineNumbersStyle) -> NSAttributedString {
 		
 		let attr = NSMutableAttributedString(string: string)
 		let range = NSMakeRange(0, attr.length)
 		
 		let attributes: [NSAttributedStringKey: Any] = [
-			.font: theme.lineNumbersStyle.font,
-			.foregroundColor : theme.lineNumbersStyle.textColor
+			.font: style.font,
+			.foregroundColor : style.textColor
 		]
 		
 		attr.addAttributes(attributes, range: range)
@@ -39,8 +39,8 @@ struct Paragraph {
 		return attr
 	}
 	
-	func drawSize(for theme: SyntaxColorTheme) -> CGSize {
-		return attributedString(for: theme).size()
+	func drawSize(for style: LineNumbersStyle) -> CGSize {
+		return attributedString(for: style).size()
 	}
 	
 }

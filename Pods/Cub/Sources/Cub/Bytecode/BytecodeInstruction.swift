@@ -3,7 +3,7 @@
 //  Cub
 //
 //  Created by Louis D'hauwe on 08/10/2016.
-//  Copyright © 2016 - 2017 Silver Fox. All rights reserved.
+//  Copyright © 2016 - 2018 Silver Fox. All rights reserved.
 //
 
 import Foundation
@@ -17,6 +17,9 @@ public class BytecodeInstruction {
 	let type: BytecodeInstructionType
 	let arguments: [InstructionArgumentType]
 	let comment: String?
+	
+	/// The range of the instruction in the original source code
+	let range: Range<Int>?
 
 	/// Use for decoding compiled instructions.
 	/// Does not support comments.
@@ -84,15 +87,17 @@ public class BytecodeInstruction {
 		}
 
 		self.comment = nil
+		self.range = nil
 
 	}
 
-	init(label: Int, type: BytecodeInstructionType, arguments: [InstructionArgumentType] = [], comment: String? = nil) {
+	init(label: Int, type: BytecodeInstructionType, arguments: [InstructionArgumentType] = [], comment: String? = nil, range: Range<Int>?) {
 
 		self.label = label
 		self.type = type
 		self.arguments = arguments
 		self.comment = comment
+		self.range = range
 
 	}
 

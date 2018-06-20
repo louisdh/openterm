@@ -3,7 +3,7 @@
 //  Cub
 //
 //  Created by Louis D'hauwe on 10/10/2016.
-//  Copyright © 2016 - 2017 Silver Fox. All rights reserved.
+//  Copyright © 2016 - 2018 Silver Fox. All rights reserved.
 //
 
 import Foundation
@@ -16,15 +16,19 @@ public struct AssignmentNode: ASTNode {
 
 	public let variable: ASTNode
 	public let value: ASTNode
+	public let range: Range<Int>?
+	public let documentation: String?
 
-	public init(variable: ASTNode, value: ASTNode) throws {
+	public init(variable: ASTNode, value: ASTNode, range: Range<Int>?, documentation: String?) throws {
 
-		guard value is NumberNode || value is VariableNode || value is StructMemberNode || value is CallNode || value is BinaryOpNode || value is StringNode else {
-			throw AssignmentNodeValidationError(invalidValueType: value.description)
+		guard value is NumberNode || value is VariableNode || value is StructMemberNode || value is CallNode || value is BinaryOpNode || value is StringNode || value is ArrayNode || value is ArraySubscriptNode || value is BooleanNode || value is NilNode else {
+			throw AssignmentNodeValidationError(invalidValueType: value.nodeDescription ?? "")
 		}
 
 		self.variable = variable
 		self.value = value
+		self.range = range
+		self.documentation = documentation
 	}
 
 	public func compile(with ctx: BytecodeCompiler, in parent: ASTNode?) throws -> BytecodeBody {
@@ -43,7 +47,7 @@ public struct AssignmentNode: ASTNode {
 
 			let type: BytecodeInstructionType = isNew ? .registerStore : .registerUpdate
 
-			let instruction = BytecodeInstruction(label: label, type: type, arguments: [.index(varReg)], comment: "\(variable.name)")
+			let instruction = BytecodeInstruction(label: label, type: type, arguments: [.index(varReg)], comment: "\(variable.name)", range: range)
 
 			bytecode.append(instruction)
 
@@ -54,7 +58,7 @@ public struct AssignmentNode: ASTNode {
 			let (varReg, isNew) = ctx.getRegister(for: varNode.name)
 
 			guard !isNew else {
-				throw CompileError.unexpectedCommand
+				throw compileError(.unexpectedCommand)
 			}
 
 			let varInstructions = try varNode.compile(with: ctx, in: self)
@@ -62,16 +66,42 @@ public struct AssignmentNode: ASTNode {
 
 			let membersMapped = members.map { InstructionArgumentType.index($0) }
 
-			let instruction = BytecodeInstruction(label: label, type: .structUpdate, arguments: membersMapped, comment: "\(membersMapped)")
+			let instruction = BytecodeInstruction(label: label, type: .structUpdate, arguments: membersMapped, comment: "\(membersMapped)", range: range)
 
 			bytecode.append(instruction)
 
-			let storeInstruction = BytecodeInstruction(label: label, type: .registerUpdate, arguments: [.index(varReg)], comment: "\(varNode.name)")
+			let storeInstruction = BytecodeInstruction(label: label, type: .registerUpdate, arguments: [.index(varReg)], comment: "\(varNode.name)", range: range)
 
 			bytecode.append(storeInstruction)
 
-		}
+		} else if let arraySubscript = variable as? ArraySubscriptNode {
+			
+			guard let variable = arraySubscript.variable as? VariableNode else {
+				throw compileError(.unexpectedCommand)
+			}
+			
+			bytecode.append(contentsOf: try arraySubscript.name.compile(with: ctx, in: self))
+			
+			bytecode.append(contentsOf: try variable.compile(with: ctx, in: self))
 
+			let instr = BytecodeInstruction(label: ctx.nextIndexLabel(), type: .arrayUpdate, comment: "update", range: range)
+			bytecode.append(instr)
+		
+			let (varReg, isNew) = ctx.getRegister(for: variable.name)
+			
+			guard !isNew else {
+				throw compileError(.unexpectedCommand)
+			}
+			
+			let instruction = BytecodeInstruction(label: label, type: .registerUpdate, arguments: [.index(varReg)], comment: "\(variable.name)", range: range)
+			
+			bytecode.append(instruction)
+			
+		} else {
+			// error
+			
+		}
+		
 		return bytecode
 
 	}
@@ -81,7 +111,7 @@ public struct AssignmentNode: ASTNode {
 		var members = members
 
 		guard let memberId = ctx.getStructMemberId(for: memberNode.name) else {
-			throw CompileError.unexpectedCommand
+			throw compileError(.unexpectedCommand)
 		}
 
 		members.append(memberId)
@@ -92,7 +122,7 @@ public struct AssignmentNode: ASTNode {
 		} else {
 
 			guard let childMemberNode = memberNode.variable as? StructMemberNode else {
-				throw CompileError.unexpectedCommand
+				throw compileError(.unexpectedCommand)
 			}
 
 			return try getStructUpdate(childMemberNode, members: members, with: ctx)

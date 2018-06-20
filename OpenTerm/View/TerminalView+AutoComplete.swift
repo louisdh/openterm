@@ -21,10 +21,10 @@ struct CommandTypes: OptionSet {
 	/// Get the types of the given command name.
 	/// If the command is unknown, it defaults to .affectsFiles.
 	static func forCommand(_ command: String) -> CommandTypes {
-		switch command {
-		case "cd", "ls", "rmdir": return [.affectsFolders]
-		case "compress", "cp", "curl", "gunzip", "gzip", "link", "ln", "mv", "rm", "scp", "sftp", "tar", "uncompress": return [.affectsFiles, .affectsFolders]
-		case "du", "env", "mkdir", "printenv", "pwd", "setenv", "ssh", "tr", "uname", "unsetenv", "uptime", "whoami", "help", "clear": return []
+		switch (operatesOn(command)) {
+		case "directory": return [.affectsFolders]
+		case "file": return [.affectsFiles, .affectsFolders]
+		case "no": return []
 		default: return [.affectsFiles]
 		}
 	}
@@ -61,13 +61,18 @@ extension TerminalView {
 			autoCompleteManager.commandState = .running
 		case .idle:
 			autoCompleteManager.commandState = .typing(command: self.currentCommand)
+		case .waitingForInput:
+			autoCompleteManager.commandState = .running
 		}
 	}
 
 	func insertCompletion(_ completion: AutoCompleteManager.Completion) {
 		switch autoCompleteManager.state {
 		case .executing:
-			guard let character = completion.data as? String else { return }
+			guard let character = completion.data as? String else {
+				return
+			}
+			
 			textView.insertText(character)
 			executor.sendInput(character)
 		default:
@@ -81,7 +86,7 @@ extension TerminalView {
 				textView.insertText(completion.name)
 			} else {
 				// We need to complete the current argument
-				var components = currentCommand.components(separatedBy: CharacterSet.whitespaces)
+				var components = currentCommand.components(separatedBy: .whitespaces)
 				if let lastComponent = components.popLast() {
 					// If the argument we are completing is a path, we must only replace the last part of the path
 					if lastComponent.contains("/") {
@@ -111,24 +116,17 @@ extension TerminalView {
 	private static var downArrow: UIImage {
 		return UIGraphicsImageRenderer(size: .init(width: 24, height: 24)).image(actions: { context in
 
-			// Top left to center
-			let downwards = UIBezierPath()
-			downwards.move(to: CGPoint(x: 1, y: 7))
-			downwards.addLine(to: CGPoint(x: 11, y: 17))
+			let path = UIBezierPath()
+			path.move(to: CGPoint(x: 1, y: 7))
+			path.addLine(to: CGPoint(x: 11, y: 17))
+			path.addLine(to: CGPoint(x: 22, y: 7))
+			
 			UIColor.white.setStroke()
-			downwards.lineWidth = 2
-			downwards.stroke()
-
-			// Center to top right
-			let upwards = UIBezierPath()
-			upwards.move(to: CGPoint(x: 11, y: 17))
-			upwards.addLine(to: CGPoint(x: 22, y: 7))
-			UIColor.white.setStroke()
-			upwards.lineWidth = 2
-			upwards.stroke()
-
-			context.cgContext.addPath(downwards.cgPath)
-			context.cgContext.addPath(upwards.cgPath)
+			path.lineWidth = 2
+			path.stroke()
+			
+			context.cgContext.addPath(path.cgPath)
+			
 		}).withRenderingMode(.alwaysOriginal)
 	}
 }
@@ -138,13 +136,13 @@ extension TerminalView: AutoCompleteManagerDataSource {
 	func allCommandsForAutoCompletion() -> [String] {
 		let allCommands = (commandsAsArray() as? [String] ?? []).sorted()
 		let recentHistory = uniqueItemsInRecentHistory()
-		return recentHistory + Script.allNames + allCommands + ["help", "clear"]
+		return recentHistory + CommandManager.shared.scriptCommands + allCommands + ["help", "clear"]
 	}
 
 	func completionsForProgram(_ command: String, _ currentArguments: [String]) -> [AutoCompleteManager.Completion] {
-		// If command is a script, return the argument names in options form, for that script. Without ones that are already entered.
-		if Script.allNames.contains(command), let script = try? Script.named(command) {
-			return script.argumentNames.map { "--\($0)=" }.map { AutoCompleteManager.Completion($0, appendingSuffix: "") }
+
+		if CommandManager.shared.scriptCommands.contains(command) {
+			return []
 		}
 
 		var completions: [AutoCompleteManager.Completion] = []
@@ -176,18 +174,26 @@ extension TerminalView: AutoCompleteManagerDataSource {
 			completions += fileSystemCompletions(inDirectory: currentURL, showFolders: commandTypes.contains(.affectsFolders), showFiles: commandTypes.contains(.affectsFiles))
 		}
 
-		// TODO: There must be a better way to add flags. Don't want to hard code these per command. Parsing man pages could automate this.
-		let flags: [String]
-		switch command {
-		case "awk":
-			flags = ["-F", "-v", "-f", "'{", "}'"]
-		case "cat":
-			flags = ["-b", "-e", "-n", "-s", "-t", "-u", "-v"]
-		case "ls":
-			flags = ["-@", "-1", "-A", "-a", "-B", "-b", "-C", "-c", "-d", "-e", "-F", "-f", "-G", "-g", "-H", "-h", "-i", "-k", "-L", "-l", "-m", "-n", "-O", "-P", "-q", "-R", "-r", "-S", "-s", "-T", "-t", "-u", "-U", "-v", "-W", "-w", "-x"]
-		default:
-			flags = []
+		// get flags from ios_system commandDictionary.plist:
+		var flags: [String]
+		flags = []
+		let optionsFromCode = getoptString(command)
+		for c in optionsFromCode!.characters {
+			if (c == ":") {
+				continue
+			}
+			let flag = "-" + String(c)
+			flags.append(flag)
 		}
+		// special cases:
+		switch (command) {
+		case "awk":
+			flags.append("{")
+			flags.append("}")
+		default:
+			break
+		}
+
 		completions += flags.map { AutoCompleteManager.Completion($0) }
 
 		return completions
@@ -241,15 +247,18 @@ extension TerminalView: AutoCompleteManagerDataSource {
 		if !showFolders && !showFiles { return [] }
 
 		do {
-			let contents = try DocumentManager.shared.fileManager.contentsOfDirectory(at: directory, includingPropertiesForKeys: [.isDirectoryKey], options: .skipsHiddenFiles)
-			return try contents.flatMap { url in
+			
+			let contents = try DocumentManager.shared.fileManager.contentsOfDirectory(at: directory, includingPropertiesForKeys: [.isDirectoryKey], options: [])
+			
+			return try contents.compactMap { url in
 				let resourceValues = try url.resourceValues(forKeys: [.isDirectoryKey])
 				let isDirectory = resourceValues.isDirectory ?? false
 				if showFolders && isDirectory || showFiles && !isDirectory {
-					return AutoCompleteManager.Completion.init(url.lastPathComponent, appendingSuffix: isDirectory ? "/" : " ", data: url.standardizedFileURL)
+					return AutoCompleteManager.Completion(url.lastPathComponent.replacingOccurrences(of: " ", with: "\\ "), appendingSuffix: isDirectory ? "/" : " ", data: url.standardizedFileURL)
 				}
 				return nil
 			}
+			
 		} catch {
 			return []
 		}

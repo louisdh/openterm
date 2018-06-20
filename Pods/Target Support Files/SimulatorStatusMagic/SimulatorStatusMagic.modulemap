@@ -1,0 +1,6 @@
+framework module SimulatorStatusMagic {
+  umbrella header "SimulatorStatusMagic-umbrella.h"
+
+  export *
+  module * { export * }
+}

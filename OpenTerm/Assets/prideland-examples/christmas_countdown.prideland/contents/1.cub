@@ -1,0 +1,30 @@
+currentYear = formattedDate(currentDate(), "y")
+
+christmasDateString = "25-12-" + currentYear
+christmasDate = dateFromFormat(christmasDateString, "dd-MM-y")
+
+daysLeft = numberOfDaysBetween(currentDate(), christmasDate)
+
+if daysLeft == 0 {
+	println("Merry Christmas! 🎄")
+	println("Ho ho ho 🎅")
+} else {
+	daysLeftFormatted = format("%.f", daysLeft)
+	print("Just " + daysLeftFormatted + " more days until Christmas 🎄")
+}
+
+/// Get the number of days between two dates.
+func numberOfDaysBetween(date1, date2) returns {
+
+    days = 0
+
+	dateFormat = "dd-MM"
+
+	while formattedDate(date1, dateFormat) != formattedDate(date2, dateFormat) {
+		
+		date1 = dateByAdding(1, "day", date1)
+        days += 1
+	} 
+
+	return days
+}

@@ -3,7 +3,7 @@
 //  Cub
 //
 //  Created by Louis D'hauwe on 07/10/2016.
-//  Copyright © 2016 - 2017 Silver Fox. All rights reserved.
+//  Copyright © 2016 - 2018 Silver Fox. All rights reserved.
 //
 
 import Foundation
@@ -47,7 +47,7 @@ public class BytecodeCompiler {
 
 	private var structMemberIndex: Int
 
-	private var structMemberMap: [String : Int]
+	private var structMemberMap: [String: Int]
 
 	private let scopeTreeRoot: ScopeNode
 
@@ -315,7 +315,7 @@ public class BytecodeCompiler {
 				comment = nil
 			}
 			
-			let instr = BytecodeInstruction(label: label, type: .registerClear, arguments: [.index(reg)], comment: comment)
+			let instr = BytecodeInstruction(label: label, type: .registerClear, arguments: [.index(reg)], comment: comment, range: nil)
 			instructions.append(instr)
 
 		}
@@ -398,7 +398,7 @@ public class BytecodeCompiler {
 		let newReg = getNewFunctionId()
 		let exitReg = getNewFunctionId()
 
-		currentScopeNode.functionMap[name] = FunctionMapped(id: newReg, exitId: exitReg, returns: true)
+		currentScopeNode.functionMap[name] = FunctionMapped(id: newReg, exitId: exitReg, arguments: structNode.prototype.members, returns: true)
 
 		return newReg
 	}
@@ -415,9 +415,13 @@ public class BytecodeCompiler {
 		let newReg = getNewFunctionId()
 		let exitReg = getNewFunctionId()
 
-		currentScopeNode.functionMap[name] = FunctionMapped(id: newReg, exitId: exitReg, returns: functionNode.prototype.returns)
+		currentScopeNode.functionMap[name] = FunctionMapped(id: newReg, exitId: exitReg, arguments: functionNode.prototype.argumentNames,  returns: functionNode.prototype.returns)
 
 		return newReg
+	}
+
+	func getMappedFunction(named name: String) -> FunctionMapped? {
+		return currentScopeNode.deepFunctionMap()[name]
 	}
 
 	func getExitScopeFunctionId(for functionNode: FunctionNode) throws -> Int {
@@ -425,7 +429,7 @@ public class BytecodeCompiler {
 		let name = functionNode.prototype.name
 
 		guard let functionMapped = currentScopeNode.deepFunctionMap()[name] else {
-			throw error(.functionNotFound)
+			throw error(.functionNotFound(name))
 		}
 
 		return functionMapped.exitId
@@ -439,7 +443,7 @@ public class BytecodeCompiler {
 			return functionMapped.id
 		}
 
-		throw error(.functionNotFound)
+		throw error(.functionNotFound(functionName))
 	}
 
 	func doesFunctionReturn(for functionName: String) throws -> Bool {
@@ -448,7 +452,7 @@ public class BytecodeCompiler {
 			return functionMapped.returns
 		}
 
-		throw error(.functionNotFound)
+		throw error(.functionNotFound(functionName))
 
 	}
 
@@ -459,8 +463,8 @@ public class BytecodeCompiler {
 
 	// MARK: -
 
-	private func error(_ type: CompileError) -> Error {
-		return type
+	private func error(_ type: CompileErrorType) -> CompileError {
+		return CompileError(type: type, range: nil)
 	}
 
 }

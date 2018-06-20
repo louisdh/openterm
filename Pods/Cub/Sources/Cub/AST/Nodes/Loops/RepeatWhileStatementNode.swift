@@ -3,7 +3,7 @@
 //  Cub
 //
 //  Created by Louis D'hauwe on 04/12/2016.
-//  Copyright © 2016 - 2017 Silver Fox. All rights reserved.
+//  Copyright © 2016 - 2018 Silver Fox. All rights reserved.
 //
 
 import Foundation
@@ -12,15 +12,17 @@ public struct RepeatWhileStatementNode: LoopNode {
 
 	public let condition: ASTNode
 	public let body: BodyNode
+	public let range: Range<Int>?
 
-	public init(condition: ASTNode, body: BodyNode) throws {
-
-		guard condition.isValidConditionNode else {
-			throw CompileError.unexpectedCommand
-		}
+	public init(condition: ASTNode, body: BodyNode, range: Range<Int>?) throws {
 
 		self.condition = condition
 		self.body = body
+		self.range = range
+		
+		guard condition.isValidConditionNode else {
+			throw compileError(.unexpectedCommand)
+		}
 	}
 
 	func compileLoop(with ctx: BytecodeCompiler, scopeStart: Int) throws -> BytecodeBody {
@@ -40,15 +42,15 @@ public struct RepeatWhileStatementNode: LoopNode {
 		let goToEndLabel = ctx.nextIndexLabel()
 
 		let peekNextLabel = ctx.peekNextIndexLabel()
-		let ifeq = BytecodeInstruction(label: ifeqLabel, type: .ifFalse, arguments: [.index(peekNextLabel)])
+		let ifeq = BytecodeInstruction(label: ifeqLabel, type: .ifFalse, arguments: [.index(peekNextLabel)], range: range)
 
 		bytecode.append(ifeq)
 
-		let goToStart = BytecodeInstruction(label: goToEndLabel, type: .goto, arguments: [.index(scopeStart)])
+		let goToStart = BytecodeInstruction(label: goToEndLabel, type: .goto, arguments: [.index(scopeStart)], range: range)
 		bytecode.append(goToStart)
 
 		guard let _ = ctx.popLoopContinue() else {
-			throw CompileError.unexpectedCommand
+			throw compileError(.unexpectedCommand)
 		}
 
 		return bytecode

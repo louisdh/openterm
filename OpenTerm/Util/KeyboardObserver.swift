@@ -141,7 +141,9 @@ open class KeyboardObserver {
 
 internal extension KeyboardObserver {
 	@objc func notified(_ notification: Notification) {
-		guard let event = KeyboardEvent(notification: notification) else { return }
+		guard let event = KeyboardEvent(notification: notification) else {
+			return
+		}
 
 		switch event.type {
 		case .willShow:

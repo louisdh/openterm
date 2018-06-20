@@ -14,6 +14,9 @@ protocol CommandExecutorDelegate: class {
 	func commandExecutor(_ commandExecutor: CommandExecutor, receivedStderr stderr: Data)
 	func commandExecutor(_ commandExecutor: CommandExecutor, didChangeWorkingDirectory to: URL)
 	func commandExecutor(_ commandExecutor: CommandExecutor, stateDidChange newState: CommandExecutor.State)
+	func commandExecutor(_ commandExecutor: CommandExecutor, waitForInput callback: @escaping (String) -> Void)
+	func commandExecutor(_ commandExecutor: CommandExecutor, executeSubCommand subCommand: String, callback: @escaping (Int) -> Void)
+	func commandExecutor(_ commandExecutor: CommandExecutor, executeSubCommand subCommand: String, capturingOutput callback: @escaping (String) -> Void)
 }
 
 // Exit status from an ios_system command
@@ -31,6 +34,7 @@ class CommandExecutor {
 	enum State {
 		case idle
 		case running
+		case waitingForInput
 	}
 
 	var state: State = .idle {
@@ -50,8 +54,6 @@ class CommandExecutor {
 		}
 	}
 
-	/// Dispatch queue to serially run commands on.
-	private static let executionQueue = DispatchQueue(label: "CommandExecutor", qos: .userInteractive)
 	/// Dispatch queue that delegate methods will be called on.
 	private let delegateQueue = DispatchQueue(label: "CommandExecutor-Delegate", qos: .userInteractive)
 
@@ -64,7 +66,7 @@ class CommandExecutor {
 	private let stderr_file: UnsafeMutablePointer<FILE>
 
 	/// Context from commands run by this executor
-	private var context = CommandExecutionContext()
+	var context = CommandExecutionContext()
 
 	init() {
 		self.currentWorkingDirectory = DocumentManager.shared.activeDocumentsFolderURL
@@ -82,18 +84,20 @@ class CommandExecutor {
 
 	// Dispatch a new text-based command to execute.
 	func dispatch(_ command: String) {
-		let push_stdin = stdin
-		let push_stdout = stdout
-		let push_stderr = stderr
 
-		CommandExecutor.executionQueue.async {
+		let queue = DispatchQueue(label: "\(command)", qos: .utility)
+		
+		queue.async {
+		
+			Thread.current.name = command
+		
 			self.state = .running
 
-			// Set the executor's CWD as the process-wide CWD
 			DocumentManager.shared.currentDirectoryURL = self.currentWorkingDirectory
-			stdin = self.stdin_file
-			stdout = self.stdout_file
-			stderr = self.stderr_file
+			// Set the executor's CWD as the process-wide CWD
+			ios_switchSession(self.stdout_file)
+			ios_setDirectoryURL(self.currentWorkingDirectory)
+			ios_setStreams(self.stdin_file, self.stdout_file, self.stderr_file)
 			let returnCode: ReturnCode
 			do {
 				let executorCommand = self.executorCommand(forCommand: command, inContext: self.context)
@@ -110,9 +114,9 @@ class CommandExecutor {
 			let newDirectory = DocumentManager.shared.currentDirectoryURL
 			if newDirectory != self.currentWorkingDirectory {
 				self.currentWorkingDirectory = newDirectory
+				// Reset the process-wide CWD back to documents folder
+				DocumentManager.shared.currentDirectoryURL = DocumentManager.shared.activeDocumentsFolderURL
 			}
-			// Reset the process-wide CWD back to documents folder
-			DocumentManager.shared.currentDirectoryURL = DocumentManager.shared.activeDocumentsFolderURL
 
 			// Save return code into the context
 			self.context[.status] = "\(returnCode)"
@@ -121,20 +125,32 @@ class CommandExecutor {
 			// TODO: Also need to send to stderr?
 			self.stdout_pipe.fileHandleForWriting.write(Parser.Code.endOfTransmission.rawValue.data(using: .utf8)!)
 
-			stdin = push_stdin
-			stdout = push_stdout
-			stderr = push_stderr
-
 			self.state = .idle
 		}
 	}
+	
+	func closeSession() {
+		// Warn ios_system to release all data associated with this session:
+		// current directory, previous directory...
+		ios_closeSession(self.stdout_file)
+	}
+	
+	func setLocalMiniRoot() {
+		ios_switchSession(self.stdout_file)
+		ios_setMiniRootURL(self.currentWorkingDirectory)
+	}
+
 
 	// Send input to the running command's stdin.
 	func sendInput(_ input: String) {
-		guard self.state == .running, let data = input.data(using: .utf8) else { return }
+		guard self.state == .running, let data = input.data(using: .utf8) else {
+			return
+		}
+		
+		ios_switchSession(self.stdout_file)
 		switch input {
 		case Parser.Code.endOfText.rawValue, Parser.Code.endOfTransmission.rawValue:
-			// Kill running process on CTRL+C or CTRL+D.
+			// Kill running process in the current session (tab) on CTRL+C or CTRL+D.
 			// No way to send different kill signals since ios_system/pthread are running in process.
 			ios_kill()
 		default:
@@ -149,13 +165,66 @@ class CommandExecutor {
 
 		// Separate in to command and arguments
 		let components = command.components(separatedBy: .whitespaces)
-		guard components.count > 0 else { return EmptyExecutorCommand() }
+		guard components.count > 0 else {
+			return EmptyExecutorCommand()
+		}
+		
 		let program = components[0]
 		let args = Array(components[1..<components.endIndex])
+		
+		var parsedArgs = [String]()
+		
+		var currentArg = ""
+		
+		for arg in args {
+			
+			if arg.hasPrefix("\"") {
+				
+				if currentArg.isEmpty {
+
+					currentArg = arg
+					currentArg.removeFirst()
+					
+				} else {
+					
+					currentArg.append(" " + arg)
+					
+				}
+				
+			} else if arg.hasSuffix("\"") {
+
+				if currentArg.isEmpty {
+
+					currentArg.append(arg)
+
+				} else {
+					
+					currentArg.append(" " + arg)
+					currentArg.removeLast()
+					parsedArgs.append(currentArg)
+					currentArg = ""
+
+				}
+
+			} else {
+				
+				if currentArg.isEmpty {
+					parsedArgs.append(arg)
+				} else {
+					currentArg.append(" " + arg)
+				}
+				
+			}
+		
+		}
+		
+		if !currentArg.isEmpty {
+			parsedArgs.append(currentArg)
+		}
 
 		// Special case for scripts
-		if Script.allNames.contains(program), let script = try? Script.named(program) {
-			return ScriptExecutorCommand(script: script, arguments: args, context: context)
+		if let scriptDocument = CommandManager.shared.script(named: program) {
+			return ScriptExecutorCommand(script: scriptDocument, arguments: parsedArgs, context: context)
 		}
 
 		// Default case: Just execute the string itself
@@ -178,29 +247,4 @@ class CommandExecutor {
 		}
 	}
 
-}
-
-/// Basic implementation of a command, run ios_system
-struct SystemExecutorCommand: CommandExecutorCommand {
-
-	let command: String
-
-	func run(forExecutor executor: CommandExecutor) throws -> ReturnCode {
-
-		// Pass the value of the string to system, return its exit code.
-		let returnCode = ios_system(command.utf8CString)
-
-		// Flush pipes to make sure all data is read
-		fflush(stdout)
-		fflush(stderr)
-
-		return returnCode
-	}
-}
-
-/// No-op command to run.
-struct EmptyExecutorCommand: CommandExecutorCommand {
-	func run(forExecutor executor: CommandExecutor) throws -> ReturnCode {
-		return 0
-	}
 }

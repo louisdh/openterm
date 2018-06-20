@@ -8,12 +8,20 @@
 
 import Foundation
 
+public struct StructData: Equatable {
+	
+	var members: [Int: ValueType]
+	
+}
+
 public enum ValueType: Equatable {
 
 	case number(NumberType)
-	case `struct`([Int : ValueType])
+	case `struct`(StructData)
 	case bool(Bool)
 	case string(String)
+	case array([ValueType])
+	case `nil`
 
 }
 
@@ -30,7 +38,7 @@ public extension ValueType {
 
 			var descr = "{ "
 
-			for (k, v) in val {
+			for (k, v) in val.members {
 
 				if let memberName = ctx.getStructMemberName(for: k) {
 					descr += "\(memberName) = "
@@ -55,30 +63,102 @@ public extension ValueType {
 		
 		case let .string(val):
 			return val
-		
+			
+		case let .array(val):
+			
+			var descr = "["
+
+			descr += val.map({ $0.description(with: ctx) }).joined(separator: ", ")
+			
+			descr += "]"
+			
+			return descr
+			
+		case .nil:
+			return "nil"
+
 		}
 
 	}
 
 }
 
-public func ==(lhs: ValueType, rhs: ValueType) -> Bool {
-
-	if case let ValueType.number(l) = lhs, case let ValueType.number(r) = rhs {
-		return l == r
-	}
-
-	if case let ValueType.struct(l) = lhs, case let ValueType.struct(r) = rhs {
-		return l == r
-	}
-
-	if case let ValueType.bool(l) = lhs, case let ValueType.bool(r) = rhs {
-		return l == r
+extension ValueType {
+	
+	var isNumber: Bool {
+		if case .number = self {
+			return true
+		} else {
+			return false
+		}
 	}
 	
-	if case let ValueType.string(l) = lhs, case let ValueType.string(r) = rhs {
-		return l == r
+	var isString: Bool {
+		if case .string = self {
+			return true
+		} else {
+			return false
+		}
 	}
+	
+	var isBool: Bool {
+		if case .bool = self {
+			return true
+		} else {
+			return false
+		}
+	}
+	
+	var isArray: Bool {
+		if case .array = self {
+			return true
+		} else {
+			return false
+		}
+	}
+	
+	var isStruct: Bool {
+		if case .struct = self {
+			return true
+		} else {
+			return false
+		}
+	}
+	
+	var isNil: Bool {
+		if case .nil = self {
+			return true
+		} else {
+			return false
+		}
+	}
+	
+}
 
-	return false
+extension ValueType {
+
+	var size: NumberType {
+		
+		switch self {
+		case .array(let array):
+			return NumberType(array.count)
+			
+		case .bool:
+			return 1
+			
+		case .number(let number):
+			return number
+			
+		case .string(let string):
+			return NumberType(string.count)
+			
+		case .struct(let stru):
+			return NumberType(stru.members.count)
+			
+		case .nil:
+			return 0
+			
+		}
+	}
+	
 }

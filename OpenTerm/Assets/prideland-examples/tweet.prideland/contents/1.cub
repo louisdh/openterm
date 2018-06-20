@@ -1,0 +1,22 @@
+content = urlEncodeString(parameters[0])
+username = <#username#>
+command = "open-url \"tweetbot://" + username + "/post?text=" + content + "\""
+
+shell(command)
+
+/// Replaces spaces with "%20" for using a string in a URL.
+/// This is a simplified example, other replacements are needed to support all strings (such as emoticons).
+func urlEncodeString(string) returns {
+
+	encodedString = ""
+	
+	for char in string {
+		if char == " " {
+			encodedString += "%20" 
+		} else {
+			encodedString += char
+		}
+	}
+
+	return encodedString
+}

@@ -8,20 +8,24 @@
 
 import Foundation
 
-public enum TokenType {
+public enum TokenType: Equatable {
 	
 	/// Token which has no effect on program, such as white space
 	case ignoreableToken
-	case comment
+	
+	case comment(String)
 	
 	case identifier(String)
 	case number(NumberType)
 	case string(String)
+	case editorPlaceholder(String)
 
 	case parensOpen
 	case parensClose
 	case curlyOpen
 	case curlyClose
+	case squareBracketOpen
+	case squareBracketClose
 	case comma
 	case dot
 	
@@ -63,7 +67,10 @@ public enum TokenType {
 	case `return`
 	case returns
 	case `struct`
-	
+	case `guard`
+	case `in`
+	case `nil`
+
 	// Fallback
 	case other(String)
 	
@@ -71,8 +78,4 @@ public enum TokenType {
 		return "\(self)"
 	}
 	
-}
-
-func ==(lhs: TokenType, rhs: TokenType) -> Bool {
-	return lhs.uniqueDescription == rhs.uniqueDescription
 }

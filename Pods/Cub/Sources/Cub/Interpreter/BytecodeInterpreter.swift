@@ -3,7 +3,7 @@
 //  Cub
 //
 //  Created by Louis D'hauwe on 09/10/2016.
-//  Copyright © 2016 - 2017 Silver Fox. All rights reserved.
+//  Copyright © 2016 - 2018 Silver Fox. All rights reserved.
 //
 
 import Foundation
@@ -32,8 +32,6 @@ public class BytecodeInterpreter {
 
 	private(set) var pcTrace = [Int]()
 	
-	var executionFinishedCallback: (() -> Void)?
-
 	// MARK: - Init
 
 	/// Initalize a BytecodeInterpreter with an array of BytecodeExecutionInstruction
@@ -114,45 +112,33 @@ public class BytecodeInterpreter {
 
 		externalFunctions[id] = callback
 	}
+	
+	var isManuallyTerminated = false
 
 	var pc = 0
 
-	var isPaused = false
-	
-	func pause() {
-		
-		isPaused = true
-		
-	}
-	
-	func resume() throws {
-		
-		isPaused = false
-		try interpret()
-		
-	}
-	
 	/// Interpret the bytecode passed in the initializer
 	///
 	/// - Throws: InterpreterError
 	public func interpret() throws {
 
-		while pc < bytecode.count {
+		while true {
 			
-			if isPaused {
-				return
+			if isManuallyTerminated {
+				break
+			}
+			
+			// Prevent Swift array crash when appending too much.
+			// TODO: find better way to find limit, instead of hardcoded 50M.
+			if pcTrace.count > 50_000_000 {
+				throw error(.outOfMemory)
 			}
 
 			pcTrace.append(pc)
-			if let newPc = try executeInstruction(bytecode[pc], pc: pc) {
-				pc = newPc
+			let newPc = try executeInstruction(bytecode[pc], pc: pc)
+			pc = newPc
 				
-				if pc >= bytecode.count {
-					executionFinishedCallback?()
-					break
-				}
-				
-			} else {
+			if pc < 0 || pc >= bytecode.count {
 				break
 			}
 
@@ -160,9 +146,9 @@ public class BytecodeInterpreter {
 
 	}
 
-	private func executeInstruction(_ instruction: BytecodeExecutionInstruction, pc: Int) throws -> Int? {
+	private func executeInstruction(_ instruction: BytecodeExecutionInstruction, pc: Int) throws -> Int {
 
-		let newPc: Int?
+		let newPc: Int
 
 		// TODO: Cleaner (more generic) mapping possible?
 
@@ -264,6 +250,24 @@ public class BytecodeInterpreter {
 			case .privateVirtualEnd:
 				newPc = try executePrivateVirtualEnd(instruction, pc: pc)
 
+			case .arrayInit:
+				newPc = try executeArrayInit(instruction, pc: pc)
+			
+			case .arraySet:
+				newPc = try executeArraySet(instruction, pc: pc)
+			
+			case .arrayUpdate:
+				newPc = try executeArrayUpdate(instruction, pc: pc)
+			
+			case .arrayGet:
+				newPc = try executeArrayGet(instruction, pc: pc)
+			
+			case .sizeOf:
+				newPc = try sizeOf(instruction, pc: pc)
+			
+			case .exit:
+				newPc = try exit(instruction, pc: pc)
+
 		}
 
 		return newPc
@@ -284,8 +288,8 @@ public class BytecodeInterpreter {
 
 	private func executeAdd(pc: Int) throws -> Int {
 
-		let lhs = try stack.pop()
-		let rhs = try stack.pop()
+		let lhs = try popStack()
+		let rhs = try popStack()
 
 		switch (lhs, rhs) {
 		case let (.number(n1), .number(n2)):
@@ -300,6 +304,24 @@ public class BytecodeInterpreter {
 		case let (.string(n1), .string(n2)):
 			try stack.push(.string("\(n1)\(n2)"))
 
+		case let (.array(a1), .array(a2)):
+			var array = a1
+			array.append(contentsOf: a2)
+			
+			try stack.push(.array(array))
+			
+		case let (.array(a1), a2):
+			var array = a1
+			array.append(a2)
+			
+			try stack.push(.array(array))
+
+		case let (a1, .array(a2)):
+			var array = a2
+			array.insert(a1, at: 0)
+			
+			try stack.push(.array(array))
+			
 		default:
 			throw error(.unexpectedArgument)
 		}
@@ -386,8 +408,8 @@ public class BytecodeInterpreter {
 
 	private func executeEqual(pc: Int) throws -> Int {
 
-		let rhs = try stack.pop()
-		let lhs = try stack.pop()
+		let rhs = try popStack()
+		let lhs = try popStack()
 
 		let eq: Bool = lhs == rhs
 
@@ -398,8 +420,8 @@ public class BytecodeInterpreter {
 
 	private func executeNotEqual(pc: Int) throws -> Int {
 
-		let rhs = try stack.pop()
-		let lhs = try stack.pop()
+		let rhs = try popStack()
+		let lhs = try popStack()
 
 		let neq: Bool = lhs != rhs
 
@@ -508,7 +530,7 @@ public class BytecodeInterpreter {
 			throw error(.unexpectedArgument)
 		}
 
-		setRegValue(try stack.pop(), for: i)
+		setRegValue(try popStack(), for: i)
 
 		return pc + 1
 	}
@@ -523,7 +545,7 @@ public class BytecodeInterpreter {
 			throw error(.unexpectedArgument)
 		}
 
-		try updateRegValue(try stack.pop(), for: i)
+		try updateRegValue(try popStack(), for: i)
 
 		return pc + 1
 	}
@@ -560,7 +582,7 @@ public class BytecodeInterpreter {
 		return pc + 1
 	}
 
-	private func executeInvokeVirtual(_ instruction: BytecodeExecutionInstruction, pc: Int) throws -> Int? {
+	private func executeInvokeVirtual(_ instruction: BytecodeExecutionInstruction, pc: Int) throws -> Int {
 
 		guard let id = instruction.arguments.first else {
 			throw error(.unexpectedArgument)
@@ -575,12 +597,12 @@ public class BytecodeInterpreter {
 			var arguments = [String: ValueType]()
 			
 			for argName in argumentNames.reversed() {
-				let arg = try stack.pop()
+				let arg = try popStack()
 				arguments[argName] = arg
 			}
 			
-			pause()
-			
+			let semaphore = DispatchSemaphore(value: 0)
+
 			externalCallback(arguments, { (result) in
 				
 				do {
@@ -589,20 +611,22 @@ public class BytecodeInterpreter {
 						try self.stack.push(result)
 					}
 					
-					self.pc += 1
-					
-					try self.resume()
-					
+					semaphore.signal()
+
 					return true
 					
 				} catch {
 					
+					semaphore.signal()
+
 					return false
 				}
 			
 			})
 
-			return nil
+			_ = semaphore.wait(timeout: .distantFuture)
+
+			return pc + 1
 		}
 		
 		guard let idPc = virtualMap[i] else {
@@ -633,7 +657,7 @@ public class BytecodeInterpreter {
 
 	private func executePop(_ instruction: BytecodeExecutionInstruction, pc: Int) throws -> Int {
 
-		_ = try stack.pop()
+		_ = try popStack()
 
 		return pc + 1
 	}
@@ -659,7 +683,7 @@ public class BytecodeInterpreter {
 
 	private func executeStructInit(_ instruction: BytecodeExecutionInstruction, pc: Int) throws -> Int {
 
-		let newStruct = ValueType.struct([:])
+		let newStruct = ValueType.struct(StructData(members: [:]))
 
 		try stack.push(newStruct)
 
@@ -672,13 +696,13 @@ public class BytecodeInterpreter {
 			throw error(.unexpectedArgument)
 		}
 
-		guard case let ValueType.struct(v) = try stack.pop() else {
+		guard case let ValueType.struct(v) = try popStack() else {
 			throw error(.unexpectedArgument)
 		}
 
 		var newStruct = v
 
-		newStruct[key] = try stack.pop()
+		newStruct.members[key] = try popStack()
 
 		try stack.push(.struct(newStruct))
 
@@ -687,22 +711,22 @@ public class BytecodeInterpreter {
 
 	private func executeStructUpdate(_ instruction: BytecodeExecutionInstruction, pc: Int) throws -> Int {
 
-		let memberIds: [Int] = instruction.arguments.flatMap {
+		let memberIds: [Int] = instruction.arguments.compactMap {
 			if case let .index(i) = $0 {
 				return i
 			}
 			return nil
 		}
 
-		guard case let ValueType.struct(v) = try stack.pop() else {
+		guard case let ValueType.struct(v) = try popStack() else {
 			throw error(.unexpectedArgument)
 		}
 
-		let updateValue = try stack.pop()
+		let updateValue = try popStack()
 
-		let newStruct = try updatedDict(for: v, keyPath: memberIds, newValue: updateValue)
+		let newStruct = try updatedDict(for: v.members, keyPath: memberIds, newValue: updateValue)
 
-		try stack.push(.struct(newStruct))
+		try stack.push(.struct(StructData(members: newStruct)))
 
 		return pc + 1
 	}
@@ -713,11 +737,11 @@ public class BytecodeInterpreter {
 			throw error(.unexpectedArgument)
 		}
 
-		guard case let ValueType.struct(v) = try stack.pop() else {
+		guard case let ValueType.struct(v) = try popStack() else {
 			throw error(.unexpectedArgument)
 		}
 
-		guard let memberValue = v[key] else {
+		guard let memberValue = v.members[key] else {
 			throw error(.unexpectedArgument)
 		}
 
@@ -765,17 +789,148 @@ public class BytecodeInterpreter {
 
 		return try virtualInvokeStack.pop()
 	}
+	
+	private func executeArrayInit(_ instruction: BytecodeExecutionInstruction, pc: Int) throws -> Int {
+		
+		guard let arg = instruction.arguments.first, case let .index(size) = arg else {
+			throw error(.unexpectedArgument)
+		}
+		
+		let newArray = ValueType.array([ValueType](repeating: .number(0), count: size))
+		
+		try stack.push(newArray)
+		
+		return pc + 1
+	}
+	
+	private func executeArraySet(_ instruction: BytecodeExecutionInstruction, pc: Int) throws -> Int {
+		
+		guard let arg = instruction.arguments.first, case let .index(i) = arg else {
+			throw error(.unexpectedArgument)
+		}
+		
+		let newValue = try popStack()
+		
+		guard case let ValueType.array(v) = try popStack() else {
+			throw error(.unexpectedArgument)
+		}
+		
+		var newArray = v
+		
+		guard i >= 0 && i < newArray.count else {
+			throw error(.arrayOutOfBounds(index: i, arraySize: newArray.count))
+		}
+		
+		newArray[i] = newValue
+		
+		try stack.push(.array(newArray))
+		
+		return pc + 1
+	}
+	
+	private func executeArrayUpdate(_ instruction: BytecodeExecutionInstruction, pc: Int) throws -> Int {
+		
+		let v2 = try popStack()
+
+		let index = try popNumber()
+		let i = Int(index)
+		
+		let updateValue = try popStack()
+
+		if case let ValueType.array(v) = v2 {
+			
+			var newArray = v
+			
+			guard i >= 0 && i < newArray.count else {
+				throw error(.arrayOutOfBounds(index: i, arraySize: newArray.count))
+			}
+			
+			newArray[i] = updateValue
+			
+			try stack.push(.array(newArray))
+			
+		} else if case let ValueType.string(v) = v2 {
+
+			guard case let .string(insertString) = updateValue else {
+				throw error(.unexpectedArgument)
+			}
+			
+			guard i >= 0 && i < v.count else {
+				throw error(.arrayOutOfBounds(index: i, arraySize: v.count))
+			}
+			
+			let newString = String(v.prefix(i)) + insertString + String(v.dropFirst(i + 1))
+			
+			try stack.push(.string(newString))
+			
+		} else {
+			
+			throw error(.unexpectedArgument)
+
+		}
+		
+		return pc + 1
+	}
+	
+	private func executeArrayGet(_ instruction: BytecodeExecutionInstruction, pc: Int) throws -> Int {
+		
+		guard case let ValueType.number(i) = try popStack() else {
+			throw error(.unexpectedArgument)
+		}
+		
+		let v2 = try popStack()
+		if case let ValueType.array(v) = v2 {
+
+			guard let memberValue = v[safe: Int(i)] else {
+				throw error(.arrayOutOfBounds(index: Int(i), arraySize: v.count))
+			}
+			
+			try stack.push(memberValue)
+		
+		} else if case let ValueType.string(v) = v2 {
+
+			guard i >= 0 && Int(i) < v.count else {
+				throw error(.arrayOutOfBounds(index: Int(i), arraySize: v.count))
+			}
+			
+			let memberValue = v[v.index(v.startIndex, offsetBy: Int(i))]
+
+			try stack.push(.string(String(memberValue)))
+			
+		} else {
+			
+			throw error(.unexpectedArgument)
+
+		}
+		
+		return pc + 1
+	}
+	
+	private func sizeOf(_ instruction: BytecodeExecutionInstruction, pc: Int) throws -> Int {
+
+		let value = try popStack()
+		
+		let size = value.size
+	
+		try stack.push(.number(size))
+		
+		return pc + 1
+	}
+	
+	private func exit(_ instruction: BytecodeExecutionInstruction, pc: Int) throws -> Int {
+		return -1
+	}
 
 	// MARK: - Structs
 
 	/// Get updated dictionary for given dictionary, updating with newValue at keyPath.
 	/// Recursively traverses dictionary tree to update a value, then reconstructs the dictionary.
 	/// E.g.
-	/// dict = [0 : [1 : 4.0]]
+	/// dict = [0: [1: 4.0]]
 	/// keyPath = [1, 0]
 	/// newValue = 8.0
-	/// -> [0 : [1 : 8.0]]
-	private func updatedDict(for dict: [Int : ValueType], keyPath: [Int], newValue: ValueType, isReconstructing: Bool = false, trace: [[Int : ValueType]] = [], keyPathPassed: [Int] = []) throws -> [Int : ValueType] {
+	/// -> [0: [1: 8.0]]
+	private func updatedDict(for dict: [Int: ValueType], keyPath: [Int], newValue: ValueType, isReconstructing: Bool = false, trace: [[Int: ValueType]] = [], keyPathPassed: [Int] = []) throws -> [Int: ValueType] {
 
 		var trace = trace
 		var keyPathPassed = keyPathPassed
@@ -795,7 +950,7 @@ public class BytecodeInterpreter {
 			}
 
 			var newDict = lastTrace
-			newDict[idPassed] = .struct(dict)
+			newDict[idPassed] = .struct(StructData(members: dict))
 
 			return try updatedDict(for: newDict, keyPath: keyPath, newValue: newValue, isReconstructing: true, trace: trace, keyPathPassed: keyPathPassed)
 		}
@@ -833,7 +988,7 @@ public class BytecodeInterpreter {
 
 			keyPath.removeLast()
 
-			return try updatedDict(for: dictToUpdate, keyPath: keyPath, newValue: newValue, trace: trace, keyPathPassed: keyPathPassed)
+			return try updatedDict(for: dictToUpdate.members, keyPath: keyPath, newValue: newValue, trace: trace, keyPathPassed: keyPathPassed)
 		}
 
 	}
@@ -980,12 +1135,22 @@ public class BytecodeInterpreter {
 
 	// MARK: - Stack
 
+	private func popStack() throws -> ValueType {
+		
+		do {
+			return try stack.pop()
+		} catch {
+			throw self.error(.illegalStackOperation)
+
+		}
+	}
+
 	private func popNumber() throws -> NumberType {
 
-		let last = try stack.pop()
+		let last = try popStack()
 
 		guard case let ValueType.number(number) = last else {
-			throw error(.unexpectedArgument)
+			throw error(.unexpectedArgumentExpectedNumber(found: last))
 		}
 
 		return number
@@ -993,10 +1158,10 @@ public class BytecodeInterpreter {
 
 	private func popBool() throws -> Bool {
 
-		let last = try stack.pop()
+		let last = try popStack()
 
 		guard case let ValueType.bool(bool) = last else {
-			throw error(.unexpectedArgument)
+			throw error(.unexpectedArgumentExpectedBool)
 		}
 
 		return bool
@@ -1004,8 +1169,9 @@ public class BytecodeInterpreter {
 
 	// MARK: -
 
-	private func error(_ type: InterpreterError) -> Error {
-		return type
+	private func error(_ type: InterpreterErrorType) -> InterpreterError {
+
+		return InterpreterError(type: type, range: bytecode[safe: pc]?.range)
 	}
 
 }

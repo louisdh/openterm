@@ -12,6 +12,13 @@ public protocol Token {
 	
 	var savannaTokenType: TokenType { get }
 	
-	var range: Range<Int>? { get }
+	var range: Range<String.Index>? { get }
+	
+}
+
+struct CachedToken {
+	
+	let token: Token
+	let nsRange: NSRange?
 	
 }

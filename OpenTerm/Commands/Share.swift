@@ -1,5 +1,5 @@
 //
-//  Share.swft.swift
+//  Share.swift
 //  OpenTerm
 //
 //  Created by Anders Borum on 28/01/2018.
@@ -11,17 +11,25 @@ import ios_system
 
 public weak var shareFileViewController: UIViewController?
 
+@_cdecl("shareFile")
 public func shareFile(argc: Int32, argv: UnsafeMutablePointer<UnsafeMutablePointer<Int8>?>?) -> Int32 {
 	var itemsToShare = [Any]()
 
-	// share text from stdin when present
 	var bytes = [Int8]()
-	while stdin != thread_stdin {
-		var byte: Int8 = 0
-		let count = read(fileno(thread_stdin), &byte, 1)
-		guard count == 1 else { break }
-		bytes.append(byte)
+	
+	if Int(argc) == 1 {
+		
+		// share text from stdin when present
+		while stdin != thread_stdin {
+			var byte: Int8 = 0
+			let count = read(fileno(thread_stdin), &byte, 1)
+			guard count == 1 else {
+				break
+			}
+			bytes.append(byte)
+		}
 	}
+	
 	let data = Data(bytes: bytes, count: bytes.count)
 	if data.count > 0 {
 		let string = String(data: data, encoding: .utf8) ?? ""

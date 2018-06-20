@@ -1,12 +1,18 @@
 <p align="center">
-<img src="readme-resources/hero.png" style="max-height: 300px;" alt="SavannaKit">
+  <a href="https://github.com/louisdh/lioness">Lioness</a> &bull;
+  <a href="https://github.com/louisdh/cub">Cub</a> &bull;
+  <b> SavannaKit </b>
+</p>
+
+<p align="center">
+<img src="readme-resources/hero@2x.png" alt="SavannaKit">
 </p>
 
 <p align="center">
 <a href="https://travis-ci.org/louisdh/savannakit"><img src="https://travis-ci.org/louisdh/savannakit.svg?branch=master" style="max-height: 300px;" alt="Build Status"/></a>
 <a href="https://codecov.io/gh/louisdh/savannakit"><img src="https://codecov.io/gh/louisdh/savannakit/branch/master/graph/badge.svg" alt="Codecov"/></a>
 <br>
-<a href="https://developer.apple.com/swift/"><img src="https://img.shields.io/badge/Swift-4.0-orange.svg?style=flat" style="max-height: 300px;" alt="Swift"/></a>
+<a href="https://developer.apple.com/swift/"><img src="https://img.shields.io/badge/Swift-4.1-orange.svg?style=flat" style="max-height: 300px;" alt="Swift"/></a>
 <a href="https://cocoapods.org/pods/SavannaKit"><img src="https://img.shields.io/cocoapods/v/SavannaKit.svg" style="max-height: 300px;" alt="PodVersion"/></a>
 <a href="https://github.com/Carthage/Carthage"><img src="https://img.shields.io/badge/Carthage-compatible-4bc51d.svg?style=flat" style="max-height: 300px;" alt="Carthage Compatible"/></a>
 <img src="https://img.shields.io/badge/platforms-iOS%20%7C%20macOS-lightgrey.svg" style="max-height: 300px;" alt="Platform: iOS macOS">
@@ -24,10 +30,10 @@ This project includes `SyntaxTextView`, a cross-platform Text View with syntax h
 The following examples show syntax highlighting for [the Lioness programming language](https://github.com/louisdh/lioness).
 
 ### iOS
-![iOS Example](readme-resources/example_ios.png)
+<img src="readme-resources/example_ios.png" alt="iOS Example"/>
 
 ### macOS
-![macOS Example](readme-resources/example_mac.png)
+<img src="readme-resources/example_mac.png" alt="macOS Example"/>
 
 ## License
 

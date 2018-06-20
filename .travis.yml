@@ -1,5 +1,5 @@
 language: objective-c
-osx_image: xcode9.2
+osx_image: xcode9.3
 branches:
   only:
     - master
@@ -11,13 +11,15 @@ env:
   - APP_SCHEME="OpenTerm"
   matrix:
 
-    - DESTINATION="OS=11.2,name=iPad Pro (9.7-inch)"     SCHEME="$APP_SCHEME"
+    - DESTINATION="OS=11.3,name=iPad Pro (9.7-inch)"     SCHEME="$APP_SCHEME"
 
 script:
   - set -o pipefail
   - xcodebuild -version
   - xcodebuild -showsdks
 
-  - ./Dependencies/ios_system/Frameworks/prepare_simulator.sh
+  - ./bootstrap.sh
 
   - travis_retry xcodebuild -workspace "$WORKSPACE" -scheme "$APP_SCHEME" -destination "$DESTINATION" -configuration Debug ONLY_ACTIVE_ARCH=NO test | xcpretty;
+
+  - travis_retry xcodebuild -workspace "$WORKSPACE" -scheme "$APP_SCHEME" -destination "$DESTINATION" -configuration Release ONLY_ACTIVE_ARCH=NO | xcpretty;

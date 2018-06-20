@@ -3,7 +3,7 @@
 //  Cub
 //
 //  Created by Louis D'hauwe on 26/10/2016.
-//  Copyright © 2016 - 2017 Silver Fox. All rights reserved.
+//  Copyright © 2016 - 2018 Silver Fox. All rights reserved.
 //
 
 import Foundation
@@ -12,9 +12,11 @@ import Foundation
 public struct BodyNode: ASTNode {
 
 	public let nodes: [ASTNode]
+	public let range: Range<Int>?
 
-	public init(nodes: [ASTNode]) {
+	public init(nodes: [ASTNode], range: Range<Int>?) {
 		self.nodes = nodes
+		self.range = range
 	}
 
 	public func compile(with ctx: BytecodeCompiler, in parent: ASTNode?) throws -> BytecodeBody {

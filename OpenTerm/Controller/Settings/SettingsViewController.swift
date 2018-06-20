@@ -9,38 +9,6 @@
 import UIKit
 import MessageUI
 
-extension Notification.Name {
-
-	static let appearanceDidChange = NSNotification.Name(rawValue: "appearanceDidChange")
-
-}
-
-extension UIDevice {
-
-	public var modelName: String {
-		var systemInfo = utsname()
-		uname(&systemInfo)
-		let machineMirror = Mirror(reflecting: systemInfo.machine)
-		let identifier = machineMirror.children.reduce("") { identifier, element in
-			guard let value = element.value as? Int8, value != 0 else { return identifier }
-			return identifier + String(UnicodeScalar(UInt8(value)))
-		}
-		return identifier
-	}
-}
-
-extension Bundle {
-
-	public var version: String {
-		return object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String
-	}
-
-	public var build: String {
-		return object(forInfoDictionaryKey: "CFBundleVersion") as! String
-	}
-
-}
-
 class SettingsViewController: UITableViewController {
 
 	@IBOutlet weak var fontSizeLabel: UILabel!
@@ -48,10 +16,12 @@ class SettingsViewController: UITableViewController {
 
 	@IBOutlet weak var terminalTextColorView: UIView!
 	@IBOutlet weak var terminalBackgroundColorView: UIView!
-
-	@IBOutlet weak var useDarkKeyboardSwitch: UISwitch!
-
-	override func viewDidLoad() {
+    
+    @IBOutlet weak var useDarkKeyboardSwitch: UISwitch!
+	
+	@IBOutlet weak var caretStylePicker: UISegmentedControl!
+	
+    override func viewDidLoad() {
 		super.viewDidLoad()
 
 	}
@@ -73,8 +43,9 @@ class SettingsViewController: UITableViewController {
 		terminalTextColorView.backgroundColor = UserDefaultsController.shared.terminalTextColor
 		terminalBackgroundColorView.backgroundColor = UserDefaultsController.shared.terminalBackgroundColor
 
-		useDarkKeyboardSwitch.isOn = UserDefaultsController.shared.userDarkKeyboardInTerminal
-
+		useDarkKeyboardSwitch.isOn = UserDefaultsController.shared.useDarkKeyboard
+		caretStylePicker.selectedSegmentIndex = UserDefaultsController.shared.caretStyle.rawValue
+		
 	}
 
 	@IBAction func fontSizeStepperDidChange(_ sender: UIStepper) {
@@ -89,13 +60,18 @@ class SettingsViewController: UITableViewController {
 
 	@IBAction func useDarkKeyboardSwitchDidChange(_ sender: UISwitch) {
 
-		UserDefaultsController.shared.userDarkKeyboardInTerminal = useDarkKeyboardSwitch.isOn
+		UserDefaultsController.shared.useDarkKeyboard = useDarkKeyboardSwitch.isOn
 
 		NotificationCenter.default.post(name: .appearanceDidChange, object: nil)
 
 	}
 
-	@IBAction func close(_ sender: UIBarButtonItem) {
+    @IBAction func caretStyleDidChange(_ sender: UISegmentedControl) {
+		UserDefaultsController.shared.caretStyle = CaretStyle.allCases[sender.selectedSegmentIndex]
+		NotificationCenter.default.post(name: .caretStyleDidChange, object: nil)
+    }
+	
+    @IBAction func close(_ sender: UIBarButtonItem) {
 
 		self.dismiss(animated: true, completion: nil)
 
@@ -183,13 +159,16 @@ class SettingsViewController: UITableViewController {
 			let url: String?
 			switch indexPath.row {
 			case 0:
+				// Donate
+				url = "https://paypal.me/LouisDhauwe/"
+			case 1:
 				// Review on App Store
 				let appId = "1323205755"
 				url = "itms-apps://itunes.apple.com/us/app/terminal/id\(appId)?action=write-review"
-			case 1:
+			case 2:
 				// Twitter
 				url = "https://twitter.com/LouisDhauwe"
-			case 2:
+			case 3:
 				// Contact Us
 				url = nil
 

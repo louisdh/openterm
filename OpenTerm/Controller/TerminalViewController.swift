@@ -15,21 +15,6 @@ import PanelKit
 import StoreKit
 import MobileCoreServices
 
-extension String {
-	func toCString() -> UnsafePointer<Int8>? {
-		let nsSelf: NSString = self as NSString
-		return nsSelf.cString(using: String.Encoding.utf8.rawValue)
-	}
-}
-
-extension String {
-
-	var utf8CString: UnsafeMutablePointer<Int8> {
-		return UnsafeMutablePointer(mutating: (self as NSString).utf8String!)
-	}
-
-}
-
 class TerminalViewController: UIViewController {
 
 	let terminalView: TerminalView
@@ -45,12 +30,21 @@ class TerminalViewController: UIViewController {
 	var bookmarkViewController: BookmarkViewController!
 	var bookmarkPanelViewController: PanelViewController!
 
+	var cubPanels = [PanelViewController]()
+	
 	private var overflowItems: [OverflowItem] = [] {
-		didSet { applyOverflowState() }
+		didSet {
+			applyOverflowState()
+		}
 	}
+	
 	private var overflowState: OverflowState = .compact {
-		didSet { applyOverflowState() }
+		didSet {
+			applyOverflowState()
+		}
 	}
+
+	var overflowItem: UIBarButtonItem!
 
 	init() {
 		terminalView = TerminalView()
@@ -62,27 +56,54 @@ class TerminalViewController: UIViewController {
 		bookmarkViewController = storyboard.instantiateViewController(withIdentifier: "BookmarkViewController") as! BookmarkViewController
 
 		super.init(nibName: nil, bundle: nil)
+		
+		scriptsViewController.panelManager = self
+
+		let openFolderItem = OverflowItem(visibleInBar: true, icon: #imageLiteral(resourceName: "Open"), title: "Open", action: { [weak self] sender in
+			self?.showDocumentPicker(sender)
+		})
+		
+		let bookmarksItem = OverflowItem(visibleInBar: true, icon: #imageLiteral(resourceName: "Bookmarks"), title: "Bookmarks", action: { [weak self] sender in
+			self?.showBookmarks(sender)
+		})
+		
+		let historyItem = OverflowItem(visibleInBar: true, icon: #imageLiteral(resourceName: "History"), title: "History", action: { [weak self] sender in
+			self?.showHistory(sender)
+		})
+		
+		let scriptsItem = OverflowItem(visibleInBar: true, icon: #imageLiteral(resourceName: "Script"), title: "Scripts", action: { [weak self] sender in
+			self?.showScripts(sender)
+		})
 
 		overflowItems = [
-			.init(visibleInBar: true, icon: #imageLiteral(resourceName: "Open"), title: "Open", action: self.showDocumentPicker),
-			.init(visibleInBar: true, icon: #imageLiteral(resourceName: "Bookmarks"), title: "Bookmarks", action: self.showBookmarks),
-			.init(visibleInBar: true, icon: #imageLiteral(resourceName: "History"), title: "History", action: self.showHistory),
-			.init(visibleInBar: false, icon: #imageLiteral(resourceName: "Script"), title: "Scripts", action: self.showScripts)
+			openFolderItem,
+			bookmarksItem,
+			historyItem,
+			scriptsItem
 		]
 
 		historyPanelViewController = PanelViewController(with: historyViewController, in: self)
-		historyPanelViewController.view.backgroundColor = .panelBackgroundColor
+		historyPanelViewController.panelNavigationController.view.backgroundColor = .panelBackgroundColor
+		historyPanelViewController.view.backgroundColor = .clear
+		
 		scriptsPanelViewController = PanelViewController(with: scriptsViewController, in: self)
-		scriptsPanelViewController.view.backgroundColor = .panelBackgroundColor
+		scriptsPanelViewController.panelNavigationController.view.backgroundColor = .panelBackgroundColor
+		scriptsPanelViewController.view.backgroundColor = .clear
+
 		bookmarkPanelViewController = PanelViewController(with: bookmarkViewController, in: self)
-		bookmarkPanelViewController.view.backgroundColor = .panelBackgroundColor
+		bookmarkPanelViewController.panelNavigationController.view.backgroundColor = .panelBackgroundColor
+		bookmarkPanelViewController.view.backgroundColor = .clear
 
 		historyViewController.delegate = self
 		bookmarkViewController.delegate = self
 		terminalView.delegate = self
+		
+		overflowItem = UIBarButtonItem(image: #imageLiteral(resourceName: "More"), style: .plain, target: self, action: #selector(showOverflowMenu(_:)))
 	}
 
-	required init?(coder aDecoder: NSCoder) { fatalError("init(coder:) has not been implemented") }
+	required init?(coder aDecoder: NSCoder) {
+		fatalError("init(coder:) has not been implemented")
+	}
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -90,18 +111,26 @@ class TerminalViewController: UIViewController {
 		// Content wrapper is root view
 		contentWrapperView.translatesAutoresizingMaskIntoConstraints = false
 		view.addSubview(contentWrapperView)
+		
 		NSLayoutConstraint.activate([
 			contentWrapperView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
 			contentWrapperView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
 			contentWrapperView.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor),
-			contentWrapperView.bottomAnchor.constraint(equalTo: view.layoutMarginsGuide.bottomAnchor)
+			contentWrapperView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
 			])
 
-		// Add terminal view as subview
-		terminalView.frame = contentWrapperView.bounds
-		terminalView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+		contentWrapperView.backgroundColor = .black
+		
+		terminalView.translatesAutoresizingMaskIntoConstraints = false
 		contentWrapperView.addSubview(terminalView)
-
+		
+		NSLayoutConstraint.activate([
+			terminalView.leadingAnchor.constraint(equalTo: contentWrapperView.leadingAnchor),
+			terminalView.trailingAnchor.constraint(equalTo: contentWrapperView.trailingAnchor),
+			terminalView.topAnchor.constraint(equalTo: contentWrapperView.topAnchor),
+			terminalView.bottomAnchor.constraint(equalTo: contentWrapperView.bottomAnchor)
+			])
+		
 		updateTitle()
 
 		NotificationCenter.default.addObserver(self, selector: #selector(didDismissKeyboard), name: .UIKeyboardDidHide, object: nil)
@@ -109,10 +138,14 @@ class TerminalViewController: UIViewController {
 		NotificationCenter.default.addObserver(self, selector: #selector(applicationDidEnterBackground), name: .UIApplicationDidEnterBackground, object: nil)
 
 		initializeEnvironment()
-		replaceCommand("open-url", mangleFunctionName("openUrl"), true)
-		replaceCommand("share", mangleFunctionName("shareFile"), true)
-		replaceCommand("pbcopy", mangleFunctionName("pbcopy"), true)
-		replaceCommand("pbpaste", mangleFunctionName("pbpaste"), true)
+		replaceCommand("open-url", "openUrl", true)
+		replaceCommand("share", "shareFile", true)
+		replaceCommand("pbcopy", "pbcopy", true)
+		replaceCommand("pbpaste", "pbpaste", true)
+		replaceCommand("cub", "cub", true)
+		replaceCommand("credits", "credits", true)
+		replaceCommand("say", "say", true)
+		replaceCommand("sleep", "sleepCMD", true)
 
 		// Call reloadData for the added commands.
 		terminalView.autoCompleteManager.reloadData()
@@ -167,13 +200,6 @@ class TerminalViewController: UIViewController {
 		self.overflowState = self.traitCollection.horizontalSizeClass == .compact ? .compact : .expanded
 	}
 
-	private func mangleFunctionName(_ functionName: String) -> String {
-		// This works because all functions have the same signature:
-		// (argc: Int32, argv: UnsafeMutablePointer<UnsafeMutablePointer<Int8>?>?) -> Int32
-		// The first part is the class name: _T0 + length + name. To change if not "OpenTerm"
-		return "_T08OpenTerm" + String(functionName.count) + functionName + "s5Int32VAD4argc_SpySpys4Int8VGSgGSg4argvtF"
-	}
-
 	func setSSLCertIfNeeded() {
 
 		guard let cString = getenv("SSL_CERT_FILE") else {
@@ -197,6 +223,13 @@ class TerminalViewController: UIViewController {
 			}
 
 			let certsFolderURL = DocumentManager.shared.activeDocumentsFolderURL.appendingPathComponent(".certs")
+
+			let iCloudURL = certsFolderURL.appendingPathComponent("cacert.pem.icloud")
+			
+			if fileManager.fileExists(atPath: iCloudURL.path) {
+				try? fileManager.startDownloadingUbiquitousItem(at: iCloudURL)
+				return
+			}
 
 			let newURL = certsFolderURL.appendingPathComponent("cacert.pem")
 
@@ -296,7 +329,7 @@ class TerminalViewController: UIViewController {
 		return [
 			// Navigation between commands
 			UIKeyCommand(input: UIKeyInputUpArrow, modifierFlags: UIKeyModifierFlags(rawValue: 0), action: #selector(selectPreviousCommand), discoverabilityTitle: "Previous command"),
-			UIKeyCommand(input: UIKeyInputDownArrow, modifierFlags: UIKeyModifierFlags(rawValue: 0), action: #selector(selectNextCommand), discoverabilityTitle: "Next command"),
+			UIKeyCommand(input: UIKeyInputDownArrow, modifierFlags: UIKeyModifierFlags(rawValue: 0), action: #selector(selectNextCommand), discoverabilityTitle: "Next command")
 		]
 	}
 
@@ -319,15 +352,33 @@ class TerminalViewController: UIViewController {
 
 		self.present(picker, animated: true, completion: nil)
 	}
+	
 	private func showHistory(_ sender: UIView) {
 		presentPopover(historyPanelViewController, from: sender)
 	}
+	
 	private func showScripts(_ sender: UIView) {
-		presentPopover(scriptsPanelViewController, from: sender)
+		
+		// modalPresentationStyle needs to be overFullScreen so
+		// we can have a nice transition when switching from the fullscreen mode
+		// to the floating mode.
+		scriptsPanelViewController.modalPresentationStyle = .overFullScreen
+		scriptsPanelViewController.modalTransitionStyle = .coverVertical
+		
+		// A view controller with presentation style "overFullScreen" will
+		// cause the keyboard of the terminalView to be presented again
+		// when it's dismissed (which we don't want when switching from fullscreen mode
+		// to the floating mode).
+		terminalView.resignFirstResponder()
+
+		present(scriptsPanelViewController, animated: true, completion: nil)
+		
 	}
+	
 	private func showBookmarks(_ sender: UIView) {
 		presentPopover(bookmarkPanelViewController, from: sender)
 	}
+	
 }
 
 extension TerminalViewController: UIDocumentPickerDelegate {
@@ -338,9 +389,16 @@ extension TerminalViewController: UIDocumentPickerDelegate {
 			return
 		}
 
-		_ = firstFolder.startAccessingSecurityScopedResource()
-
+		let success = firstFolder.startAccessingSecurityScopedResource()
+		let isReadable = DocumentManager.shared.fileManager.isReadableFile(atPath: firstFolder.path)
+		
+		guard success && isReadable else {
+			showAlert("Error", message: "Could not access folder.")
+			return
+		}
+		
 		self.terminalView.executor.currentWorkingDirectory = firstFolder
+		self.terminalView.executor.setLocalMiniRoot()
 	}
 
 }
@@ -359,6 +417,7 @@ extension TerminalViewController: BookmarkViewControllerDelegate {
 
 			//  Change the directory to the path.
 			self.terminalView.executor.currentWorkingDirectory = newValue
+			self.terminalView.executor.setLocalMiniRoot()
 
 			self.terminalView.newLine()
 			self.terminalView.writeOutput("Current directory changed to \"\(newValue.path)\"")
@@ -408,6 +467,7 @@ extension TerminalViewController: TerminalViewDelegate {
 
 		if command == "exit" {
 			if let parent = self.parent as? TerminalTabViewController {
+				terminalView.executor.closeSession()
 				parent.closeTab(self)
 			}
 			return
@@ -440,7 +500,7 @@ extension TerminalViewController: HistoryViewControllerDelegate {
 extension TerminalViewController: PanelManager {
 
 	var panels: [PanelViewController] {
-		return [historyPanelViewController, scriptsPanelViewController, bookmarkPanelViewController]
+		return [historyPanelViewController, scriptsPanelViewController, bookmarkPanelViewController] + cubPanels
 	}
 
 	var panelContentWrapperView: UIView {
@@ -455,6 +515,10 @@ extension TerminalViewController: PanelManager {
 
 		savePanelStates()
 
+	}
+	
+	func maximumNumberOfPanelsPinned(at side: PanelPinSide) -> Int {
+		return 2
 	}
 
 }
@@ -525,13 +589,14 @@ private extension TerminalViewController {
 	}
 
 	func applyOverflowState() {
-		let overflowItem = UIBarButtonItem.init(image: #imageLiteral(resourceName: "More"), style: .plain, target: self, action: #selector(showOverflowMenu(_:)))
 		switch self.overflowState {
 		case .expanded:
-			let visibleItems = overflowItems.filter { $0.visibleInBar }.map { OverflowBarButtonItem.init(item: $0) }
+			let visibleItems = overflowItems.filter { $0.visibleInBar }.map { OverflowBarButtonItem(item: $0) }
 			self.navigationItem.rightBarButtonItems = visibleItems + (visibleItems.count != overflowItems.count ? [overflowItem] : [])
 		case .compact:
-			self.navigationItem.rightBarButtonItems = [overflowItem]
+			if self.navigationItem.rightBarButtonItems != [overflowItem] {
+				self.navigationItem.rightBarButtonItems = [overflowItem]
+			}
 		}
 	}
 
@@ -561,17 +626,20 @@ private extension TerminalViewController {
 			tableView.alwaysBounceVertical = false
 		}
 
-		required init?(coder aDecoder: NSCoder) { fatalError("init(coder:) has not been implemented") }
+		required init?(coder aDecoder: NSCoder) {
+			fatalError("init(coder:) has not been implemented")
+		}
 
 		override func viewDidLayoutSubviews() {
 			super.viewDidLayoutSubviews()
 
-			self.preferredContentSize = CGSize.init(width: 240, height: tableView.contentSize.height)
+			self.preferredContentSize = CGSize(width: 240, height: tableView.contentSize.height)
 		}
 
 		override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 			return items.count
 		}
+		
 		override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 			let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
 
@@ -581,7 +649,7 @@ private extension TerminalViewController {
 			cell.imageView?.backgroundColor = .darkGray
 			cell.imageView?.layer.cornerRadius = 5
 			cell.backgroundColor = .clear
-			cell.selectionStyle = .none
+			cell.selectionStyle = .default
 
 			return cell
 		}
@@ -589,10 +657,14 @@ private extension TerminalViewController {
 		override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 			tableView.deselectRow(at: indexPath, animated: true)
 
-			// Get the view that presented this popover
-			guard let presentingView = popoverPresentationController?.sourceView else { return }
+			tableView.cellForRow(at: indexPath)?.imageView?.backgroundColor = .darkGray
 
-			// Dismiss ourself, and run action with presentiing view
+			// Get the view that presented this popover
+			guard let presentingView = popoverPresentationController?.sourceView else {
+				return
+			}
+
+			// Dismiss ourself, and run action with presenting view
 			let item = items[indexPath.row]
 			presentingViewController?.dismiss(animated: true, completion: {
 				item.action(presentingView)
@@ -600,11 +672,7 @@ private extension TerminalViewController {
 		}
 
 		override func tableView(_ tableView: UITableView, didHighlightRowAt indexPath: IndexPath) {
-			tableView.cellForRow(at: indexPath)?.backgroundColor = UIColor.black.withAlphaComponent(0.1)
-		}
-
-		override func tableView(_ tableView: UITableView, didUnhighlightRowAt indexPath: IndexPath) {
-			tableView.cellForRow(at: indexPath)?.backgroundColor = .clear
+			tableView.cellForRow(at: indexPath)?.imageView?.backgroundColor = .darkGray
 		}
 
 		// Always show in popover, even on iPhone
@@ -617,7 +685,9 @@ private extension TerminalViewController {
 	}
 
 	private class OverflowBarButtonItem: UIBarButtonItem {
+		
 		var item: OverflowItem?
+		
 		convenience init(item: OverflowItem) {
 			self.init(image: item.icon, style: .plain, target: nil, action: #selector(onTap))
 			self.target = self

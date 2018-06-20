@@ -3,7 +3,7 @@
 //  Cub
 //
 //  Created by Louis D'hauwe on 16/10/2016.
-//  Copyright © 2016 - 2017 Silver Fox. All rights reserved.
+//  Copyright © 2016 - 2018 Silver Fox. All rights reserved.
 //
 
 import Foundation
@@ -13,15 +13,21 @@ public struct ConditionalStatementNode: ASTNode {
 	public let condition: ASTNode
 	public let body: BodyNode
 	public let elseBody: BodyNode?
+	public let range: Range<Int>?
 
-	public init(condition: ASTNode, body: BodyNode, elseBody: BodyNode? = nil) {
+	public init(condition: ASTNode, body: BodyNode, elseBody: BodyNode? = nil, range: Range<Int>?) {
 		self.condition = condition
 		self.body = body
 		self.elseBody = elseBody
+		self.range = range
 	}
 
 	public func compile(with ctx: BytecodeCompiler, in parent: ASTNode?) throws -> BytecodeBody {
 
+		if condition is AssignmentNode {
+			throw compileError(.assignmentAsCondition)
+		}
+		
 		var bytecode = BytecodeBody()
 
 		let conditionInstruction = try condition.compile(with: ctx, in: self)
@@ -39,7 +45,7 @@ public struct ConditionalStatementNode: ASTNode {
 		let goToEndLabel = ctx.nextIndexLabel()
 
 		let peekNextLabel = ctx.peekNextIndexLabel()
-		let ifeq = BytecodeInstruction(label: ifeqLabel, type: .ifFalse, arguments: [.index(peekNextLabel)])
+		let ifeq = BytecodeInstruction(label: ifeqLabel, type: .ifFalse, arguments: [.index(peekNextLabel)], range: range)
 		bytecode.append(ifeq)
 
 		if let elseBody = elseBody {
@@ -52,7 +58,7 @@ public struct ConditionalStatementNode: ASTNode {
 		bytecode.append(contentsOf: bodyBytecode)
 
 		if let elseBody = elseBody, elseBody.nodes.count > 0 {
-			let goToEnd = BytecodeInstruction(label: goToEndLabel, type: .goto, arguments: [.index(ctx.peekNextIndexLabel())])
+			let goToEnd = BytecodeInstruction(label: goToEndLabel, type: .goto, arguments: [.index(ctx.peekNextIndexLabel())], range: range)
 			bytecode.append(goToEnd)
 		}
 

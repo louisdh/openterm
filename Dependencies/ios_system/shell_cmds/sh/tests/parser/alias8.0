@@ -1,4 +1,0 @@
-# $FreeBSD: head/bin/sh/tests/parser/alias8.0 240825 2012-09-22 12:52:41Z jilles $
-
-alias echo='echo'
-[ "`eval echo b`" = b ]
