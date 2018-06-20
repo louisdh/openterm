@@ -59,6 +59,7 @@
 		BE38085B1FD9BFB600393EB8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BE3808591FD9BFB600393EB8 /* Main.storyboard */; };
 		BE38085D1FD9BFB600393EB8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BE38085C1FD9BFB600393EB8 /* Assets.xcassets */; };
 		BE3808601FD9BFB600393EB8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BE38085E1FD9BFB600393EB8 /* LaunchScreen.storyboard */; };
+		BE453E93202B0F160025B216 /* FileLinks.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE453E92202B0F160025B216 /* FileLinks.swift */; };
 		BE3A62DD208B3B570014A498 /* CubDocumentationBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE3A62DC208B3B570014A498 /* CubDocumentationBundle.swift */; };
 		BE3A62DF208B3BB70014A498 /* CubDocumentationUpdater.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE3A62DE208B3BB70014A498 /* CubDocumentationUpdater.swift */; };
 		BE3A62E1208B49EF0014A498 /* cub-docs.json in Resources */ = {isa = PBXBuildFile; fileRef = BE3A62E0208B49EF0014A498 /* cub-docs.json */; };
@@ -198,6 +199,7 @@
 		BE38085C1FD9BFB600393EB8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		BE38085F1FD9BFB600393EB8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		BE3808611FD9BFB600393EB8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		BE453E92202B0F160025B216 /* FileLinks.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileLinks.swift; sourceTree = "<group>"; };
 		BE3A62DC208B3B570014A498 /* CubDocumentationBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CubDocumentationBundle.swift; sourceTree = "<group>"; };
 		BE3A62DE208B3BB70014A498 /* CubDocumentationUpdater.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CubDocumentationUpdater.swift; sourceTree = "<group>"; };
 		BE3A62E0208B49EF0014A498 /* cub-docs.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "cub-docs.json"; sourceTree = "<group>"; };
@@ -559,6 +561,7 @@
 				3CA32100201FF6A100974B5F /* Scripting */,
 				BEA8E2902001348C00002475 /* UIColor+AssetCatalog.swift */,
 				F4602B48200A63FC009D0547 /* UserDefaults+UIColor.swift */,
+				BE453E92202B0F160025B216 /* FileLinks.swift */,
 				BEA4992D1FDC305B001B9B9D /* KeyboardObserver.swift */,
 				3C905FC920265BC60084BA63 /* StoreReviewPrompter.swift */,
 				BE8E66FB206196A7007B14E6 /* Notification+Names.swift */,
@@ -844,6 +847,7 @@
 				3C406E1A20207CE7005F97C4 /* CommandExecutor.swift in Sources */,
 				BE57BDD6207BF9D800A60950 /* Say.swift in Sources */,
 				3C905FCA20265BC60084BA63 /* StoreReviewPrompter.swift in Sources */,
+				BE453E93202B0F160025B216 /* FileLinks.swift in Sources */,
 				BEA14A67202CE5D300AB7351 /* Cub.swift in Sources */,
 				BEB775642073F85600201EBB /* CustomColorBarPicker.swift in Sources */,
 				BEB774ED20701D2900201EBB /* Credits.swift in Sources */,
