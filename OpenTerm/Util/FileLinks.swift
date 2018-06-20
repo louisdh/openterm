@@ -9,6 +9,7 @@
 import UIKit
 
 extension URL {
+	
 	// Return URL in the same directory as this one that does not exist, by appending -1 or -2 to part of filename before .ext
 	// The original url might be returned if there is nothing at this location.
 	public func unused() -> URL {
@@ -33,20 +34,23 @@ extension URL {
 				return url
 			}
 			
-			index += 1;
+			index += 1
 		}
 	}
+	
 }
 
 extension NSAttributedString {
+	
 	public func withFilesAsLinks(currentDirectory: String) -> NSAttributedString {
         let text = string
         let mutable = self.mutableCopy() as! NSMutableAttributedString
         
         // read all files to have easy access
         let manager = FileManager.default
-        var files = [String:[String]]() // key is first word of filename, value is entire filename relative to current dir
-        do {
+        var files = [String: [String]]() // key is first word of filename, value is entire filename relative to current dir
+		
+		do {
 			for filename in try manager.contentsOfDirectory(atPath: currentDirectory) {
                 if let word = filename.components(separatedBy: " ").first {
                     var array = files[word] ?? [String]()
@@ -55,6 +59,7 @@ extension NSAttributedString {
                 }
             }
         } catch {
+			
         }
         
         let whitespace = CharacterSet.whitespacesAndNewlines
@@ -74,8 +79,9 @@ extension NSAttributedString {
                     if found {
                         // mark as link
                         let url = URL(fileURLWithPath: currentDirectory).appendingPathComponent(filename)
-                        let attrs = [NSAttributedStringKey.link: url,
-                                     NSAttributedStringKey.underlineStyle: 1] as [NSAttributedStringKey : Any]
+						let attrs: [NSAttributedStringKey: Any] = [.link: url,
+																   .underlineStyle: NSUnderlineStyle.styleSingle.rawValue]
+						
                         let nsRange = NSRange(location: range.lowerBound.encodedOffset,
                                               length: range.upperBound.encodedOffset -  range.lowerBound.encodedOffset)
                         mutable.addAttributes(attrs, range: nsRange)
@@ -112,7 +118,7 @@ func relative(filename: String, to directory: String) -> String {
             tail = tail.appendingPathComponent(path)
             continue
             
-        } else if(pathParts.isEmpty) {
+        } else if pathParts.isEmpty {
             // we have no more path, which means we must go out
             dirParts.removeFirst()
 			head = head.appendingPathComponent("..")

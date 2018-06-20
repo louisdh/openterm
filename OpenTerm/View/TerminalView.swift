@@ -494,7 +494,7 @@ extension TerminalView: UITextDragDelegate {
 		let parameters = UIDragPreviewParameters()
 		parameters.visiblePath = UIBezierPath.init(roundedRect: label.bounds, cornerRadius: 7)
 		
-		let preview = UIDragPreview(view:label, parameters:parameters)
+		let preview = UIDragPreview(view: label, parameters: parameters)
 		return preview
 	}
 	
@@ -516,7 +516,7 @@ extension TerminalView: UITextDragDelegate {
 													loadHandler: { (completion) in
 														
 					// read url from source provider
-					let _ = item.itemProvider.loadObject(ofClass: URL.self,
+					_ = item.itemProvider.loadObject(ofClass: URL.self,
 														 completionHandler: { (reader, error) in
 						completion(reader, true, error)
 					})
@@ -531,10 +531,10 @@ extension TerminalView: UITextDragDelegate {
 				// We want to set url from attributtedText directory
 				textView.attributedText.enumerateAttribute(.link, in: textView.range(dragRequest.dragRange), options: [],
 														   using: { (link, _, _) in
-					if link is String {
-						dragItem.localObject = URL(string: link! as! String)
-					} else if(link is URL) {
-						dragItem.localObject = link! as! URL
+					if let link = link as? String {
+						dragItem.localObject = URL(string: link)
+					} else if let link = link as? URL {
+						dragItem.localObject = link
 					}
 				})
 				
@@ -560,8 +560,7 @@ extension TerminalView: UITextDropDelegate {
 		textView.pasteDelegate = self
 	}
 	
-	func textDroppableView(_ textDroppableView: UIView & UITextDroppable,
-						   dropSessionDidEnd session: UIDropSession) {
+	func textDroppableView(_ textDroppableView: UIView & UITextDroppable, dropSessionDidEnd session: UIDropSession) {
 		// move cursor to end of document when finished with drop
 		let end = textView.endOfDocument
 		textView.selectedTextRange = textView.textRange(from: end, to: end)
@@ -570,9 +569,9 @@ extension TerminalView: UITextDropDelegate {
 	}
 }
 
-extension TerminalView : UITextPasteDelegate {
-	func textPasteConfigurationSupporting(_ textPasteConfigurationSupporting: UITextPasteConfigurationSupporting,
-										  transform item: UITextPasteItem) {
+extension TerminalView: UITextPasteDelegate {
+	
+	func textPasteConfigurationSupporting(_ textPasteConfigurationSupporting: UITextPasteConfigurationSupporting, transform item: UITextPasteItem) {
 		
 		// try to pick result from localObject
 		if let localUrl: URL = item.localObject as! URL? {
@@ -585,7 +584,7 @@ extension TerminalView : UITextPasteDelegate {
 		// we want to paste as the first public type
 		for uti in item.itemProvider.registeredTypeIdentifiers {
 			if uti.hasPrefix("public.") {
-				paste(item: item, uti:uti)
+				paste(item: item, uti: uti)
 				return
 			}
 			
@@ -593,7 +592,7 @@ extension TerminalView : UITextPasteDelegate {
 		
 		// we only get to this point if there are no public types
 		let uti = item.itemProvider.registeredTypeIdentifiers.first ?? (kUTTypeFileURL as String)
-		paste(item: item, uti:uti)
+		paste(item: item, uti: uti)
 	}
 	
 	private func paste(item: UITextPasteItem, uti: String) {
@@ -603,7 +602,7 @@ extension TerminalView : UITextPasteDelegate {
 			guard let url = url else { return }
 															
 				if inPlace {
-					let _ = url.startAccessingSecurityScopedResource()
+					_ = url.startAccessingSecurityScopedResource()
 					let currentDirectory = self.executor.currentWorkingDirectory.path
 					let result = relative(filename: url.path, to: currentDirectory)
 					item.setResult(string: result)
